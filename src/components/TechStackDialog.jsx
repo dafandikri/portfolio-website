@@ -31,6 +31,7 @@ const TechStackDialog = () => {
         { name: "Tailwind", icon: "tailwind" },
         { name: "Ubuntu", icon: "ubuntu" },
         { name: "VS Code", icon: "vsc" },
+        { name: "WordPress", icon: "wordpress" },
     ];
     
     // Measure the width of the icons container for the animation
