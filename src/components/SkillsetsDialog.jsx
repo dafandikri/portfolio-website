@@ -63,10 +63,6 @@ const SkillsetsDialog = () => {
 
   return (
     <section className="section-sm">
-        <div className="container">
-            <div className="row">
-                <div className="col-lg-12">
-                    <div className="my-5">
                         {/* Skillsets Dialog */}
                         <div className="card card-tertiary">
                             <div className="card-header d-flex justify-content-between align-items-center">
@@ -127,10 +123,6 @@ const SkillsetsDialog = () => {
                             </div>
                         </div>
                         {/* End of Skillsets Dialog */}
-                    </div>
-                </div>
-            </div>
-        </div>
         
         {/* CSS for animation */}
         <style jsx>{`

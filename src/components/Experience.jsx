@@ -47,10 +47,6 @@ const Experience = () => {
 
     return (
         <section className="section-sm">
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-12">
-                        <div className="my-5">
                             {/* Welcome Dialog */}
                             <div className="card card-tertiary mx-auto" style={{maxWidth: "550px"}}>
                                 {/* Dialog Title Bar */}
@@ -122,10 +118,6 @@ const Experience = () => {
                                 </div>
                             </div>
                             {/* End of Welcome Dialog */}
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section>
     );
 };

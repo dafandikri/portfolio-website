@@ -59,10 +59,6 @@ const TechStackDialog = () => {
     
     return (
         <section className="section-sm">
-            <div className="container">
-                <div className="row">
-                    <div className="col-lg-12">
-                        <div className="my-5">
                             {/* Tech Stack Dialog */}
                             <div className="card card-tertiary">
                                 <div className="card-header d-flex justify-content-between align-items-center">
@@ -123,11 +119,6 @@ const TechStackDialog = () => {
                                 </div>
                             </div>
                             {/* End of Tech Stack Dialog */}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             {/* CSS for animation */}
             <style jsx>{`
                 @keyframes scrollTech {
