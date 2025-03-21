@@ -1,7 +1,66 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../styles/w95.css';
 
+// Import skills icons
+const importSkillIcon = (iconName) => {
+  return `/src/assets/img/skills/${iconName}.png`;
+};
+
 const SkillsetsDialog = () => {
+  const [containerWidth, setContainerWidth] = useState(0);
+  const scrollContainerRef = useRef(null);
+  const skillsContainerRef = useRef(null);
+  
+  // Define skills data
+  const skills = [
+    { name: "Frontend Development", icon: "frontend", skills: "HTML, CSS, JavaScript, React, WordPress" },
+    { name: "Backend Development", icon: "backend", skills: "Node.js, Python, Java, APIs" },
+    { name: "Database Management", icon: "database", skills: "SQL, MongoDB, Redis, ORM" },
+    { name: "Mobile Development", icon: "mobile", skills: "Flutter, React Native" },
+    { name: "UI/UX Design", icon: "design", skills: "Figma, Adobe XD, Wireframing" },
+    { name: "DevOps", icon: "devops", skills: "CI/CD, Docker, Git, AWS" },
+    { name: "Project Management", icon: "management", skills: "Agile, Scrum, JIRA, Leadership" },
+    { name: "AI & Machine Learning", icon: "ai", skills: "TensorFlow, PyTorch, NLP" },
+  ];
+  
+  // Measure the width of the skills container for the animation
+  useEffect(() => {
+    if (skillsContainerRef.current) {
+      const width = skillsContainerRef.current.offsetWidth;
+      setContainerWidth(width);
+    }
+  }, []);
+
+  // Function to render skill cards
+  const renderSkillCard = (skill, index) => (
+    <div 
+      key={`${skill.name}-${index}`}
+      className="tech-icon mx-4" 
+      style={{
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center", 
+        width: "180px",
+        backgroundColor: "#C0C0C0",
+        border: "2px solid #FFF",
+        borderRightColor: "#000",
+        borderBottomColor: "#000",
+        padding: "8px",
+        margin: "0 10px"
+      }}
+    >
+      <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
+        <img 
+          src={importSkillIcon(skill.icon)} 
+          alt={skill.name} 
+          style={{width: "64px", height: "64px", imageRendering: "pixelated"}} 
+        />
+      </div>
+      <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>{skill.name}</span>
+      <span style={{fontSize: "10px", textAlign: "center"}}>{skill.skills}</span>
+    </div>
+  );
+
   return (
     <section className="section-sm">
         <div className="container">
@@ -23,208 +82,36 @@ const SkillsetsDialog = () => {
                                     <strong>My Professional Skills:</strong>
                                 </div>
                                 {/* Skill categories scrolling container */}
-                                <div className="tech-stack-container" style={{position: "relative", overflow: "hidden", height: "170px", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF", backgroundColor: "#FFF", padding: "8px 0"}}>
-                                    <div className="tech-stack-scroll" style={{display: "flex", position: "absolute", animation: "scroll-tech 40s linear infinite"}}>
-                                        {/* Skill categories - first set */}
-                                        <div className="tech-icon mx-4" style={{
+                                <div 
+                                    ref={scrollContainerRef}
+                                    className="tech-stack-container" 
+                                    style={{
+                                        position: "relative", 
+                                        overflow: "hidden", 
+                                        height: "170px", 
+                                        border: "1px solid #888", 
+                                        borderRightColor: "#FFF", 
+                                        borderBottomColor: "#FFF", 
+                                        backgroundColor: "#FFF", 
+                                        padding: "8px 0"
+                                    }}
+                                >
+                                    <div 
+                                        className="skills-wrapper"
+                                        style={{
                                             display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/frontend.png" alt="Frontend Development" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Frontend Development</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>HTML, CSS, JavaScript, React</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/backend.png" alt="Backend Development" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Backend Development</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>Node.js, Python, Java, APIs</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/database.png" alt="Database Management" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Database Management</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>SQL, MongoDB, Redis, ORM</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/mobile.png" alt="Mobile Development" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Mobile Development</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>Flutter, React Native</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/design.png" alt="UI/UX Design" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>UI/UX Design</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>Figma, Adobe XD, Wireframing</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/devops.png" alt="DevOps" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>DevOps</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>CI/CD, Docker, Git, AWS</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/management.png" alt="Project Management" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Project Management</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>Agile, Scrum, JIRA, Leadership</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/ai.png" alt="AI/ML" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>AI & Machine Learning</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>TensorFlow, PyTorch, NLP</span>
+                                            width: "max-content", 
+                                            animation: containerWidth ? `scrollSkills ${skills.length * 5}s linear infinite` : 'none'
+                                        }}
+                                    >
+                                        {/* First set of skills */}
+                                        <div ref={skillsContainerRef} className="skills-set" style={{display: "flex"}}>
+                                            {skills.map((skill, index) => renderSkillCard(skill, index))}
                                         </div>
                                         
-                                        {/* Duplicate first few skills for seamless looping */}
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/frontend.png" alt="Frontend Development" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Frontend Development</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>HTML, CSS, JavaScript, React</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/backend.png" alt="Backend Development" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Backend Development</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>Node.js, Python, Java, APIs</span>
-                                        </div>
-                                        <div className="tech-icon mx-4" style={{
-                                            display: "flex", 
-                                            flexDirection: "column", 
-                                            alignItems: "center", 
-                                            width: "180px",
-                                            backgroundColor: "#C0C0C0",
-                                            border: "2px solid #FFF",
-                                            borderRightColor: "#000",
-                                            borderBottomColor: "#000",
-                                            padding: "8px",
-                                            margin: "0 10px"
-                                        }}>
-                                            <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
-                                                <img src="../img/skills/database.png" alt="Database Management" style={{width: "64px", height: "64px", imageRendering: "pixelated"}} />
-                                            </div>
-                                            <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>Database Management</span>
-                                            <span style={{fontSize: "10px", textAlign: "center"}}>SQL, MongoDB, Redis, ORM</span>
+                                        {/* Second set of skills (duplicate for seamless loop) */}
+                                        <div className="skills-set" style={{display: "flex"}}>
+                                            {skills.map((skill, index) => renderSkillCard(skill, index + skills.length))}
                                         </div>
                                     </div>
                                 </div>
@@ -244,6 +131,14 @@ const SkillsetsDialog = () => {
                 </div>
             </div>
         </div>
+        
+        {/* CSS for animation */}
+        <style jsx>{`
+            @keyframes scrollSkills {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-${containerWidth}px); }
+            }
+        `}</style>
     </section>
   );
 };
