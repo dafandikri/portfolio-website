@@ -75,7 +75,7 @@ const TechStackDialog = () => {
                                 </div>
                                 <div className="card-body">
                                     <div className="mb-3">
-                                        <strong>Tech Stack and Tools:</strong>
+                                        <strong>My Tech Stack and Tools:</strong>
                                     </div>
                                     {/* Icon scrolling container */}
                                     <div 
