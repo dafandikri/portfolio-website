@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import ProfileCard from './components/ProfileCard'
 import TechStackDialog from './components/TechStackDialog'
 import SkillsetsDialog from './components/SkillsetsDialog'
+import Experience from './components/Experience'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <ProfileCard />
       <TechStackDialog />
       <SkillsetsDialog />
+      <Experience />
     </div>
   )
 }
