@@ -3,7 +3,7 @@ import '../styles/w95.css';
 
 // Import tech stack icons
 const importIcon = (iconName) => {
-    return `/src/assets/img/favicon/${iconName}.png`;
+  return `/src/assets/img/favicon/${iconName}.png`;
 };
 
 const TechStackDialog = () => {
@@ -58,67 +58,73 @@ const TechStackDialog = () => {
     
     return (
         <section className="section-sm">
-            <div className="my-5">
-                {/* Tech Stack Dialog */}
-                <div className="card card-tertiary">
-                    <div className="card-header d-flex justify-content-between align-items-center">
-                        <span>Tech Stack and Tools</span>
-                        <div>
-                            <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>━</button>
-                            <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>☐</button>
-                            <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>✖</button>
-                        </div>
-                    </div>
-                    <div className="card-body">
-                        <div className="mb-3">
-                            <strong>Tech Stack and Tools:</strong>
-                        </div>
-                        {/* Icon scrolling container */}
-                        <div 
-                            ref={scrollContainerRef}
-                            className="tech-stack-container" 
-                            style={{
-                                position: "relative", 
-                                overflow: "hidden", 
-                                height: "80px", 
-                                border: "1px solid #888", 
-                                borderRightColor: "#FFF", 
-                                borderBottomColor: "#FFF", 
-                                backgroundColor: "#FFF", 
-                                padding: "8px 0"
-                            }}
-                        >
-                            <div 
-                                className="tech-icons-wrapper"
-                                style={{
-                                    display: "flex", 
-                                    width: "max-content", 
-                                    animation: containerWidth ? `scrollTech ${techStack.length * 2}s linear infinite` : 'none'
-                                }}
-                            >
-                                {/* First set of icons */}
-                                <div ref={techIconsRef} className="tech-icons" style={{display: "flex"}}>
-                                    {renderTechIcons()}
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-12">
+                        <div className="my-5">
+                            {/* Tech Stack Dialog */}
+                            <div className="card card-tertiary">
+                                <div className="card-header d-flex justify-content-between align-items-center">
+                                    <span>Tech Stack and Tools</span>
+                                    <div>
+                                        <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>━</button>
+                                        <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>☐</button>
+                                        <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: "1", backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: "0"}}>✖</button>
+                                    </div>
                                 </div>
-                                
-                                {/* Second set of icons (duplicate for seamless loop) */}
-                                <div className="tech-icons" style={{display: "flex"}}>
-                                    {renderTechIcons()}
+                                <div className="card-body">
+                                    <div className="mb-3">
+                                        <strong>Tech Stack and Tools:</strong>
+                                    </div>
+                                    {/* Icon scrolling container */}
+                                    <div 
+                                        ref={scrollContainerRef}
+                                        className="tech-stack-container" 
+                                        style={{
+                                            position: "relative", 
+                                            overflow: "hidden", 
+                                            height: "80px", 
+                                            border: "1px solid #888", 
+                                            borderRightColor: "#FFF", 
+                                            borderBottomColor: "#FFF", 
+                                            backgroundColor: "#FFF", 
+                                            padding: "8px 0"
+                                        }}
+                                    >
+                                        <div 
+                                            className="tech-icons-wrapper"
+                                            style={{
+                                                display: "flex", 
+                                                width: "max-content", 
+                                                animation: containerWidth ? `scrollTech ${techStack.length * 2}s linear infinite` : 'none'
+                                            }}
+                                        >
+                                            {/* First set of icons */}
+                                            <div ref={techIconsRef} className="tech-icons" style={{display: "flex"}}>
+                                                {renderTechIcons()}
+                                            </div>
+                                            
+                                            {/* Second set of icons (duplicate for seamless loop) */}
+                                            <div className="tech-icons" style={{display: "flex"}}>
+                                                {renderTechIcons()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="d-flex justify-content-end mt-4">
+                                        <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
+                                            <span className="btn-text">View All</span>
+                                        </button>
+                                        <button className="btn btn-sm btn-primary" type="button">
+                                            <span className="btn-text">OK</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div className="d-flex justify-content-end mt-4">
-                            <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
-                                <span className="btn-text">View All</span>
-                            </button>
-                            <button className="btn btn-sm btn-primary" type="button">
-                                <span className="btn-text">OK</span>
-                            </button>
+                            {/* End of Tech Stack Dialog */}
                         </div>
                     </div>
                 </div>
-                {/* End of Tech Stack Dialog */}
             </div>
             
             {/* CSS for animation */}
