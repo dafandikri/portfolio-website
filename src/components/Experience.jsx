@@ -3,7 +3,7 @@ import '../styles/w95.css';
 
 // Import company logos helper
 const importCompanyLogo = (iconName) => {
-  return `/src/assets/img/favicon/${iconName}.png`;
+    return `/src/assets/img/favicon/${iconName}.png`;
 };
 
 const Experience = () => {
@@ -47,77 +47,77 @@ const Experience = () => {
 
     return (
         <section className="section-sm">
-                            {/* Welcome Dialog */}
-                            <div className="card card-tertiary mx-auto" style={{maxWidth: "550px"}}>
-                                {/* Dialog Title Bar */}
-                                <div className="card-header d-flex justify-content-between align-items-center">
-                                    <span>Experience</span>
-                                    <div>
-                                        <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>&#10006;</button>
+            {/* Welcome Dialog */}
+            <div className="card card-tertiary mx-auto" style={{maxWidth: "550px"}}>
+                {/* Dialog Title Bar */}
+                <div className="card-header d-flex justify-content-between align-items-center">
+                    <span>Experience</span>
+                    <div>
+                        <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>&#10006;</button>
+                    </div>
+                </div>
+                <div className="card-body">
+                    {/* Main Dialog Content */}
+                    <h5 className="text-center mb-4">Welcome to My Experience</h5>
+                    
+                    <div className="row">
+                        <div className="col-9">
+                            {/* Tip Box with Yellow Background */}
+                            <div id="experienceContent" className="p-3 mb-3" style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
+                                <div className="d-flex">
+                                    <div className="mr-3">
+                                        {/* Company Logo Icon that changes based on selected year */}
+                                        <div style={{width: "32px", height: "32px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
+                                            <img 
+                                                src={importCompanyLogo(experienceData[selectedYear].logo)} 
+                                                alt="Company Logo" 
+                                                style={{width: "24px", height: "24px", imageRendering: "pixelated"}} 
+                                            />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="card-body">
-                                    {/* Main Dialog Content */}
-                                    <h5 className="text-center mb-4">Welcome to My Experience</h5>
-                                    
-                                    <div className="row">
-                                        <div className="col-9">
-                                            {/* Tip Box with Yellow Background */}
-                                            <div id="experienceContent" className="p-3 mb-3" style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
-                                                <div className="d-flex">
-                                                    <div className="mr-3">
-                                                        {/* Company Logo Icon that changes based on selected year */}
-                                                        <div style={{width: "32px", height: "32px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
-                                                            <img 
-                                                                src={importCompanyLogo(experienceData[selectedYear].logo)} 
-                                                                alt="Company Logo" 
-                                                                style={{width: "24px", height: "24px", imageRendering: "pixelated"}} 
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <p className="mb-1"><strong style={{color: "#000080"}}>{experienceData[selectedYear].title}</strong></p>
-                                                        <p className="mb-0">{experienceData[selectedYear].description}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="form-check mb-2">
-                                                <label className="form-check-label">
-                                                    <input 
-                                                        className="form-check-input" 
-                                                        type="checkbox" 
-                                                        checked={showDialog}
-                                                        onChange={() => setShowDialog(!showDialog)}
-                                                    />
-                                                    <span className="form-check-x"></span>
-                                                    <span className="form-check-sign"></span>
-                                                    Show this dialog at startup
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="col-3 d-flex flex-column">
-                                        {/* Year Buttons */}
-                                        {Object.keys(experienceData).map(year => (
-                                            <button 
-                                                key={year}
-                                                className={`btn btn-primary mb-2 ${selectedYear === year ? 'active' : ''}`}
-                                                type="button"
-                                                onClick={() => handleYearClick(year)}
-                                            >
-                                                <span className="btn-text">{year}</span>
-                                            </button>
-                                        ))}
-                                            <div className="mt-auto">
-                                                <button className="btn btn-primary border-dark" type="button">
-                                                    <span className="btn-text">Close</span>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <p className="mb-1"><strong style={{color: "#000080"}}>{experienceData[selectedYear].title}</strong></p>
+                                        <p className="mb-0">{experienceData[selectedYear].description}</p>
                                     </div>
                                 </div>
                             </div>
-                            {/* End of Welcome Dialog */}
+                            
+                            <div className="form-check mb-2">
+                                <label className="form-check-label">
+                                    <input 
+                                        className="form-check-input" 
+                                        type="checkbox" 
+                                        checked={showDialog}
+                                        onChange={() => setShowDialog(!showDialog)}
+                                    />
+                                    <span className="form-check-x"></span>
+                                    <span className="form-check-sign"></span>
+                                    Show this dialog at startup
+                                </label>
+                            </div>
+                        </div>
+                        <div className="col-3 d-flex flex-column">
+                            {/* Year Buttons */}
+                            {Object.keys(experienceData).map(year => (
+                                <button 
+                                    key={year}
+                                    className={`btn btn-primary mb-2 ${selectedYear === year ? 'active' : ''}`}
+                                    type="button"
+                                    onClick={() => handleYearClick(year)}
+                                >
+                                    <span className="btn-text">{year}</span>
+                                </button>
+                            ))}
+                            <div className="mt-auto">
+                                <button className="btn btn-primary border-dark" type="button">
+                                    <span className="btn-text">Close</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* End of Welcome Dialog */}
         </section>
     );
 };
