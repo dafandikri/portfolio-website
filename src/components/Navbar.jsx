@@ -1,8 +1,22 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
 
+// Helper function to import icons
+const importIcon = (iconName) => {
+  return `/src/assets/img/favicon/${iconName}.png`;
+};
+
 const Navbar = () => {
     const [time, setTime] = useState('');
+    
+    // Navigation items with their respective icons and target sections
+    const navItems = [
+        { name: "Profile", icon: "user", target: "#profile" },
+        { name: "Tech Stack & Skills", icon: "code", target: "#tech-skills" },
+        { name: "Experience", icon: "briefcase", target: "#experience" },
+        { name: "Projects", icon: "folder", target: "#projects" },
+        { name: "Contact", icon: "envelope", target: "#contact" }
+    ];
     
     useEffect(() => {
         // Format time in AM/PM format
@@ -28,27 +42,52 @@ const Navbar = () => {
         return () => clearInterval(intervalId);
     }, []);
 
+    const iconStyle = {
+        width: "24px", 
+        height: "24px", 
+        imageRendering: "pixelated"
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark justify-content-between mb-3">
-            <ul className="navbar-nav navbar-nav-hover flex-row align-items-center">
-                <li className="nav-item">
-                    <a href="../index.html" className="nav-link" role="button">
-                        <span className="nav-link-inner-text">📺 Start</span>
-                    </a>
-                </li>
-                <li className="nav-item">
-                    <a href="../docs/introduction.html" className="nav-link"
-                        role="button">
-                        <span
-                            className="nav-link-inner-text">📕 Documentation</span>
-                    </a>
-                </li>
-            </ul>
+            {/* Time display on left */}
             <div className="time text-center">
                 <span className="text-uppercase">{time}</span>
             </div>
+            
+            {/* Center navigation links with icons */}
+            <ul className="navbar-nav mx-auto d-flex flex-row">
+                {navItems.map((item, index) => (
+                    <li key={index} className="nav-item mx-2">
+                        <a href={item.target} className="nav-link" title={item.name}>
+                            <img 
+                                src={importIcon(item.icon)} 
+                                alt={item.name} 
+                                style={iconStyle} 
+                            />
+                        </a>
+                    </li>
+                ))}
+            </ul>
+            
+            {/* LinkedIn link on right */}
+            <div>
+                <a 
+                    href="https://www.linkedin.com/in/erdafa-andikri-496b341b0" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="nav-link"
+                    title="Visit my LinkedIn profile"
+                >
+                    <img 
+                        src={importIcon("linkedin")} 
+                        alt="LinkedIn" 
+                        style={iconStyle} 
+                    />
+                </a>
+            </div>
         </nav>
-    )
+    );
 };
 
 export default Navbar;
