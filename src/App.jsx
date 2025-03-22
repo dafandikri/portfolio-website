@@ -13,8 +13,21 @@ function App() {
     <div>
       <Navbar />
       <ProfileCard />
-      <TechStackDialog />
-      <SkillsetsDialog />
+      
+      {/* Tech Stack and Skillsets side by side layout */}
+      <div id="tech-skills" className="section-sm">
+        <div className="container">
+          <div className="row">
+            <div className="col-lg-5">
+              <SkillsetsDialog />
+            </div>
+            <div className="col-lg-7">
+              <TechStackDialog />
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <Experience />
       <Project />
       <Contact />

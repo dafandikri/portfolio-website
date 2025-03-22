@@ -58,9 +58,9 @@ const TechStackDialog = () => {
     };
     
     return (
-        <section className="section-sm">
+        <div>
             {/* Tech Stack Dialog */}
-            <div className="card card-tertiary">
+            <div className="card card-tertiary h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Tech Stack and Tools</span>
                     <div>
@@ -126,7 +126,7 @@ const TechStackDialog = () => {
                     100% { transform: translateX(-${containerWidth}px); }
                 }
             `}</style>
-        </section>
+        </div>
     );
 };
 

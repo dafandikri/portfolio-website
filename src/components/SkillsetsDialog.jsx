@@ -62,9 +62,9 @@ const SkillsetsDialog = () => {
     );
 
     return (
-        <section className="section-sm">
+        <div>
             {/* Skillsets Dialog */}
-            <div className="card card-tertiary">
+            <div className="card card-tertiary h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Professional Skillsets</span>
                     <div>
@@ -75,16 +75,16 @@ const SkillsetsDialog = () => {
                 </div>
                 <div className="card-body">
                     <div className="mb-3">
-                        <strong>My Professional Skills:</strong>
+                        <strong>My Skills:</strong>
                     </div>
-                    {/* Skill categories scrolling container */}
+                    {/* Adjust height to make the content fit the card */}
                     <div 
                         ref={scrollContainerRef}
                         className="tech-stack-container" 
                         style={{
                             position: "relative", 
                             overflow: "hidden", 
-                            height: "170px", 
+                            height: "250px", 
                             border: "1px solid #888", 
                             borderRightColor: "#FFF", 
                             borderBottomColor: "#FFF", 
@@ -113,9 +113,6 @@ const SkillsetsDialog = () => {
                     </div>
                     
                     <div className="d-flex justify-content-end mt-4">
-                        <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
-                            <span className="btn-text">View Details</span>
-                        </button>
                         <button className="btn btn-sm btn-primary" type="button">
                             <span className="btn-text">OK</span>
                         </button>
@@ -123,7 +120,7 @@ const SkillsetsDialog = () => {
                 </div>
             </div>
             {/* End of Skillsets Dialog */}
-                
+            
             {/* CSS for animation */}
             <style jsx>{`
                 @keyframes scrollSkills {
@@ -131,7 +128,7 @@ const SkillsetsDialog = () => {
                     100% { transform: translateX(-${containerWidth}px); }
                 }
             `}</style>
-        </section>
+        </div>
     );
 };
 
