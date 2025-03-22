@@ -73,18 +73,18 @@ const SkillsetsDialog = () => {
                         <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>&#10006;</button>
                     </div>
                 </div>
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
                     <div className="mb-3">
                         <strong>My Skills:</strong>
                     </div>
-                    {/* Adjust height to make the content fit the card */}
+                    {/* Adjust height to match TechStackDialog */}
                     <div 
                         ref={scrollContainerRef}
-                        className="tech-stack-container" 
+                        className="tech-stack-container flex-grow-1" 
                         style={{
                             position: "relative", 
                             overflow: "hidden", 
-                            height: "250px", 
+                            height: "160px", // Matched height with TechStackDialog
                             border: "1px solid #888", 
                             borderRightColor: "#FFF", 
                             borderBottomColor: "#FFF", 
@@ -113,6 +113,9 @@ const SkillsetsDialog = () => {
                     </div>
                     
                     <div className="d-flex justify-content-end mt-4">
+                        <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
+                            <span className="btn-text">View Details</span>
+                        </button>
                         <button className="btn btn-sm btn-primary" type="button">
                             <span className="btn-text">OK</span>
                         </button>
