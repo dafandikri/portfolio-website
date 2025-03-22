@@ -1,0 +1,40 @@
+/* Windows 95 theme styling */
+
+.windows95-app {
+  font-family: 'Windows 95', sans-serif;
+  min-height: 100vh;
+}
+
+.desktop-background {
+  background-color: #008080; /* Classic Windows 95 teal background */
+  min-height: 100vh;
+  background-image: url('/src/assets/img/background.jpg'); /* Background image */
+  background-repeat: no-repeat;
+  background-size: cover; /* Make image cover the entire viewport */
+  background-position: center top; /* Position image at the top */
+  background-attachment: fixed; /* Keep the background fixed while scrolling */
+  padding-bottom: 2rem;
+}
+
+/* Add section IDs for scroll targeting */
+#profile, #tech-skills, #experience, #projects, #contact {
+  scroll-margin-top: 60px; /* Ensure anchor links don't hide content under navbar */
+}
+
+/* Container styles */
+.container {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+/* Section spacing */
+.section-sm {
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Make each component look like a floating window */
+.card {
+  margin-bottom: 1.5rem;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
