@@ -4,21 +4,26 @@ import profileImage from '/src/assets/img/profile.jpg'; // Import profile image
 
 const ProfileCard = () => {
     return (
-        <div className="col-12 col-lg-6 mb-4 mb-lg-0">
+        <div className="col-12 mb-4">
             <div className="card card-tertiary">
-                <div className="card-header">
+                <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Profile Card</span>
+                    <div>
+                        <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>━</button>
+                        <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>☐</button>
+                        <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>&#10006;</button>
+                    </div>
                 </div>
-                <div className="card-body">
-                    <div className="d-flex flex-row align-items-start">
-                        {/* Square image with Windows 95 border style */}
-                        <div className="mr-3" style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "4px", backgroundColor: "#C0C0C0"}}>
+                <div className="card-body" style={{position: "relative", paddingBottom: "70px"}}>
+                    <div className="d-flex flex-row align-items-center">
+                        {/* Larger square image with Windows 95 border style */}
+                        <div className="mr-4" style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "6px", backgroundColor: "#C0C0C0"}}>
                             {/* Use the imported image */}
-                            <img src={profileImage} alt="Profile Picture" style={{width: "150px", height: "150px", display: "block", objectFit: "cover"}} />
+                            <img src={profileImage} alt="Profile Picture" style={{width: "200px", height: "200px", display: "block", objectFit: "cover"}} />
                         </div>
-                        <div>
-                            <h5 className="mb-2">Erdafa Andikri</h5>
-                            <p className="card-text">
+                        <div style={{padding: "15px"}}>
+                            <h2 className="mb-3" style={{fontSize: "28px", fontWeight: "bold"}}>Erdafa Andikri</h2>
+                            <p className="card-text" style={{fontSize: "18px", lineHeight: "1.5"}}>
                                 An excellent Software Architect,
                                 a versatile Full-Stack Engineer,
                                 and to the core, a problem solver,
@@ -28,12 +33,25 @@ const ProfileCard = () => {
                             </p>
                         </div>
                     </div>
-                    <div className="d-flex mt-3 justify-content-end">
-                        <button className="btn btn-sm mr-2 btn-primary" type="button">
-                            <span className="btn-text">Contact</span>
-                        </button>
-                        <button className="btn btn-sm btn-primary border-dark" type="button">
-                            <span className="btn-text">View Profile</span>
+                    
+                    {/* Buttons positioned at bottom right - fixed sizing */}
+                    <div style={{
+                        position: "absolute", 
+                        bottom: "20px", 
+                        right: "20px",
+                    }}>
+                        <button 
+                            className="btn btn-primary border-dark" 
+                            type="button" 
+                            style={{
+                                fontSize: "14px", 
+                                padding: "6px 16px", 
+                                height: "auto",
+                                minHeight: "32px",
+                                lineHeight: "normal"
+                            }}
+                        >
+                            <span className="btn-text">Very Cool!</span>
                         </button>
                     </div>
                 </div>
