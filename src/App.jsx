@@ -5,6 +5,7 @@ import ProfileCard from './components/ProfileCard'
 import TechStackDialog from './components/TechStackDialog'
 import SkillsetsDialog from './components/SkillsetsDialog'
 import Experience from './components/Experience'
+import Project from './components/Project'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <TechStackDialog />
       <SkillsetsDialog />
       <Experience />
+      <Project />
     </div>
   )
 }
