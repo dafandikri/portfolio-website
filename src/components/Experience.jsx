@@ -12,7 +12,7 @@ const Experience = () => {
         "2024": {
             title: "IT Developer Intern - PT International Biometrics Indonesia",
             description: "Successfully developed and updated the company's official website using WordPress, achieving significant improvements in functionality and user experience.",
-            logo: "wordpress"
+            logo: "interbio"
         },
         "2023": {
             title: "Java Developer - CodeCrafters Inc.",
