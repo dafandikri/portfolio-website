@@ -7,6 +7,7 @@ import SkillsetsDialog from './components/SkillsetsDialog'
 import Experience from './components/Experience'
 import Project from './components/Project'
 import Contact from './components/Contact'
+import KnowEachOther from './components/KnowEachOther'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <div id="profile">
             <ProfileCard />
           </div>
+          <KnowEachOther />
           
           {/* Tech Stack and Skillsets side by side layout */}
           <div id="tech-skills" className="section-sm">

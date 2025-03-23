@@ -38,3 +38,67 @@
   margin-bottom: 1.5rem;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
+
+/* Word Processor Styling */
+.word-processor {
+  background-color: #ffffff;
+  position: relative;
+}
+
+.toolbar, .formatting-bar {
+  background-color: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  font-size: 0.7rem;
+}
+
+.toolbar span, .formatting-bar span {
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 0 5px;
+}
+
+.toolbar span:hover, .formatting-bar span:hover {
+  background-color: #000080;
+  color: white;
+}
+
+.text-content {
+  background-color: #ffffff;
+  height: 200px;
+  border: 1px solid #808080;
+  overflow-y: auto;
+}
+
+.typing-text {
+  font-size: 1.5rem;
+  font-family: "Windows 95", sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+}
+
+.cursor {
+  font-weight: normal;
+  animation: blink 1s step-end infinite;
+}
+
+.cursor.visible {
+  opacity: 1;
+}
+
+.cursor.invisible {
+  opacity: 0;
+}
+
+@keyframes blink {
+  from, to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
