@@ -20,8 +20,17 @@ function App() {
           </div>
           <KnowEachOther />
           
-          {/* Tech Stack and Skillsets side by side layout */}
+          {/* Tech Stack and Skillsets section with title */}
           <div id="tech-skills" className="section-sm">
+            {/* Enhanced title with shadow for better contrast */}
+            <h2 className="mb-4 text-white" style={{
+              textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+              fontWeight: "bold",
+              letterSpacing: "1px"
+            }}>
+              Skills & Technologies
+            </h2>
+            
             <div className="row">
               <div className="col-lg-5">
                 <SkillsetsDialog />

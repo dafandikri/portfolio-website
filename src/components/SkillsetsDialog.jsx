@@ -13,14 +13,14 @@ const SkillsetsDialog = () => {
     
     // Define skills data
     const skills = [
-        { name: "Frontend Development", icon: "frontend", skills: "HTML, CSS, JavaScript, React, WordPress" },
-        { name: "Backend Development", icon: "backend", skills: "Node.js, Python, Java, APIs" },
-        { name: "Database Management", icon: "database", skills: "SQL, MongoDB, Redis, ORM" },
-        { name: "Mobile Development", icon: "mobile", skills: "Flutter, React Native" },
-        { name: "UI/UX Design", icon: "design", skills: "Figma, Adobe XD, Wireframing" },
-        { name: "DevOps", icon: "devops", skills: "CI/CD, Docker, Git, AWS" },
-        { name: "Project Management", icon: "management", skills: "Agile, Scrum, JIRA, Leadership" },
-        { name: "AI & Machine Learning", icon: "ai", skills: "TensorFlow, PyTorch, NLP" },
+        { name: "Frontend Development", icon: "frontend" },
+        { name: "Backend Development", icon: "backend" },
+        { name: "Database Management", icon: "database" },
+        { name: "Mobile Development", icon: "mobile" },
+        { name: "UI/UX Design", icon: "design" },
+        { name: "DevOps", icon: "devops" },
+        { name: "Project Management", icon: "management" },
+        { name: "AI & Machine Learning", icon: "ai" },
     ];
     
     // Measure the width of the skills container for the animation
@@ -57,7 +57,6 @@ const SkillsetsDialog = () => {
                 />
             </div>
             <span style={{fontSize: "12px", textAlign: "center", fontWeight: "bold"}}>{skill.name}</span>
-            <span style={{fontSize: "10px", textAlign: "center"}}>{skill.skills}</span>
         </div>
     );
 
@@ -89,7 +88,9 @@ const SkillsetsDialog = () => {
                             borderRightColor: "#FFF", 
                             borderBottomColor: "#FFF", 
                             backgroundColor: "#FFF", 
-                            padding: "8px 0"
+                            padding: "16px 0", // Consistent padding
+                            display: "flex",
+                            alignItems: "center" // Center content vertically
                         }}
                     >
                         <div 

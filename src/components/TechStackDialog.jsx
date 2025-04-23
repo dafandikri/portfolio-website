@@ -90,17 +90,20 @@ const TechStackDialog = () => {
                         style={{
                             position: "relative", 
                             overflow: "hidden", 
-                            height: "160px", // Increased height to accommodate two rows
+                            height: "160px",
                             border: "1px solid #888", 
                             borderRightColor: "#FFF", 
                             borderBottomColor: "#FFF", 
                             backgroundColor: "#FFF", 
-                            padding: "8px 0"
+                            padding: "4px 0", // Consistent padding
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-around" // Distribute space evenly
                         }}
                     >
                         {/* First row - left to right */}
                         <div 
-                            className="tech-icons-wrapper mb-3"
+                            className="tech-icons-wrapper"
                             style={{
                                 display: "flex", 
                                 width: "max-content", 
