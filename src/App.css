@@ -8,11 +8,6 @@
 .desktop-background {
   background-color: #008080; /* Classic Windows 95 teal background */
   min-height: 100vh;
-  background-image: url('/src/assets/img/background.jpg'); /* Background image */
-  background-repeat: no-repeat;
-  background-size: cover; /* Make image cover the entire viewport */
-  background-position: center top; /* Position image at the top */
-  background-attachment: fixed; /* Keep the background fixed while scrolling */
   padding-bottom: 2rem;
 }
 

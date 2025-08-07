@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
-
-// Helper function to import icons
-const importIcon = (iconName) => {
-  return `/src/assets/img/favicon/${iconName}.png`;
-};
+import { getIcon } from '../assets';
 
 const Navbar = () => {
     const [time, setTime] = useState('');
@@ -102,7 +98,7 @@ const Navbar = () => {
                                     }}
                                 >
                                     <img 
-                                        src={importIcon(item.icon)} 
+                                        src={getIcon(item.icon)} 
                                         alt={item.name} 
                                         style={iconStyle} 
                                     />
@@ -133,7 +129,7 @@ const Navbar = () => {
                         }}
                     >
                         <img 
-                            src={importIcon("linkedin")} 
+                            src={getIcon("linkedin")} 
                             alt="LinkedIn" 
                             style={iconStyle} 
                         />

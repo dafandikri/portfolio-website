@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
-import profileImage from '/src/assets/img/profile.jpg'; // Import profile image
+import { getImage } from '../assets';
 
 const ProfileCard = () => {
     return (
@@ -18,8 +18,8 @@ const ProfileCard = () => {
                     <div className="d-flex flex-row align-items-center">
                         {/* Larger square image with Windows 95 border style */}
                         <div className="mr-4" style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "6px", backgroundColor: "#C0C0C0"}}>
-                            {/* Use the imported image */}
-                            <img src={profileImage} alt="Profile Picture" style={{width: "200px", height: "200px", display: "block", objectFit: "cover"}} />
+                            {/* Use the proper asset import */}
+                            <img src={getImage("profile")} alt="Profile Picture" style={{width: "200px", height: "200px", display: "block", objectFit: "cover"}} />
                         </div>
                         <div style={{padding: "15px"}}>
                             <h2 className="mb-3" style={{fontSize: "28px", fontWeight: "bold"}}>Erdafa Andikri</h2>

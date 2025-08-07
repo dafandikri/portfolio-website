@@ -8,29 +8,36 @@ import Experience from './components/Experience'
 import Project from './components/Project'
 import Contact from './components/Contact'
 import KnowEachOther from './components/KnowEachOther'
+import { getImage } from './assets'
 
 function App() {
   return (
     <div className="windows95-app">
-      <div className="desktop-background">
+      <div className="desktop-background" style={{
+        backgroundImage: `url(${getImage("background")})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundAttachment: 'fixed'
+      }}>
         <Navbar />
-        <div className="container py-2"> {/* Reduced padding from py-4 to py-2 */}
-          <div id="profile" className="mb-2"> {/* Added margin-bottom to reduce space after profile */}
+        <div className="container py-2">
+          <div id="profile" className="mb-2">
             <ProfileCard />
           </div>
           
-          <div className="mb-2"> {/* Added margin-bottom to reduce space after KnowEachOther */}
+          <div className="mb-2">
             <KnowEachOther />
           </div>
           
           {/* Tech Stack and Skillsets section with title */}
-          <div id="tech-skills" className="mb-5"> {/* Changed from mb-4 to mb-5 for even more space */}
+          <div id="tech-skills" className="mb-5">
             {/* Enhanced title with shadow for better contrast */}
-            <h2 className="mb-3 text-white" style={{ /* Reduced from mb-4 to mb-3 */
+            <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
               fontWeight: "bold",
               letterSpacing: "1px",
-              fontSize: "1.8rem" /* Slightly smaller font size */
+              fontSize: "1.8rem"
             }}>
               Skills & Technologies
             </h2>
@@ -45,13 +52,13 @@ function App() {
             </div>
           </div>
           
-          <div id="experience" className="mb-3"> {/* Changed from mt-4 to mb-3 */}
+          <div id="experience" className="mb-5">
             {/* Enhanced title with shadow for better contrast */}
-            <h2 className="mb-3 text-white" style={{ /* Reduced from mb-4 to mb-3 */
+            <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
               fontWeight: "bold",
               letterSpacing: "1px",
-              fontSize: "1.8rem" /* Slightly smaller font size */
+              fontSize: "1.8rem"
             }}>
               Experience
             </h2>
@@ -62,11 +69,29 @@ function App() {
             </div>
           </div>
           
-          <div id="projects" className="mb-3"> {/* Changed from mt-4 to mb-3 */}
+          <div id="projects" className="mb-5">
+            {/* Added Projects title with consistent styling */}
+            <h2 className="mb-3 text-white" style={{
+              textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+              fontWeight: "bold",
+              letterSpacing: "1px",
+              fontSize: "1.8rem"
+            }}>
+              Projects
+            </h2>
             <Project />
           </div>
           
-          <div id="contact"> {/* Removed mt-4 as it's the last element */}
+          <div id="contact">
+            {/* Added Contact Me title with consistent styling and small spacing */}
+            <h2 className="mb-3 text-white" style={{
+              textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+              fontWeight: "bold",
+              letterSpacing: "1px",
+              fontSize: "1.8rem"
+            }}>
+              Contact Me
+            </h2>
             <Contact />
           </div>
         </div>

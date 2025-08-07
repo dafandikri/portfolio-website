@@ -3,61 +3,80 @@ import '../styles/w95.css';
 import { getImage, getIcon } from '../assets';
 
 const Project = () => {
-    // Expanded project data with multiple projects
+    // Updated project data based on CV
     const projects = [
         {
-            title: "Portfolio Website",
-            description: "Personal portfolio website, showcasing skills, experiences, and projects. Contents are to be updated regularly. Future update will showcase achievements section, certifications section, and some other cool stuff.",
+            title: "JagaRaga",
+            year: "2025",
+            description: "A comprehensive health and wellness application designed through an end-to-end HCI cycle. Focused on translating complex health needs of office workers and students into an intuitive digital solution through extensive user research and data-driven design.",
             image: "interbio_project",
             features: [
-                "Responsive design with Bootstrap framework",
-                "Windows 95 aesthetic with modern functionality",
-                "Interactive elements using JavaScript",
-                "Showcases projects, skills, and experience"
+                "End-to-end HCI cycle implementation with Value Proposition Canvas",
+                "25+ qualitative insights consolidated into actionable design requirements",
+                "High-fidelity Figma prototype with iterative usability testing",
+                "System Usability Scale improved to 68.67 (Good rating)"
             ],
-            techStack: ["javascript", "react"],
+            techStack: ["figma", "react", "javascript"],
             liveLink: "#",
             repoLink: "#"
         },
         {
-            title: "Bikun Tracker Bot",
-            description: "A comprehensive bus tracking system with real-time notifications and web interface. Features automated tracking, location updates, and user notifications for bus arrival times.",
-            image: "interbio_project", // Using same image for now
+            title: "Interbio.id Website",
+            year: "2024",
+            description: "Complete redesign and relaunch of interbio.id on WordPress for PT International Biometrics Indonesia. Modernized UI, streamlined navigation, and implemented enterprise-grade security standards while creating a modular CMS workflow for non-technical staff.",
+            image: "interbio_project",
             features: [
-                "Real-time bus location tracking",
-                "Automated notification system",
-                "Web interface with interactive maps",
-                "Flask backend with Python automation"
+                "Full website redesign and relaunch on WordPress platform",
+                "Modern UI with streamlined navigation for enhanced user engagement",
+                "ISO 27001 compliance with SSL/TLS security implementation",
+                "Modular CMS workflow training for non-technical staff (2x PR efficiency increase)"
             ],
-            techStack: ["python", "javascript", "react", "github"],
+            techStack: ["wordpress", "figma", "github"],
+            liveLink: "https://interbio.id",
+            repoLink: "#"
+        },
+        {
+            title: "Solemates",
+            year: "2025",
+            description: "A secure Django-based e-commerce website for shoe retail built as part of Security-Driven Software Development course. Implemented OWASP Top 10 principles and secure coding practices, successfully passing independent penetration testing.",
+            image: "interbio_project",
+            features: [
+                "Django-based e-commerce platform with security focus",
+                "OWASP Top 10 security principles implementation",
+                "Kubernetes deployment to Fakultas Ilmu Komputer UI server",
+                "Secure DevOps practices with SSH configuration and infrastructure hardening"
+            ],
+            techStack: ["python", "django", "docker", "github"],
             liveLink: "#",
             repoLink: "#"
         },
         {
-            title: "Kementrans Bot",
-            description: "Data extraction and processing bot for government transportation data. Automates data collection, processing, and CSV export functionality with scheduled operations.",
-            image: "interbio_project", // Using same image for now
+            title: "GeoBikunAlert",
+            year: "2024",
+            description: "An intelligent notification bot that revolutionizes campus transportation. Automatically tracks Bikun bus locations, converts data to GPS coordinates, and sends proximity alerts via Apple's API, improving commuting efficiency for 3000+ students and professors by 200%.",
+            image: "interbio_project",
             features: [
-                "Automated data extraction from PDFs",
-                "CSV export functionality",
-                "Scheduled data processing",
-                "Google Sheets integration"
+                "Real-time bus location scraping from bikun.ui.ac.id",
+                "GPS coordinate conversion and proximity detection (100m radius)",
+                "Apple API integration for seamless notifications",
+                "200% improvement in commuting efficiency for 3000+ users"
             ],
-            techStack: ["python", "django", "github", "javascript"],
+            techStack: ["python", "javascript", "github"],
             liveLink: "#",
             repoLink: "#"
         },
         {
-            title: "SCELE Bot",
-            description: "Educational platform automation bot for course management and student interaction. Streamlines administrative tasks and improves learning experience.",
-            image: "interbio_project", // Using same image for now
+            title: "DepeFood",
+            year: "2024",
+            description: "A comprehensive food ordering platform built with JavaFX, featuring dual interfaces for administrators and customers. Streamlined restaurant management for admins while providing seamless ordering experience for customers.",
+            image: "interbio_project",
             features: [
-                "Course management automation",
-                "Student interaction handling",
-                "Assignment tracking",
-                "Notification system"
+                "JavaFX-based food ordering system",
+                "Dual interface design for admins and customers",
+                "Restaurant management and order processing features",
+                "25% improvement in user satisfaction ratings"
             ],
-            techStack: ["python", "selenium", "react", "github"],
+            techStack: ["java", "github"],
             liveLink: "#",
             repoLink: "#"
         }
@@ -97,7 +116,12 @@ const Project = () => {
                     <span className="btn-text">← Previous</span>
                 </button>
                 
-                <span style={{fontSize: "0.9rem", color: "#000"}}>
+                <span style={{
+                    fontSize: "0.9rem", 
+                    color: "white",
+                    textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+                    fontWeight: "bold"
+                }}>
                     Page {currentIndex + 1} of {totalPages}
                 </span>
                 
@@ -116,7 +140,7 @@ const Project = () => {
                     <div key={currentIndex * projectsPerPage + index} className="col-lg-6 mb-4">
                         <div className="card card-tertiary h-100 overflow-hidden">
                             <div className="card-header d-flex justify-content-between align-items-center">
-                                <span>{project.title}</span>
+                                <span>{project.title} ({project.year})</span>
                                 <div>
                                     <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>━</button>
                                     <button className="btn btn-sm mr-1" style={{width: "16px", height: "16px", fontSize: "12px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>☐</button>
@@ -131,7 +155,25 @@ const Project = () => {
                                             <div>
                                                 {/* Project Screenshot with Windows 95 border */}
                                                 <div style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", backgroundColor: "#FFFFFF", padding: "3px", marginBottom: "10px"}}>
-                                                    <img src={getImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
+                                                    {project.title === "Interbio.id Website" ? (
+                                                        <img src={getImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
+                                                    ) : (
+                                                        <div style={{
+                                                            display: "flex", 
+                                                            flexDirection: "column", 
+                                                            alignItems: "center", 
+                                                            justifyContent: "center", 
+                                                            height: "120px", 
+                                                            backgroundColor: "#f5f5f5",
+                                                            color: "#666",
+                                                            fontSize: "14px",
+                                                            fontFamily: "'Windows 95', 'MS Sans Serif', monospace"
+                                                        }}>
+                                                            <div style={{fontSize: "30px", marginBottom: "8px"}}>☹️</div>
+                                                            <div style={{fontWeight: "bold", fontSize: "16px"}}>Coming Soon</div>
+                                                            <div style={{fontSize: "12px", marginTop: "4px"}}>Screenshot in progress</div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 
                                                 {/* Tech Stack Icons */}
@@ -170,7 +212,7 @@ const Project = () => {
                                             
                                             <div className="d-flex mt-auto">
                                                 <a href={project.liveLink} className="btn btn-sm mr-2 btn-primary border-dark" target="_blank" rel="noopener noreferrer">
-                                                    <span className="btn-text">View Website</span>
+                                                    <span className="btn-text">View Project</span>
                                                 </a>
                                                 <a href={project.repoLink} className="btn btn-sm btn-primary" target="_blank" rel="noopener noreferrer">
                                                     <span className="btn-text">GitHub Repo</span>

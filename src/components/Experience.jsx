@@ -3,43 +3,43 @@ import '../styles/w95.css';
 import { getIcon } from '../assets';
 
 const Experience = () => {
-    // Experience data by year
+    // Experience data by year - Updated with real CV experience
     const experienceData = {
         "2025": {
-            title: "Intern - Kementerian Transmigrasi Republik Indonesia",
+            title: "Intern - Kementerian Transmigrasi",
             date: "July 2025 - August 2025",
-            description: "Successfully developed and updated the company's official website using WordPress, achieving significant improvements in functionality and user experience.",
+            description: "Researched national regulations on Electronic-Based Government Systems (SPBE) including Presidential Regulation No. 95/2018 and Ministry of Administrative Reform guidelines to assess their impact on digital services at the Ministry of Transmigration.",
+            achievements: [
+                "Automated certificate design process using programming skills, increasing output efficiency by 4x",
+                "Eliminated the need for manual formatting through automation",
+                "Assisted Strategic Planning Training Team with participant registration and session flow",
+                "Supported more than 20 employees in training activities"
+            ],
             logo: "kementrans"
         },
         "2024": {
             title: "IT Developer Intern - PT International Biometrics Indonesia",
             date: "June 2024 - August 2024",
-            description: "Successfully developed and updated the company's official website using WordPress, achieving significant improvements in functionality and user experience.",
+            description: "Redesigned and relaunched interbio.id on WordPress, modernizing UI and streamlining navigation to elevate user engagement and brand credibility.",
+            achievements: [
+                "Passed ISO 27001 standards test implementing SSL/TLS best practices",
+                "Passed independent penetration test with 0 critical vulnerabilities",
+                "Configured modular CMS workflow and trained communications team",
+                "Empowered non-technical staff to publish content, resulting in 2x increase in PR efforts"
+            ],
             logo: "interbio"
         },
         "2023": {
-            title: "Java Developer - CodeCrafters Inc.",
-            date: "March 2023 - November 2023",
-            description: "Developed enterprise Java applications utilizing Spring Boot, implementing RESTful APIs and microservices architecture.",
-            logo: "java"
-        },
-        "2022": {
-            title: "Frontend Developer - Web Solutions Ltd",
-            date: "August 2022 - February 2023",
-            description: "Built responsive web applications using React.js, collaborating with design and backend teams to deliver seamless user experiences.",
-            logo: "react"
-        },
-        "2021": {
-            title: "Software Engineering Intern - Tech Innovators",
-            date: "May 2021 - July 2022",
-            description: "Contributed to open-source projects and gained practical experience in version control and collaborative development.",
-            logo: "github"
-        },
-        "2020": {
-            title: "Web Development Assistant - Digital Creators",
-            date: "September 2020 - April 2021",
-            description: "Assisted in developing interactive web applications with JavaScript and jQuery, focusing on client-side functionality.",
-            logo: "javascript"
+            title: "Mentee at RISTEK OpenClass Data Science - RISTEK Fasilkom UI",
+            date: "2023",
+            description: "Deepened understanding of Data Management for its applications in AI and Machine Learning Development, taught by an industry expert Data Scientist at Tiket.com.",
+            achievements: [
+                "Gained comprehensive knowledge in data management principles",
+                "Learned AI and Machine Learning development applications",
+                "Received mentorship from industry expert at Tiket.com",
+                "Enhanced technical skills in data science methodologies"
+            ],
+            logo: "python"
         }
     };
 
@@ -99,8 +99,18 @@ const Experience = () => {
                                     </div>
                                     <div style={{flex: 1}}>
                                         <p className="mb-2"><strong style={{color: "#000080", fontSize: "1.1rem"}}>{experienceData[selectedYear].title}</strong></p>
-                                        <p className="mb-1" style={{fontSize: "0.9rem", lineHeight: "1.4", color: "#555"}}>{experienceData[selectedYear].date}</p>
-                                        <p className="mb-0" style={{fontSize: "1rem", lineHeight: "1.4"}}>{experienceData[selectedYear].description}</p>
+                                        <p className="mb-2" style={{fontSize: "0.9rem", lineHeight: "1.4", color: "#555"}}>{experienceData[selectedYear].date}</p>
+                                        <p className="mb-3" style={{fontSize: "1rem", lineHeight: "1.4"}}>{experienceData[selectedYear].description}</p>
+                                        
+                                        {/* Key Achievements */}
+                                        <div>
+                                            <p className="mb-2" style={{fontSize: "0.95rem", fontWeight: "bold", color: "#000080"}}>Key Achievements:</p>
+                                            <ul className="mb-0" style={{fontSize: "0.9rem", lineHeight: "1.3", paddingLeft: "20px"}}>
+                                                {experienceData[selectedYear].achievements.map((achievement, index) => (
+                                                    <li key={index} className="mb-1">{achievement}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

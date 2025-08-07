@@ -4,9 +4,9 @@ import { getImage, getIcon } from '../assets';
 
 const Contact = () => {
     return (
-        <section className="section-sm">
-            {/* MSN-inspired Contact Dialog */}
-            <div className="card card-tertiary" style={{marginBottom: "50px"}}>
+        <div>
+            {/* MSN-inspired Contact Dialog - removed section wrapper and reduced margin */}
+            <div className="card card-tertiary" style={{marginBottom: "0px"}}>
                 {/* Dialog Title Bar */}
                 <div className="card-header d-flex justify-content-between align-items-center" style={{backgroundColor: "#000080", color: "white", overflow: "hidden"}}>
                     <span>Contact Me</span>
@@ -60,28 +60,40 @@ const Contact = () => {
                                     
                                     <div className="row">
                                         <div className="col-md-6">
-                                            {/* Primary contact methods (emphasized) */}
+                                            {/* Primary contact methods with icons */}
                                             <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#eee", padding: "6px 10px"}}>
-                                                <strong style={{width: "70px"}}>Email:</strong>
-                                                <a href="mailto:dafandikri@gmail.com" className="text-primary" style={{fontSize: "12px", wordBreak: "break-word"}}>dafandikri@gmail.com</a>
+                                                <div className="d-flex align-items-center" style={{width: "90px", minWidth: "90px"}}>
+                                                    <img src={getIcon("gmail")} alt="Email" width="16" height="16" style={{marginRight: "5px"}} />
+                                                    <strong style={{fontSize: "12px"}}>Email:</strong>
+                                                </div>
+                                                <a href="mailto:dafandikri@gmail.com" className="text-primary" style={{fontSize: "12px", wordBreak: "break-word", marginLeft: "8px"}}>dafandikri@gmail.com</a>
                                             </div>
                                             
                                             <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#eee", padding: "6px 10px"}}>
-                                                <strong style={{width: "70px"}}>LinkedIn:</strong>
-                                                <a href="https://linkedin.com/in/dafandikri" className="text-primary" style={{fontSize: "12px"}}>linkedin.com/in/dafandikri</a>
+                                                <div className="d-flex align-items-center" style={{width: "90px", minWidth: "90px"}}>
+                                                    <img src={getIcon("linkedin")} alt="LinkedIn" width="16" height="16" style={{marginRight: "5px"}} />
+                                                    <strong style={{fontSize: "12px"}}>LinkedIn:</strong>
+                                                </div>
+                                                <a href="https://linkedin.com/in/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "8px"}}>linkedin.com/in/dafandikri</a>
                                             </div>
                                         </div>
                                         
                                         <div className="col-md-6">
-                                            {/* Secondary contact methods */}
-                                            <div className="d-flex align-items-center mb-2" style={{padding: "6px 10px", border: "1px solid transparent"}}>
-                                                <strong style={{width: "70px"}}>GitHub:</strong>
-                                                <a href="https://github.com/dafandikri" className="text-secondary" style={{fontSize: "12px"}}>github.com/dafandikri</a>
+                                            {/* Secondary contact methods with icons - made more prominent */}
+                                            <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#f5f5f5", padding: "6px 12px"}}>
+                                                <div className="d-flex align-items-center" style={{width: "100px", minWidth: "100px"}}>
+                                                    <img src={getIcon("github")} alt="GitHub" width="16" height="16" style={{marginRight: "6px", imageRendering: "pixelated"}} />
+                                                    <strong style={{fontSize: "12px"}}>GitHub:</strong>
+                                                </div>
+                                                <a href="https://github.com/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "10px"}}>github.com/dafandikri</a>
                                             </div>
                                             
-                                            <div className="d-flex align-items-center" style={{padding: "6px 10px", border: "1px solid transparent"}}>
-                                                <strong style={{width: "70px"}}>Instagram:</strong>
-                                                <a href="https://instagram.com/dafandikri" className="text-secondary" style={{fontSize: "12px"}}>@dafandikri</a>
+                                            <div className="d-flex align-items-center" style={{border: "1px solid #888", background: "#f5f5f5", padding: "6px 12px"}}>
+                                                <div className="d-flex align-items-center" style={{width: "100px", minWidth: "100px"}}>
+                                                    <img src={getIcon("instagram")} alt="Instagram" width="16" height="16" style={{marginRight: "6px", imageRendering: "pixelated"}} />
+                                                    <strong style={{fontSize: "12px"}}>Instagram:</strong>
+                                                </div>
+                                                <a href="https://instagram.com/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "10px"}}>@dafandikri</a>
                                             </div>
                                         </div>
                                     </div>
@@ -115,7 +127,7 @@ const Contact = () => {
                 </div>
             </div>
             {/* End of MSN-inspired Contact Dialog */}
-        </section>
+        </div>
     );
 };
 

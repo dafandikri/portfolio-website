@@ -16,8 +16,10 @@ import flutterIcon from './img/favicon/flutter.png';
 import folderIcon from './img/favicon/folder.png';
 import geminiIcon from './img/favicon/gemini.png';
 import githubIcon from './img/favicon/github.png';
+import gmailIcon from './img/favicon/gmail.png';
 import gptIcon from './img/favicon/gpt.png';
 import ijIcon from './img/favicon/ij.png';
+import instagramIcon from './img/favicon/instagram.png';
 import interbioIcon from './img/favicon/interbio.png';
 import javaIcon from './img/favicon/java.png';
 import javascriptIcon from './img/favicon/javascript.png';
@@ -63,8 +65,10 @@ export const icons = {
   folder: folderIcon,
   gemini: geminiIcon,
   github: githubIcon,
+  gmail: gmailIcon,
   gpt: gptIcon,
   ij: ijIcon,
+  instagram: instagramIcon,
   interbio: interbioIcon,
   java: javaIcon,
   javascript: javascriptIcon,
