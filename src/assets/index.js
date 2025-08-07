@@ -33,6 +33,16 @@ import userIcon from './img/favicon/user.png';
 import vscIcon from './img/favicon/vsc.png';
 import wordpressIcon from './img/favicon/wordpress.png';
 
+// Import skill icons
+import aiSkill from './img/skills/ai.png';
+import backendSkill from './img/skills/backend.png';
+import databaseSkill from './img/skills/database.png';
+import designSkill from './img/skills/design.png';
+import devopsSkill from './img/skills/devops.png';
+import frontendSkill from './img/skills/frontend.png';
+import managementSkill from './img/skills/management.png';
+import mobileSkill from './img/skills/mobile.png';
+
 // Create mapping objects for easy access
 export const images = {
   profile: profileImg,
@@ -71,6 +81,18 @@ export const icons = {
   wordpress: wordpressIcon
 };
 
+export const skills = {
+  ai: aiSkill,
+  backend: backendSkill,
+  database: databaseSkill,
+  design: designSkill,
+  devops: devopsSkill,
+  frontend: frontendSkill,
+  management: managementSkill,
+  mobile: mobileSkill
+};
+
 // Helper functions for components
 export const getImage = (imageName) => images[imageName];
 export const getIcon = (iconName) => icons[iconName];
+export const getSkill = (skillName) => skills[skillName];

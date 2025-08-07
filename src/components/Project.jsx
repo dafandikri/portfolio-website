@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
-
-// Helper function to import project images
-const importProjectImage = (imageName) => {
-  return `/src/assets/img/${imageName}.png`;
-};
-
-// Helper function to import tech stack icons
-const importTechIcon = (iconName) => {
-    return `/src/assets/img/favicon/${iconName}.png`;
-};
+import { getImage, getIcon } from '../assets';
 
 const Project = () => {
     // Expanded project data with multiple projects
@@ -31,42 +22,42 @@ const Project = () => {
         {
             title: "Bikun Tracker Bot",
             description: "A comprehensive bus tracking system with real-time notifications and web interface. Features automated tracking, location updates, and user notifications for bus arrival times.",
-            image: "portfolioweb", // Using same image for now
+            image: "interbio_project", // Using same image for now
             features: [
                 "Real-time bus location tracking",
                 "Automated notification system",
                 "Web interface with interactive maps",
                 "Flask backend with Python automation"
             ],
-            techStack: ["python", "javascript", "html", "css"],
+            techStack: ["python", "javascript", "react", "github"],
             liveLink: "#",
             repoLink: "#"
         },
         {
             title: "Kementrans Bot",
             description: "Data extraction and processing bot for government transportation data. Automates data collection, processing, and CSV export functionality with scheduled operations.",
-            image: "portfolioweb", // Using same image for now
+            image: "interbio_project", // Using same image for now
             features: [
                 "Automated data extraction from PDFs",
                 "CSV export functionality",
                 "Scheduled data processing",
                 "Google Sheets integration"
             ],
-            techStack: ["python", "csv", "github", "javascript"],
+            techStack: ["python", "django", "github", "javascript"],
             liveLink: "#",
             repoLink: "#"
         },
         {
             title: "SCELE Bot",
             description: "Educational platform automation bot for course management and student interaction. Streamlines administrative tasks and improves learning experience.",
-            image: "portfolioweb", // Using same image for now
+            image: "interbio_project", // Using same image for now
             features: [
                 "Course management automation",
                 "Student interaction handling",
                 "Assignment tracking",
                 "Notification system"
             ],
-            techStack: ["python", "bootstrap", "html", "css"],
+            techStack: ["python", "selenium", "react", "github"],
             liveLink: "#",
             repoLink: "#"
         }
@@ -140,7 +131,7 @@ const Project = () => {
                                             <div>
                                                 {/* Project Screenshot with Windows 95 border */}
                                                 <div style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", backgroundColor: "#FFFFFF", padding: "3px", marginBottom: "10px"}}>
-                                                    <img src={importProjectImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
+                                                    <img src={getImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
                                                 </div>
                                                 
                                                 {/* Tech Stack Icons */}
@@ -152,7 +143,7 @@ const Project = () => {
                                                             style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "2px", backgroundColor: "#C0C0C0", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center"}}
                                                         >
                                                             <img 
-                                                                src={importTechIcon(tech)} 
+                                                                src={getIcon(tech)} 
                                                                 alt={tech} 
                                                                 width="20" 
                                                                 height="20" 

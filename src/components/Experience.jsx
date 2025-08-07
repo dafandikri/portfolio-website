@@ -1,10 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
-
-// Import company logos helper
-const importCompanyLogo = (iconName) => {
-    return `/src/assets/img/favicon/${iconName}.png`;
-};
+import { getIcon } from '../assets';
 
 const Experience = () => {
     // Experience data by year
@@ -95,7 +91,7 @@ const Experience = () => {
                                         {/* Company Logo Icon that changes based on selected year - Made bigger like skillsets */}
                                         <div style={{width: "64px", height: "64px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
                                             <img 
-                                                src={importCompanyLogo(experienceData[selectedYear].logo)} 
+                                                src={getIcon(experienceData[selectedYear].logo)} 
                                                 alt="Company Logo" 
                                                 style={{width: "48px", height: "48px", imageRendering: "pixelated"}} 
                                             />

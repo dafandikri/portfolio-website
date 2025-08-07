@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import '../styles/w95.css';
-
-// Import tech stack icons
-const importIcon = (iconName) => {
-    return `/src/assets/img/favicon/${iconName}.png`;
-};
+import { getIcon } from '../assets';
 
 const TechStackDialog = () => {
     const [container1Width, setContainer1Width] = useState(0);
@@ -57,7 +53,7 @@ const TechStackDialog = () => {
             <div key={index} className="tech-icon mx-3" style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <div style={{width: "48px", height: "48px", border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "4px", backgroundColor: "#C0C0C0"}}>
                     <img 
-                        src={importIcon(tech.icon)} 
+                        src={getIcon(tech.icon)} 
                         alt={tech.name} 
                         style={{width: "36px", height: "36px", imageRendering: "pixelated"}} 
                     />

@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
 import '../styles/w95.css';
-
-// Helper function to import profile image and icons
-const importImage = (imagePath) => {
-  return `/src/assets/img/${imagePath}`;
-};
-
-const importIcon = (iconName) => {
-  return `/src/assets/img/favicon/${iconName}.png`;
-};
+import { getImage, getIcon } from '../assets';
 
 const Contact = () => {
     return (
@@ -33,15 +25,15 @@ const Contact = () => {
                                 {/* Profile image */}
                                 <div style={{marginTop: "30px", marginBottom: "20px", position: "relative", display: "inline-block"}}>
                                     <div style={{border: "1px solid #888", borderRightColor: "#fff", borderBottomColor: "#fff", backgroundColor: "#fff", padding: "8px", display: "inline-block"}}>
-                                        <img src={importImage("profile.jpg")} alt="Erdafa Andikri" style={{width: "140px", height: "140px", objectFit: "cover"}} />
+                                        <img src={getImage("profile")} alt="Erdafa Andikri" style={{width: "140px", height: "140px", objectFit: "cover"}} />
                                     </div>
                                     
                                     {/* Small floating icons like the original MSN screen */}
                                     <div style={{position: "absolute", top: "15px", right: "-20px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src={importIcon("github")} alt="GitHub" width="24" height="24" />
+                                        <img src={getIcon("github")} alt="GitHub" width="24" height="24" />
                                     </div>
                                     <div style={{position: "absolute", bottom: "30px", left: "-15px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src={importIcon("code")} alt="Code" width="24" height="24" />
+                                        <img src={getIcon("code")} alt="Code" width="24" height="24" />
                                     </div>
                                 </div>
                                 

@@ -1,10 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import '../styles/w95.css';
-
-// Import skills icons
-const importSkillIcon = (iconName) => {
-    return `/src/assets/img/skills/${iconName}.png`;
-};
+import { getSkill } from '../assets';
 
 const SkillsetsDialog = () => {
     const [containerWidth, setContainerWidth] = useState(0);
@@ -51,7 +47,7 @@ const SkillsetsDialog = () => {
         >
             <div style={{width: "64px", height: "64px", marginBottom: "8px"}}>
                 <img 
-                    src={importSkillIcon(skill.icon)} 
+                    src={getSkill(skill.icon)} 
                     alt={skill.name} 
                     style={{width: "64px", height: "64px", imageRendering: "pixelated"}} 
                 />
