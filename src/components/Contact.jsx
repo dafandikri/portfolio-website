@@ -71,12 +71,12 @@ const Contact = () => {
                                             {/* Primary contact methods (emphasized) */}
                                             <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#eee", padding: "6px 10px"}}>
                                                 <strong style={{width: "70px"}}>Email:</strong>
-                                                <a href="mailto:erdafa.andikri@example.com" className="text-primary" style={{fontSize: "12px", wordBreak: "break-word"}}>erdafa.andikri@example.com</a>
+                                                <a href="mailto:dafandikri@gmail.com" className="text-primary" style={{fontSize: "12px", wordBreak: "break-word"}}>dafandikri@gmail.com</a>
                                             </div>
                                             
                                             <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#eee", padding: "6px 10px"}}>
                                                 <strong style={{width: "70px"}}>LinkedIn:</strong>
-                                                <a href="https://linkedin.com/in/erdafa-andikri" className="text-primary" style={{fontSize: "12px"}}>linkedin.com/in/erdafa-andikri</a>
+                                                <a href="https://linkedin.com/in/dafandikri" className="text-primary" style={{fontSize: "12px"}}>linkedin.com/in/dafandikri</a>
                                             </div>
                                         </div>
                                         
@@ -84,12 +84,12 @@ const Contact = () => {
                                             {/* Secondary contact methods */}
                                             <div className="d-flex align-items-center mb-2" style={{padding: "6px 10px", border: "1px solid transparent"}}>
                                                 <strong style={{width: "70px"}}>GitHub:</strong>
-                                                <a href="https://github.com/erdafandikri" className="text-secondary" style={{fontSize: "12px"}}>github.com/erdafandikri</a>
+                                                <a href="https://github.com/dafandikri" className="text-secondary" style={{fontSize: "12px"}}>github.com/dafandikri</a>
                                             </div>
                                             
                                             <div className="d-flex align-items-center" style={{padding: "6px 10px", border: "1px solid transparent"}}>
                                                 <strong style={{width: "70px"}}>Instagram:</strong>
-                                                <a href="https://instagram.com/erdafandikri" className="text-secondary" style={{fontSize: "12px"}}>@erdafandikri</a>
+                                                <a href="https://instagram.com/dafandikri" className="text-secondary" style={{fontSize: "12px"}}>@dafandikri</a>
                                             </div>
                                         </div>
                                     </div>
@@ -107,10 +107,10 @@ const Contact = () => {
                                 
                                 {/* Action Buttons */}
                                 <div className="d-flex justify-content-end">
-                                    <a href="mailto:erdafa.andikri@example.com" className="btn btn-sm mr-2 btn-primary border-dark">
+                                    <a href="mailto:dafandikri@gmail.com" className="btn btn-sm mr-2 btn-primary border-dark">
                                         <span className="btn-text">Send Email</span>
                                     </a>
-                                    <a href="https://linkedin.com/in/erdafa-andikri" className="btn btn-sm mr-2 btn-primary">
+                                    <a href="https://linkedin.com/in/dafandikri" className="btn btn-sm mr-2 btn-primary">
                                         <span className="btn-text">Connect</span>
                                     </a>
                                     <button className="btn btn-sm btn-primary" type="button">

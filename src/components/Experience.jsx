@@ -9,28 +9,39 @@ const importCompanyLogo = (iconName) => {
 const Experience = () => {
     // Experience data by year
     const experienceData = {
+        "2025": {
+            title: "Intern - Kementerian Transmigrasi Republik Indonesia",
+            date: "July 2025 - August 2025",
+            description: "Successfully developed and updated the company's official website using WordPress, achieving significant improvements in functionality and user experience.",
+            logo: "kementrans"
+        },
         "2024": {
             title: "IT Developer Intern - PT International Biometrics Indonesia",
+            date: "June 2024 - August 2024",
             description: "Successfully developed and updated the company's official website using WordPress, achieving significant improvements in functionality and user experience.",
             logo: "interbio"
         },
         "2023": {
             title: "Java Developer - CodeCrafters Inc.",
+            date: "March 2023 - November 2023",
             description: "Developed enterprise Java applications utilizing Spring Boot, implementing RESTful APIs and microservices architecture.",
             logo: "java"
         },
         "2022": {
             title: "Frontend Developer - Web Solutions Ltd",
+            date: "August 2022 - February 2023",
             description: "Built responsive web applications using React.js, collaborating with design and backend teams to deliver seamless user experiences.",
             logo: "react"
         },
         "2021": {
             title: "Software Engineering Intern - Tech Innovators",
+            date: "May 2021 - July 2022",
             description: "Contributed to open-source projects and gained practical experience in version control and collaborative development.",
             logo: "github"
         },
         "2020": {
             title: "Web Development Assistant - Digital Creators",
+            date: "September 2020 - April 2021",
             description: "Assisted in developing interactive web applications with JavaScript and jQuery, focusing on client-side functionality.",
             logo: "javascript"
         }
@@ -46,9 +57,9 @@ const Experience = () => {
     };
 
     return (
-        <section className="section-sm">
+        <div>
             {/* Welcome Dialog */}
-            <div className="card card-tertiary mx-auto" style={{maxWidth: "550px"}}>
+            <div className="card card-tertiary mx-auto">
                 {/* Dialog Title Bar */}
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Experience</span>
@@ -61,23 +72,39 @@ const Experience = () => {
                     <h5 className="text-center mb-4">Welcome to My Experience</h5>
                     
                     <div className="row">
-                        <div className="col-9">
-                            {/* Tip Box with Yellow Background */}
+                        <div className="col-12">
+                            {/* Year Buttons - Horizontal layout above description */}
+                            <div className="d-flex justify-content-center mb-3">
+                                {Object.keys(experienceData).sort((a, b) => b - a).map(year => (
+                                    <button 
+                                        key={year}
+                                        className={`btn btn-primary mx-1 ${selectedYear === year ? 'active' : ''}`}
+                                        type="button"
+                                        onClick={() => handleYearClick(year)}
+                                        style={{width: "55px", fontSize: "0.8rem", padding: "4px 2px"}}
+                                    >
+                                        <span className="btn-text">{year}</span>
+                                    </button>
+                                ))}
+                            </div>
+                            
+                            {/* Tip Box with Yellow Background - Now full width */}
                             <div id="experienceContent" className="p-3 mb-3" style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
                                 <div className="d-flex">
                                     <div className="mr-3">
-                                        {/* Company Logo Icon that changes based on selected year */}
-                                        <div style={{width: "32px", height: "32px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
+                                        {/* Company Logo Icon that changes based on selected year - Made bigger like skillsets */}
+                                        <div style={{width: "64px", height: "64px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
                                             <img 
                                                 src={importCompanyLogo(experienceData[selectedYear].logo)} 
                                                 alt="Company Logo" 
-                                                style={{width: "24px", height: "24px", imageRendering: "pixelated"}} 
+                                                style={{width: "48px", height: "48px", imageRendering: "pixelated"}} 
                                             />
                                         </div>
                                     </div>
-                                    <div>
-                                        <p className="mb-1"><strong style={{color: "#000080"}}>{experienceData[selectedYear].title}</strong></p>
-                                        <p className="mb-0">{experienceData[selectedYear].description}</p>
+                                    <div style={{flex: 1}}>
+                                        <p className="mb-2"><strong style={{color: "#000080", fontSize: "1.1rem"}}>{experienceData[selectedYear].title}</strong></p>
+                                        <p className="mb-1" style={{fontSize: "0.9rem", lineHeight: "1.4", color: "#555"}}>{experienceData[selectedYear].date}</p>
+                                        <p className="mb-0" style={{fontSize: "1rem", lineHeight: "1.4"}}>{experienceData[selectedYear].description}</p>
                                     </div>
                                 </div>
                             </div>
@@ -95,21 +122,10 @@ const Experience = () => {
                                     Show this dialog at startup
                                 </label>
                             </div>
-                        </div>
-                        <div className="col-3 d-flex flex-column">
-                            {/* Year Buttons */}
-                            {Object.keys(experienceData).map(year => (
-                                <button 
-                                    key={year}
-                                    className={`btn btn-primary mb-2 ${selectedYear === year ? 'active' : ''}`}
-                                    type="button"
-                                    onClick={() => handleYearClick(year)}
-                                >
-                                    <span className="btn-text">{year}</span>
-                                </button>
-                            ))}
-                            <div className="mt-auto">
-                                <button className="btn btn-primary border-dark" type="button">
+                            
+                            {/* Close Button */}
+                            <div className="d-flex justify-content-end mt-3">
+                                <button className="btn btn-sm btn-primary border-dark" type="button">
                                     <span className="btn-text">Close</span>
                                 </button>
                             </div>
@@ -118,7 +134,7 @@ const Experience = () => {
                 </div>
             </div>
             {/* End of Welcome Dialog */}
-        </section>
+        </div>
     );
 };
 
