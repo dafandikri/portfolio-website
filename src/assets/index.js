@@ -2,6 +2,7 @@
 import profileImg from './img/profile.jpg';
 import backgroundImg from './img/background.jpg';
 import interBioProject from './img/interbio_project.png';
+import portfolioProject from './img/portfolio_project.png';
 
 // Import favicon icons
 import briefcaseIcon from './img/favicon/briefcase.png';
@@ -49,7 +50,8 @@ import mobileSkill from './img/skills/mobile.png';
 export const images = {
   profile: profileImg,
   background: backgroundImg,
-  interbio_project: interBioProject
+  interbio_project: interBioProject,
+  portfolio_project: portfolioProject
 };
 
 export const icons = {

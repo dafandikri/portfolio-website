@@ -10,7 +10,7 @@ const Project = () => {
             title: "Portfolio Website",
             year: "2025",
             description: "A nostalgic Windows 95-themed portfolio website built with React and Vite. Features smooth animations, responsive design, and retro UI elements that showcase my projects, skills, and experience in an engaging, interactive format with modern web technologies.",
-            image: "interbio_project",
+            image: "portfolio_project",
             features: [
                 "Windows 95-inspired UI with authentic retro styling and animations",
                 "Responsive design with mobile hamburger menu and scroll-triggered animations",
@@ -40,7 +40,7 @@ const Project = () => {
             title: "JagaRaga",
             year: "2025",
             description: "A comprehensive health and wellness application designed through an end-to-end HCI cycle. Focused on translating complex health needs of office workers and students into an intuitive digital solution through extensive user research and data-driven design.",
-            image: "interbio_project",
+            image: "", // No image
             features: [
                 "End-to-end HCI cycle implementation with Value Proposition Canvas",
                 "25+ qualitative insights consolidated into actionable design requirements",
@@ -55,7 +55,7 @@ const Project = () => {
             title: "Solemates",
             year: "2025",
             description: "A secure Django-based e-commerce website for shoe retail built as part of Security-Driven Software Development course. Implemented OWASP Top 10 principles and secure coding practices, successfully passing independent penetration testing.",
-            image: "interbio_project",
+            image: "", // No image
             features: [
                 "Django-based e-commerce platform with security focus",
                 "OWASP Top 10 security principles implementation",
@@ -70,7 +70,7 @@ const Project = () => {
             title: "GeoBikunAlert",
             year: "2024",
             description: "An intelligent notification bot that revolutionizes campus transportation. Automatically tracks Bikun bus locations, converts data to GPS coordinates, and sends proximity alerts via Apple's API, improving commuting efficiency for 3000+ students and professors by 200%.",
-            image: "interbio_project",
+            image: "", // No image
             features: [
                 "Real-time bus location scraping from bikun.ui.ac.id",
                 "GPS coordinate conversion and proximity detection (100m radius)",
@@ -85,7 +85,7 @@ const Project = () => {
             title: "DepeFood",
             year: "2024",
             description: "A comprehensive food ordering platform built with JavaFX, featuring dual interfaces for administrators and customers. Streamlined restaurant management for admins while providing seamless ordering experience for customers.",
-            image: "interbio_project",
+            image: "", // No image
             features: [
                 "JavaFX-based food ordering system",
                 "Dual interface design for admins and customers",
@@ -186,7 +186,7 @@ const Project = () => {
                                             <div>
                                                 {/* Project Screenshot with Windows 95 border */}
                                                 <div style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", backgroundColor: "#FFFFFF", padding: "3px", marginBottom: "10px"}}>
-                                                    {project.title === "Interbio.id Website" ? (
+                                                    {project.image ? (
                                                         <img src={getImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
                                                     ) : (
                                                         <div style={{
