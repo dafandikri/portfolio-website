@@ -49,7 +49,16 @@ const KnowEachOther = () => {
   }, [displayText, isTyping, fullText]);
 
   return (
-    <div className="section-sm mb-5">
+    <motion.div 
+      className="section-sm mb-5"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        duration: 0.3, 
+        ease: "easeOut",
+        delay: 0.6
+      }}
+    >
       <div className="card">
         <div className="card-header">
           <div className="icon w95-file-text"></div>
@@ -77,12 +86,14 @@ const KnowEachOther = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <span className="mr-2">Arial</span>
-            <span className="mr-2">|</span>
+            <span className="mr-2 divider">|</span>
             <span className="mr-2">12</span>
-            <span className="mr-2">|</span>
+            <span className="mr-2 divider">|</span>
             <span className="mr-2">B</span>
-            <span className="mr-2">I</span>
-            <span>U</span>
+            <span className="mr-2 divider">|</span>
+            <span className="mr-2">i</span>
+            <span className="mr-2 divider">|</span>
+            <span className="mr-1">U</span>
           </motion.div>
           
           <div className="text-content p-3">
@@ -93,7 +104,7 @@ const KnowEachOther = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

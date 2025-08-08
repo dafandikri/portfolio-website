@@ -1,11 +1,65 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getImage } from '../assets';
 
 const ProfileCard = () => {
+    const [showSparks, setShowSparks] = useState(false);
+
+    const handleCoolButtonClick = () => {
+        setShowSparks(true);
+        setTimeout(() => setShowSparks(false), 1000); // Reset after animation
+    };
+
+    // Shake animation variant - EXACTLY same as navbar buttons
+    const buttonVariants = {
+        hover: {
+            x: [0, -8, 8, -8, 8, 0, -4, 4, 0],
+            y: [0, -4, 4, -4, 4, 0, -4, 4, 0],
+            transition: {
+                duration: 0.6,
+                ease: "easeInOut"
+            }
+        },
+        tap: {
+            scale: 0.95
+        }
+    };
+
+    // Sparks animation variants
+    const sparkVariants = {
+        initial: { 
+            opacity: 0, 
+            scale: 0, 
+            x: 0, 
+            y: 0,
+            rotate: 0
+        },
+        animate: { 
+            opacity: [0, 1, 1, 0], 
+            scale: [0, 1.2, 1, 0],
+            x: Math.random() * 60 - 30,
+            y: Math.random() * 60 - 30,
+            rotate: Math.random() * 360,
+            transition: {
+                duration: 1,
+                ease: "easeOut"
+            }
+        }
+    };
+
     return (
         <div className="col-12 mb-4">
-            <div className="card card-tertiary">
+            <motion.div 
+                className="card card-tertiary"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                    duration: 0.3, 
+                    ease: "easeOut",
+                    delay: 0.3
+                }}
+            >
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Profile Card</span>
                     <div>
@@ -40,7 +94,7 @@ const ProfileCard = () => {
                         bottom: "20px", 
                         right: "20px",
                     }}>
-                        <button 
+                        <motion.button 
                             className="btn btn-primary border-dark" 
                             type="button" 
                             style={{
@@ -48,14 +102,73 @@ const ProfileCard = () => {
                                 padding: "6px 16px", 
                                 height: "auto",
                                 minHeight: "32px",
-                                lineHeight: "normal"
+                                lineHeight: "normal",
+                                position: "relative"
                             }}
+                            variants={buttonVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                            onClick={handleCoolButtonClick}
                         >
                             <span className="btn-text">Very Cool!</span>
-                        </button>
+                            
+                            {/* Sparks Animation */}
+                            {showSparks && (
+                                <div style={{
+                                    position: "absolute",
+                                    top: "50%",
+                                    left: "50%",
+                                    transform: "translate(-50%, -50%)",
+                                    pointerEvents: "none",
+                                    zIndex: 1000
+                                }}>
+                                    {[...Array(8)].map((_, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial="initial"
+                                            animate="animate"
+                                            variants={sparkVariants}
+                                            style={{
+                                                position: "absolute",
+                                                width: "8px",
+                                                height: "8px",
+                                                backgroundColor: ["#FFD700", "#FFA500", "#FF6347", "#00BFFF", "#32CD32"][i % 5],
+                                                borderRadius: "50%",
+                                                boxShadow: `0 0 6px ${["#FFD700", "#FFA500", "#FF6347", "#00BFFF", "#32CD32"][i % 5]}`,
+                                            }}
+                                        />
+                                    ))}
+                                    
+                                    {/* Star-shaped sparks */}
+                                    {[...Array(4)].map((_, i) => (
+                                        <motion.div
+                                            key={`star-${i}`}
+                                            initial="initial"
+                                            animate="animate"
+                                            variants={{
+                                                ...sparkVariants,
+                                                animate: {
+                                                    ...sparkVariants.animate,
+                                                    x: Math.random() * 80 - 40,
+                                                    y: Math.random() * 80 - 40,
+                                                }
+                                            }}
+                                            style={{
+                                                position: "absolute",
+                                                fontSize: "12px",
+                                                color: "#FFD700",
+                                                textShadow: "0 0 6px #FFD700",
+                                            }}
+                                        >
+                                            ✨
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            )}
+                        </motion.button>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

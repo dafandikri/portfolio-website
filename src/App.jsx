@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import './App.css'
 import Navbar from './components/Navbar'
 import ProfileCard from './components/ProfileCard'
@@ -31,7 +32,17 @@ function App() {
           </div>
           
           {/* Tech Stack and Skillsets section with title */}
-          <div id="tech-skills" className="mb-5">
+          <motion.div 
+            id="tech-skills" 
+            className="mb-5"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeOut",
+              delay: 0.9
+            }}
+          >
             {/* Enhanced title with shadow for better contrast */}
             <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
@@ -50,9 +61,19 @@ function App() {
                 <TechStackDialog />
               </div>
             </div>
-          </div>
+          </motion.div>
           
-          <div id="experience" className="mb-5">
+          <motion.div 
+            id="experience" 
+            className="mb-5"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeOut",
+              delay: 1.2
+            }}
+          >
             {/* Enhanced title with shadow for better contrast */}
             <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
@@ -67,9 +88,19 @@ function App() {
                 <Experience />
               </div>
             </div>
-          </div>
+          </motion.div>
           
-          <div id="projects" className="mb-5">
+          <motion.div 
+            id="projects" 
+            className="mb-5"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeOut",
+              delay: 1.5
+            }}
+          >
             {/* Added Projects title with consistent styling */}
             <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
@@ -80,9 +111,18 @@ function App() {
               Projects
             </h2>
             <Project />
-          </div>
+          </motion.div>
           
-          <div id="contact">
+          <motion.div 
+            id="contact"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ 
+              duration: 0.3, 
+              ease: "easeOut",
+              delay: 1.8
+            }}
+          >
             {/* Added Contact Me title with consistent styling and small spacing */}
             <h2 className="mb-3 text-white" style={{
               textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
@@ -93,7 +133,7 @@ function App() {
               Contact Me
             </h2>
             <Contact />
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

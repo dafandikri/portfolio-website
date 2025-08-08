@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getIcon } from '../assets';
 
@@ -44,15 +45,40 @@ const Navbar = () => {
         imageRendering: "pixelated"
     };
 
+    // Animation variants for buttons
+    const buttonVariants = {
+        hover: {
+            x: [0, -2, 2, -2, 2, 0, -1, 1, 0],
+            y: [0, -1, 1, -1, 1, 0, -1, 1, 0],
+            transition: {
+                duration: 0.6,
+                ease: "easeInOut"
+            }
+        },
+        tap: {
+            scale: 0.95
+        }
+    };
+
     return (
-        <div className="navbar-wrapper" style={{
-            display: "flex",
-            justifyContent: "center",
-            paddingTop: "15px",
-            position: "sticky",
-            top: 0,
-            zIndex: 1000
-        }}>
+        <motion.div 
+            className="navbar-wrapper" 
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                paddingTop: "15px",
+                position: "sticky",
+                top: 0,
+                zIndex: 1000
+            }}
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ 
+                duration: 0.3, 
+                ease: "easeOut",
+                delay: 0
+            }}
+        >
             <div style={{
                 width: "85%",
                 maxWidth: "1000px",
@@ -80,7 +106,7 @@ const Navbar = () => {
                     <ul className="navbar-nav d-flex flex-row m-0">
                         {navItems.map((item, index) => (
                             <li key={index} className="nav-item mx-2">
-                                <a 
+                                <motion.a 
                                     href={item.target} 
                                     title={item.name}
                                     style={{
@@ -96,6 +122,9 @@ const Navbar = () => {
                                         textDecoration: "none",
                                         fontSize: "10px"
                                     }}
+                                    variants={buttonVariants}
+                                    whileHover="hover"
+                                    whileTap="tap"
                                 >
                                     <img 
                                         src={getIcon(item.icon)} 
@@ -103,14 +132,14 @@ const Navbar = () => {
                                         style={iconStyle} 
                                     />
                                     <span className="mt-1">{item.name}</span>
-                                </a>
+                                </motion.a>
                             </li>
                         ))}
                     </ul>
                     
                     {/* LinkedIn link on right */}
-                    <a 
-                        href="https://www.linkedin.com/in/erdafa-andikri-496b341b0" 
+                    <motion.a 
+                        href="https://www.linkedin.com/in/dafandikri" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         title="Visit my LinkedIn profile"
@@ -127,6 +156,9 @@ const Navbar = () => {
                             textDecoration: "none",
                             fontSize: "10px"
                         }}
+                        variants={buttonVariants}
+                        whileHover="hover"
+                        whileTap="tap"
                     >
                         <img 
                             src={getIcon("linkedin")} 
@@ -134,10 +166,10 @@ const Navbar = () => {
                             style={iconStyle} 
                         />
                         <span className="mt-1">LinkedIn</span>
-                    </a>
+                    </motion.a>
                 </nav>
             </div>
-        </div>
+        </motion.div>
     );
 };
 
