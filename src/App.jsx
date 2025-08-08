@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
 import Navbar from './components/Navbar'
@@ -12,6 +12,25 @@ import KnowEachOther from './components/KnowEachOther'
 import { getImage } from './assets'
 
 function App() {
+  // Force scroll to top on page load/refresh
+  useEffect(() => {
+    // Scroll to top immediately
+    window.scrollTo(0, 0);
+    
+    // Clear any hash from URL without triggering navigation
+    if (window.location.hash) {
+      // Replace the current history entry to remove the hash
+      window.history.replaceState(null, null, window.location.pathname + window.location.search);
+    }
+    
+    // Ensure scroll position stays at top after a short delay (in case of any layout shifts)
+    const timeoutId = setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
     <div className="windows95-app">
       <div className="desktop-background" style={{
