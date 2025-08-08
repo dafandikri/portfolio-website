@@ -7,19 +7,19 @@ const Project = () => {
     // Updated project data based on CV
     const projects = [
         {
-            title: "JagaRaga",
+            title: "Portfolio Website",
             year: "2025",
-            description: "A comprehensive health and wellness application designed through an end-to-end HCI cycle. Focused on translating complex health needs of office workers and students into an intuitive digital solution through extensive user research and data-driven design.",
+            description: "A nostalgic Windows 95-themed portfolio website built with React and Vite. Features smooth animations, responsive design, and retro UI elements that showcase my projects, skills, and experience in an engaging, interactive format with modern web technologies.",
             image: "interbio_project",
             features: [
-                "End-to-end HCI cycle implementation with Value Proposition Canvas",
-                "25+ qualitative insights consolidated into actionable design requirements",
-                "High-fidelity Figma prototype with iterative usability testing",
-                "System Usability Scale improved to 68.67 (Good rating)"
+                "Windows 95-inspired UI with authentic retro styling and animations",
+                "Responsive design with mobile hamburger menu and scroll-triggered animations",
+                "Framer Motion integration for smooth cascading entrance effects",
+                "SEO optimized with meta tags, robots.txt, and social media previews"
             ],
-            techStack: ["figma", "react", "javascript"],
-            liveLink: "#",
-            repoLink: "#"
+            techStack: ["react", "javascript", "vsc", "github"],
+            liveLink: "https://dafandikri.tech",
+            repoLink: "https://github.com/dafandikri/portfolio-website"
         },
         {
             title: "Interbio.id Website",
@@ -34,6 +34,21 @@ const Project = () => {
             ],
             techStack: ["wordpress", "figma", "github"],
             liveLink: "https://interbio.id",
+            repoLink: "#"
+        },
+        {
+            title: "JagaRaga",
+            year: "2025",
+            description: "A comprehensive health and wellness application designed through an end-to-end HCI cycle. Focused on translating complex health needs of office workers and students into an intuitive digital solution through extensive user research and data-driven design.",
+            image: "interbio_project",
+            features: [
+                "End-to-end HCI cycle implementation with Value Proposition Canvas",
+                "25+ qualitative insights consolidated into actionable design requirements",
+                "High-fidelity Figma prototype with iterative usability testing",
+                "System Usability Scale improved to 68.67 (Good rating)"
+            ],
+            techStack: ["figma", "react", "javascript"],
+            liveLink: "#",
             repoLink: "#"
         },
         {
