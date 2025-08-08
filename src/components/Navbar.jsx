@@ -5,6 +5,7 @@ import { getIcon } from '../assets';
 
 const Navbar = () => {
     const [time, setTime] = useState('');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     
     // Navigation items with their respective icons and target sections
     const navItems = [
@@ -60,6 +61,11 @@ const Navbar = () => {
         }
     };
 
+    // Handle menu item click
+    const handleMenuClick = () => {
+        setIsMenuOpen(false);
+    };
+
     return (
         <motion.div 
             className="navbar-wrapper" 
@@ -102,8 +108,8 @@ const Navbar = () => {
                         <span className="text-uppercase">{time}</span>
                     </div>
                     
-                    {/* Center navigation links with icons */}
-                    <ul className="navbar-nav d-flex flex-row m-0">
+                    {/* Desktop navigation links with icons */}
+                    <ul className="navbar-nav d-none d-md-flex flex-row m-0">
                         {navItems.map((item, index) => (
                             <li key={index} className="nav-item mx-2">
                                 <motion.a 
@@ -137,12 +143,56 @@ const Navbar = () => {
                         ))}
                     </ul>
                     
-                    {/* LinkedIn link on right */}
+                    {/* Mobile hamburger menu button */}
+                    <div className="d-md-none">
+                        <motion.button
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            style={{
+                                backgroundColor: "#C0C0C0",
+                                border: "2px solid #FFFFFF",
+                                borderRight: "2px solid #000000",
+                                borderBottom: "2px solid #000000",
+                                padding: "6px 8px",
+                                cursor: "pointer",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: "40px",
+                                height: "32px"
+                            }}
+                            variants={buttonVariants}
+                            whileHover="hover"
+                            whileTap="tap"
+                        >
+                            {/* 3 horizontal bars */}
+                            <div style={{
+                                width: "20px",
+                                height: "2px",
+                                backgroundColor: "#000000",
+                                marginBottom: "3px"
+                            }}></div>
+                            <div style={{
+                                width: "20px",
+                                height: "2px",
+                                backgroundColor: "#000000",
+                                marginBottom: "3px"
+                            }}></div>
+                            <div style={{
+                                width: "20px",
+                                height: "2px",
+                                backgroundColor: "#000000"
+                            }}></div>
+                        </motion.button>
+                    </div>
+                    
+                    {/* Desktop LinkedIn link on right */}
                     <motion.a 
                         href="https://www.linkedin.com/in/dafandikri" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         title="Visit my LinkedIn profile"
+                        className="d-none d-md-flex"
                         style={{
                             display: "flex",
                             flexDirection: "column",
@@ -168,6 +218,97 @@ const Navbar = () => {
                         <span className="mt-1">LinkedIn</span>
                     </motion.a>
                 </nav>
+                
+                {/* Mobile dropdown menu */}
+                {isMenuOpen && (
+                    <motion.div 
+                        className="d-md-none"
+                        style={{
+                            borderTop: "1px solid #808080",
+                            backgroundColor: "#C0C0C0",
+                            padding: "8px 0"
+                        }}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {navItems.map((item, index) => (
+                            <motion.a
+                                key={index}
+                                href={item.target}
+                                onClick={handleMenuClick}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    padding: "8px 16px",
+                                    color: "#000000",
+                                    textDecoration: "none",
+                                    backgroundColor: "transparent",
+                                    border: "none",
+                                    width: "100%",
+                                    fontSize: "14px"
+                                }}
+                                whileHover={{ 
+                                    backgroundColor: "#000080", 
+                                    color: "white" 
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <img 
+                                    src={getIcon(item.icon)} 
+                                    alt={item.name} 
+                                    style={{
+                                        width: "16px",
+                                        height: "16px",
+                                        marginRight: "12px",
+                                        imageRendering: "pixelated"
+                                    }} 
+                                />
+                                {item.name}
+                            </motion.a>
+                        ))}
+                        
+                        {/* LinkedIn in mobile menu */}
+                        <motion.a
+                            href="https://www.linkedin.com/in/dafandikri"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={handleMenuClick}
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                padding: "8px 16px",
+                                color: "#000000",
+                                textDecoration: "none",
+                                backgroundColor: "transparent",
+                                border: "none",
+                                width: "100%",
+                                fontSize: "14px",
+                                borderTop: "1px solid #808080",
+                                marginTop: "4px",
+                                paddingTop: "12px"
+                            }}
+                            whileHover={{ 
+                                backgroundColor: "#000080", 
+                                color: "white" 
+                            }}
+                            whileTap={{ scale: 0.98 }}
+                        >
+                            <img 
+                                src={getIcon("linkedin")} 
+                                alt="LinkedIn" 
+                                style={{
+                                    width: "16px",
+                                    height: "16px",
+                                    marginRight: "12px",
+                                    imageRendering: "pixelated"
+                                }} 
+                            />
+                            LinkedIn Profile
+                        </motion.a>
+                    </motion.div>
+                )}
             </div>
         </motion.div>
     );
