@@ -36,10 +36,10 @@ const Contact = () => {
                                     
                                     {/* Small floating icons like the original MSN screen */}
                                     <div style={{position: "absolute", top: "15px", right: "-20px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src={getIcon("github")} alt="GitHub" width="24" height="24" />
+                                        <img src="/profile.png" alt="Portfolio" width="24" height="24" style={{borderRadius: "2px", objectFit: "cover"}} />
                                     </div>
                                     <div style={{position: "absolute", bottom: "30px", left: "-15px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src={getIcon("code")} alt="Code" width="24" height="24" />
+                                        <img src={getIcon("code")} alt="Code" width="24" height="24" style={{imageRendering: "pixelated"}} />
                                     </div>
                                 </div>
                                 
