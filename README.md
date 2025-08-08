@@ -21,6 +21,13 @@ Coming soon - a dedicated section highlighting my academic and professional acco
 - Certifications and professional achievements
 - Leadership roles and community contributions
 
+### Interactive AI Assistant
+
+Planning to integrate an intelligent chatbot that provides visitors with a more personalized way to learn about my background and experience:
+
+- **Conversational Interface**: A Windows 95-styled chat window where visitors can ask questions about my projects, skills, and career journey
+- **Knowledge Base**: AI trained on my professional background, educational experience, and project details to provide accurate and insightful responses
+
 ### Hobbies
 
 Planning to showcase my filmmaking hobby through embedded content:
