@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getIcon } from '../assets';
 
@@ -53,7 +54,12 @@ const Experience = () => {
     };
 
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+        >
             {/* Welcome Dialog */}
             <div className="card card-tertiary mx-auto">
                 {/* Dialog Title Bar */}
@@ -140,7 +146,7 @@ const Experience = () => {
                 </div>
             </div>
             {/* End of Welcome Dialog */}
-        </div>
+        </motion.div>
     );
 };
 

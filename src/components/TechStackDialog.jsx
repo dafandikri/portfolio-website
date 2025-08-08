@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getIcon } from '../assets';
 
@@ -64,7 +65,12 @@ const TechStackDialog = () => {
     };
     
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+        >
             {/* Tech Stack Dialog */}
             <div className="card card-tertiary h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
@@ -162,7 +168,7 @@ const TechStackDialog = () => {
                     100% { transform: translateX(0); }
                 }
             `}</style>
-        </div>
+        </motion.div>
     );
 };
 

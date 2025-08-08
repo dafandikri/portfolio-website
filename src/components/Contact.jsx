@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getImage, getIcon } from '../assets';
 
 const Contact = () => {
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+        >
             {/* MSN-inspired Contact Dialog - removed section wrapper and reduced margin */}
             <div className="card card-tertiary" style={{marginBottom: "0px"}}>
                 {/* Dialog Title Bar */}
@@ -127,7 +133,7 @@ const Contact = () => {
                 </div>
             </div>
             {/* End of MSN-inspired Contact Dialog */}
-        </div>
+        </motion.div>
     );
 };
 

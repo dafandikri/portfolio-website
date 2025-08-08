@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getSkill } from '../assets';
 
@@ -57,7 +58,12 @@ const SkillsetsDialog = () => {
     );
 
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+        >
             {/* Skillsets Dialog */}
             <div className="card card-tertiary h-100">
                 <div className="card-header d-flex justify-content-between align-items-center">
@@ -128,7 +134,7 @@ const SkillsetsDialog = () => {
                     100% { transform: translateX(-${containerWidth}px); }
                 }
             `}</style>
-        </div>
+        </motion.div>
     );
 };
 

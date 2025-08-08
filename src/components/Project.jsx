@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getImage, getIcon } from '../assets';
 
@@ -105,7 +106,12 @@ const Project = () => {
     };
 
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            viewport={{ once: true, margin: "-100px" }}
+        >
             {/* Navigation Controls */}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <button 
@@ -138,7 +144,17 @@ const Project = () => {
             <div className="row">
                 {getCurrentProjects().map((project, index) => (
                     <div key={currentIndex * projectsPerPage + index} className="col-lg-6 mb-4">
-                        <div className="card card-tertiary h-100 overflow-hidden">
+                        <motion.div 
+                            className="card card-tertiary h-100 overflow-hidden"
+                            initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ 
+                                duration: 0.5, 
+                                ease: "easeOut",
+                                delay: index * 0.1
+                            }}
+                            viewport={{ once: true, margin: "-50px" }}
+                        >
                             <div className="card-header d-flex justify-content-between align-items-center">
                                 <span>{project.title} ({project.year})</span>
                                 <div>
@@ -222,11 +238,11 @@ const Project = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 ))}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
