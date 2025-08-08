@@ -11,6 +11,87 @@
   padding-bottom: 2rem;
 }
 
+/* Enhanced Navbar Shadow and Blur Effects */
+.navbar-wrapper {
+  position: relative;
+  z-index: 1000;
+}
+
+.navbar-wrapper::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px; /* Extended height for better blur transition */
+  background: linear-gradient(
+    180deg, 
+    rgba(0, 0, 0, 0.35) 0%,     /* Increased from 0.15 to 0.35 */
+    rgba(0, 0, 0, 0.25) 30%,    /* Increased from 0.1 to 0.25 */
+    rgba(0, 0, 0, 0.15) 60%,    /* Increased from 0.05 to 0.15 */
+    rgba(0, 0, 0, 0.08) 80%,    /* Increased from 0.02 to 0.08 */
+    transparent 100%            /* Fade to transparent */
+  );
+  z-index: 999;
+  pointer-events: none; /* Allow clicks to pass through */
+  transition: opacity 0.3s ease;
+}
+
+.navbar-wrapper::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px; /* Increased blur area height */
+  backdrop-filter: blur(12px) saturate(140%); /* Increased blur from 8px to 12px */
+  -webkit-backdrop-filter: blur(12px) saturate(140%); /* Increased saturation */
+  mask: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,        /* Full blur at top */
+    rgba(0, 0, 0, 0.95) 15%,    /* Strong blur extended */
+    rgba(0, 0, 0, 0.85) 30%,    /* Medium-strong blur */
+    rgba(0, 0, 0, 0.7) 45%,     /* Medium blur */
+    rgba(0, 0, 0, 0.5) 60%,     /* Light-medium blur */
+    rgba(0, 0, 0, 0.25) 75%,    /* Light blur */
+    rgba(0, 0, 0, 0.1) 90%,     /* Very light blur */
+    transparent 100%            /* No blur at bottom */
+  );
+  -webkit-mask: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.95) 15%,
+    rgba(0, 0, 0, 0.85) 30%,
+    rgba(0, 0, 0, 0.7) 45%,
+    rgba(0, 0, 0, 0.5) 60%,
+    rgba(0, 0, 0, 0.25) 75%,
+    rgba(0, 0, 0, 0.1) 90%,
+    transparent 100%
+  );
+  z-index: 998;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+/* Enhanced shadow for the navbar container itself */
+.navbar-wrapper > div {
+  position: relative;
+  z-index: 1001;
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.3),
+    0 4px 15px rgba(0, 0, 0, 0.2),
+    0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Hover effect for enhanced depth */
+.navbar-wrapper:hover > div {
+  box-shadow: 
+    2px 2px 8px rgba(0, 0, 0, 0.4),
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
 /* Add section IDs for scroll targeting */
 #profile, #tech-skills, #experience, #projects, #contact {
   scroll-margin-top: 80px; /* Increased margin to ensure content isn't hidden under navbar */
