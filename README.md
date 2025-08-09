@@ -35,6 +35,10 @@ Planning to showcase my filmmaking hobby through embedded content:
 - Short films and creative projects
 - Integrating with letterboxd, so people can see my reviews through my website
 
+### CV/Resume Section
+
+- Planning to put CV/Resume secion for visitors and potential recruites to read and download
+
 ## Contact & Links
 
 - **Email**: [dafandikri@gmail.com](mailto:dafandikri@gmail.com)
