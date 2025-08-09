@@ -3,18 +3,12 @@
 .windows95-app {
   font-family: 'Windows 95', sans-serif;
   min-height: 100vh;
-  background-color: transparent; /* Remove default background color */
 }
 
 .desktop-background {
-  background-color: transparent; /* Remove default teal background that causes flash */
+  background-color: #008080; /* Classic Windows 95 teal background */
   min-height: 100vh;
   padding-bottom: 2rem;
-}
-
-/* Loading screen styling */
-.loading-screen {
-  background-color: transparent; /* Ensure no flash during loading */
 }
 
 /* Enhanced Navbar Shadow and Blur Effects */

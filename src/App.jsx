@@ -12,48 +12,8 @@ import KnowEachOther from './components/KnowEachOther'
 import { getImage } from './assets'
 
 function App() {
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-
-  // Preload critical images
-  useEffect(() => {
-    const preloadImages = async () => {
-      const criticalImages = [
-        getImage("background"),
-        getImage("profile"),
-        getImage("interbio_project"),
-        getImage("portfolio_project")
-      ];
-
-      const imagePromises = criticalImages.map((src) => {
-        return new Promise((resolve, reject) => {
-          if (!src) {
-            resolve(); // Skip if image source is undefined
-            return;
-          }
-          const img = new Image();
-          img.onload = () => resolve();
-          img.onerror = () => resolve(); // Continue even if image fails to load
-          img.src = src;
-        });
-      });
-
-      try {
-        await Promise.all(imagePromises);
-        setImagesLoaded(true);
-      } catch (error) {
-        console.warn('Some images failed to preload:', error);
-        setImagesLoaded(true); // Continue anyway
-      }
-    };
-
-    preloadImages();
-  }, []);
-
   // Force scroll to top on page load/refresh
   useEffect(() => {
-    // Only run scroll logic after images are loaded
-    if (!imagesLoaded) return;
-
     // Scroll to top immediately
     window.scrollTo(0, 0);
     
@@ -69,56 +29,17 @@ function App() {
     }, 100);
     
     return () => clearTimeout(timeoutId);
-  }, [imagesLoaded]);
-
-  // Show loading screen until images are preloaded
-  if (!imagesLoaded) {
-    return (
-      <div className="windows95-app">
-        <div className="loading-screen" style={{
-          backgroundImage: `url(${getImage("background")})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center top',
-          backgroundAttachment: 'fixed',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          {/* Optional: Add a subtle loading indicator */}
-          <div style={{
-            backgroundColor: 'rgba(192, 192, 192, 0.9)',
-            border: '2px solid #000',
-            borderRightColor: '#dfdfdf',
-            borderBottomColor: '#dfdfdf',
-            padding: '20px',
-            fontFamily: 'Windows 95, sans-serif',
-            fontSize: '14px',
-            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.3)'
-          }}>
-            Loading...
-          </div>
-        </div>
-      </div>
-    );
-  }
+  }, []);
 
   return (
     <div className="windows95-app">
-      <motion.div 
-        className="desktop-background" 
-        style={{
-          backgroundImage: `url(${getImage("background")})`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center top',
-          backgroundAttachment: 'fixed'
-        }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
+      <div className="desktop-background" style={{
+        backgroundImage: `url(${getImage("background")})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center top',
+        backgroundAttachment: 'fixed'
+      }}>
         <Navbar />
         <div className="container py-2">
           <div id="profile" className="mb-2">
@@ -218,7 +139,7 @@ function App() {
             <Contact />
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }
