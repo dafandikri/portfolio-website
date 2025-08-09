@@ -28,6 +28,7 @@ import kementransIcon from './img/favicon/kementrans.png';
 import linkedinIcon from './img/favicon/linkedin.png';
 import pythonIcon from './img/favicon/python.png';
 import reactIcon from './img/favicon/react.png';
+import ristekIcon from './img/favicon/ristek.png';
 import seleniumIcon from './img/favicon/selenium.png';
 import springbootIcon from './img/favicon/springboot.png';
 import tailwindIcon from './img/favicon/tailwind.png';
@@ -78,6 +79,7 @@ export const icons = {
   linkedin: linkedinIcon,
   python: pythonIcon,
   react: reactIcon,
+  ristek: ristekIcon,
   selenium: seleniumIcon,
   springboot: springbootIcon,
   tailwind: tailwindIcon,

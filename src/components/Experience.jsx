@@ -40,7 +40,7 @@ const Experience = () => {
                 "Received mentorship from industry expert at Tiket.com",
                 "Enhanced technical skills in data science methodologies"
             ],
-            logo: "python"
+            logo: "ristek"
         }
     };
 
