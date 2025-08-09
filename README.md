@@ -39,6 +39,10 @@ Planning to showcase my filmmaking hobby through embedded content:
 
 - Planning to put CV/Resume secion for visitors and potential recruites to read and download
 
+### Blog Section
+
+- Planning to add a blog section to give updates
+
 ## Contact & Links
 
 - **Email**: [dafandikri@gmail.com](mailto:dafandikri@gmail.com)
