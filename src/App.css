@@ -6,9 +6,26 @@
 }
 
 .desktop-background {
-  background-color: #008080; /* Classic Windows 95 teal background */
+  background: url('./assets/img/background.jpg') no-repeat center center fixed; /* Set background image immediately */
+  background-size: cover;
+  background-color: #008080; /* Fallback color that matches the image */
   min-height: 100vh;
   padding-bottom: 2rem;
+}
+
+/* Preload critical images to prevent loading delays */
+.desktop-background::before {
+  content: '';
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  background: url('./assets/img/profile.jpg') no-repeat;
+  background: url('./assets/img/favicon/user.png') no-repeat;
+  background: url('./assets/img/favicon/code.png') no-repeat;
+  background: url('./assets/img/favicon/briefcase.png') no-repeat;
+  background: url('./assets/img/favicon/folder.png') no-repeat;
+  background: url('./assets/img/favicon/envelope.png') no-repeat;
+  background: url('./assets/img/favicon/linkedin.png') no-repeat;
 }
 
 /* Enhanced Navbar Shadow and Blur Effects */
