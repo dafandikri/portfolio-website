@@ -7,7 +7,7 @@ const Experience = () => {
     // Experience data by year - Updated with real CV experience
     const experienceData = {
         "2025": {
-            title: "Intern - Kementerian Transmigrasi",
+            title: "Intern - Kementerian Transmigrasi Republik Indonesia",
             date: "July 2025 - August 2025",
             description: "Researched national regulations on Electronic-Based Government Systems (SPBE) including Presidential Regulation No. 95/2018 and Ministry of Administrative Reform guidelines to assess their impact on digital services at the Ministry of Transmigration.",
             achievements: [
