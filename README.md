@@ -30,10 +30,13 @@ Planning to integrate an intelligent chatbot that provides visitors with a more 
 
 ### Hobbies
 
-Planning to showcase my filmmaking hobby through embedded content:
+Planning to showcase my hobby through embedded content:
 
 - Short films and creative projects
 - Integrating with letterboxd, so people can see my reviews through my website
+- Games i have played and take a keen interest on
+- Music and possibly integrating with Spotify/Apple Music
+- Photographs i have taken
 
 ### CV/Resume Section
 
