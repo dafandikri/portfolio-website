@@ -137,8 +137,8 @@ const Experience = () => {
                             
                             {/* Close Button */}
                             <div className="d-flex justify-content-end mt-3">
-                                <button className="btn btn-sm btn-primary border-dark" type="button">
-                                    <span className="btn-text">Close</span>
+                                <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
+                                    <span className="btn-text">Amazing!</span>
                                 </button>
                             </div>
                         </div>

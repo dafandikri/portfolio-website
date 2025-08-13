@@ -123,9 +123,6 @@ const Contact = () => {
                                     <a href="https://linkedin.com/in/dafandikri" className="btn btn-sm mr-2 btn-primary">
                                         <span className="btn-text">Connect</span>
                                     </a>
-                                    <button className="btn btn-sm btn-primary" type="button">
-                                        <span className="btn-text">Close</span>
-                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -313,9 +313,6 @@ const Hobbies = () => {
                         <a href="https://letterboxd.com/dafandikri/" className="btn btn-sm mr-2 btn-primary border-dark" target="_blank" rel="noopener noreferrer">
                             <span className="btn-text">View on Letterboxd</span>
                         </a>
-                        <button className="btn btn-sm btn-primary" type="button">
-                            <span className="btn-text">Close</span>
-                        </button>
                     </div>
                 </div>
             </div>
