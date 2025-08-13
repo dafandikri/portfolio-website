@@ -8,11 +8,15 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve -s dist -l $PORT"
+    "start": "serve -s dist -l $PORT",
+    "fetch-reviews": "node scripts/fetch-letterboxd.js",
+    "build-with-reviews": "npm run fetch-reviews && npm run build"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "@xmldom/xmldom": "^0.9.8",
     "bootstrap": "^5.3.3",
+    "dotenv": "^17.2.1",
     "framer-motion": "^12.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
