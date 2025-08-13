@@ -91,7 +91,15 @@ const Experience = () => {
                             </div>
                             
                             {/* Tip Box with Yellow Background - Now full width */}
-                            <div id="experienceContent" className="p-3 mb-3" style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
+                            <motion.div 
+                                key={selectedYear}
+                                id="experienceContent" 
+                                className="p-3 mb-3" 
+                                style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                            >
                                 <div className="d-flex">
                                     <div className="mr-3">
                                         {/* Company Logo Icon that changes based on selected year - Made bigger like skillsets */}
@@ -119,7 +127,7 @@ const Experience = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                             
                             <div className="form-check mb-2">
                                 <label className="form-check-label">
