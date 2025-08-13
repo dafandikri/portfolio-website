@@ -201,53 +201,70 @@ const Hobbies = () => {
                         {/* Left Side - Movie Poster */}
                         <div className="col-md-4">
                             <div className="p-2">
-                                {/* Widescreen cinematic poster without background */}
-                                <div style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    overflow: "hidden",
-                                    height: "280px"
-                                }}>
-                                    {currentReview.poster_url && !currentReview.poster_url.includes('empty-poster') ? (
+                                {/* Widescreen cinematic poster with Windows 95 border that hugs the image */}
+                                {currentReview.poster_url && !currentReview.poster_url.includes('empty-poster') ? (
+                                    <div style={{
+                                        border: "2px solid #000", 
+                                        borderRightColor: "#DFDFDF", 
+                                        borderBottomColor: "#DFDFDF", 
+                                        backgroundColor: "#FFFFFF", 
+                                        padding: "3px",
+                                        display: "inline-block",
+                                        lineHeight: 0
+                                    }}>
                                         <img 
                                             src={currentReview.poster_url} 
                                             alt={`${currentReview.title} Cinematic Poster`} 
                                             style={{
+                                                width: "100%",
                                                 maxWidth: "100%",
-                                                maxHeight: "100%",
-                                                objectFit: "cover",
-                                                transition: "opacity 0.5s ease-in-out"
+                                                height: "auto",
+                                                objectFit: "contain",
+                                                display: "block"
                                             }}
                                             onError={(e) => {
                                                 // Fallback if poster fails to load
                                                 e.target.style.display = 'none';
-                                                e.target.nextSibling.style.display = 'flex';
+                                                e.target.parentElement.nextSibling.style.display = 'flex';
                                             }}
                                         />
-                                    ) : null}
+                                    </div>
+                                ) : (
                                     <div style={{
-                                        display: (!currentReview.poster_url || currentReview.poster_url.includes('empty-poster')) ? "flex" : "none", 
-                                        flexDirection: "column", 
-                                        alignItems: "center", 
-                                        justifyContent: "center", 
-                                        height: "100%", 
-                                        backgroundColor: "#f5f5f5",
-                                        color: "#666",
-                                        fontSize: "14px",
-                                        fontFamily: "'Windows 95', 'MS Sans Serif', monospace",
-                                        textAlign: "center",
-                                        padding: "20px"
+                                        border: "2px solid #000", 
+                                        borderRightColor: "#DFDFDF", 
+                                        borderBottomColor: "#DFDFDF", 
+                                        backgroundColor: "#FFFFFF", 
+                                        padding: "3px",
+                                        height: "280px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        overflow: "hidden"
                                     }}>
-                                        <div style={{fontSize: "40px", marginBottom: "12px"}}>🎬</div>
-                                        <div style={{fontWeight: "bold", fontSize: "16px", marginBottom: "8px"}}>
-                                            {currentReview.title}
-                                        </div>
-                                        <div style={{fontSize: "12px", color: "#888"}}>
-                                            Cinematic Poster Loading...
+                                        <div style={{
+                                            display: "flex", 
+                                            flexDirection: "column", 
+                                            alignItems: "center", 
+                                            justifyContent: "center", 
+                                            height: "100%", 
+                                            backgroundColor: "#f5f5f5",
+                                            color: "#666",
+                                            fontSize: "14px",
+                                            fontFamily: "'Windows 95', 'MS Sans Serif', monospace",
+                                            textAlign: "center",
+                                            padding: "20px"
+                                        }}>
+                                            <div style={{fontSize: "40px", marginBottom: "12px"}}>🎬</div>
+                                            <div style={{fontWeight: "bold", fontSize: "16px", marginBottom: "8px"}}>
+                                                {currentReview.title}
+                                            </div>
+                                            <div style={{fontSize: "12px", color: "#888"}}>
+                                                Cinematic Poster Loading...
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </div>
                         
