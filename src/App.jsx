@@ -9,6 +9,7 @@ import Experience from './components/Experience'
 import Project from './components/Project'
 import Contact from './components/Contact'
 import KnowEachOther from './components/KnowEachOther'
+import Hobbies from './components/Hobbies'
 import { getImage } from './assets'
 
 function App() {
@@ -118,6 +119,25 @@ function App() {
               Projects
             </motion.h2>
             <Project />
+          </div>
+          
+          <div id="hobbies" className="mb-5">
+            <motion.h2 
+              className="mb-3 text-white" 
+              style={{
+                textShadow: "2px 2px 8px rgba(0, 0, 0, 0.8)",
+                fontWeight: "bold",
+                letterSpacing: "1px",
+                fontSize: "1.8rem"
+              }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-100px" }}
+            >
+              Hobbies
+            </motion.h2>
+            <Hobbies />
           </div>
           
           <div id="contact">
