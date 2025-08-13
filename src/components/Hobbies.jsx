@@ -201,26 +201,23 @@ const Hobbies = () => {
                         {/* Left Side - Movie Poster */}
                         <div className="col-md-4">
                             <div className="p-2">
-                                {/* Movie poster with Windows 95 border */}
+                                {/* Widescreen cinematic poster without background */}
                                 <div style={{
-                                    border: "2px solid #000", 
-                                    borderRightColor: "#DFDFDF", 
-                                    borderBottomColor: "#DFDFDF", 
-                                    backgroundColor: "#FFFFFF", 
-                                    padding: "3px",
-                                    height: "280px",
                                     display: "flex",
                                     alignItems: "center",
-                                    justifyContent: "center"
+                                    justifyContent: "center",
+                                    overflow: "hidden",
+                                    height: "280px"
                                 }}>
                                     {currentReview.poster_url && !currentReview.poster_url.includes('empty-poster') ? (
                                         <img 
                                             src={currentReview.poster_url} 
-                                            alt={`${currentReview.title} Poster`} 
+                                            alt={`${currentReview.title} Cinematic Poster`} 
                                             style={{
                                                 maxWidth: "100%",
                                                 maxHeight: "100%",
-                                                objectFit: "contain"
+                                                objectFit: "cover",
+                                                transition: "opacity 0.5s ease-in-out"
                                             }}
                                             onError={(e) => {
                                                 // Fallback if poster fails to load
@@ -247,7 +244,7 @@ const Hobbies = () => {
                                             {currentReview.title}
                                         </div>
                                         <div style={{fontSize: "12px", color: "#888"}}>
-                                            Poster Coming Soon
+                                            Cinematic Poster Loading...
                                         </div>
                                     </div>
                                 </div>
