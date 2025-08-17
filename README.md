@@ -2,6 +2,16 @@
 
 A nostalgic Windows 95-themed portfolio website built with React and Vite, showcasing my journey as a Software Engineer and Problem Solver.
 
+## PageSpeed Insights Results
+
+### Desktop Performance
+
+![Desktop PageSpeed Score](readme/pagespeed_desktop.png)
+
+### Mobile Performance
+
+![Mobile PageSpeed Score](readme/pagespeed_mobile.png)
+
 ## About Me
 
 I'm **Erdafa Andikri**, a passionate Software Engineer and Computer Science student at the University of Indonesia. I specialize in full-stack development, AI integration, and creating innovative solutions that bridge technology with real-world problems. When I'm not coding, you can find me exploring my creative side through filmmaking. And I love watching films :D
