@@ -214,7 +214,10 @@ const Hobbies = () => {
                                     }}>
                                         <img 
                                             src={currentReview.poster_url} 
-                                            alt={`${currentReview.title} Cinematic Poster`} 
+                                            alt={`${currentReview.title} movie poster`}
+                                            width="280"
+                                            height="400"
+                                            loading="lazy"
                                             style={{
                                                 width: "100%",
                                                 maxWidth: "100%",
@@ -223,7 +226,6 @@ const Hobbies = () => {
                                                 display: "block"
                                             }}
                                             onError={(e) => {
-                                                // Fallback if poster fails to load
                                                 e.target.style.display = 'none';
                                                 e.target.parentElement.nextSibling.style.display = 'flex';
                                             }}

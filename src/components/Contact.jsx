@@ -31,15 +31,36 @@ const Contact = () => {
                                 {/* Profile image */}
                                 <div style={{marginTop: "30px", marginBottom: "20px", position: "relative", display: "inline-block"}}>
                                     <div style={{border: "1px solid #888", borderRightColor: "#fff", borderBottomColor: "#fff", backgroundColor: "#fff", padding: "8px", display: "inline-block"}}>
-                                        <img src={getImage("profile")} alt="Erdafa Andikri" style={{width: "140px", height: "140px", objectFit: "cover"}} />
+                                        <img 
+                                            src={getImage("profile")} 
+                                            alt="Erdafa Andikri" 
+                                            width="140" 
+                                            height="140" 
+                                            loading="lazy"
+                                            style={{width: "140px", height: "140px", objectFit: "cover"}} 
+                                        />
                                     </div>
                                     
                                     {/* Small floating icons like the original MSN screen */}
                                     <div style={{position: "absolute", top: "15px", right: "-20px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src="/profile.png" alt="portfolio icon" width="24" height="24" style={{borderRadius: "2px", objectFit: "cover"}} />
+                                        <img 
+                                            src="/profile.png" 
+                                            alt="portfolio icon" 
+                                            width="24" 
+                                            height="24" 
+                                            loading="lazy"
+                                            style={{borderRadius: "2px", objectFit: "cover"}} 
+                                        />
                                     </div>
                                     <div style={{position: "absolute", bottom: "30px", left: "-15px", background: "white", border: "1px solid #aaa", padding: "3px", borderRadius: "2px"}}>
-                                        <img src={getIcon("code")} alt="code icon" width="24" height="24" style={{imageRendering: "pixelated"}} />
+                                        <img 
+                                            src={getIcon("code")} 
+                                            alt="code icon" 
+                                            width="24" 
+                                            height="24" 
+                                            loading="lazy"
+                                            style={{imageRendering: "pixelated"}} 
+                                        />
                                     </div>
                                 </div>
                                 
