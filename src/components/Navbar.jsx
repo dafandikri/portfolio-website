@@ -134,7 +134,7 @@ const Navbar = () => {
                                 >
                                     <img 
                                         src={getIcon(item.icon)} 
-                                        alt={item.name} 
+                                        alt={`${item.icon} icon`}
                                         style={iconStyle} 
                                     />
                                     <span className="mt-1">{item.name}</span>
@@ -212,7 +212,7 @@ const Navbar = () => {
                     >
                         <img 
                             src={getIcon("linkedin")} 
-                            alt="LinkedIn" 
+                            alt="LinkedIn icon" 
                             style={iconStyle} 
                         />
                         <span className="mt-1">LinkedIn</span>
@@ -257,7 +257,7 @@ const Navbar = () => {
                             >
                                 <img 
                                     src={getIcon(item.icon)} 
-                                    alt={item.name} 
+                                    alt={`${item.icon} icon`}
                                     style={{
                                         width: "16px",
                                         height: "16px",
@@ -297,7 +297,7 @@ const Navbar = () => {
                         >
                             <img 
                                 src={getIcon("linkedin")} 
-                                alt="LinkedIn" 
+                                alt="LinkedIn icon" 
                                 style={{
                                     width: "16px",
                                     height: "16px",

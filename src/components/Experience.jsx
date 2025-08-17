@@ -106,7 +106,7 @@ const Experience = () => {
                                         <div style={{width: "64px", height: "64px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
                                             <img 
                                                 src={getIcon(experienceData[selectedYear].logo)} 
-                                                alt="Company Logo" 
+                                                alt={`${experienceData[selectedYear].logo} company logo`}
                                                 style={{width: "48px", height: "48px", imageRendering: "pixelated"}} 
                                             />
                                         </div>
