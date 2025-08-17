@@ -117,10 +117,7 @@ const SkillsetsDialog = () => {
                     
                     <div className="d-flex justify-content-end mt-4">
                         <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
-                            <span className="btn-text">View Details</span>
-                        </button>
-                        <button className="btn btn-sm btn-primary" type="button">
-                            <span className="btn-text">OK</span>
+                            <span className="btn-text">Wow!</span>
                         </button>
                     </div>
                 </div>

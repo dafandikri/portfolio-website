@@ -91,14 +91,22 @@ const Experience = () => {
                             </div>
                             
                             {/* Tip Box with Yellow Background - Now full width */}
-                            <div id="experienceContent" className="p-3 mb-3" style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
+                            <motion.div 
+                                key={selectedYear}
+                                id="experienceContent" 
+                                className="p-3 mb-3" 
+                                style={{backgroundColor: "#FFFFE1", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut" }}
+                            >
                                 <div className="d-flex">
                                     <div className="mr-3">
                                         {/* Company Logo Icon that changes based on selected year - Made bigger like skillsets */}
                                         <div style={{width: "64px", height: "64px", backgroundColor: "#FFFFE1", display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #888", borderRightColor: "#FFF", borderBottomColor: "#FFF"}}>
                                             <img 
                                                 src={getIcon(experienceData[selectedYear].logo)} 
-                                                alt="Company Logo" 
+                                                alt={`${experienceData[selectedYear].logo} company logo`}
                                                 style={{width: "48px", height: "48px", imageRendering: "pixelated"}} 
                                             />
                                         </div>
@@ -119,7 +127,7 @@ const Experience = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                             
                             <div className="form-check mb-2">
                                 <label className="form-check-label">
@@ -137,8 +145,8 @@ const Experience = () => {
                             
                             {/* Close Button */}
                             <div className="d-flex justify-content-end mt-3">
-                                <button className="btn btn-sm btn-primary border-dark" type="button">
-                                    <span className="btn-text">Close</span>
+                                <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
+                                    <span className="btn-text">Amazing!</span>
                                 </button>
                             </div>
                         </div>

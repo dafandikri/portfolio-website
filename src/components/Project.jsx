@@ -187,7 +187,35 @@ const Project = () => {
                                                 {/* Project Screenshot with Windows 95 border */}
                                                 <div style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", backgroundColor: "#FFFFFF", padding: "3px", marginBottom: "10px"}}>
                                                     {project.image ? (
-                                                        <img src={getImage(project.image)} className="img-fluid" alt={`${project.title} Screenshot`} />
+                                                        <div style={{position: "relative"}}>
+                                                            <img 
+                                                                src={getImage(project.image)} 
+                                                                className="img-fluid" 
+                                                                alt={`${project.title} Screenshot`}
+                                                                width="280"
+                                                                height="180"
+                                                                loading="lazy"
+                                                                style={{width: "100%", height: "auto", maxWidth: "280px"}}
+                                                            />
+                                                            <div style={{
+                                                                position: "absolute",
+                                                                top: "50%",
+                                                                left: "50%",
+                                                                transform: "translate(-50%, -50%)",
+                                                                background: "rgba(0,0,0,0.7)",
+                                                                color: "white",
+                                                                padding: "4px 8px",
+                                                                borderRadius: "3px",
+                                                                fontSize: "10px",
+                                                                opacity: 0,
+                                                                transition: "opacity 0.3s",
+                                                                pointerEvents: "none"
+                                                            }}
+                                                            className="hover-overlay"
+                                                            >
+                                                                Click to enlarge
+                                                            </div>
+                                                        </div>
                                                     ) : (
                                                         <div style={{
                                                             display: "flex", 

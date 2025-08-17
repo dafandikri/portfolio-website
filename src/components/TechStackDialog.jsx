@@ -146,10 +146,7 @@ const TechStackDialog = () => {
                     
                     <div className="d-flex justify-content-end mt-4">
                         <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
-                            <span className="btn-text">View All</span>
-                        </button>
-                        <button className="btn btn-sm btn-primary" type="button">
-                            <span className="btn-text">OK</span>
+                            <span className="btn-text">Nice!</span>
                         </button>
                     </div>
                 </div>

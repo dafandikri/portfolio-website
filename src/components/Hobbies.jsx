@@ -214,7 +214,10 @@ const Hobbies = () => {
                                     }}>
                                         <img 
                                             src={currentReview.poster_url} 
-                                            alt={`${currentReview.title} Cinematic Poster`} 
+                                            alt={`${currentReview.title} movie poster`}
+                                            width="280"
+                                            height="400"
+                                            loading="lazy"
                                             style={{
                                                 width: "100%",
                                                 maxWidth: "100%",
@@ -223,7 +226,6 @@ const Hobbies = () => {
                                                 display: "block"
                                             }}
                                             onError={(e) => {
-                                                // Fallback if poster fails to load
                                                 e.target.style.display = 'none';
                                                 e.target.parentElement.nextSibling.style.display = 'flex';
                                             }}
@@ -313,9 +315,6 @@ const Hobbies = () => {
                         <a href="https://letterboxd.com/dafandikri/" className="btn btn-sm mr-2 btn-primary border-dark" target="_blank" rel="noopener noreferrer">
                             <span className="btn-text">View on Letterboxd</span>
                         </a>
-                        <button className="btn btn-sm btn-primary" type="button">
-                            <span className="btn-text">Close</span>
-                        </button>
                     </div>
                 </div>
             </div>

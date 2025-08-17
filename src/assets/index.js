@@ -1,8 +1,8 @@
 // Import all images for proper Vite bundling
 import profileImg from './img/profile.jpg';
 import backgroundImg from './img/background.jpg';
-import interBioProject from './img/interbio_project.png';
-import portfolioProject from './img/portfolio_project.png';
+import interBioProject from './img/interbio_project.webp';
+import portfolioProject from './img/portfolio_project.webp';
 
 // Import favicon icons
 import briefcaseIcon from './img/favicon/briefcase.png';

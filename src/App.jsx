@@ -1,16 +1,33 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import './App.css'
 import Navbar from './components/Navbar'
 import ProfileCard from './components/ProfileCard'
-import TechStackDialog from './components/TechStackDialog'
-import SkillsetsDialog from './components/SkillsetsDialog'
-import Experience from './components/Experience'
-import Project from './components/Project'
-import Contact from './components/Contact'
 import KnowEachOther from './components/KnowEachOther'
-import Hobbies from './components/Hobbies'
 import { getImage } from './assets'
+
+// Lazy load components that are not immediately visible
+const TechStackDialog = lazy(() => import('./components/TechStackDialog'))
+const SkillsetsDialog = lazy(() => import('./components/SkillsetsDialog'))
+const Experience = lazy(() => import('./components/Experience'))
+const Project = lazy(() => import('./components/Project'))
+const Hobbies = lazy(() => import('./components/Hobbies'))
+const Contact = lazy(() => import('./components/Contact'))
+
+// Loading component for lazy-loaded sections
+const SectionLoader = () => (
+  <div style={{
+    padding: "40px",
+    textAlign: "center",
+    backgroundColor: "#C0C0C0",
+    border: "2px solid #FFF",
+    borderRightColor: "#000",
+    borderBottomColor: "#000",
+    color: "#000"
+  }}>
+    Loading...
+  </div>
+)
 
 function App() {
   // Force scroll to top on page load/refresh
@@ -51,7 +68,7 @@ function App() {
             <KnowEachOther />
           </div>
           
-          {/* Tech Stack and Skillsets section with animated title */}
+          {/* Tech Stack and Skillsets section with lazy loading */}
           <div id="tech-skills" className="mb-5">
             <motion.h2 
               className="mb-3 text-white" 
@@ -71,10 +88,14 @@ function App() {
             
             <div className="row">
               <div className="col-lg-5">
-                <SkillsetsDialog />
+                <Suspense fallback={<SectionLoader />}>
+                  <SkillsetsDialog />
+                </Suspense>
               </div>
               <div className="col-lg-7">
-                <TechStackDialog />
+                <Suspense fallback={<SectionLoader />}>
+                  <TechStackDialog />
+                </Suspense>
               </div>
             </div>
           </div>
@@ -118,7 +139,9 @@ function App() {
             >
               Projects
             </motion.h2>
-            <Project />
+            <Suspense fallback={<SectionLoader />}>
+              <Project />
+            </Suspense>
           </div>
           
           <div id="hobbies" className="mb-5">
@@ -137,7 +160,9 @@ function App() {
             >
               Hobbies
             </motion.h2>
-            <Hobbies />
+            <Suspense fallback={<SectionLoader />}>
+              <Hobbies />
+            </Suspense>
           </div>
           
           <div id="contact">
@@ -156,7 +181,9 @@ function App() {
             >
               Contact Me
             </motion.h2>
-            <Contact />
+            <Suspense fallback={<SectionLoader />}>
+              <Contact />
+            </Suspense>
           </div>
         </div>
       </div>

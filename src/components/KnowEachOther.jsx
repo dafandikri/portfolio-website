@@ -61,7 +61,7 @@ const KnowEachOther = () => {
     >
       <div className="card">
         <div className="card-header">
-          <div className="icon w95-file-text"></div>
+          <div className="icon w95-file-text" role="img" aria-label="WordPad document icon"></div>
           <span>WordPad - Introduction.doc</span>
         </div>
         <div className="card-body word-processor">
@@ -99,7 +99,7 @@ const KnowEachOther = () => {
           <div className="text-content p-3">
             <h1 className="typing-text">
               {displayText}
-              <span className={`cursor ${cursorVisible ? 'visible' : 'invisible'}`}>|</span>
+              <span className={`cursor ${cursorVisible ? 'visible' : 'invisible'}`} aria-hidden="true">|</span>
             </h1>
           </div>
         </div>
