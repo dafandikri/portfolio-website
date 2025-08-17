@@ -3,12 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Preconnect to external domains for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://code.jquery.com">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preload" href="/src/fonts/w-95-sans-serif.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="Erdafa Andikri - Software Architect & Full-Stack Engineer from Jakarta, Indonesia. Experienced in React, Django, Flutter, and modern web technologies. Explore my portfolio featuring projects in e-commerce, mobile apps, and enterprise solutions." />
@@ -32,22 +29,25 @@
     <meta name="twitter:description" content="Innovative Software Architect from Jakarta, Indonesia. Expert in React, Django, Flutter, and modern web technologies." />
     <meta name="twitter:image" content="https://dafandikri.tech/src/assets/img/profile.jpg" />
     
-    <!-- Favicon with preloading for performance -->
-    <link rel="preload" href="/profile.png" as="image" type="image/png" />
+    <!-- Favicon (keep the small resolution for favicon) -->
     <link rel="icon" type="image/png" href="/profile.png" />
     <link rel="apple-touch-icon" href="/profile.png" />
     
-    <!-- Preload only the most critical images -->
+    <!-- Preload critical images to prevent FOUC -->
     <link rel="preload" href="/src/assets/img/background.jpg" as="image" />
     <link rel="preload" href="/src/assets/img/profile.jpg" as="image" />
-    <link rel="preload" href="/src/assets/img/interbio_project.webp" as="image" />
-    <link rel="preload" href="/src/assets/img/portfolio_project.webp" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/user.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/code.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/briefcase.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/folder.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/envelope.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/linkedin.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/kementrans.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/interbio.png" as="image" />
+    <link rel="preload" href="/src/assets/img/favicon/ristek.png" as="image" />
     
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="/src/fonts/w-95-sans-serif.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-    
-    <!-- Load CSS asynchronously to prevent render blocking -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet';document.body.classList.add('css-loaded')">
+    <!-- Bootstrap CSS with async loading -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
     
     <title>Erdafa Andikri - Portfolio | Software Architect & Full-Stack Engineer</title>
@@ -55,29 +55,16 @@
   <body>
     <div id="root"></div>
     
-    <!-- React application entry point (highest priority) -->
-    <script type="module" src="/src/main.jsx"></script>
+    <!-- jQuery must come before Bootstrap and your other scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    <!-- Load non-critical scripts asynchronously -->
-    <script>
-      // Load jQuery and Bootstrap asynchronously after React loads
-      function loadScript(src, callback) {
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        if (callback) script.onload = callback;
-        document.head.appendChild(script);
-      }
-      
-      // Load scripts in sequence to avoid conflicts
-      window.addEventListener('load', function() {
-        loadScript('https://code.jquery.com/jquery-3.6.0.min.js', function() {
-          loadScript('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', function() {
-            // Load W95 script
-            loadScript('/src/js/w95.js');
-          });
-        });
-      });
-    </script>
+    <!-- Bootstrap JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom W95 script -->
+    <script src="/src/js/w95.js"></script>
+    
+    <!-- React application entry point -->
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
