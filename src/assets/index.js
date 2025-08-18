@@ -36,6 +36,8 @@ import ubuntuIcon from './img/favicon/ubuntu.png';
 import userIcon from './img/favicon/user.png';
 import vscIcon from './img/favicon/vsc.png';
 import wordpressIcon from './img/favicon/wordpress.png';
+import postmanIcon from './img/favicon/postman.png';
+import nodejsIcon from './img/favicon/nodejs.png';
 
 // Import skill icons
 import aiSkill from './img/skills/ai.png';
@@ -86,7 +88,9 @@ export const icons = {
   ubuntu: ubuntuIcon,
   user: userIcon,
   vsc: vscIcon,
-  wordpress: wordpressIcon
+  wordpress: wordpressIcon,
+  postman: postmanIcon,
+  nodejs: nodejsIcon
 };
 
 export const skills = {
