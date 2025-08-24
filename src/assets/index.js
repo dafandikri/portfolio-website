@@ -39,6 +39,7 @@ import wordpressIcon from './img/favicon/wordpress.png';
 import postmanIcon from './img/favicon/postman.png';
 import nodejsIcon from './img/favicon/nodejs.png';
 import viciiIcon from './img/favicon/vicii.png';
+import cameraIcon from './img/favicon/camera.png';
 
 // Import skill icons
 import aiSkill from './img/skills/ai.png';
@@ -92,7 +93,8 @@ export const icons = {
   wordpress: wordpressIcon,
   postman: postmanIcon,
   nodejs: nodejsIcon,
-  vicii: viciiIcon
+  vicii: viciiIcon,
+  camera: cameraIcon,
 };
 
 export const skills = {
