@@ -9,12 +9,13 @@ const Experience = () => {
         "2025": {
             title: "Intern - Kementerian Transmigrasi Republik Indonesia",
             date: "July 2025 - August 2025",
-            description: "Researched national regulations on Electronic-Based Government Systems (SPBE) including Presidential Regulation No. 95/2018 and Ministry of Administrative Reform guidelines to assess their impact on digital services at the Ministry of Transmigration.",
+            description: "Collaborated with 2 other interns to build an automated training evaluation system using Google tools and scripting, speeding up admin tasks and certificate delivery.",
             achievements: [
-                "Automated certificate design process using programming skills, increasing output efficiency by 4x",
-                "Eliminated the need for manual formatting through automation",
+                "Automated certificate design process using programming skills, increasing output efficiency by 4x and eliminating manual formatting",
+                "Built automated evaluation system for training, integrating Google Forms, Sheets, Slides, and Autocrat",
+                "Used scripting to auto-organize folders, calculate improvement percentages, and send certificates via email. Leading to 75% faster administrative process, and hundreds of certificates sent automatically",
                 "Assisted Strategic Planning Training Team with participant registration and session flow",
-                "Supported more than 20 employees in training activities"
+                "Supported hundreds of employees in training activities"
             ],
             logo: "kementrans"
         },
