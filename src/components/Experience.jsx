@@ -13,7 +13,7 @@ const Experience = () => {
             achievements: [
                 "Automated certificate design process using programming skills, increasing output efficiency by 4x and eliminating manual formatting",
                 "Built automated evaluation system for training, integrating Google Forms, Sheets, Slides, and Autocrat",
-                "Used scripting to auto-organize folders, calculate improvement percentages, and send certificates via email. Leading to 75% faster administrative process, and hundreds of certificates sent automatically",
+                "Used scripting to auto-organize folders, calculate improvement percentages, and send certificates via email. Leading to 75% faster administrative process",
                 "Assisted Strategic Planning Training Team with participant registration and session flow",
                 "Supported hundreds of employees in training activities"
             ],
