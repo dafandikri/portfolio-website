@@ -68,30 +68,44 @@ const ProfileCard = () => {
                         <button className="btn btn-sm" style={{width: "16px", height: "16px", fontSize: "8px", lineHeight: 1, backgroundColor: "#C0C0C0", border: "2px solid #FFF", borderRightColor: "#000", borderBottomColor: "#000", padding: 0}}>&#10006;</button>
                     </div>
                 </div>
-                <div className="card-body" style={{position: "relative", paddingBottom: "70px"}}>
-                    <div className="d-flex flex-row align-items-center">
-                        {/* Larger square image with Windows 95 border style */}
-                        <div className="mr-4" style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "6px", backgroundColor: "#C0C0C0"}}>
-                            {/* Use the proper asset import with explicit dimensions */}
+                <div className="card-body" style={{position: "relative", paddingBottom: "60px"}}>
+                    {/* Responsive layout: column on mobile, row on desktop */}
+                    <div className="d-flex flex-column flex-md-row align-items-center align-items-md-center">
+                        {/* Profile image with responsive sizing */}
+                        <div className="mb-3 mb-md-0 mr-md-5" style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "6px", backgroundColor: "#C0C0C0"}}>
+                            {/* Responsive image sizing: smaller on mobile, larger on desktop */}
+                            <img 
+                                src={getImage("profile")} 
+                                alt="Erdafa Andikri's profile photo" 
+                                width="150" 
+                                height="150" 
+                                loading="eager"
+                                className="d-md-none"
+                                style={{width: "150px", height: "150px", display: "block", objectFit: "cover"}} 
+                            />
                             <img 
                                 src={getImage("profile")} 
                                 alt="Erdafa Andikri's profile photo" 
                                 width="200" 
                                 height="200" 
                                 loading="eager"
+                                className="d-none d-md-block"
                                 style={{width: "200px", height: "200px", display: "block", objectFit: "cover"}} 
                             />
                         </div>
-                        <div style={{padding: "15px"}}>
-                            <h2 className="mb-3" style={{fontSize: "28px", fontWeight: "bold"}}>Erdafa Andikri</h2>
-                            <p className="card-text" style={{fontSize: "18px", lineHeight: "1.5"}}>
-                                An excellent Software Architect,
-                                a versatile Full-Stack Engineer,
-                                and to the core, a problem solver,
-                                crafting innovative IT solutions
-                                from the lively city of Jakarta,
-                                Indonesia.
-                            </p>
+                        {/* Text content with responsive alignment - centered vertically on desktop, left-aligned text on mobile */}
+                        <div style={{padding: "10px"}} className="text-center text-md-left d-md-flex d-md-flex-column d-md-justify-content-center">
+                            <div>
+                                <h2 className="mb-3 mb-md-1" style={{fontSize: "28px", fontWeight: "bold", display: "block"}}>Erdafa Andikri</h2>
+                                <p className="card-text mb-0 text-left text-md-left" style={{fontSize: "18px", lineHeight: "1.4", marginTop: "0", display: "block"}}>
+                                    An excellent Software Architect,
+                                    a versatile Full-Stack Engineer,
+                                    and to the core, a problem solver,
+                                    crafting innovative IT solutions
+                                    from the lively city of Jakarta,
+                                    Indonesia.
+                                </p>
+                            </div>
                         </div>
                     </div>
                     
