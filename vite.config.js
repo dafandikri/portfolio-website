@@ -5,15 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Optimize chunks for faster LCP
+    // Optimize chunks
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          // Split animations into separate chunk to defer loading
-          animations: ['framer-motion'],
-          // Split other heavy dependencies  
-          utils: ['react/jsx-runtime']
+          animations: ['framer-motion']
         }
       }
     },
@@ -22,16 +19,12 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true,
-        // More aggressive compression
-        unsafe: true,
-        unsafe_comps: true,
-        unsafe_math: true
+        drop_debugger: true
       }
     },
     // Optimize assets - reduce inline limit to prioritize external loading
-    assetsInlineLimit: 1024,
-    chunkSizeWarningLimit: 600,
+    assetsInlineLimit: 2048,
+    chunkSizeWarningLimit: 800,
     // Enable CSS code splitting
     cssCodeSplit: true
   },
