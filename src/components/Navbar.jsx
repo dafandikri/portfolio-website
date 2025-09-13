@@ -83,7 +83,7 @@ const Navbar = () => {
             transition={{ 
                 duration: 0.3, 
                 ease: "easeOut",
-                delay: 0
+                delay: 0.3
             }}
         >
             <div style={{
