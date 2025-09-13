@@ -33,15 +33,68 @@
     <link rel="icon" type="image/png" href="/profile.png" />
     <link rel="apple-touch-icon" href="/profile.png" />
     
-    <!-- Preload critical images to prevent FOUC -->
+    <!-- Preload critical images to prevent FOUC - HIGHEST PRIORITY -->
+    <link rel="preload" href="/src/assets/img/profile.jpg" as="image" fetchpriority="high" />
     <link rel="preload" href="/src/assets/img/background.jpg" as="image" />
-    <link rel="preload" href="/src/assets/img/profile.jpg" as="image" />
 
     <link rel="preload" href="/src/assets/img/interbio_project.webp" as="image" />
     <link rel="preload" href="/src/assets/img/portfolio_project.webp" as="image" />
     
-    <!-- Bootstrap CSS with async loading -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Bootstrap CSS with async loading + critical CSS inlined -->
+    <style>
+      /* Critical CSS - Above the fold styles */
+      @font-face {
+        font-family: 'w95fa';
+        src: url('/src/fonts/w-95-sans-serif.woff2') format('woff2'),
+             url('/src/fonts/w-95-sans-serif.woff') format('woff');
+        font-display: swap;
+        font-weight: normal;
+        font-style: normal;
+      }
+      body { 
+        margin: 0; 
+        font-family: 'w95fa', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #008080; 
+        overflow-x: hidden;
+      }
+      #root { min-height: 100vh; }
+      .card { 
+        background: #c0c0c0; 
+        border: 2px solid #fff; 
+        border-right-color: #000; 
+        border-bottom-color: #000; 
+      }
+      .card-header { 
+        background: linear-gradient(90deg, #0080ff 0%, #0080ff 100%); 
+        color: white; 
+        padding: 4px 8px; 
+        font-size: 11px; 
+        border-bottom: 1px solid #000; 
+      }
+      .card-body { padding: 12px; }
+      .d-flex { display: flex; }
+      .flex-column { flex-direction: column; }
+      .align-items-center { align-items: center; }
+      .justify-content-center { justify-content: center; }
+      .text-center { text-align: center; }
+      .mb-3 { margin-bottom: 1rem; }
+      .mb-0 { margin-bottom: 0; }
+      /* Optimize LCP element styling */
+      .card-text {
+        font-display: swap;
+        contain: layout style;
+      }
+      @media (min-width: 768px) {
+        .flex-md-row { flex-direction: row; }
+        .text-md-left { text-align: left; }
+        .d-md-flex { display: flex; }
+        .d-md-none { display: none; }
+        .d-none.d-md-block { display: block; }
+      }
+    </style>
+    
+    <!-- Defer non-critical CSS -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" media="print" />
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"></noscript>
     
     <title>Erdafa Andikri - Portfolio | Software Architect & Full-Stack Engineer</title>
@@ -49,16 +102,10 @@
   <body>
     <div id="root"></div>
     
-    <!-- jQuery must come before Bootstrap and your other scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Bootstrap JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom W95 script -->
-    <script src="/src/js/w95.js"></script>
-    
-    <!-- React application entry point -->
+    <!-- React application entry point - Load first -->
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Bootstrap JavaScript Bundle with Popper - Load async after React -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

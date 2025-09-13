@@ -83,7 +83,7 @@ const Navbar = () => {
             transition={{ 
                 duration: 0.3, 
                 ease: "easeOut",
-                delay: 0
+                delay: 0.3
             }}
         >
             <div style={{
@@ -148,6 +148,9 @@ const Navbar = () => {
                     <div className="d-md-none">
                         <motion.button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                            aria-expanded={isMenuOpen}
+                            aria-controls="mobile-navigation-menu"
                             style={{
                                 backgroundColor: "#C0C0C0",
                                 border: "2px solid #FFFFFF",
@@ -223,6 +226,7 @@ const Navbar = () => {
                 {/* Mobile dropdown menu */}
                 {isMenuOpen && (
                     <motion.div 
+                        id="mobile-navigation-menu"
                         className="d-md-none"
                         style={{
                             borderTop: "1px solid #808080",

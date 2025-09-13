@@ -44,7 +44,7 @@ function App() {
     // Ensure scroll position stays at top after a short delay (in case of any layout shifts)
     const timeoutId = setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 100);
+    }, 50);
     
     return () => clearTimeout(timeoutId);
   }, []);

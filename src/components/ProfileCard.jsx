@@ -57,7 +57,7 @@ const ProfileCard = () => {
                 transition={{ 
                     duration: 0.3, 
                     ease: "easeOut",
-                    delay: 0.3
+                    delay: 0
                 }}
             >
                 <div className="card-header d-flex justify-content-between align-items-center">
@@ -80,6 +80,7 @@ const ProfileCard = () => {
                                 width="150" 
                                 height="150" 
                                 loading="eager"
+                                fetchpriority="high"
                                 className="d-md-none"
                                 style={{width: "150px", height: "150px", display: "block", objectFit: "cover"}} 
                             />
@@ -89,6 +90,7 @@ const ProfileCard = () => {
                                 width="200" 
                                 height="200" 
                                 loading="eager"
+                                fetchpriority="high"
                                 className="d-none d-md-block"
                                 style={{width: "200px", height: "200px", display: "block", objectFit: "cover"}} 
                             />
@@ -189,7 +191,7 @@ const ProfileCard = () => {
                         </motion.button>
                     </div>
                 </div>
-            </motion.div>
+            </motion.div >
         </div>
     );
 };
