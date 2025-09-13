@@ -22,13 +22,17 @@ export default defineConfig({
         drop_debugger: true
       }
     },
-    // Optimize assets
-    assetsInlineLimit: 4096,
-    chunkSizeWarningLimit: 1000
+    // Optimize assets - reduce inline limit to prioritize external loading
+    assetsInlineLimit: 2048,
+    chunkSizeWarningLimit: 800,
+    // Enable CSS code splitting
+    cssCodeSplit: true
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion']
+    include: ['react', 'react-dom', 'framer-motion'],
+    // Force pre-bundling of critical dependencies
+    force: true
   },
   // Enable compression
   server: {
