@@ -50,16 +50,7 @@ const ProfileCard = () => {
 
     return (
         <div className="col-12 mb-4">
-            <motion.div 
-                className="card card-tertiary"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                    duration: 0.3, 
-                    ease: "easeOut",
-                    delay: 0.3
-                }}
-            >
+            <div className="card card-tertiary">
                 <div className="card-header d-flex justify-content-between align-items-center">
                     <span>Profile Card</span>
                     <div>
@@ -191,7 +182,7 @@ const ProfileCard = () => {
                         </motion.button>
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </div>
     );
 };
