@@ -93,7 +93,7 @@ const Contact = () => {
                                                     <img src={getIcon("gmail")} alt="Email" width="16" height="16" style={{marginRight: "5px"}} />
                                                     <strong style={{fontSize: "12px"}}>Email:</strong>
                                                 </div>
-                                                <a href="mailto:dafandikri@gmail.com" className="text-primary" style={{fontSize: "12px", wordBreak: "break-word", marginLeft: "8px"}}>dafandikri@gmail.com</a>
+                                                <a href="mailto:dafandikri@gmail.com" style={{fontSize: "12px", wordBreak: "break-word", marginLeft: "8px", color: "#000"}}>dafandikri@gmail.com</a>
                                             </div>
                                             
                                             <div className="d-flex align-items-center mb-2" style={{border: "1px solid #888", background: "#eee", padding: "6px 10px"}}>
@@ -101,7 +101,7 @@ const Contact = () => {
                                                     <img src={getIcon("linkedin")} alt="LinkedIn" width="16" height="16" style={{marginRight: "5px"}} />
                                                     <strong style={{fontSize: "12px"}}>LinkedIn:</strong>
                                                 </div>
-                                                <a href="https://linkedin.com/in/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "8px"}}>linkedin.com/in/dafandikri</a>
+                                                <a href="https://linkedin.com/in/dafandikri" style={{fontSize: "12px", marginLeft: "8px", color: "#000"}}>linkedin.com/in/dafandikri</a>
                                             </div>
                                         </div>
                                         
@@ -112,7 +112,7 @@ const Contact = () => {
                                                     <img src={getIcon("github")} alt="GitHub" width="16" height="16" style={{marginRight: "6px", imageRendering: "pixelated"}} />
                                                     <strong style={{fontSize: "12px"}}>GitHub:</strong>
                                                 </div>
-                                                <a href="https://github.com/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "10px"}}>github.com/dafandikri</a>
+                                                <a href="https://github.com/dafandikri" style={{fontSize: "12px", marginLeft: "10px", color: "#000"}}>github.com/dafandikri</a>
                                             </div>
                                             
                                             <div className="d-flex align-items-center" style={{border: "1px solid #888", background: "#f5f5f5", padding: "6px 12px"}}>
@@ -120,7 +120,7 @@ const Contact = () => {
                                                     <img src={getIcon("instagram")} alt="Instagram" width="16" height="16" style={{marginRight: "6px", imageRendering: "pixelated"}} />
                                                     <strong style={{fontSize: "12px"}}>Instagram:</strong>
                                                 </div>
-                                                <a href="https://instagram.com/dafandikri" className="text-primary" style={{fontSize: "12px", marginLeft: "10px"}}>@dafandikri</a>
+                                                <a href="https://instagram.com/dafandikri" style={{fontSize: "12px", marginLeft: "10px", color: "#000"}}>@dafandikri</a>
                                             </div>
                                         </div>
                                     </div>

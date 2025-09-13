@@ -13,6 +13,7 @@ const Navbar = () => {
         { name: "Tech Stack & Skills", icon: "code", target: "#tech-skills" },
         { name: "Experience", icon: "briefcase", target: "#experience" },
         { name: "Projects", icon: "folder", target: "#projects" },
+        { name: "Hobbies", icon: "camera", target: "#hobbies" },
         { name: "Contact", icon: "envelope", target: "#contact" }
     ];
     

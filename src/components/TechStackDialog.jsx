@@ -22,6 +22,7 @@ const TechStackDialog = () => {
         { name: "Gemini", icon: "gemini" },
         { name: "GitHub", icon: "github" },
         { name: "GPT", icon: "gpt" },
+        { name: "Postman", icon: "postman" },
     ];
     
     const techStackRow2 = [
@@ -35,6 +36,7 @@ const TechStackDialog = () => {
         { name: "Ubuntu", icon: "ubuntu" },
         { name: "VS Code", icon: "vsc" },
         { name: "WordPress", icon: "wordpress" },
+        { name: "Node.js", icon: "nodejs" }
     ];
     
     // Measure the width of both icon containers for the animations
