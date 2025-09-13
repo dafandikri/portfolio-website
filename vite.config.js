@@ -5,16 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    // Optimize chunks for faster LCP
+    // Optimize chunks
     rollupOptions: {
       output: {
         manualChunks: {
-          // Core React - essential for initial render
           vendor: ['react', 'react-dom'],
-          // Defer animations completely - load after LCP
-          animations: ['framer-motion'],
-          // Separate lazy-loaded components
-          lazyComponents: ['./src/components/TechStackDialog', './src/components/SkillsetsDialog', './src/components/Experience', './src/components/Project', './src/components/Hobbies', './src/components/Contact']
+          animations: ['framer-motion']
         }
       }
     },
@@ -23,26 +19,19 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true,
-        // More aggressive compression to reduce unused JS
-        dead_code: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn']
-      },
-      mangle: {
-        safari10: true
+        drop_debugger: true
       }
     },
-    // Optimize assets - prioritize critical content
-    assetsInlineLimit: 1024, // Keep small for faster LCP
-    chunkSizeWarningLimit: 400, // Lower threshold to catch bloat
+    // Optimize assets - reduce inline limit to prioritize external loading
+    assetsInlineLimit: 2048,
+    chunkSizeWarningLimit: 800,
     // Enable CSS code splitting
     cssCodeSplit: true
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom'], // Don't pre-bundle framer-motion
-    exclude: ['framer-motion'], // Exclude to reduce initial bundle
-    // Force pre-bundling of critical dependencies only
+    include: ['react', 'react-dom', 'framer-motion'],
+    // Force pre-bundling of critical dependencies
     force: true
   },
   // Enable compression
