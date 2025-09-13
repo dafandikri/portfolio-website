@@ -182,20 +182,24 @@ const Project = () => {
                                 <div className="row g-0">
                                     {/* Left Panel with Project Screenshot */}
                                     <div className="col-md-5" style={{backgroundColor: "#7fb4b4", overflow: "hidden"}}>
-                                        <div className="p-3 h-100 d-flex flex-column justify-content-between">
-                                            <div>
-                                                {/* Project Screenshot with Windows 95 border */}
-                                                <div style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", backgroundColor: "#FFFFFF", padding: "3px", marginBottom: "10px"}}>
+                                        <div className="h-100 d-flex flex-column">
+                                            <div style={{flex: 1, display: "flex", flexDirection: "column"}}>
+                                                {/* Project Screenshot - NO WHITESPACE AT ALL */}
+                                                <div style={{flex: 1, position: "relative"}}>
                                                     {project.image ? (
-                                                        <div style={{position: "relative"}}>
+                                                        <div style={{position: "relative", width: "100%", height: "100%"}}>
                                                             <img 
                                                                 src={getImage(project.image)} 
-                                                                className="img-fluid" 
                                                                 alt={`${project.title} Screenshot`}
                                                                 width="280"
                                                                 height="180"
                                                                 loading="lazy"
-                                                                style={{width: "100%", height: "auto", maxWidth: "280px"}}
+                                                                style={{
+                                                                    width: "100%", 
+                                                                    height: "100%", 
+                                                                    objectFit: "contain",
+                                                                    display: "block"
+                                                                }}
                                                             />
                                                             <div style={{
                                                                 position: "absolute",
@@ -222,7 +226,7 @@ const Project = () => {
                                                             flexDirection: "column", 
                                                             alignItems: "center", 
                                                             justifyContent: "center", 
-                                                            height: "120px", 
+                                                            height: "100%", 
                                                             backgroundColor: "#f5f5f5",
                                                             color: "#666",
                                                             fontSize: "14px",
@@ -236,22 +240,24 @@ const Project = () => {
                                                 </div>
                                                 
                                                 {/* Tech Stack Icons */}
-                                                <div className="d-flex flex-wrap mt-2">
-                                                    {project.techStack.map((tech, techIndex) => (
-                                                        <div 
-                                                            key={techIndex}
-                                                            className="mr-2 mb-2" 
-                                                            style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "2px", backgroundColor: "#C0C0C0", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center"}}
-                                                        >
-                                                            <img 
-                                                                src={getIcon(tech)} 
-                                                                alt={tech} 
-                                                                width="20" 
-                                                                height="20" 
-                                                                style={{imageRendering: "pixelated"}} 
-                                                            />
-                                                        </div>
-                                                    ))}
+                                                <div className="p-2">
+                                                    <div className="d-flex flex-wrap">
+                                                        {project.techStack.map((tech, techIndex) => (
+                                                            <div 
+                                                                key={techIndex}
+                                                                className="mr-2 mb-2" 
+                                                                style={{border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "2px", backgroundColor: "#C0C0C0", width: "30px", height: "30px", display: "flex", alignItems: "center", justifyContent: "center"}}
+                                                            >
+                                                                <img 
+                                                                    src={getIcon(tech)} 
+                                                                    alt={tech} 
+                                                                    width="20" 
+                                                                    height="20" 
+                                                                    style={{imageRendering: "pixelated"}} 
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
