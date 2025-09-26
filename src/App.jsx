@@ -1,5 +1,7 @@
 import { useState, useEffect, lazy, Suspense } from 'react'
 import { motion } from 'framer-motion'
+import { SpeedInsights } from '@vercel/speed-insights/react'
+import { Analytics } from '@vercel/analytics/react'
 import './App.css'
 import Navbar from './components/Navbar'
 import ProfileCard from './components/ProfileCard'
@@ -187,6 +189,8 @@ function App() {
           </div>
         </div>
       </div>
+      <SpeedInsights />
+      <Analytics />
     </div>
   )
 }
