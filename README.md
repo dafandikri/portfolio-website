@@ -47,6 +47,7 @@ Planning to showcase my hobby through embedded content:
 - Games I have played and take a keen interest on
 - Music and possibly integrating with Spotify/Apple Music
 - Photographs I have taken
+- Adding my bouldering/climbing progress and achievements
 
 ### CV/Resume Section
 
@@ -54,7 +55,7 @@ Planning to showcase my hobby through embedded content:
 
 ### Blog Section
 
-- Planning to add a blog section to give updates
+- Planning to add a blog section to give updates about myself
 
 ## Contact & Links
 
