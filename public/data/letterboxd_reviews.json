@@ -1,5 +1,15 @@
 [
   {
+    "title": "Lost and Found",
+    "year": "1996",
+    "rating": 3,
+    "review": "im watching wong kar wai after this",
+    "watchedDate": "November 17, 2025",
+    "link": "https://letterboxd.com/dafandikri/film/lost-and-found-1996/",
+    "tmdb_id": 118202,
+    "poster_url": "https://image.tmdb.org/t/p/w500/eVjHLRxchRbbpAJT9BpabHaLxNs.jpg"
+  },
+  {
     "title": "Andai Ibu Tidak Menikah Dengan Ayah",
     "year": "2025",
     "rating": 3,
@@ -28,15 +38,5 @@
     "link": "https://letterboxd.com/dafandikri/film/the-prestige/",
     "tmdb_id": 1124,
     "poster_url": "https://image.tmdb.org/t/p/w500/yCnJT53HMXAK87xzPAdjdYhZ3JE.jpg"
-  },
-  {
-    "title": "Your Name.",
-    "year": "2016",
-    "rating": 4,
-    "review": "jangan lu pada samain sama sore: istri dari masa depan\n\nwacthed this with my homeboy during internship.\n\nWhen she disappeared when writing her name 😭",
-    "watchedDate": "July 30, 2025",
-    "link": "https://letterboxd.com/dafandikri/film/your-name/",
-    "tmdb_id": 372058,
-    "poster_url": "https://image.tmdb.org/t/p/w500/8x9iKH8kWA0zdkgNdpAew7OstYe.jpg"
   }
 ]
