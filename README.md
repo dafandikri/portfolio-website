@@ -14,7 +14,7 @@ A nostalgic Windows 95-themed portfolio website built with React and Vite, showc
 
 ## About Me
 
-I'm **Erdafa Andikri**, a passionate Software Engineer and Computer Science student at the University of Indonesia. I specialize in full-stack development, AI integration, and creating innovative solutions that bridge technology with real-world problems. When I'm not coding, you can find me exploring my creative side through filmmaking. And I love watching films :D
+I'm **Erdafa Andikri**, a passionate Software Engineer and Computer Science student at the University of Indonesia. I specialize in full-stack development and creating innovative solutions that bridge technology with real-world problems.
 
 ## About This Website
 
@@ -47,6 +47,7 @@ Planning to showcase my hobby through embedded content:
 - Games I have played and take a keen interest on
 - Music and possibly integrating with Spotify/Apple Music
 - Photographs I have taken
+- Adding my bouldering/climbing progress and achievements
 
 ### CV/Resume Section
 
@@ -54,7 +55,7 @@ Planning to showcase my hobby through embedded content:
 
 ### Blog Section
 
-- Planning to add a blog section to give updates
+- Planning to add a blog section to give updates about myself
 
 ## Contact & Links
 

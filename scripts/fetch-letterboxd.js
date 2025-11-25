@@ -17,7 +17,7 @@ const LETTERBOXD_USERNAME = process.env.LETTERBOXD_USERNAME || 'dafandikri';
 const TMDB_API_KEY = process.env.TMDB_API_KEY || 'YOUR_TMDB_API_KEY';
 const RSS_URL = `https://letterboxd.com/${LETTERBOXD_USERNAME}/rss/`;
 const OUTPUT_PATH = path.join(__dirname, '../public/data/letterboxd_reviews.json');
-const MAX_REVIEWS = 4;
+const MAX_REVIEWS = 5;
 
 // Helper function to make HTTPS requests
 function httpsRequest(url) {

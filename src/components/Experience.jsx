@@ -25,12 +25,11 @@ const Experience = () => {
                 {
                     id: "2025-08",
                     monthLabel: "August 2025",
-                    title: "Intern - VICII",
+                    title: "Software Engineer Intern - VICII",
                     date: "August 2025 - Present",
                     description: "Joined VICII as an intern to contribute to web development.",
                     achievements: [
-                        "Developed NORA, an e-commerce website",
-                        "Collaborated with cross-functional teams to deliver high-quality website"
+                        "Collaborated with cross-functional teams (IT, Design, and Marketing) to deliver high-quality e-commerce website integrating with Shopify"
                     ],
                     logo: "vicii"
                 }
