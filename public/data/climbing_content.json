@@ -1,0 +1,26 @@
+[
+  {
+    "title": "November 2025 Bouldering Session",
+    "location": "Alpine Outpost Indonesia, Jakarta",
+    "grade": "V2",
+    "style": "Indoor Bouldering",
+    "date": "November 2025",
+    "description": "Completed this V2, I would say it's fun. The crux is on the finishing move, because you're already tired from all the previous moves and need to deadpoint to the top hold.",
+    "highlights": [
+      "Read the route well before starting",
+      "Reached the top hold with a deadpoint"
+    ],
+    "media": [
+      {
+        "type": "video",
+        "url": "https://youtube.com/embed/09Q3O8NyLN4?si=NADBAXuodIhtHkVH",
+        "caption": "The starting beta for the V2 route"
+      },
+        {
+            "type": "image",
+            "url": "/images/climbing/11_nov_2025.jpg",
+            "caption": "Reaching the top hold"
+        }
+    ]
+  }
+]
