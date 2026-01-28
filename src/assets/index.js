@@ -40,6 +40,7 @@ import postmanIcon from './img/favicon/postman.png';
 import nodejsIcon from './img/favicon/nodejs.png';
 import viciiIcon from './img/favicon/vicii.png';
 import cameraIcon from './img/favicon/camera.png';
+import systatumIcon from './img/favicon/systatum.png';
 
 // Import skill icons
 import aiSkill from './img/skills/ai.png';
@@ -95,6 +96,7 @@ export const icons = {
   nodejs: nodejsIcon,
   vicii: viciiIcon,
   camera: cameraIcon,
+  systatum: systatumIcon
 };
 
 export const skills = {

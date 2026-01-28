@@ -5,6 +5,21 @@ import { getIcon } from '../assets';
 
 const Experience = () => {
     const experienceData = {
+        "2026": {
+            entries: [
+                {
+                    id: "2026-01",
+                    monthLabel: "January 2026",
+                    title: "Backend Developer Intern - Systatum",
+                    date: "January 2026 - Present",
+                    description: "Contributing to backend development using Crystal and Marten Framework, focusing on building scalable and efficient web application.",
+                    achievements: [
+                        "Developed and optimized backend services using Crystal programming language",
+                    ],
+                    logo: "systatum"
+                }
+            ]
+        },
         "2025": {
             entries: [
                 {
@@ -26,7 +41,7 @@ const Experience = () => {
                     id: "2025-08",
                     monthLabel: "August 2025",
                     title: "Software Engineer Intern - VICII",
-                    date: "August 2025 - Present",
+                    date: "August 2025 - September 2025",
                     description: "Joined VICII as an intern to contribute to web development.",
                     achievements: [
                         "Collaborated with cross-functional teams (IT, Design, and Marketing) to deliver high-quality e-commerce website integrating with Shopify"
