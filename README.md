@@ -86,6 +86,9 @@ npm install
 
 # Start development server
 npm run dev
+
+# Fetch movie reviews
+npm run fetch-reviews
 ```
 
 ### Build for Production
