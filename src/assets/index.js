@@ -40,7 +40,7 @@ import postmanIcon from './img/favicon/postman.png';
 import nodejsIcon from './img/favicon/nodejs.png';
 import viciiIcon from './img/favicon/vicii.png';
 import cameraIcon from './img/favicon/camera.png';
-import systatumIcon from './img/favicon/systatum.png';
+import systatumIcon from './img/favicon/systatum.jpg';
 
 // Import skill icons
 import aiSkill from './img/skills/ai.png';
