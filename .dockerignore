@@ -1,0 +1,16 @@
+node_modules
+dist
+dist-ssr
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+*.md
+LICENSE
+readme/
+certs/
+k8s/
+.DS_Store
+.vscode
+.idea
