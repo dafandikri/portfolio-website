@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getIcon } from '../assets';
@@ -6,6 +7,8 @@ import { getIcon } from '../assets';
 const Navbar = () => {
     const [time, setTime] = useState('');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation();
     
     // Navigation items with their respective icons and target sections
     const navItems = [
@@ -14,6 +17,7 @@ const Navbar = () => {
         { name: "Experience", icon: "briefcase", target: "#experience" },
         { name: "Projects", icon: "folder", target: "#projects" },
         { name: "Hobbies", icon: "camera", target: "#hobbies" },
+        { name: "Blog", icon: "folder", target: "/blog" },
         { name: "Contact", icon: "envelope", target: "#contact" }
     ];
     
@@ -111,37 +115,42 @@ const Navbar = () => {
                     
                     {/* Desktop navigation links with icons */}
                     <ul className="navbar-nav d-none d-md-flex flex-row m-0">
-                        {navItems.map((item, index) => (
-                            <li key={index} className="nav-item mx-2">
-                                <motion.a 
-                                    href={item.target} 
-                                    title={item.name}
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        backgroundColor: "#C0C0C0",
-                                        border: "2px solid #FFFFFF",
-                                        borderRight: "2px solid #000000",
-                                        borderBottom: "2px solid #000000",
-                                        padding: "4px 8px",
-                                        color: "#000000",
-                                        textDecoration: "none",
-                                        fontSize: "10px"
-                                    }}
-                                    variants={buttonVariants}
-                                    whileHover="hover"
-                                    whileTap="tap"
-                                >
-                                    <img 
-                                        src={getIcon(item.icon)} 
-                                        alt={`${item.icon} icon`}
-                                        style={iconStyle} 
-                                    />
-                                    <span className="mt-1">{item.name}</span>
-                                </motion.a>
-                            </li>
-                        ))}
+                        {navItems.map((item, index) => {
+                            const isRoute = item.target.startsWith('/');
+                            return (
+                                <li key={index} className="nav-item mx-2">
+                                    <motion.a
+                                        href={isRoute ? undefined : item.target}
+                                        onClick={isRoute ? (e) => { e.preventDefault(); navigate(item.target); } : (item.target.startsWith('#') && location.pathname !== '/') ? (e) => { e.preventDefault(); navigate('/' + item.target); } : undefined}
+                                        title={item.name}
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            alignItems: "center",
+                                            backgroundColor: "#C0C0C0",
+                                            border: "2px solid #FFFFFF",
+                                            borderRight: "2px solid #000000",
+                                            borderBottom: "2px solid #000000",
+                                            padding: "4px 8px",
+                                            color: "#000000",
+                                            textDecoration: "none",
+                                            fontSize: "10px",
+                                            cursor: "pointer"
+                                        }}
+                                        variants={buttonVariants}
+                                        whileHover="hover"
+                                        whileTap="tap"
+                                    >
+                                        <img
+                                            src={getIcon(item.icon)}
+                                            alt={`${item.icon} icon`}
+                                            style={iconStyle}
+                                        />
+                                        <span className="mt-1">{item.name}</span>
+                                    </motion.a>
+                                </li>
+                            );
+                        })}
                     </ul>
                     
                     {/* Mobile hamburger menu button */}
@@ -238,41 +247,54 @@ const Navbar = () => {
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.3 }}
                     >
-                        {navItems.map((item, index) => (
-                            <motion.a
-                                key={index}
-                                href={item.target}
-                                onClick={handleMenuClick}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    padding: "8px 16px",
-                                    color: "#000000",
-                                    textDecoration: "none",
-                                    backgroundColor: "transparent",
-                                    border: "none",
-                                    width: "100%",
-                                    fontSize: "14px"
-                                }}
-                                whileHover={{ 
-                                    backgroundColor: "#000080", 
-                                    color: "white" 
-                                }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <img 
-                                    src={getIcon(item.icon)} 
-                                    alt={`${item.icon} icon`}
+                        {navItems.map((item, index) => {
+                            const isRoute = item.target.startsWith('/');
+                            return (
+                                <motion.a
+                                    key={index}
+                                    href={isRoute ? undefined : item.target}
+                                    onClick={(e) => {
+                                        if (isRoute) {
+                                            e.preventDefault();
+                                            navigate(item.target);
+                                        } else if (item.target.startsWith('#') && location.pathname !== '/') {
+                                            e.preventDefault();
+                                            navigate('/' + item.target);
+                                        }
+                                        handleMenuClick();
+                                    }}
                                     style={{
-                                        width: "16px",
-                                        height: "16px",
-                                        marginRight: "12px",
-                                        imageRendering: "pixelated"
-                                    }} 
-                                />
-                                {item.name}
-                            </motion.a>
-                        ))}
+                                        display: "flex",
+                                        alignItems: "center",
+                                        padding: "8px 16px",
+                                        color: "#000000",
+                                        textDecoration: "none",
+                                        backgroundColor: "transparent",
+                                        border: "none",
+                                        width: "100%",
+                                        fontSize: "14px",
+                                        cursor: "pointer"
+                                    }}
+                                    whileHover={{
+                                        backgroundColor: "#000080",
+                                        color: "white"
+                                    }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <img
+                                        src={getIcon(item.icon)}
+                                        alt={`${item.icon} icon`}
+                                        style={{
+                                            width: "16px",
+                                            height: "16px",
+                                            marginRight: "12px",
+                                            imageRendering: "pixelated"
+                                        }}
+                                    />
+                                    {item.name}
+                                </motion.a>
+                            );
+                        })}
                         
                         {/* LinkedIn in mobile menu */}
                         <motion.a
