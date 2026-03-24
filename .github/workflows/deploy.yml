@@ -1,0 +1,44 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write   # required to push to ghcr.io
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/dafandikri/portfolio-website:latest
+          build-args: |
+            TMDB_API_KEY=${{ secrets.TMDB_API_KEY }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to k3s
+        uses: appleboy/ssh-action@v1
+        with:
+          host: 159.223.49.141
+          username: root
+          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          script: |
+            k3s kubectl rollout restart deployment/portfolio-app -n portfolio
+            k3s kubectl rollout status deployment/portfolio-app -n portfolio --timeout=120s
