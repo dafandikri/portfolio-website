@@ -5,17 +5,21 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
-    certResolvers:
+    certificatesResolvers:
       letsencrypt:
-        email: dafandikri@gmail.com
-        storage: /data/acme.json
-        httpChallenge:
-          entryPoint: web
+        acme:
+          email: dafandikri@gmail.com
+          storage: /data/acme.json
+          httpChallenge:
+            entryPoint: web
 
     ports:
       web:
-        redirectTo:
-          port: websecure
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
 
     persistence:
       enabled: true
