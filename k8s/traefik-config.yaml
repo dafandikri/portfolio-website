@@ -5,12 +5,18 @@ metadata:
   namespace: kube-system
 spec:
   valuesContent: |-
-    additionalArguments:
-      - "--certificatesresolvers.letsencrypt.acme.email=dafandikri@gmail.com"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/data/acme.json"
-      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    certResolvers:
+      letsencrypt:
+        email: dafandikri@gmail.com
+        storage: /data/acme.json
+        httpChallenge:
+          entryPoint: web
+
+    ports:
+      web:
+        redirectTo:
+          port: websecure
+
     persistence:
       enabled: true
       storageClass: local-path
