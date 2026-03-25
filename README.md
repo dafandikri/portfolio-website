@@ -1,30 +1,149 @@
-# Erdafa Andikri - Portfolio Website
+# Erdafa Andikri — Portfolio Website
 
-A nostalgic Windows 95-themed portfolio website built with React and Vite, showcasing my journey as a Software Engineer and Problem Solver.
+A nostalgic Windows 95-themed portfolio website built with React + Vite, showcasing my journey as a Software Engineer and CS student at Universitas Indonesia.
 
-## PageSpeed Insights Results
+## Live
 
-### Desktop Performance
+| Environment | URL | Stack |
+|-------------|-----|-------|
+| Production | [dafandikri.tech](https://dafandikri.tech) | Vercel (CDN, auto-deploy) |
+| Infra Demo | [k8s.dafandikri.tech](https://k8s.dafandikri.tech) | k3s on DigitalOcean Droplet |
+
+## PageSpeed Insights
+
+### Desktop
 
 ![Desktop PageSpeed Score](readme/pagespeed_desktop.png)
 
-### Mobile Performance
+### Mobile
 
 ![Mobile PageSpeed Score](readme/pagespeed_mobile.png)
 
-## About Me
+## Tech Stack
 
-I'm **Erdafa Andikri**, a passionate Software Engineer and Computer Science student at the University of Indonesia. I specialize in full-stack development and creating innovative solutions that bridge technology with real-world problems.
+- **Frontend**: React 19, Vite, Bootstrap 5, Framer Motion
+- **Routing**: React Router v7
+- **Containerization**: Docker (multi-stage build, nginx-unprivileged)
+- **Container Registry**: GitHub Container Registry (`ghcr.io`)
+- **Orchestration**: k3s (lightweight Kubernetes) on DigitalOcean Droplet
+- **Ingress / TLS**: Traefik v3 with Let's Encrypt ACME HTTP-01
+- **CI/CD**: GitHub Actions — build → push → rolling restart
 
-## About This Website
+## Architecture
 
-This portfolio website is designed with a retro Windows 95 aesthetic, combining nostalgia with modern web technologies. It features smooth animations, responsive design, and interactive elements that showcase my projects, skills, and professional experience in an engaging format.
+```
+git push to main
+    │
+    ├── Vercel Git integration (unchanged)
+    │       └── dafandikri.tech  (CDN, production)
+    │
+    └── GitHub Actions
+            │
+            ▼
+        1. Build Docker image (TMDB_API_KEY baked in at build time,
+           Letterboxd reviews fetched at build time via scripts/fetch-letterboxd.js)
+        2. Push → ghcr.io/dafandikri/portfolio-website:latest
+        3. SSH into DigitalOcean Droplet (159.223.49.141)
+        4. k3s kubectl rollout restart deployment/portfolio-app -n portfolio
+           (imagePullPolicy: Always re-pulls :latest on every restart)
+        5. k3s kubectl rollout status ... --timeout=120s
+
+Internet → :80/:443
+         → Traefik v3 (k3s built-in, Let's Encrypt TLS)
+         → portfolio-app Service ClusterIP :80
+         → portfolio-app Pods :8080 (nginx-unprivileged, 2 replicas)
+```
+
+## Features
+
+- Windows 95 aesthetic with retro UI components
+- Smooth animations with Framer Motion
+- Responsive design (mobile + desktop)
+- **Blog** — sprint/project write-ups as routed pages
+- **Letterboxd integration** — movie reviews fetched at build time via TMDB API
+- Vercel Analytics + Speed Insights
+
+## Development
+
+### Prerequisites
+
+- Node.js 22+
+- npm
+
+### Setup
+
+```bash
+# Clone
+git clone https://github.com/dafandikri/portfolio-website.git
+cd portfolio-website
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+```
+
+### Fetch Letterboxd Reviews (optional)
+
+Requires a TMDB API key set as `TMDB_API_KEY` in your environment or `.env`.
+
+```bash
+npm run fetch-reviews
+```
+
+### Build for Production
+
+```bash
+# Build (without reviews)
+npm run build
+
+# Build with reviews fetched first
+npm run build-with-reviews
+
+# Preview production build locally
+npm run preview
+```
+
+### Docker (local)
+
+```bash
+docker build --build-arg TMDB_API_KEY=your_key -t portfolio-website .
+docker run -p 8080:8080 portfolio-website
+# open http://localhost:8080
+```
+
+## CI/CD
+
+Push to `main` triggers the GitHub Actions workflow (`.github/workflows/deploy.yml`):
+
+1. Builds Docker image with `TMDB_API_KEY` injected
+2. Pushes to `ghcr.io/dafandikri/portfolio-website:latest`
+3. SSHes into Droplet and performs a rolling restart
+
+**Required GitHub Secrets:**
+
+| Secret | Description |
+|--------|-------------|
+| `TMDB_API_KEY` | TMDB API key for Letterboxd review fetching |
+| `DROPLET_SSH_PRIVATE_KEY` | SSH private key for root@159.223.49.141 |
+
+## Kubernetes Manifests (`k8s/`)
+
+| File | Purpose |
+|------|---------|
+| `namespace.yaml` | `portfolio` namespace |
+| `configmap.yaml` | Nginx config (SPA routing, `/healthz` endpoint) |
+| `deployment.yaml` | 2 replicas, rolling update, resource limits, liveness/readiness probes |
+| `service.yaml` | ClusterIP service on port 80 → pod port 8080 |
+| `ingress.yaml` | Traefik ingress for `k8s.dafandikri.tech` with TLS |
+| `traefik-config.yaml` | HelmChartConfig — Let's Encrypt ACME resolver + HTTP→HTTPS redirect |
 
 ## Future Updates
 
 ### Awards & Achievements Section
 
-Coming soon - a dedicated section highlighting my academic and professional accomplishments:
+A dedicated section highlighting academic and professional accomplishments:
 
 - Competition wins and recognitions
 - Academic honors and scholarships
@@ -33,31 +152,34 @@ Coming soon - a dedicated section highlighting my academic and professional acco
 
 ### Interactive AI Assistant
 
-Planning to integrate an intelligent chatbot that provides visitors with a more personalized way to learn about my background and experience:
+Planning to integrate an intelligent chatbot so visitors can have a more personalized way to learn about my background and experience:
 
-- **Conversational Interface**: A Windows 95-styled chat window where visitors can ask questions about my projects, skills, and career journey
-- **Knowledge Base**: AI trained on my professional background, educational experience, and project details to provide accurate and insightful responses
+- **Conversational Interface** — a Windows 95-styled chat window (implemented as a shadcn/ui `Sheet` side panel) where visitors can ask questions about my projects, skills, and career journey
+- **Streaming responses** — powered by [Vercel AI SDK](https://sdk.vercel.ai) using `useChat` from `@ai-sdk/react` with `DefaultChatTransport` for real-time streamed replies
+- **Knowledge base** — grounded on my professional background, educational experience, and project details to provide accurate responses
 
 ### Hobbies
 
-Planning to showcase my hobby through embedded content:
+Planning to showcase hobbies through embedded content:
 
 - Short films and creative projects
-- Integrating with letterboxd, so people can see my reviews through my website
-- Games I have played and take a keen interest on
-- Music and possibly integrating with Spotify/Apple Music
-- Photographs I have taken
-- Adding my bouldering/climbing progress and achievements
+- ~~Letterboxd integration~~ ✅ Done — movie reviews now fetched at build time via TMDB API
+- Games I've played and take a keen interest in
+- Music, possibly integrating with Spotify or Apple Music
+- Photographs I've taken
+- ~~Bouldering/climbing progress and achievements~~ ✅ Done
 
-### CV/Resume Section
+### CV / Resume Section
 
-- Planning to put CV/Resume secion for visitors and potential recruites to read and download
+Planning to add a CV/Resume section for visitors and potential recruiters to read and download.
 
-### Blog Section
+### Blog Section ✅
 
-- Planning to add a blog section to give updates about myself
+~~Planning to add a blog section to give updates about myself~~ — shipped as routed pages (`/blog`, `/blog/:slug`) with Sprint write-ups.
 
-## Contact & Links
+---
+
+## Contact
 
 - **Email**: [dafandikri@gmail.com](mailto:dafandikri@gmail.com)
 - **LinkedIn**: [linkedin.com/in/dafandikri](https://linkedin.com/in/dafandikri)
@@ -65,50 +187,10 @@ Planning to showcase my hobby through embedded content:
 - **Instagram**: [@dafandikri](https://instagram.com/dafandikri)
 - **Website**: [dafandikri.tech](https://dafandikri.tech)
 
-## Development
-
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/dafandikri/portfolio-website.git
-
-# Navigate to project directory
-cd portfolio-website
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# Fetch movie reviews
-npm run fetch-reviews
-```
-
-### Build for Production
-
-```bash
-# Build the project
-npm run build
-
-# Preview production build
-npm run preview
-```
-
-### Deployment
-
-The site is configured for Heroku deployment with static file serving. The build process generates optimized assets in the `dist` folder.
-
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+MIT — see [LICENSE](LICENSE).
 
 ---
 
-**Built with ❤️ by Erdafa Andikri** | _Combining nostalgia with modern technology_
+**Built with React + Vite · Deployed on Vercel & k3s · Styled like it's 1995**
