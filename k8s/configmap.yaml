@@ -12,6 +12,24 @@ data:
         root /usr/share/nginx/html;
         index index.html;
 
+        gzip on;
+        gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+        gzip_min_length 1024;
+
+        # index.html — never cache (SPA entry point must always be fresh)
+        location = /index.html {
+            add_header Cache-Control "no-cache, no-store, must-revalidate";
+            try_files $uri =404;
+        }
+
+        # Hashed assets (JS/CSS chunks from Vite) — cache 1 year, immutable
+        location /assets/ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+            try_files $uri =404;
+        }
+
+        # SPA catch-all routing
         location / {
             try_files $uri $uri/ /index.html;
         }
@@ -24,7 +42,7 @@ data:
 
         location /healthz {
             access_log off;
-            return 200 'ok';
+            return 200 "ok";
             add_header Content-Type text/plain;
         }
     }

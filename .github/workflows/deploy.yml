@@ -36,6 +36,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Copy k8s manifests to droplet
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: 159.223.49.141
+          username: root
+          key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
+          source: "k8s/"
+          target: "/tmp/portfolio-deploy"
+
       - name: Deploy to k3s
         uses: appleboy/ssh-action@v1
         with:
@@ -43,5 +52,10 @@ jobs:
           username: root
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           script: |
+            k3s kubectl apply -f /tmp/portfolio-deploy/k8s/namespace.yaml
+            k3s kubectl apply -f /tmp/portfolio-deploy/k8s/configmap.yaml
+            k3s kubectl apply -f /tmp/portfolio-deploy/k8s/deployment.yaml
+            k3s kubectl apply -f /tmp/portfolio-deploy/k8s/service.yaml
+            k3s kubectl apply -f /tmp/portfolio-deploy/k8s/ingress.yaml
             k3s kubectl rollout restart deployment/portfolio-app -n portfolio
             k3s kubectl rollout status deployment/portfolio-app -n portfolio --timeout=120s
