@@ -20,6 +20,43 @@ const BlogPostPage = () => {
     }, []);
 
     useEffect(() => {
+        if (!post) return;
+        const originalTitle = document.title;
+        document.title = `${post.title} — Erdafa Andikri`;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        const originalDesc = metaDesc?.getAttribute('content') ?? '';
+        if (metaDesc) metaDesc.setAttribute('content', post.excerpt);
+        return () => {
+            document.title = originalTitle;
+            if (metaDesc) metaDesc.setAttribute('content', originalDesc);
+        };
+    }, [post]);
+
+    useEffect(() => {
+        if (!post) return;
+        let cancelled = false;
+        import('mermaid').then(({ default: mermaid }) => {
+            if (cancelled) return;
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'base',
+                themeVariables: {
+                    primaryColor: '#000080',
+                    primaryTextColor: '#ffffff',
+                    primaryBorderColor: '#000000',
+                    lineColor: '#808080',
+                    secondaryColor: '#DFDFDF',
+                    tertiaryColor: '#FFFFE1',
+                    fontFamily: '"Courier New", monospace',
+                    fontSize: '13px',
+                },
+            });
+            mermaid.run({ querySelector: '.blog-content .mermaid' });
+        });
+        return () => { cancelled = true; };
+    }, [post]);
+
+    useEffect(() => {
         const fetchPost = async () => {
             try {
                 const response = await fetch('/data/blog_posts.json');
@@ -264,6 +301,19 @@ const BlogPostPage = () => {
                                     border-right: 2px solid #fff;
                                     border-bottom: 2px solid #fff;
                                     margin: 8px 0;
+                                }
+                                .blog-content .mermaid {
+                                    background-color: #1a1a2e;
+                                    border: 2px solid #808080;
+                                    border-right: 2px solid #fff;
+                                    border-bottom: 2px solid #fff;
+                                    padding: 16px;
+                                    margin: 12px 0;
+                                    overflow-x: auto;
+                                    text-align: center;
+                                }
+                                .blog-content .mermaid svg {
+                                    max-width: 100%;
                                 }
                             `}</style>
                             <div
