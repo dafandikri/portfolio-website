@@ -51,7 +51,9 @@ const BlogPostPage = () => {
                     fontSize: '13px',
                 },
             });
-            mermaid.run({ querySelector: '.blog-content .mermaid' });
+            return mermaid.run({ querySelector: '.blog-content .mermaid' });
+        }).catch((err) => {
+            console.error('[BlogPostPage] Mermaid render failed:', err);
         });
         return () => { cancelled = true; };
     }, [post]);
