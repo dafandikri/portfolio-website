@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import '../styles/w95.css';
@@ -15,18 +15,24 @@ const BlogListPage = () => {
     const [selectedTag, setSelectedTag] = useState(null);
     const navigate = useNavigate();
 
-    const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
+    const allTags = useMemo(
+        () => [...new Set(posts.flatMap((p) => p.tags))].sort(),
+        [posts]
+    );
 
-    const filteredPosts = posts.filter((post) => {
-        const q = searchQuery.toLowerCase();
-        const matchesSearch =
-            q === '' ||
-            post.title.toLowerCase().includes(q) ||
-            post.excerpt.toLowerCase().includes(q) ||
-            post.tags.some((t) => t.toLowerCase().includes(q));
-        const matchesTag = selectedTag === null || post.tags.includes(selectedTag);
-        return matchesSearch && matchesTag;
-    });
+    const filteredPosts = useMemo(
+        () => posts.filter((post) => {
+            const q = searchQuery.toLowerCase();
+            const matchesSearch =
+                q === '' ||
+                post.title.toLowerCase().includes(q) ||
+                post.excerpt.toLowerCase().includes(q) ||
+                post.tags.some((t) => t.toLowerCase().includes(q));
+            const matchesTag = selectedTag === null || post.tags.includes(selectedTag);
+            return matchesSearch && matchesTag;
+        }),
+        [posts, searchQuery, selectedTag]
+    );
 
     useEffect(() => {
         window.scrollTo(0, 0);
