@@ -11,7 +11,22 @@ const formatDate = (dateStr) => {
 const BlogListPage = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedTag, setSelectedTag] = useState(null);
     const navigate = useNavigate();
+
+    const allTags = [...new Set(posts.flatMap((p) => p.tags))].sort();
+
+    const filteredPosts = posts.filter((post) => {
+        const q = searchQuery.toLowerCase();
+        const matchesSearch =
+            q === '' ||
+            post.title.toLowerCase().includes(q) ||
+            post.excerpt.toLowerCase().includes(q) ||
+            post.tags.some((t) => t.toLowerCase().includes(q));
+        const matchesTag = selectedTag === null || post.tags.includes(selectedTag);
+        return matchesSearch && matchesTag;
+    });
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -155,6 +170,70 @@ const BlogListPage = () => {
                         <span>Blog</span>
                     </div>
                     <div className="card-body">
+                        {!loading && posts.length > 0 && (
+                            <div className="mb-3">
+                                <div className="mb-2" style={{ display: 'flex', gap: '4px' }}>
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="Search posts..."
+                                        style={{
+                                            flex: 1,
+                                            fontFamily: '"Windows 95", "Courier New", monospace',
+                                            fontSize: '12px',
+                                            padding: '3px 6px',
+                                            border: '2px solid #808080',
+                                            borderRightColor: '#fff',
+                                            borderBottomColor: '#fff',
+                                            background: '#fff',
+                                            color: '#000',
+                                            outline: 'none',
+                                        }}
+                                    />
+                                    {searchQuery && (
+                                        <button
+                                            className="btn btn-sm btn-primary border-dark"
+                                            onClick={() => setSearchQuery('')}
+                                            style={{ fontSize: '11px' }}
+                                        >
+                                            <span className="btn-text">X Clear</span>
+                                        </button>
+                                    )}
+                                </div>
+                                {allTags.length > 0 && (
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                                        <button
+                                            onClick={() => setSelectedTag(null)}
+                                            style={{
+                                                fontSize: '10px', padding: '2px 6px',
+                                                border: '1px solid #808080', cursor: 'pointer',
+                                                background: selectedTag === null ? '#000080' : '#DFDFDF',
+                                                color: selectedTag === null ? '#fff' : '#000',
+                                                fontFamily: 'inherit',
+                                            }}
+                                        >
+                                            All
+                                        </button>
+                                        {allTags.map((tag) => (
+                                            <button
+                                                key={tag}
+                                                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                                                style={{
+                                                    fontSize: '10px', padding: '2px 6px',
+                                                    border: '1px solid #808080', cursor: 'pointer',
+                                                    background: selectedTag === tag ? '#000080' : '#DFDFDF',
+                                                    color: selectedTag === tag ? '#fff' : '#000',
+                                                    fontFamily: 'inherit',
+                                                }}
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                         {loading ? (
                             <div style={{
                                 padding: '40px',
@@ -172,9 +251,15 @@ const BlogListPage = () => {
                                 No blog posts yet. Check back soon!
                             </div>
                         ) : (
-                            posts.map((post, index) => (
-                                <BlogCard key={post.id} post={post} index={index} />
-                            ))
+                            filteredPosts.length === 0 ? (
+                                <div style={{ padding: '20px', textAlign: 'center', color: '#808080', fontSize: '12px' }}>
+                                    No posts match your search.
+                                </div>
+                            ) : (
+                                filteredPosts.map((post, index) => (
+                                    <BlogCard key={post.id} post={post} index={index} />
+                                ))
+                            )
                         )}
                     </div>
                 </div>
