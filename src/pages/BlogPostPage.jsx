@@ -231,34 +231,67 @@ const BlogPostPage = () => {
                                     font-size: 0.9rem;
                                     line-height: 1.6;
                                 }
+                                /* Code blocks rendered as a high-contrast Dracula IDE window */
                                 .blog-content pre {
-                                    background-color: #1a1a2e;
-                                    color: #e0e0e0;
-                                    padding: 12px;
-                                    border: 2px solid #808080;
-                                    border-right: 2px solid #fff;
-                                    border-bottom: 2px solid #fff;
+                                    position: relative;
+                                    background: #282a36;
+                                    color: #f8f8f2;
+                                    padding: 36px 16px 16px 16px;
+                                    border: 1px solid #44475a;
+                                    border-radius: 8px;
                                     overflow-x: auto;
-                                    font-size: 11.5px;
-                                    line-height: 1.5;
-                                    margin: 10px 0;
-                                    font-family: 'Courier New', monospace;
+                                    font-size: 12px;
+                                    line-height: 1.6;
+                                    margin: 14px 0;
+                                    font-family: 'SF Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, 'Courier New', monospace;
+                                    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
+                                    -webkit-font-smoothing: antialiased;
+                                    tab-size: 4;
+                                }
+                                /* macOS-style traffic-light dots */
+                                .blog-content pre::before {
+                                    content: '';
+                                    position: absolute;
+                                    top: 13px;
+                                    left: 16px;
+                                    width: 11px;
+                                    height: 11px;
+                                    border-radius: 50%;
+                                    background: #ff5f56;
+                                    box-shadow: 18px 0 #ffbd2e, 36px 0 #27c93f;
+                                }
+                                /* language label from data-lang attribute */
+                                .blog-content pre::after {
+                                    content: attr(data-lang);
+                                    position: absolute;
+                                    top: 10px;
+                                    right: 14px;
+                                    font-family: 'SF Mono', ui-monospace, monospace;
+                                    font-size: 10px;
+                                    font-weight: 700;
+                                    letter-spacing: 1.5px;
+                                    text-transform: uppercase;
+                                    color: #6272a4;
                                 }
                                 .blog-content code {
-                                    font-family: 'Courier New', monospace;
+                                    font-family: 'SF Mono', 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
                                     font-size: 12px;
                                 }
                                 .blog-content pre code {
+                                    display: block;
                                     background: none;
-                                    padding: 0;
+                                    padding: 11px 0 0 0;
                                     border: none;
+                                    border-top: 1px solid #44475a;
                                     color: inherit;
+                                    font-family: inherit;
                                 }
                                 .blog-content code:not(pre code) {
                                     background-color: #DFDFDF;
                                     padding: 1px 4px;
                                     border: 1px solid #808080;
                                     font-size: 11.5px;
+                                    color: #000080;
                                 }
                                 .blog-content table {
                                     width: 100%;
