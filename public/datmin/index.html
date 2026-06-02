@@ -584,15 +584,15 @@ window.CONTENT = [
      ],
      mnemonic:'DCBE — Degree(count), Closeness(reach), Betweenness(bridge), Eigenvector(prestige).',
      viz:'CentralityViz'},
-    {n:'Community detection — "what groups exist?"', tl:'Find densely-connected clusters of nodes',
+    {n:'Community detection — "what groups exist?"', tl:'Find densely-connected clusters of nodes (it\'s basically clustering on graphs)',
      body:[
-       'A **community** = a set of nodes more densely connected to each other than to the rest of the graph (e.g. a criminal cell, a friend group, a research field). UAS 2024 Q1 asked you to define this and give a law-enforcement use: e.g. detecting a **money-laundering ring** as a tightly-knit community of accounts moving funds among themselves.',
-       '**Modularity $Q$** is the quality score: high $Q$ means many edges fall *inside* communities and few cross between them. $Q=\\frac{1}{2m}\\sum_{ij}\\big(A_{ij}-\\frac{k_ik_j}{2m}\\big)\\delta(c_i,c_j)$ — compares actual intra-community edges to what you\'d expect at random.',
-       '**Girvan–Newman** (divisive, top-down): repeatedly **remove the edge with the highest *edge betweenness***. Those edges are the "bridges" between communities, so cutting them peels communities apart. (2025 PG#6 answer = "remove the edge with highest edge betweenness".) Accurate but slow: $O(m^2n)$.',
-       '**Louvain** (agglomerative, bottom-up, greedy): start with every node its own community; repeatedly move nodes to whichever neighbour-community increases modularity most; then "collapse" each community into a super-node and repeat. Fast, scales to millions of nodes. **Weakness:** can produce **badly-connected (even internally disconnected) communities.**',
-       '**Leiden** = Louvain fixed. Adds a **refinement** step that *guarantees every community is internally connected* and converges to better-quality, more stable partitions. Remember Leiden as "Louvain + a guarantee."'
+       'A **community** = a group of nodes that are densely connected to each other (or share similar interests/similarity) more than to the rest of the graph — a criminal cell, a friend group, a research field. **Think of it as clustering, but on a graph.** UAS 2024 Q1 asked you to define this + a law-enforcement use: detecting a **money-laundering ring** as a tightly-knit community of accounts moving funds among themselves.',
+       '**Modularity $Q$** is the main concept — the quality score for how *well-separated* the groups are. High $Q$ = many edges fall *inside* communities, few cross between them. $Q=\\frac{1}{2m}\\sum_{ij}\\big(A_{ij}-\\frac{k_ik_j}{2m}\\big)\\delta(c_i,c_j)$ (note it uses each node\'s **degree** $k_i$). It plays the same role here that **silhouette score / Davies–Bouldin** play in ordinary clustering: a number telling you how good the grouping is.',
+       '**Girvan–Newman** (divisive, top-down): compute **edge betweenness** for every edge, **cut the highest one** (a "bridge", e.g. a–b) to split the graph, then **recompute betweenness on the already-cut graph** and repeat — peeling off communities iteratively. (2025 PG#6 answer = "remove the edge with highest edge betweenness".) Accurate but slow: $O(m^2n)$.',
+       '**Louvain** (agglomerative, bottom-up, greedy): start with every node its own community; **iteratively** move each node to whichever neighbour-community raises **modularity $Q$** most (the calculation uses node **degrees**); then collapse each community into a super-node and repeat. Fast, scales to millions of nodes. **Weakness:** can produce **badly-connected (even internally disconnected) communities.**',
+       '**Leiden** = Louvain + an extra **refinement** step in the middle, where node moving is only done **within the same community** — this *guarantees every community stays internally connected* and gives better, more stable partitions. Remember Leiden as "Louvain + a connectivity guarantee."'
      ],
-     mnemonic:'Girvan-Newman CUTS bridges (divisive); Louvain GROWS communities (greedy); Leiden = Louvain that never leaves a community broken.',
+     mnemonic:'Modularity = silhouette-score-for-graphs. Girvan-Newman CUTS highest-betweenness edges (recompute each round); Louvain GROWS communities by max-ΔQ (uses degree); Leiden = Louvain + refinement (move only within same community) → never disconnected.',
      viz:null},
     {n:'Frequent subgraph mining — "what patterns recur?"', tl:'Find sub-structures appearing in many graphs',
      body:[
@@ -716,8 +716,8 @@ window.CONTENT = [
   id:'media', title:'Image · Audio · Video Mining', icon:'🎞️', weight:'hi',
   examTag:'Representation, feature extraction (CNN/MFCC), pipelines, ethics',
   dek:'How pixels, waveforms and frames become features a model can mine — and the ethics of doing so.',
-  readTime:13,
-  source:'CNN Intro · W10 Computer Vision · W11 Audio · Audio Tutorial · Image Mining w/ Ollama+Qwen3',
+  readTime:17,
+  source:'CNN Intro · W10 Computer Vision · W11 Audio · Image and Audio Mining (asistensi, worked LBP/conv/pooling/FFT) · Image Mining w/ Ollama+Qwen3',
   bigPicture:'Images, audio and video are just **numbers in disguise**. The job is always: **digital representation → feature extraction → model → task**. An **image** = a grid of pixels (H×W×channels; grayscale=1, RGB=3, each 0–255). **Audio** = a 1-D waveform sampled over time. **Video** = a stack of image frames + an audio track. Deep learning (CNNs) learns the features automatically instead of hand-crafting them.',
   concepts:[
     {n:'Digital image representation', tl:'Pixels, channels, resolution',
@@ -726,46 +726,85 @@ window.CONTENT = [
        '(GIS tie-in from 2025 PG#1: a **raster** image stores data in a **cell/grid of pixels** and gets **blurry when zoomed**; a **vector** image uses **mathematical equations** for lines/shapes and stays sharp — SHP is a vector format.)'
      ],
      mnemonic:'Image = H × W × Channels. RGB = 3 channels, each 0–255.'},
+    {n:'Global vs local features: FFT vs LBP', tl:'Two ways to extract hand-crafted features',
+     body:[
+       'Classic computer vision distinguishes **global** features (describe the whole image) from **local** features (describe small patches).',
+       '**FFT (global):** the Fourier Transform converts the image from the **spatial domain to the frequency domain**, capturing overall structure as a sum of sinusoids. It is roughly **translation-invariant** — shifting the object barely changes the FFT magnitude.',
+       '**LBP — Local Binary Pattern (local):** captures **local texture** by comparing each pixel to its 8 neighbours. Rule: neighbour $\\ge$ centre → **1**, else **0**; read the 8 bits in a fixed order (e.g. clockwise from top-left) → an 8-bit binary → convert to decimal. Very sensitive to micro-patterns: cracks, edges, surface texture.',
+       'Worked (from your asistensi): centre = 75, image rows $[85,90,70],[65,75,80],[60,72,88]$, clockwise from top-left → $1,1,0,1,1,0,0,0$ = `11011000` = $128+64+16+8 =$ **216**.'
+     ],
+     mnemonic:'FFT = GLOBAL, frequency domain, translation-invariant. LBP = LOCAL texture; neighbour≥centre→1, read bits → decimal.'},
     {n:'CNNs & convolution — the core of computer vision', tl:'Learned filters that detect patterns',
      body:[
-       'A **Convolutional Neural Network** slides small **kernels/filters** over the image. Each **convolution** computes Σ(image patch × kernel) → a **feature map** that highlights a pattern (an edge, a corner). Early layers detect edges; deeper layers compose them into textures → object parts → objects (hierarchical features).',
-       '**Pooling** (e.g. max-pooling) shrinks feature maps → fewer parameters, translation-tolerance. Output size of one conv layer: $\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$ (W=input, K=kernel, P=padding, S=stride). The huge win of CNNs: **automatic feature extraction** — no hand-engineering.',
-       '**Parameter sharing** (the same kernel scans the whole image) is why CNNs need far fewer weights than a dense net and generalize to where-ever the pattern appears.'
+       'A **Convolutional Neural Network** slides small **kernels/filters** over the image. Each **convolution** computes Σ(image patch × kernel) → a **feature map** that highlights a pattern (an edge, a corner). Early layers detect edges; deeper layers compose them into textures → object parts → objects (hierarchical features). Note: deep learning uses **cross-correlation** — sliding-window pointwise multiply, no kernel flip.',
+       'Output size of one conv layer: $\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$ (W=input, K=kernel, P=padding, S=stride). e.g. a 3×3 image ∗ 2×2 kernel, valid, stride 1 → 2×2 feature map.',
+       'Two efficiency tricks vs a dense MLP: **Sparse connectivity** — each output connects only to a small **local receptive field** (kernel-sized region), not every input pixel. **Parameter sharing** — the *same* filter weights are reused across all spatial positions. Together → **far fewer parameters** than a fully-connected net, plus translation tolerance.',
+       '**Pooling** (e.g. **max-pooling**) shrinks feature maps → fewer params, robustness. 2×2 max-pool stride 2 on a 4×4 → 2×2: take the max of each non-overlapping 2×2 block. The big CNN win: **automatic feature extraction** — no hand-engineering.'
      ],
-     mnemonic:'Conv = detect · Pool = shrink · Deeper = more abstract. Out=(W−K+2P)/S+1.',
+     mnemonic:'Conv=detect · Pool=shrink(max) · Deeper=abstract. Out=(W−K+2P)/S+1. Sparse connectivity (local receptive field) + parameter sharing (reuse filter) ⇒ few params.',
      viz:'ConvViz'},
-    {n:'Audio representation & features', tl:'Waveform → spectrogram → MFCC',
+    {n:'Classic ML vs Deep Learning pipeline', tl:'Hand-designed features vs learned features',
      body:[
-       'Sound is a **continuous wave**; we **sample** it (e.g. 44.1 kHz = 44,100 samples/sec — Nyquist: sample ≥ 2× the highest frequency you want to keep). That gives a 1-D **waveform** (amplitude over time).',
-       'Time-domain alone is hard to mine, so transform to the **frequency domain** via the **Fourier transform** → a **spectrogram** (time × frequency × energy heat-map). From it we extract **MFCCs (Mel-Frequency Cepstral Coefficients)** — compact features matching how *humans* hear (the Mel scale). MFCCs are the classic input for speech/audio classification.'
+       '**Classic ML pipeline:** a human **hand-designs** the features (LBP, SIFT, HOG), then feeds them into a **separate** classifier. Feature design and classification are two disconnected stages.',
+       '**Deep Learning (CNN) pipeline:** **representation learning** — the filters that extract low- → high-level features are **learned automatically and simultaneously** with the classifier, end-to-end from the raw pixels. No manual feature engineering.'
      ],
-     mnemonic:'Waveform → (Fourier) → Spectrogram → MFCC. Sample ≥ 2× max freq (Nyquist).'},
-    {n:'Deep learning & the media pipeline', tl:'Same recipe across modalities',
+     mnemonic:'Classic = hand-designed features (LBP/SIFT/HOG) + separate classifier. Deep = features learned end-to-end (representation learning).'},
+    {n:'Audio: signal, sampling & frequency domain', tl:'Why sound is numbers, and why we go to the frequency domain',
      body:[
-       'Whether image, audio (as spectrogram) or video, the pipeline is identical: **acquire → preprocess (resize/normalize/denoise) → extract features (CNN / MFCC) → model (classify / detect / cluster) → evaluate**. **Video** adds the **temporal** dimension: handle frames with 3-D CNNs or CNN+RNN/transformer to capture motion, plus the audio stream.',
-       'Modern shortcut (your Image-Mining-with-Ollama+Qwen3 tutorial): instead of training a CNN, hand the image to a **vision-language model** and just *ask* it — covered next topic.'
+       'Sound is **energy as vibrations** that propagate **through a medium** — so it **cannot travel in a vacuum** (no medium to carry the vibration). We **sample** the continuous wave (e.g. 44.1 kHz) into a 1-D **waveform** (amplitude over time). **Nyquist:** sample at ≥ **2× the highest frequency** you want to keep, or you get aliasing.',
+       'A complex signal = a **sum of simpler frequencies** (music analogy: **Bass** = low freq / slow changes, **Melody** = mid freq, **Noise** = high freq / fast changes).',
+       '**Time domain** shows *what* happens (amplitude over time); **Frequency domain** shows *how often* it happens (which frequencies exist). The **Fourier Transform (FFT)** moves you between them and is great for **filtering noise** (noise = high frequency → isolated in the frequency domain).',
+       'In FFT code, `mask = freqs > 0` keeps only **positive frequencies** (FFT returns a mirrored negative half you discard); `np.abs(fft)` takes the **magnitude** because FFT outputs **complex numbers**. e.g. signal $[1,2,1,-1]$ → FFT $[3,\\,-3j,\\,-1,\\,3j]$ → magnitude $[3,3,1,3]$.',
+       'Run many FFTs over **small time windows** → a **spectrogram** (time × frequency × energy). A spectrogram is essentially a **2-D image of sound**, which is exactly why **CNNs** work so well on audio.'
      ],
+     mnemonic:'No medium → no sound (vacuum). Nyquist fs≥2·fmax. Time=what happens, Freq=how often. FFT: mask>0 (positive freqs), np.abs (magnitude). Spectrogram = image of sound → CNN.',
+     viz:null},
+    {n:'Audio features: MFCC, centroid, ZCR, chroma, filters', tl:'The hand-crafted audio feature zoo',
+     body:[
+       '**MFCC — Mel-Frequency Cepstral Coefficients:** maps frequencies onto the **non-linear Mel scale** that mimics **human hearing**, so it is a **perceptually meaningful** representation; generally focuses more on **low frequencies**. The classic input for speech/audio classification.',
+       '**Spectral Centroid (brightness):** the "**centre of mass**" / mean frequency of the spectrum (the frequency-domain analogue of **RMSE**). **High** centroid = bright/sharp sound (breaking glass, high trumpet, worn brakes); **low** = dull/soft (leftmost piano keys, distant thunder).',
+       '**Zero-Crossing Rate (ZCR):** how often the signal **changes sign**; indicates **roughness/noisiness**. Use cases: **speech vs music** detection, **voiced vs unvoiced** speech (voiced is smoother → lower ZCR), noise detection.',
+       '**Chroma features (Pitch Class Profiles):** energy of the **12 musical pitch classes** (C, C#, … B) ignoring octave. **Octave invariance** = the same note in any octave is summed into one pitch class.',
+       '**Low-Pass Filter (LPF):** passes low frequencies, blocks high → **smooths the signal** / removes noise. **High-Pass Filter (HPF):** passes high frequencies, blocks low → **highlights edges / sudden changes**.'
+     ],
+     mnemonic:'MFCC=Mel/perceptual(low-freq). Centroid=brightness(≈RMSE). ZCR=sign-changes=roughness(speech vs music). Chroma=12 pitch classes(octave-invariant). LPF smooths, HPF highlights edges.',
+     viz:null},
+    {n:'Video mining: redundancy, background subtraction, tracking', tl:'The temporal dimension',
+     body:[
+       'Raw video is **massive**, hard to analyse directly, and full of **temporal redundancy** — consecutive frames barely change because most of the scene (roads, buildings, trees) is **static**.',
+       '**Background Subtraction** exploits this: build a **static background model**, subtract it from each new frame → unchanged (redundant) pixels become **0 (black)**, only moving pixels survive. Output = a **binary mask**: **white = moving object (foreground)**, **black = static background**. The white blobs are the **Region of Interest (ROI)** — the dynamic info (people, vehicles) data mining actually cares about.',
+       '**Object tracking** estimates future positions with stochastic filters. **Kalman Filter:** assumes **Gaussian** noise, a **linear** motion model, state = a single Gaussian (mean+covariance) → best for **linear, smooth** motion (a car cruising on a highway). **Particle Filter:** **no** strong noise assumption (handles non-Gaussian), handles **non-linear** motion, state = many random **particles** → best for **erratic, non-linear** motion (a billiard ball bouncing randomly).',
+       'General media pipeline (all modalities): **acquire → preprocess → extract features (CNN/MFCC) → model → evaluate (+ethics)**. A modern shortcut (your Ollama+Qwen3 tutorial): skip training and just *ask* a vision-language model — next topic.'
+     ],
+     mnemonic:'Temporal redundancy → background subtraction → binary mask (white=moving=ROI, black=static). Tracking: Kalman=linear+Gaussian(highway car); Particle=non-linear/non-Gaussian(bouncing ball).',
      viz:null}
   ],
   pipeline:'graph LR\n  A[Acquire<br/>pixels/waveform/frames] --> B[Preprocess<br/>resize·normalize·denoise]\n  B --> C[Feature extraction<br/>CNN · MFCC · 3D-CNN]\n  C --> D[Model<br/>classify·detect·cluster]\n  D --> E[Evaluate + Ethics]',
   formulas:[
-    {n:'Conv output size', tex:'O=\\left\\lfloor\\dfrac{W-K+2P}{S}\\right\\rfloor+1', when:'W=input, K=kernel, P=padding, S=stride. 5×5 ∗ 3×3, P0 S1 → 3×3.'},
+    {n:'Conv output size', tex:'O=\\left\\lfloor\\dfrac{W-K+2P}{S}\\right\\rfloor+1', when:'W=input, K=kernel, P=padding, S=stride. 3×3 ∗ 2×2, P0 S1 → 2×2.'},
+    {n:'LBP (Local Binary Pattern)', tex:'\\mathrm{LBP}=\\textstyle\\sum_{i=0}^{7} s(n_i-c)\\,2^{i},\\quad s(x)=\\begin{cases}1&x\\ge0\\\\0&x<0\\end{cases}', when:'Neighbour≥centre→1, read bits in fixed order → decimal. Worked centre 75 → 216.'},
     {n:'Nyquist sampling', tex:'f_s \\ge 2\\,f_{\\max}', when:'Sample rate must be ≥ twice the highest frequency to avoid aliasing.'}
   ],
   mnemonics:[
     {phrase:'"Image=grid, Audio=wave, Video=frames+sound"', expands:'Each becomes a tensor of numbers.'},
-    {phrase:'"CNN: convolve, pool, repeat, classify"', expands:'Hierarchical learned features.'}
+    {phrase:'"FFT=global, LBP=local"', expands:'FFT→frequency domain (whole image); LBP→local texture (neighbour vs centre).'},
+    {phrase:'"Sparse connectivity + parameter sharing"', expands:'Local receptive field + reused filter ⇒ CNN has far fewer params than an MLP.'},
+    {phrase:'"White mask = moving = ROI"', expands:'Background subtraction keeps only the changing foreground pixels.'},
+    {phrase:'"Kalman = straight line, Particle = chaos"', expands:'Kalman: linear+Gaussian; Particle: non-linear/non-Gaussian.'}
   ],
   pitfalls:[
     'Raster (pixels, blurs on zoom) vs vector (equations, stays sharp) — 2025 PG#1.',
+    'LBP: read the 8 neighbours in the **stated order** (e.g. clockwise from top-left) and use ≥ (not >) for the centre.',
+    'FFT outputs **complex** numbers → wrap in `np.abs()` for magnitude; `freqs>0` keeps the positive half.',
     'A spectrogram is an *image of sound* — that\'s why CNNs work on audio.',
-    'Conv output-size formula: don\'t forget +1.'
+    'Conv output-size formula: don\'t forget +1. Deep learning convolution = cross-correlation (no kernel flip).'
   ],
   summary:[
     'Everything → numbers: image=H×W×C, audio=sampled waveform, video=frames+audio.',
-    'CNN = sliding learned kernels (convolution) + pooling → automatic hierarchical features. Out=(W−K+2P)/S+1.',
-    'Audio: waveform → Fourier → spectrogram → MFCC. Nyquist: fs≥2·fmax.',
-    'Pipeline: acquire→preprocess→extract→model→evaluate(+ethics). Video adds time.'
+    'Features: FFT(global,frequency,translation-invariant) vs LBP(local texture, neighbour≥centre→bits→decimal, e.g. 216).',
+    'CNN = learned kernels (convolution) + max-pooling → automatic hierarchical features. Out=(W−K+2P)/S+1. Sparse connectivity + parameter sharing ⇒ few params. Classic ML = hand-designed features; DL = learned end-to-end.',
+    'Audio: vibrations need a medium (no vacuum). Nyquist fs≥2·fmax. Time vs frequency domain; FFT (mask>0, np.abs). Spectrogram→CNN. Features: MFCC(Mel/perceptual), spectral centroid(brightness≈RMSE), ZCR(roughness), chroma(12 pitch classes, octave-invariant). LPF smooths, HPF highlights edges.',
+    'Video: temporal redundancy → background subtraction → binary mask (white=moving=ROI). Tracking: Kalman(linear/Gaussian) vs Particle(non-linear/non-Gaussian).'
   ]
 },
 /* ==================== 4. MULTIMODAL & VLM ==================== */
@@ -1063,7 +1102,87 @@ window.PROBLEMS = [
    q:'Name 2 challenges of **web mining** vs ordinary text mining, and state what `BeautifulSoup.find()` returns.',
    steps:['Challenge 1: web data is **unstructured & inconsistent** (messy HTML, ads, navigation noise).','Challenge 2: **scale + dynamic JS content + legal/ethical limits** (robots.txt, rate limiting).','find(): returns the **first** HTML element matching the given tag, **with its contents**.'],
    answer:'Challenges: messy/unstructured HTML + huge dynamic scale & legal-ethical constraints. find() → first matching tag + its content.',
-   tip:'User-Agent header makes the request look like a browser, not a bot (2025 Esai2b).'}
+   tip:'User-Agent header makes the request look like a browser, not a bot (2025 Esai2b).'},
+
+  {id:'p17', topic:'media', type:'compute', diff:'hard', source:'Asistensi · Image Mining',
+   q:'Compute the decimal **Local Binary Pattern (LBP)** for the centre pixel (75), reading neighbours **clockwise from top-left**. Rule: neighbour ≥ centre → 1, else 0.',
+   given:'I = [85 90 70]\n    [65 75 80]\n    [60 72 88]   centre C = 75',
+   steps:[
+     'Clockwise from top-left: TL=85≥75→1, TC=90≥75→1, TR=70<75→0, CR=80≥75→1, BR=88≥75→1, BC=72<75→0, BL=60<75→0, CL=65<75→0.',
+     'Binary pattern (MSB=first neighbour): 1 1 0 1 1 0 0 0.',
+     'Decimal = 1·2⁷+1·2⁶+0·2⁵+1·2⁴+1·2³+0+0+0 = 128+64+16+8.',
+     '= 216.'
+   ],
+   answer:'LBP = `11011000` = **216**.',
+   tip:'Use ≥ (not >) at the centre, and keep the neighbour order the question specifies. LBP captures LOCAL texture.'},
+
+  {id:'p18', topic:'media', type:'compute', diff:'hard', source:'Asistensi · Image Mining',
+   q:'Perform **valid 2D convolution** (no padding, stride 1, cross-correlation) of image I with kernel K. Give the feature map.',
+   given:'I = [2 1 3]      K = [ 1 0]\n    [0 4 1]          [-1 2]\n    [1 2 0]',
+   steps:[
+     'Output size = (3−2+1)×(3−2+1) = 2×2.',
+     'O(1,1)=2·1+1·0+0·(−1)+4·2 = 2+0+0+8 = 10.',
+     'O(1,2)=1·1+3·0+4·(−1)+1·2 = 1+0−4+2 = −1.',
+     'O(2,1)=0·1+4·0+1·(−1)+2·2 = 0+0−1+4 = 3.',
+     'O(2,2)=4·1+1·0+2·(−1)+0·2 = 4+0−2+0 = 2.'
+   ],
+   answer:'Feature map = [[10, −1], [3, 2]].',
+   tip:'Deep-learning "convolution" is really cross-correlation: overlay kernel, multiply element-wise, sum. Slide by the stride.'},
+
+  {id:'p19', topic:'media', type:'compute', diff:'med', source:'Asistensi · Image Mining',
+   q:'Apply **2×2 Max Pooling, stride 2, no padding** to the 4×4 feature map A. Give the output.',
+   given:'A = [1 3 2 0]\n    [4 2 1 5]\n    [0 3 8 2]\n    [1 6 4 7]',
+   steps:[
+     'Split into four non-overlapping 2×2 blocks (stride 2).',
+     'Top-left [[1,3],[4,2]] → max = 4. Top-right [[2,0],[1,5]] → max = 5.',
+     'Bottom-left [[0,3],[1,6]] → max = 6. Bottom-right [[8,2],[4,7]] → max = 8.',
+     'Assemble the 2×2 output.'
+   ],
+   answer:'Output = [[4, 5], [6, 8]].',
+   tip:'Max pooling keeps the strongest activation per block → downsamples + adds translation tolerance.'},
+
+  {id:'p20', topic:'media', type:'compute', diff:'med', source:'Asistensi · Audio Mining',
+   q:'For signal $[1,2,1,-1]$, `np.fft.fft` gives $[3{+}0j,\\,0{-}3j,\\,-1{+}0j,\\,0{+}3j]$. (a) What is the **magnitude** spectrum? (b) Why wrap FFT in `np.abs()`? (c) What does `mask = freqs > 0` do?',
+   steps:[
+     '(a) magnitude = |complex| for each bin: |3|=3, |−3j|=3, |−1|=1, |3j|=3.',
+     '(b) FFT returns **complex** numbers (real+imaginary); np.abs() gives the absolute **magnitude** so you can plot signal strength.',
+     '(c) FFT produces a mirrored **negative-frequency** half; `freqs>0` keeps only the **positive** frequencies for a standard spectrum.'
+   ],
+   answer:'(a) [3, 3, 1, 3]. (b) FFT is complex → np.abs() = magnitude. (c) Keep positive frequencies only (drop the mirror).',
+   tip:'|a+bj| = √(a²+b²). Magnitude spectrum is what you actually plot/feed to a model.'},
+
+  {id:'p21', topic:'media', type:'concept', diff:'med', source:'Asistensi · Video Mining',
+   q:'Object tracking: when is a **Kalman Filter** better than a **Particle Filter**? (a) car driving straight at constant speed on a highway; (b) a billiard ball bouncing randomly after collisions.',
+   steps:[
+     'Kalman assumes Gaussian noise + a linear motion model; state = a single Gaussian (mean+covariance).',
+     'Particle makes no strong noise assumption (non-Gaussian OK) + handles non-linear motion; state = many random particles.',
+     '(a) Highway car: linear, smooth → **Kalman** (deterministic, fast, cheap).',
+     '(b) Bouncing ball: non-linear, erratic, messy → **Particle** (samples many possible trajectories).'
+   ],
+   answer:'(a) Kalman (linear + Gaussian). (b) Particle (non-linear + non-Gaussian).',
+   tip:'Kalman = one neat Gaussian for smooth/linear motion; Particle = a cloud of samples for chaos.'},
+
+  {id:'p22', topic:'media', type:'concept', diff:'easy', source:'Asistensi · Video Mining',
+   q:'In **Background Subtraction**, the output is a **binary mask**. What do white and black pixels mean, and why is the white area called the **Region of Interest (ROI)**?',
+   steps:[
+     'Background subtraction subtracts a static background model from each frame; unchanged (redundant) pixels → 0.',
+     'White pixels = **moving foreground** (changed vs the background model).',
+     'Black pixels = **static background** (no change).',
+     'The white region holds the dynamic info (people, vehicles) we mine → it is the **ROI**; black is ignored to save compute.'
+   ],
+   answer:'White = moving foreground, Black = static background. White = ROI because it carries the dynamic info worth analysing.',
+   tip:'This directly attacks temporal redundancy: only analyse what actually moved.'},
+
+  {id:'p23', topic:'media', type:'concept', diff:'med', source:'Asistensi · Audio Mining',
+   q:'(a) Why can sound NOT travel in a vacuum? (b) Intuition for **Spectral Centroid**, **Zero-Crossing Rate**, and **MFCC**?',
+   steps:[
+     '(a) Sound is vibration propagating **through a medium**; a vacuum has no medium to carry it → no sound.',
+     '(b) Spectral Centroid = "centre of mass" of the spectrum = brightness; high = sharp/bright, low = dull (≈ RMSE in the frequency domain).',
+     'Zero-Crossing Rate = how often the signal changes sign = roughness; good for speech-vs-music & voiced-vs-unvoiced.',
+     'MFCC = Mel-Frequency Cepstral Coefficients; maps to the perceptual **Mel scale** (human hearing), focuses on low frequencies.'
+   ],
+   answer:'(a) No medium in a vacuum. (b) Centroid=brightness, ZCR=roughness/sign-changes, MFCC=perceptual Mel-scale features.',
+   tip:'Centroid≈RMSE-of-frequency; ZCR distinguishes smooth (voiced) vs rough (noise); MFCC mimics the ear.'}
 ];
 
 /* ===================== MAIN APPLICATION (inline) ===================== */
@@ -1504,16 +1623,23 @@ const MASTER=[
  ]},
  {n:3, title:'Image · Audio · Video · Multimodal (VLM) + Tactics', accent:'var(--core)', sections:[
    {h:'Image / Computer Vision', items:[
-     'Image = H×W×C (gray=1, RGB=3, each 0–255). Raster=pixels (blurs on zoom); vector=equations (sharp, SHP).',
-     '**CNN**: kernels slide → convolution → feature map. Conv=detect, pool=shrink, deeper=abstract.',
-     'Conv out size $=\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$. 5×5 ∗ 3×3, P0 S1 → 3×3.',
-     'Parameter sharing → far fewer weights. Edge kernel = + centre, − surround.'
+     'Image = H×W×C (gray=1, RGB=3, each 0–255). Raster=pixels (blurs); vector=equations (sharp, SHP).',
+     'Features: **FFT**=global (freq domain, translation-invariant) vs **LBP**=local texture (neighbour≥centre→1, read bits → decimal; e.g. 216).',
+     '**CNN**: kernels slide → convolution (cross-correlation) → feature map. Conv=detect, **max-pool**=shrink, deeper=abstract.',
+     'Conv out $=\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$. 3×3 ∗ 2×2 → 2×2. **Sparse connectivity** (local receptive field) + **parameter sharing** ⇒ few params.',
+     'Classic ML = hand-designed features (LBP/SIFT/HOG)+separate classifier; **Deep** = learned end-to-end.'
    ]},
-   {h:'Audio & Video', items:[
-     'Sound = sampled waveform. **Nyquist**: $f_s\\ge 2f_{max}$ (avoid aliasing).',
-     'Waveform → Fourier → **spectrogram** → **MFCC** (Mel scale ≈ human hearing).',
-     'Spectrogram = image of sound → CNN applies. Video = frames + audio → temporal (3D-CNN / CNN+RNN).',
-     'Pipeline (all media): acquire → preprocess → extract features → model → evaluate (+ ethics).'
+   {h:'Audio', items:[
+     'Sound = vibrations needing a **medium** (no vacuum). Sampled waveform. **Nyquist** $f_s\\ge 2f_{max}$.',
+     'Time domain (what happens) vs Frequency domain (how often). **FFT**: `mask>0` (positive freqs), `np.abs` (magnitude, since complex). Spectrogram = many FFTs → image of sound → CNN.',
+     '**MFCC** = Mel scale (perceptual, low-freq). **Spectral centroid** = brightness (≈RMSE). **ZCR** = sign-changes = roughness (speech vs music). **Chroma** = 12 pitch classes (octave-invariant).',
+     '**LPF** smooths/removes noise; **HPF** highlights edges/sudden changes.'
+   ]},
+   {h:'Video', items:[
+     '**Temporal redundancy**: consecutive frames barely change (static background).',
+     '**Background subtraction** → binary mask: **white=moving (foreground=ROI)**, black=static background.',
+     'Tracking: **Kalman**=linear motion+Gaussian noise, single Gaussian state (highway car). **Particle**=non-linear+non-Gaussian, many particles (bouncing ball).',
+     'Pipeline (all media): acquire → preprocess → extract (CNN/MFCC) → model → evaluate (+ethics).'
    ]},
    {h:'Multimodal & VLM', items:[
      '**CLIP**: contrastive — image & text encoders → shared space; pull matched pairs together, push mismatches apart.',
