@@ -1,5 +1,23 @@
 [
   {
+    "id": "data-mining-cram-hub",
+    "title": "DatMin Cram Hub: Belajar Penambangan Data buat UAS dalam Satu Halaman Interaktif",
+    "date": "2026-06-02",
+    "category": "Data Mining",
+    "tags": [
+      "Data Mining",
+      "UAS",
+      "Graph Mining",
+      "Text Mining",
+      "CLIP",
+      "Belajar",
+      "Fasilkom UI"
+    ],
+    "excerpt": "Hub belajar interaktif untuk UAS Penambangan Data — graph mining, text & web mining (GenAI + LLM), image/audio/video, multimodal (VLM), plus clustering & time series. Visualisasi interaktif, LaTeX, 16 soal UAS asli dengan solusi langkah-demi-langkah, timer Pomodoro, dan generator cheat sheet 3 lembar.",
+    "readTime": "Interactive",
+    "content": "<p><strong>Satu halaman untuk seluruh materi UAS Penambangan Data.</strong> Aku bangun hub belajar interaktif ini buat ngebut belajar (cram) menjelang UAS — dirangkum langsung dari slide Fasilkom UI dan soal UAS asli 2024 &amp; 2025, lengkap dengan visualisasi interaktif, rumus LaTeX, soal latihan beserta solusi langkah-demi-langkah, timer Pomodoro, dan generator cheat sheet 3 lembar.</p>\n\n<div style=\"text-align:center;margin:22px 0;\">\n  <a href=\"/datmin/index.html\" target=\"_blank\" rel=\"noopener\" style=\"display:inline-block;font-family:'ms_sans_serif',sans-serif;font-weight:bold;font-size:14px;background:#000080;color:#fff;padding:12px 26px;text-decoration:none;border:2px solid #fff;border-right-color:#000;border-bottom-color:#000;\">▶ Buka Study Hub layar penuh ↗</a>\n</div>\n\n<h2>Apa yang ada di dalam</h2>\n<ul>\n  <li><strong>6 topik high-yield</strong> — Graph Mining, Text &amp; Web Mining (termasuk GenAI + LLM), Image/Audio/Video Mining, Multimodal (VLM/CLIP), plus toolkit Clustering &amp; Time Series yang selalu keluar.</li>\n  <li><strong>Visualisasi interaktif</strong> — explorer centrality graph, plot word embedding + cosine similarity, dendrogram HAC, demo konvolusi CNN, confusion matrix → Precision/Recall/F1, dekomposisi time series, dan matriks contrastive CLIP.</li>\n  <li><strong>Practice Engine</strong> — 16 soal dari UAS 2024/2025 asli dengan solusi bertahap dan penilaian active-recall (Got it / Shaky / Missed).</li>\n  <li><strong>Cheat sheet siap-tulis</strong> — master 3 lembar (sesuai aturan UAS) plus builder untuk merakit cheat sheet sendiri, siap di-print.</li>\n  <li><strong>Pacing</strong> — timer Pomodoro 50/5 dan pelacak progres per konsep (tersimpan di browser).</li>\n</ul>\n\n<h2>Coba langsung di sini</h2>\n<p>Versi tersemat di bawah ini interaktif penuh. Untuk pengalaman terbaik (terutama di HP), buka versi <a href=\"/datmin/index.html\" target=\"_blank\" rel=\"noopener\">layar penuh</a>.</p>\n<iframe src=\"/datmin/index.html\" title=\"DatMin Cram Hub\" loading=\"lazy\" style=\"width:100%;height:80vh;min-height:560px;border:2px solid #808080;border-right-color:#fff;border-bottom-color:#fff;background:#fbfaf7;display:block;\"></iframe>\n\n<p style=\"font-size:12px;color:#444;margin-top:14px;\">Dibuat untuk persiapan UAS Penambangan Data (Fasilkom UI) — 3 Juni 2026. Konten bersifat ringkasan high-yield; selalu cek slide asli untuk detail.</p>"
+  },
+  {
     "id": "sira-refactoring-design-patterns",
     "title": "Lapisan, Tabel, dan Ekstraksi: 3 Refactoring yang Menurunkan Cognitive Complexity SIRA",
     "date": "2026-06-01",

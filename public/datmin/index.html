@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DatMin Cram — Data Mining Final Exam Study Hub</title>
+<meta name="description" content="A deep, visual, last-minute study hub for the Penambangan Data (Data Mining) final exam — Fasilkom UI." />
+
+<!-- KaTeX for LaTeX math -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+
+<!-- React + Babel (single-file interactivity) -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- Mermaid for algorithm pipelines / flowcharts -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+<!-- Editorial typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN SYSTEM — "Scholar's Paper": Medium editorial + academic
+   ============================================================ */
+:root{
+  --paper:#fbfaf7; --paper-2:#ffffff; --paper-raise:#fffefb;
+  --ink:#1b1a17; --ink-soft:#403d37; --ink-faint:#6f6a60;
+  --line:#e8e4da; --line-soft:#f0ece3;
+  --accent:#2f5d50;          /* scholarly teal-green */
+  --accent-soft:#e7f0ec;
+  --gold:#9a7b25; --gold-soft:#f6efdc;
+  --hi:#b23a48; --hi-soft:#fbe9eb;    /* high exam weight */
+  --med:#b5781f; --med-soft:#fbf0dd;  /* medium weight */
+  --core:#3f6f8f; --core-soft:#e7f0f5;/* toolkit / core */
+  --good:#2f7a4d; --good-soft:#e6f4ec;
+  --shadow:0 1px 2px rgba(30,28,24,.04),0 8px 28px rgba(30,28,24,.06);
+  --shadow-lg:0 2px 6px rgba(30,28,24,.06),0 24px 60px rgba(30,28,24,.12);
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --rail:300px; --read:720px;
+}
+[data-theme="dark"]{
+  --paper:#16161a; --paper-2:#1c1c21; --paper-raise:#1f1f25;
+  --ink:#ece9e2; --ink-soft:#c7c3ba; --ink-faint:#8e897e;
+  --line:#2c2c33; --line-soft:#26262c;
+  --accent:#7fc9b4; --accent-soft:#1d2a27;
+  --gold:#d8b65a; --gold-soft:#2a2519;
+  --hi:#e8868f; --hi-soft:#2e1d20;
+  --med:#e0a85a; --med-soft:#2c2418; --core:#86b6d4; --core-soft:#1a242c;
+  --good:#74c98f; --good-soft:#18271e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --shadow-lg:0 2px 6px rgba(0,0,0,.4),0 24px 60px rgba(0,0,0,.55);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:18px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  transition:background .3s,color .3s;
+}
+.sans{font-family:var(--sans)}
+.mono{font-family:var(--mono)}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.18;letter-spacing:-.012em;color:var(--ink)}
+::selection{background:var(--accent-soft);color:var(--ink)}
+
+/* ---- Layout shell ---- */
+.shell{display:grid;grid-template-columns:var(--rail) 1fr;min-height:100vh}
+.rail{
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--line);background:var(--paper-2);
+  padding:26px 20px 40px;display:flex;flex-direction:column;gap:6px;
+}
+.rail::-webkit-scrollbar{width:8px}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px}
+.main{min-width:0;display:flex;flex-direction:column}
+.canvas{width:100%;max-width:calc(var(--read) + 220px);margin:0 auto;padding:0 28px 140px;flex:1}
+@media(max-width:920px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:fixed;z-index:60;width:84%;max-width:320px;transform:translateX(-105%);transition:transform .28s;box-shadow:var(--shadow-lg)}
+  .rail.open{transform:translateX(0)}
+  .canvas{padding:0 18px 140px}
+}
+
+/* ---- Brand / nav ---- */
+.brand{display:flex;align-items:center;gap:11px;margin-bottom:18px;cursor:pointer}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:linear-gradient(140deg,var(--accent),#1f3d34);display:grid;place-items:center;color:#fff;font-family:var(--serif);font-weight:600;font-size:21px;box-shadow:var(--shadow)}
+.brand-name{font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.1}
+.brand-sub{font-family:var(--sans);font-size:11.5px;color:var(--ink-faint);letter-spacing:.02em}
+.nav-label{font-family:var(--sans);font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-faint);margin:18px 4px 7px}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink-soft);transition:background .15s,color .15s;border:1px solid transparent}
+.nav-item:hover{background:var(--paper-raise);color:var(--ink)}
+.nav-item.active{background:var(--accent-soft);color:var(--ink);border-color:var(--line)}
+.nav-ico{font-size:16px;width:20px;text-align:center;flex:none}
+.nav-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--sans)}
+.b-hi{background:var(--hi-soft);color:var(--hi)} .b-med{background:var(--med-soft);color:var(--med)} .b-core{background:var(--core-soft);color:var(--core)}
+.nav-dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--good)}
+
+/* ---- Top bar ---- */
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:14px;padding:13px 28px;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line-soft)}
+@media(max-width:920px){.topbar{padding:11px 16px}}
+.hamb{display:none;font-size:20px;cursor:pointer;color:var(--ink-soft);background:none;border:none}
+@media(max-width:920px){.hamb{display:block}}
+.bar-spacer{flex:1}
+.pill-btn{font-family:var(--sans);font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--paper-2);color:var(--ink-soft);padding:7px 13px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:.15s}
+.pill-btn:hover{border-color:var(--accent);color:var(--ink)}
+.icon-btn{width:36px;height:36px;border-radius:9px;border:1px solid var(--line);background:var(--paper-2);cursor:pointer;display:grid;place-items:center;font-size:16px;color:var(--ink-soft);transition:.15s}
+.icon-btn:hover{border-color:var(--accent);color:var(--ink)}
+
+/* ---- Reading column ---- */
+.read{max-width:var(--read);margin:0 auto}
+.read p{margin:0 0 1.15em;color:var(--ink-soft);font-size:20px;line-height:1.65}
+.read p strong{color:var(--ink);font-weight:600}
+.kicker{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.h-title{font-size:clamp(34px,5vw,52px);line-height:1.06;margin:14px 0 8px;letter-spacing:-.022em}
+.dek{font-size:21px;color:var(--ink-faint);font-style:italic;line-height:1.5;margin-bottom:22px;font-weight:400}
+.byline{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--sans);font-size:13.5px;color:var(--ink-faint);margin-bottom:30px}
+.dropcap::first-letter{float:left;font-family:var(--serif);font-weight:600;font-size:3.3em;line-height:.78;padding:6px 10px 0 0;color:var(--accent)}
+.sec-h{font-size:27px;margin:46px 0 6px;scroll-margin-top:80px}
+.sec-rule{width:42px;height:3px;background:var(--accent);border-radius:3px;margin:0 0 16px}
+
+/* ---- Cards & callouts ---- */
+.card{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow);margin:22px 0}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:0 12px 12px 0;padding:15px 18px;margin:22px 0;font-size:17.5px;color:var(--ink-soft)}
+.callout.gold{border-color:var(--gold);background:var(--gold-soft)}
+.callout.hi{border-color:var(--hi);background:var(--hi-soft)}
+.callout-t{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.callout.gold .callout-t{color:var(--gold)} .callout.hi .callout-t{color:var(--hi)}
+.tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:20px;background:var(--paper-raise);border:1px solid var(--line);color:var(--ink-soft)}
+.tag.hi{background:var(--hi-soft);border-color:transparent;color:var(--hi)}
+.tag.med{background:var(--med-soft);border-color:transparent;color:var(--med)}
+.tag.core{background:var(--core-soft);border-color:transparent;color:var(--core)}
+
+/* ---- Concept blocks ---- */
+.concept{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:16px 0;background:var(--paper-raise);transition:.18s}
+.concept:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.concept-h{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.concept-n{font-family:var(--sans);font-weight:700;font-size:17px;color:var(--ink)}
+.concept-tl{font-family:var(--sans);font-size:11.5px;color:var(--ink-faint);font-style:italic}
+.concept p{font-size:17.5px;margin:.4em 0;color:var(--ink-soft);line-height:1.55}
+.mnem{font-family:var(--sans);font-size:13.5px;background:var(--gold-soft);color:var(--gold);border-radius:8px;padding:7px 11px;margin-top:9px;display:inline-block;font-weight:600}
+
+/* ---- Formula sheet ---- */
+.formula{border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:12px 0;background:var(--paper-2);display:flex;flex-direction:column;gap:8px}
+.formula-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.formula-n{font-family:var(--sans);font-weight:600;font-size:14.5px;color:var(--ink)}
+.formula-body{overflow-x:auto;padding:6px 2px}
+.formula-when{font-family:var(--sans);font-size:13px;color:var(--ink-faint)}
+.cheat-add{font-family:var(--sans);font-size:11.5px;font-weight:600;border:1px dashed var(--line);background:none;color:var(--ink-faint);padding:4px 10px;border-radius:7px;cursor:pointer;transition:.15s;white-space:nowrap}
+.cheat-add:hover{border-color:var(--accent);color:var(--accent)}
+.cheat-add.in{background:var(--accent);color:#fff;border-style:solid;border-color:var(--accent)}
+
+/* ---- KaTeX sizing ---- */
+.katex{font-size:1.05em}
+.katex-display{margin:.4em 0;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+
+/* ---- Viz frame ---- */
+.viz{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:18px;margin:22px 0;box-shadow:var(--shadow)}
+.viz-cap{font-family:var(--sans);font-size:12.5px;color:var(--ink-faint);text-align:center;margin-top:10px;font-style:italic}
+.viz-title{font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.mermaid{display:flex;justify-content:center}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;margin:12px 0}
+.ctrl button{font-family:var(--sans);font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--paper-raise);color:var(--ink-soft);padding:6px 13px;border-radius:8px;cursor:pointer;transition:.15s}
+.ctrl button:hover,.ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.slider{width:100%;max-width:340px;accent-color:var(--accent)}
+
+/* ---- Pills row / summary ---- */
+.summary-grid{display:grid;gap:9px;margin:16px 0}
+.summary-row{display:flex;gap:11px;align-items:flex-start;font-size:17px;color:var(--ink-soft)}
+.summary-row .n{font-family:var(--sans);font-weight:700;color:var(--accent);flex:none;font-size:14px;margin-top:2px}
+
+/* ---- Practice engine ---- */
+.prob{background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:22px 24px;margin:18px 0;box-shadow:var(--shadow)}
+.prob-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:13px}
+.prob-q{font-size:19px;color:var(--ink);line-height:1.5;margin-bottom:8px}
+.prob-q strong{font-weight:600}
+.given{background:var(--paper-raise);border:1px solid var(--line-soft);border-radius:10px;padding:12px 15px;margin:12px 0;font-family:var(--mono);font-size:14px;color:var(--ink-soft);white-space:pre-wrap;overflow-x:auto}
+.reveal-btn{font-family:var(--sans);font-size:14px;font-weight:600;background:var(--ink);color:var(--paper);border:none;padding:10px 18px;border-radius:9px;cursor:pointer;transition:.15s;margin-top:6px}
+.reveal-btn:hover{opacity:.88}
+.sol{margin-top:16px;border-top:1px dashed var(--line);padding-top:16px;animation:fade .3s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.step{display:flex;gap:12px;margin:10px 0;font-size:17px;color:var(--ink-soft);line-height:1.55}
+.step-n{flex:none;width:24px;height:24px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-family:var(--sans);font-weight:700;font-size:12.5px;display:grid;place-items:center;margin-top:1px}
+.ans{background:var(--good-soft);border:1px solid color-mix(in srgb,var(--good) 30%,transparent);border-radius:11px;padding:13px 16px;margin-top:14px;font-size:17.5px}
+.ans b{color:var(--good)}
+.recall{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.recall span{font-family:var(--sans);font-size:13px;color:var(--ink-faint);margin-right:4px}
+.recall button{font-family:var(--sans);font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--paper-raise);padding:6px 14px;border-radius:8px;cursor:pointer;transition:.15s}
+.recall button.miss:hover{background:var(--hi);color:#fff;border-color:var(--hi)}
+.recall button.ok:hover{background:var(--med);color:#fff;border-color:var(--med)}
+.recall button.got:hover{background:var(--good);color:#fff;border-color:var(--good)}
+.recall button.sel-miss{background:var(--hi);color:#fff;border-color:var(--hi)}
+.recall button.sel-ok{background:var(--med);color:#fff;border-color:var(--med)}
+.recall button.sel-got{background:var(--good);color:#fff;border-color:var(--good)}
+
+/* ---- Dashboard ---- */
+.hero{padding:46px 0 8px}
+.count{display:inline-flex;align-items:center;gap:9px;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--hi);background:var(--hi-soft);padding:7px 14px;border-radius:30px;margin-bottom:20px}
+.count .dotpulse{width:8px;height:8px;border-radius:50%;background:var(--hi);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;margin:24px 0}
+.tcard{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;padding:20px;cursor:pointer;transition:.2s;box-shadow:var(--shadow);overflow:hidden}
+.tcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--accent)}
+.tcard-ico{font-size:26px;margin-bottom:12px}
+.tcard-t{font-family:var(--sans);font-weight:700;font-size:16.5px;margin-bottom:5px;color:var(--ink)}
+.tcard-d{font-size:15px;color:var(--ink-faint);line-height:1.45;font-family:var(--sans)}
+.tcard-bar{height:5px;border-radius:5px;background:var(--line-soft);margin-top:14px;overflow:hidden}
+.tcard-bar i{display:block;height:100%;background:var(--good);border-radius:5px;transition:width .5s}
+.tcard-foot{display:flex;justify-content:space-between;align-items:center;margin-top:9px;font-family:var(--sans);font-size:11.5px;color:var(--ink-faint)}
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin:22px 0}
+.stat{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.stat-v{font-family:var(--sans);font-weight:700;font-size:26px;color:var(--ink);letter-spacing:-.02em}
+.stat-l{font-family:var(--sans);font-size:12.5px;color:var(--ink-faint);margin-top:2px}
+
+/* ---- Pomodoro ---- */
+.pomo{position:fixed;right:22px;bottom:22px;z-index:70;background:var(--paper-2);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);width:230px;overflow:hidden;font-family:var(--sans)}
+.pomo-head{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;background:var(--ink);color:var(--paper)}
+.pomo-phase{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.pomo-body{padding:16px 15px;text-align:center}
+.pomo-time{font-family:var(--mono);font-size:42px;font-weight:500;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.pomo-time.break{color:var(--good)}
+.pomo-ctrl{display:flex;gap:8px;margin-top:14px}
+.pomo-ctrl button{flex:1;font-family:var(--sans);font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--paper-raise);padding:8px;border-radius:8px;cursor:pointer;transition:.15s}
+.pomo-ctrl button:hover{border-color:var(--accent);color:var(--accent)}
+.pomo-ctrl button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.pomo-meta{font-size:11.5px;color:var(--ink-faint);margin-top:10px}
+.pomo-fab{position:fixed;right:22px;bottom:22px;z-index:70;width:52px;height:52px;border-radius:50%;background:var(--ink);color:var(--paper);border:none;cursor:pointer;font-size:22px;box-shadow:var(--shadow-lg);display:grid;place-items:center;transition:.2s}
+.pomo-fab:hover{transform:scale(1.06)}
+@media(max-width:920px){.pomo{right:14px;bottom:14px;width:200px}.pomo-fab{right:14px;bottom:14px}}
+
+/* ---- Cheatsheet builder ---- */
+.cheat-page{background:#fff;color:#111;border:1px solid var(--line);border-radius:8px;padding:20px;margin:18px 0;box-shadow:var(--shadow);column-count:2;column-gap:20px;font-size:12px}
+.cheat-item{break-inside:avoid;border:1px solid #e3e3e3;border-radius:7px;padding:8px 10px;margin-bottom:9px;background:#fcfcfa}
+.cheat-item .cn{font-family:var(--sans);font-weight:700;font-size:11px;color:#222;display:flex;justify-content:space-between;gap:6px}
+.cheat-item .cx{margin-top:5px;color:#111}
+.cheat-item .rm{cursor:pointer;color:#b23a48;font-weight:700;font-family:var(--sans)}
+.cheat-empty{text-align:center;color:var(--ink-faint);font-family:var(--sans);padding:40px;font-size:15px}
+
+/* ---- Misc ---- */
+.toc{position:sticky;top:78px;font-family:var(--sans);font-size:13.5px;display:flex;flex-direction:column;gap:3px}
+.toc a{padding:5px 11px;border-radius:7px;color:var(--ink-faint);text-decoration:none;border-left:2px solid transparent;transition:.15s}
+.toc a:hover{color:var(--ink);background:var(--paper-raise)}
+.with-toc{display:grid;grid-template-columns:1fr 200px;gap:40px;align-items:start}
+@media(max-width:1100px){.with-toc{grid-template-columns:1fr}.toc-wrap{display:none}}
+.fmt-q{font-family:var(--sans)}
+.divider{height:1px;background:var(--line);margin:40px 0;border:none}
+.print-btn{font-family:var(--sans);font-weight:600;font-size:14px;background:var(--accent);color:#fff;border:none;padding:11px 20px;border-radius:10px;cursor:pointer}
+.seg{display:inline-flex;background:var(--paper-raise);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{font-family:var(--sans);font-size:13px;font-weight:600;border:none;background:none;color:var(--ink-faint);padding:7px 13px;border-radius:7px;cursor:pointer;transition:.15s}
+.seg button.on{background:var(--paper-2);color:var(--ink);box-shadow:var(--shadow)}
+.fade-in{animation:fade .35s ease}
+table.dm{width:100%;border-collapse:collapse;font-family:var(--sans);font-size:14.5px;margin:16px 0}
+table.dm th,table.dm td{border:1px solid var(--line);padding:8px 12px;text-align:center}
+table.dm th{background:var(--paper-raise);font-weight:700;color:var(--ink)}
+table.dm td{color:var(--ink-soft)}
+
+@media print{
+  .rail,.topbar,.pomo,.pomo-fab,.no-print{display:none!important}
+  .shell{display:block}.canvas{max-width:none;padding:0}
+  body{background:#fff;font-size:11px}
+  .cheat-page{box-shadow:none;border:none;column-count:3}
+}
+</style>
+</head>
+<body data-theme="light">
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const {useState,useEffect,useRef,useMemo,useCallback} = React;
+
+/* =====================================================================
+   MATH + DIAGRAM PRIMITIVES
+   ===================================================================== */
+function Tex({children,block}){
+  const ref = useRef(null);
+  useEffect(()=>{
+    if(ref.current && window.katex){
+      try{ window.katex.render(children, ref.current, {displayMode:!!block, throwOnError:false, fleqn:false}); }
+      catch(e){ ref.current.textContent = children; }
+    }
+  },[children,block]);
+  return block ? <div className="katex-display-wrap" ref={ref}/> : <span ref={ref}/>;
+}
+
+let _mid=0;
+function Mermaid({chart}){
+  const ref=useRef(null);
+  useEffect(()=>{
+    let alive=true;
+    if(ref.current && window.mermaid){
+      const id='mm'+(_mid++);
+      window.mermaid.render(id, chart).then(({svg})=>{ if(alive&&ref.current) ref.current.innerHTML=svg; })
+        .catch(()=>{ if(ref.current) ref.current.textContent='[diagram]'; });
+    }
+    return ()=>{alive=false};
+  },[chart]);
+  return <div className="mermaid" ref={ref}/>;
+}
+
+/* =====================================================================
+   CUSTOM SVG VISUALIZATIONS
+   ===================================================================== */
+
+/* -- 1. Word-embedding 2D plot + live cosine similarity (2024 exam) -- */
+function EmbeddingViz(){
+  const pts=[
+    {w:'Mathematics',x:1.6,y:4.2,c:'#2f5d50'},
+    {w:'Statistics',x:2.1,y:3.7,c:'#3f6f8f'},
+    {w:'Tiger',x:4.4,y:1.5,c:'#b5781f'},
+    {w:'Lion',x:4.7,y:1.0,c:'#b23a48'},
+  ];
+  const [a,setA]=useState(0),[b,setB]=useState(2);
+  const W=360,H=300,pad=34, sx=v=>pad+(v/5)*(W-2*pad), sy=v=>H-pad-(v/5)*(H-2*pad);
+  const cos=(p,q)=>{const d=p.x*q.x+p.y*q.y,m=Math.hypot(p.x,p.y)*Math.hypot(q.x,q.y);return d/m;};
+  const c=cos(pts[a],pts[b]);
+  return(
+    <div className="viz">
+      <div className="viz-title">📐 Word Embeddings & Cosine Similarity</div>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',maxWidth:420,display:'block',margin:'0 auto'}}>
+        <line x1={pad} y1={H-pad} x2={W-pad} y2={H-pad} stroke="var(--line)"/>
+        <line x1={pad} y1={pad} x2={pad} y2={H-pad} stroke="var(--line)"/>
+        {pts.map((p,i)=>(
+          <g key={i}>
+            <line x1={sx(0)} y1={sy(0)} x2={sx(p.x)} y2={sy(p.y)} stroke={p.c} strokeWidth={(i===a||i===b)?3:1.4} opacity={(i===a||i===b)?1:.45} markerEnd="url(#ar)"/>
+            <circle cx={sx(p.x)} cy={sy(p.y)} r={6} fill={p.c}/>
+            <text x={sx(p.x)+9} y={sy(p.y)+4} fontFamily="var(--sans)" fontSize="12" fill="var(--ink)">{p.w}</text>
+          </g>
+        ))}
+        <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6" fill="none" stroke="context-stroke" strokeWidth="1.4"/></marker></defs>
+      </svg>
+      <div className="ctrl">
+        <select value={a} onChange={e=>setA(+e.target.value)} style={{fontFamily:'var(--sans)',padding:'6px 10px',borderRadius:8,border:'1px solid var(--line)',background:'var(--paper-raise)',color:'var(--ink)'}}>
+          {pts.map((p,i)=><option key={i} value={i}>{p.w}</option>)}
+        </select>
+        <span style={{fontFamily:'var(--sans)',color:'var(--ink-faint)'}}>vs</span>
+        <select value={b} onChange={e=>setB(+e.target.value)} style={{fontFamily:'var(--sans)',padding:'6px 10px',borderRadius:8,border:'1px solid var(--line)',background:'var(--paper-raise)',color:'var(--ink)'}}>
+          {pts.map((p,i)=><option key={i} value={i}>{p.w}</option>)}
+        </select>
+      </div>
+      <div style={{textAlign:'center',fontFamily:'var(--sans)'}}>
+        cosine similarity = <b style={{color:c>.8?'var(--good)':'var(--hi)',fontSize:20}}>{c.toFixed(3)}</b>
+        <span style={{color:'var(--ink-faint)',fontSize:14}}> &nbsp;({c>.8?'similar meaning → small angle':'different meaning → large angle'})</span>
+      </div>
+      <div className="viz-cap">Semantically related words point in similar directions. Cosine looks at the <i>angle</i>, not length — that's why it beats Euclidean for text. (From UAS 2024 #3)</div>
+    </div>
+  );
+}
+
+/* -- 2. Centrality interactive graph (UAS 2025 Esai #1, node S) -- */
+function CentralityViz(){
+  // graph from 2025 exam: nodes P,Q,R,S,T,U,V
+  const nodes={P:[210,40],Q:[330,95],R:[195,120],S:[70,110],T:[225,180],U:[70,185],V:[150,235]};
+  const edges=[['P','S'],['P','R'],['P','Q'],['S','R'],['S','U'],['S','V'],['R','Q'],['R','T'],['R','U'],['U','T'],['T','Q'],['T','V']];
+  const [sel,setSel]=useState('S');
+  const deg={}; Object.keys(nodes).forEach(n=>deg[n]=0);
+  edges.forEach(([a,b])=>{deg[a]++;deg[b]++;});
+  // BFS shortest path length from sel
+  const adj={}; Object.keys(nodes).forEach(n=>adj[n]=[]);
+  edges.forEach(([a,b])=>{adj[a].push(b);adj[b].push(a);});
+  const bfs=(s)=>{const d={[s]:0},q=[s];while(q.length){const u=q.shift();adj[u].forEach(v=>{if(d[v]===undefined){d[v]=d[u]+1;q.push(v);}});}return d;};
+  const dist=bfs(sel); const N=Object.keys(nodes).length;
+  const sumD=Object.keys(nodes).filter(n=>n!==sel).reduce((s,n)=>s+(dist[n]||0),0);
+  const closeNorm=((N-1)/sumD);
+  const W=400,H=270;
+  return(
+    <div className="viz">
+      <div className="viz-title">🕸️ Centrality Explorer — click a node</div>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',maxWidth:480,display:'block',margin:'0 auto'}}>
+        {edges.map(([a,b],i)=><line key={i} x1={nodes[a][0]} y1={nodes[a][1]} x2={nodes[b][0]} y2={nodes[b][1]} stroke="var(--line)" strokeWidth={2}/>)}
+        {Object.entries(nodes).map(([n,[x,y]])=>{
+          const isSel=n===sel; const r=11+deg[n]*1.6;
+          return(<g key={n} style={{cursor:'pointer'}} onClick={()=>setSel(n)}>
+            <circle cx={x} cy={y} r={r} fill={isSel?'var(--accent)':'var(--accent-soft)'} stroke="var(--accent)" strokeWidth={2}/>
+            <text x={x} y={y+4} textAnchor="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="13" fill={isSel?'#fff':'var(--accent)'}>{n}</text>
+          </g>);
+        })}
+      </svg>
+      <div className="stat-row" style={{margin:'14px 0 0'}}>
+        <div className="stat"><div className="stat-v">{deg[sel]}</div><div className="stat-l">Degree centrality of {sel}</div></div>
+        <div className="stat"><div className="stat-v">{closeNorm.toFixed(3)}</div><div className="stat-l">Closeness (normalized)</div></div>
+        <div className="stat"><div className="stat-v">{sumD}</div><div className="stat-l">Σ shortest-path lengths</div></div>
+      </div>
+      <div className="viz-cap">Node size = degree. Closeness(norm) = (N−1)/Σd = {N-1}/{sumD} = {closeNorm.toFixed(3)}. For {sel}, exactly the 2025 exam's worked answer when {sel}=S (0.75). Betweenness needs counting shortest paths *through* the node.</div>
+    </div>
+  );
+}
+
+/* -- 3. Dendrogram (HAC) -- */
+function DendroViz(){
+  // single-linkage merge order for A(5,4)B(2,2)C(1,3)D(5,5) Euclidean — 2024 exam #4a
+  // merges: A-D (1.0), B-C (1.41), {AD}-{BC} (3.16)
+  return(
+    <div className="viz">
+      <div className="viz-title">🌳 Dendrogram — HAC single linkage (Euclidean)</div>
+      <svg viewBox="0 0 360 230" style={{width:'100%',maxWidth:420,display:'block',margin:'0 auto'}}>
+        {/* y axis */}
+        <line x1="40" y1="20" x2="40" y2="190" stroke="var(--line)"/>
+        {[0,1,2,3].map(h=>{const y=190-h*52;return(<g key={h}><line x1="36" y1={y} x2="40" y2={y} stroke="var(--ink-faint)"/><text x="30" y={y+4} textAnchor="end" fontSize="11" fontFamily="var(--sans)" fill="var(--ink-faint)">{h}</text></g>);})}
+        {/* leaves at x: A=80 D=140 B=210 C=270 */}
+        {/* A-D merge at h=1 -> y=138 */}
+        <path d="M80,190 L80,138 L140,138 L140,190" fill="none" stroke="var(--accent)" strokeWidth="2.4"/>
+        {/* B-C merge at h=1.41 -> y~117 */}
+        <path d="M210,190 L210,117 L270,117 L270,190" fill="none" stroke="#3f6f8f" strokeWidth="2.4"/>
+        {/* {AD}-{BC} at h=3.16 -> y~25; AD center x=110, BC center x=240 */}
+        <path d="M110,138 L110,26 L240,26 L240,117" fill="none" stroke="#b23a48" strokeWidth="2.4"/>
+        {[['A',80],['D',140],['B',210],['C',270]].map(([l,x])=><text key={l} x={x} y="205" textAnchor="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="13" fill="var(--ink)">{l}</text>)}
+        <text x="200" y="222" textAnchor="middle" fontSize="11" fontFamily="var(--sans)" fill="var(--ink-faint)">merge heights: A–D@1.0, B–C@1.41, {'{AD}'}–{'{BC}'}@3.16</text>
+      </svg>
+      <div className="viz-cap">Read bottom-up: the <b>lowest</b> bars merge first (most similar). Cutting the tree at a height gives your clusters. (UAS 2024 #4a)</div>
+    </div>
+  );
+}
+
+/* -- 4. CNN convolution demo -- */
+function ConvViz(){
+  const [k,setK]=useState('edge');
+  const img=[[10,10,10,80,80],[10,10,10,80,80],[10,10,10,80,80],[10,10,10,80,80],[10,10,10,80,80]];
+  const kernels={edge:[[-1,-1,-1],[-1,8,-1],[-1,-1,-1]],blur:[[1,1,1],[1,1,1],[1,1,1]].map(r=>r.map(v=>v/9)),sharp:[[0,-1,0],[-1,5,-1],[0,-1,0]]};
+  const K=kernels[k];
+  const out=[];for(let i=0;i<3;i++){out[i]=[];for(let j=0;j<3;j++){let s=0;for(let a=0;a<3;a++)for(let b=0;b<3;b++)s+=img[i+a][j+b]*K[a][b];out[i][j]=Math.round(s);}}
+  const cell=(v,mx)=>{const t=Math.max(0,Math.min(1,(v)/(mx||100)));return `rgba(47,93,80,${.12+t*.7})`;};
+  return(
+    <div className="viz">
+      <div className="viz-title">🔲 Convolution — how a CNN "sees" a vertical edge</div>
+      <div className="ctrl">
+        {Object.keys(kernels).map(kk=><button key={kk} className={k===kk?'on':''} onClick={()=>setK(kk)}>{kk} filter</button>)}
+      </div>
+      <div style={{display:'flex',gap:18,justifyContent:'center',alignItems:'center',flexWrap:'wrap'}}>
+        <Grid m={img} cap="Input 5×5" mx={80}/>
+        <span style={{fontSize:22,color:'var(--ink-faint)'}}>✳</span>
+        <Grid m={K} cap="Kernel 3×3" k/>
+        <span style={{fontSize:22,color:'var(--ink-faint)'}}>=</span>
+        <Grid m={out} cap="Feature map 3×3" mx={Math.max(...out.flat().map(Math.abs))}/>
+      </div>
+      <div className="viz-cap">A kernel slides over the image; each output = Σ(overlap × kernel). The <b>edge</b> filter lights up exactly where pixels change (the boundary 10→80). Output size = (5−3)+1 = 3. Stack many filters → deep features.</div>
+    </div>
+  );
+}
+function Grid({m,cap,mx=100,k}){
+  return(<div style={{textAlign:'center'}}>
+    <div style={{display:'grid',gridTemplateColumns:`repeat(${m[0].length},1fr)`,gap:2}}>
+      {m.flat().map((v,i)=><div key={i} style={{width:k?30:26,height:k?30:26,display:'grid',placeItems:'center',fontFamily:'var(--mono)',fontSize:k?11:10.5,borderRadius:4,background:k?'var(--gold-soft)':`rgba(47,93,80,${.1+Math.min(1,Math.abs(v)/mx)*.7})`,color:k?'var(--gold)':(Math.abs(v)/mx>.5?'#fff':'var(--ink)')}}>{k?(+v).toFixed(v%1?1:0):v}</div>)}
+    </div>
+    <div style={{fontFamily:'var(--sans)',fontSize:11.5,color:'var(--ink-faint)',marginTop:6}}>{cap}</div>
+  </div>);
+}
+
+/* -- 5. Confusion matrix → precision / recall / F1 -- */
+function MetricsViz(){
+  const [tp,setTp]=useState(40),[fp,setFp]=useState(10),[fn,setFn]=useState(60),[tn,setTn]=useState(390);
+  const P=tp/(tp+fp||1), R=tp/(tp+fn||1), F1=2*P*R/((P+R)||1);
+  const cellS={padding:'14px',textAlign:'center',fontFamily:'var(--sans)',borderRadius:10};
+  return(
+    <div className="viz">
+      <div className="viz-title">🎯 Confusion Matrix → Precision / Recall / F1</div>
+      <div style={{display:'grid',gridTemplateColumns:'80px 1fr 1fr',gap:8,maxWidth:420,margin:'0 auto'}}>
+        <div></div><div style={{...cellS,fontWeight:700,color:'var(--ink-faint)',fontSize:12}}>Pred +</div><div style={{...cellS,fontWeight:700,color:'var(--ink-faint)',fontSize:12}}>Pred −</div>
+        <div style={{...cellS,fontWeight:700,color:'var(--ink-faint)',fontSize:12,display:'grid',placeItems:'center'}}>Actual +</div>
+        <Edt v={tp} set={setTp} bg="var(--good-soft)" lab="TP"/>
+        <Edt v={fn} set={setFn} bg="var(--hi-soft)" lab="FN"/>
+        <div style={{...cellS,fontWeight:700,color:'var(--ink-faint)',fontSize:12,display:'grid',placeItems:'center'}}>Actual −</div>
+        <Edt v={fp} set={setFp} bg="var(--med-soft)" lab="FP"/>
+        <Edt v={tn} set={setTn} bg="var(--paper-raise)" lab="TN"/>
+      </div>
+      <div className="stat-row" style={{margin:'16px 0 0'}}>
+        <div className="stat"><div className="stat-v">{P.toFixed(2)}</div><div className="stat-l">Precision = TP/(TP+FP)</div></div>
+        <div className="stat"><div className="stat-v">{R.toFixed(2)}</div><div className="stat-l">Recall = TP/(TP+FN)</div></div>
+        <div className="stat"><div className="stat-v" style={{color:'var(--accent)'}}>{F1.toFixed(2)}</div><div className="stat-l">F1 = 2PR/(P+R)</div></div>
+      </div>
+      <div className="viz-cap">Edit the cells. Precision = "of what I flagged, how much was right." Recall = "of all real positives, how many did I catch." F1 = their harmonic mean. (UAS 2025: P=.8,R=.4 → F1=.53)</div>
+    </div>
+  );
+}
+function Edt({v,set,bg,lab}){
+  return(<div style={{background:bg,borderRadius:10,padding:'10px',textAlign:'center'}}>
+    <div style={{fontFamily:'var(--sans)',fontSize:10.5,fontWeight:700,color:'var(--ink-faint)'}}>{lab}</div>
+    <input type="number" value={v} onChange={e=>set(Math.max(0,+e.target.value||0))} style={{width:'70px',textAlign:'center',fontFamily:'var(--mono)',fontSize:18,fontWeight:600,border:'none',background:'none',color:'var(--ink)'}}/>
+  </div>);
+}
+
+/* -- 6. Time-series decomposition -- */
+function TSViz(){
+  const [mode,setMode]=useState('mult');
+  const n=48, data=[];
+  for(let t=0;t<n;t++){const trend=10+t*0.4;const seas=Math.sin(t/12*2*Math.PI);const amp=mode==='mult'?(1+t*0.06):3;data.push(trend+seas*amp);}
+  const W=420,H=170,pad=24, mn=Math.min(...data),mx=Math.max(...data);
+  const sx=i=>pad+(i/(n-1))*(W-2*pad), sy=v=>H-pad-((v-mn)/(mx-mn))*(H-2*pad);
+  const path=data.map((v,i)=>`${i?'L':'M'}${sx(i).toFixed(1)},${sy(v).toFixed(1)}`).join(' ');
+  const trendPath=data.map((v,i)=>`${i?'L':'M'}${sx(i).toFixed(1)},${sy(10+i*0.4).toFixed(1)}`).join(' ');
+  return(
+    <div className="viz">
+      <div className="viz-title">📈 Time-Series Decomposition</div>
+      <div className="ctrl">
+        <button className={mode==='add'?'on':''} onClick={()=>setMode('add')}>Additive (constant amplitude)</button>
+        <button className={mode==='mult'?'on':''} onClick={()=>setMode('mult')}>Multiplicative (growing)</button>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{width:'100%',maxWidth:480,display:'block',margin:'0 auto'}}>
+        <path d={trendPath} fill="none" stroke="var(--gold)" strokeWidth="2" strokeDasharray="5 4"/>
+        <path d={path} fill="none" stroke="var(--accent)" strokeWidth="2.4"/>
+      </svg>
+      <div className="viz-cap"><b style={{color:'var(--gold)'}}>Trend</b> (dashed) + <b style={{color:'var(--accent)'}}>seasonality</b> + noise. If seasonal swings <b>grow</b> with the trend → <b>multiplicative</b>; if constant → <b>additive</b>. Every series always has <b>level + noise</b>. (UAS 2025 PG#8, Isian#5)</div>
+    </div>
+  );
+}
+
+/* -- 7. CLIP contrastive matrix (VLM) -- */
+function ClipViz(){
+  const imgs=['🐶 dog','🐱 cat','🚗 car'];const txts=['"a photo of a dog"','"a photo of a cat"','"a photo of a car"'];
+  const sim=[[.92,.21,.08],[.18,.90,.12],[.05,.10,.94]];
+  return(
+    <div className="viz">
+      <div className="viz-title">🔗 CLIP — contrastive image–text matching</div>
+      <div style={{overflowX:'auto'}}>
+      <table className="dm" style={{maxWidth:480,margin:'0 auto'}}>
+        <thead><tr><th></th>{txts.map((t,i)=><th key={i} style={{fontSize:11}}>{t}</th>)}</tr></thead>
+        <tbody>{imgs.map((im,i)=><tr key={i}><th>{im}</th>{sim[i].map((s,j)=><td key={j} style={{background:`rgba(47,93,80,${s})`,color:s>.5?'#fff':'var(--ink-soft)',fontWeight:i===j?700:400}}>{s.toFixed(2)}</td>)}</tr>)}</tbody>
+      </table></div>
+      <div className="viz-cap">CLIP trains image & text encoders so that <b>matching</b> pairs (diagonal) have high cosine similarity and mismatches are low. This is what enables <b>zero-shot</b>: classify a new image by comparing it to text prompts you write on the spot. (W12 / lecture14-vlm)</div>
+    </div>
+  );
+}
+
+/* -- 8. TF-IDF mini calculator -- */
+function TfidfViz(){
+  const docs=[['the','cat','sat','on','the','mat'],['the','dog','ate','the','bone'],['cat','and','dog','play']];
+  const [term,setTerm]=useState('cat');
+  const N=docs.length;
+  const tf=docs.map(d=>d.filter(w=>w===term).length/d.length);
+  const df=docs.filter(d=>d.includes(term)).length;
+  const idf=Math.log(N/(df||1));
+  return(
+    <div className="viz">
+      <div className="viz-title">🔤 TF-IDF Calculator</div>
+      <div className="ctrl">
+        <span style={{fontFamily:'var(--sans)',color:'var(--ink-faint)'}}>term:</span>
+        {['the','cat','dog','bone'].map(t=><button key={t} className={term===t?'on':''} onClick={()=>setTerm(t)}>{t}</button>)}
+      </div>
+      <table className="dm" style={{maxWidth:520,margin:'0 auto'}}>
+        <thead><tr><th>Doc</th><th>TF</th><th>contains "{term}"?</th><th>TF·IDF</th></tr></thead>
+        <tbody>{docs.map((d,i)=><tr key={i}><td style={{textAlign:'left',fontFamily:'var(--mono)',fontSize:12}}>{d.join(' ')}</td><td>{tf[i].toFixed(2)}</td><td>{d.includes(term)?'✓':'—'}</td><td style={{fontWeight:700,color:'var(--accent)'}}>{(tf[i]*idf).toFixed(3)}</td></tr>)}</tbody>
+      </table>
+      <div style={{textAlign:'center',fontFamily:'var(--sans)',fontSize:14,color:'var(--ink-faint)'}}>IDF = log(N/df) = log({N}/{df}) = <b style={{color:'var(--ink)'}}>{idf.toFixed(3)}</b></div>
+      <div className="viz-cap">TF-IDF = how often a word appears <i>here</i> (TF) × how <i>rare</i> it is overall (IDF). Common words like "the" (in every doc) get IDF≈0 → killed. Rare, document-specific words score high.</div>
+    </div>
+  );
+}
+
+const VIZ = {EmbeddingViz,CentralityViz,DendroViz,ConvViz,MetricsViz,TSViz,ClipViz,TfidfViz};
+
+/* =====================================================================
+   CONTENT — extracted/synthesized from Fasilkom UI slides + past UAS
+   ===================================================================== */
+window.CONTENT = [];
+window.PROBLEMS = [];
+
+/* ===================== CONTENT (inline, offline-safe) =====================
+   Each topic teaches from scratch (you skipped class) and maps to the official
+   kisi-kisi + the actual UAS 2024/2025 questions. weight: hi|med|core.
+   Concepts may carry an inline `viz` key (one of window.VIZ) rendered after them. */
+window.CONTENT = [
+/* ============================ 1. GRAPH MINING ============================ */
+{
+  id:'graph', title:'Graph Mining', icon:'🕸️', weight:'hi',
+  examTag:'Esai #1 every year — centrality is a guaranteed compute question',
+  dek:'Networks of entities and relationships — who is central, which communities exist, and which patterns repeat.',
+  readTime:11,
+  source:'W06 Louvain/Leiden · W07 Graph Mining · UAS 2024 Q1 · UAS 2025 PG5-7 + Esai1',
+  bigPicture:'A **graph** $G=(V,E)$ is a set of **nodes** (vertices = entities, e.g. people, papers, suspects) joined by **edges** (links = relationships). The lecture literally opened with a real corruption network from Wikidata: people as nodes, "is-a-person" / "friend-of" / "bribed" as labelled edges. Graph mining asks three questions: (1) **who matters?** → *centrality*; (2) **what groups exist?** → *community detection*; (3) **what sub-patterns recur?** → *frequent subgraph mining*.',
+  concepts:[
+    {n:'Centrality — "who is important?"', tl:'4 flavours, each a different definition of "important"',
+     body:[
+       'Centrality scores how important a node is. There are four you must know cold:',
+       '**Degree centrality** = how many edges a node has. Raw popularity. Normalized: divide by $N-1$ (max possible neighbours).',
+       '**Closeness centrality** = how *close* a node is to everyone else. $C_{close}(v)=\\dfrac{N-1}{\\sum_{u}d(v,u)}$ where $d$ is shortest-path length. High closeness = can reach the whole network in few hops.',
+       '**Betweenness centrality** = how often a node sits *on the shortest path between other pairs*. $C_{btw}(v)=\\sum_{s\\ne v\\ne t}\\dfrac{\\sigma_{st}(v)}{\\sigma_{st}}$ — a **bridge/broker**. Normalize by dividing by $\\binom{N-1}{2}$.',
+       '**Eigenvector centrality** = you are important if your *neighbours* are important (the idea behind PageRank).',
+       'The 2025 exam (PG#5) tested the key intuition: a node with **high betweenness but low degree** is a **bridge between communities** — few connections, but every shortest path runs through it. Removing it disconnects the network.'
+     ],
+     mnemonic:'DCBE — Degree(count), Closeness(reach), Betweenness(bridge), Eigenvector(prestige).',
+     viz:'CentralityViz'},
+    {n:'Community detection — "what groups exist?"', tl:'Find densely-connected clusters of nodes',
+     body:[
+       'A **community** = a set of nodes more densely connected to each other than to the rest of the graph (e.g. a criminal cell, a friend group, a research field). UAS 2024 Q1 asked you to define this and give a law-enforcement use: e.g. detecting a **money-laundering ring** as a tightly-knit community of accounts moving funds among themselves.',
+       '**Modularity $Q$** is the quality score: high $Q$ means many edges fall *inside* communities and few cross between them. $Q=\\frac{1}{2m}\\sum_{ij}\\big(A_{ij}-\\frac{k_ik_j}{2m}\\big)\\delta(c_i,c_j)$ — compares actual intra-community edges to what you\'d expect at random.',
+       '**Girvan–Newman** (divisive, top-down): repeatedly **remove the edge with the highest *edge betweenness***. Those edges are the "bridges" between communities, so cutting them peels communities apart. (2025 PG#6 answer = "remove the edge with highest edge betweenness".) Accurate but slow: $O(m^2n)$.',
+       '**Louvain** (agglomerative, bottom-up, greedy): start with every node its own community; repeatedly move nodes to whichever neighbour-community increases modularity most; then "collapse" each community into a super-node and repeat. Fast, scales to millions of nodes. **Weakness:** can produce **badly-connected (even internally disconnected) communities.**',
+       '**Leiden** = Louvain fixed. Adds a **refinement** step that *guarantees every community is internally connected* and converges to better-quality, more stable partitions. Remember Leiden as "Louvain + a guarantee."'
+     ],
+     mnemonic:'Girvan-Newman CUTS bridges (divisive); Louvain GROWS communities (greedy); Leiden = Louvain that never leaves a community broken.',
+     viz:null},
+    {n:'Frequent subgraph mining — "what patterns recur?"', tl:'Find sub-structures appearing in many graphs',
+     body:[
+       'Given a database of many graphs (e.g. thousands of molecules), find **subgraphs that appear at least `minsup` times**. The threshold is called **minimum support / minsup** — that exact term was the 2025 Isian#4 answer.',
+       'Use cases: a recurring ring structure in chemistry → a drug candidate; a repeated interaction pattern in a social network. The classic algorithm is **gSpan** (uses a canonical DFS code so it never counts the same subgraph twice).',
+       'The hard part is **subgraph isomorphism** (checking whether a pattern occurs) — NP-hard, which is why these algorithms lean on clever canonical encodings and pruning (anti-monotonicity: if a subgraph is infrequent, none of its supergraphs can be frequent).'
+     ],
+     mnemonic:'Frequent subgraph = "appears ≥ minsup times". minsup = the bar.',
+     viz:null},
+    {n:'Graph embeddings', tl:'Turn graph structure into vectors',
+     body:[
+       '**Graph embeddings** map nodes (or whole graphs) into a **vector space** (2025 PG#7 answer = "ruang vektor / vector space"), preserving relational + structural information so you can feed graphs into ordinary ML models. node2vec / DeepWalk do random walks and treat them like "sentences" of nodes (reusing the word2vec trick).'
+     ]}
+  ],
+  pipeline:'graph TD\n  A["Raw network<br/>(nodes + edges)"] --> B[Centrality<br/>who matters]\n  A --> C[Community detection<br/>Louvain / Leiden / Girvan-Newman]\n  A --> D[Frequent subgraph<br/>minsup, gSpan]\n  A --> E[Graph embedding<br/>→ vectors]\n  E --> F[Downstream ML]',
+  formulas:[
+    {n:'Degree centrality (normalized)', tex:'C_{deg}(v)=\\dfrac{\\deg(v)}{N-1}', when:'Raw connection count, scaled 0–1.'},
+    {n:'Closeness centrality (normalized)', tex:'C_{close}(v)=\\dfrac{N-1}{\\sum_{u\\ne v} d(v,u)}', when:'Inverse mean shortest-path distance. 2025 Esai1: S → 6/8 = 0.75.'},
+    {n:'Betweenness centrality (normalized)', tex:'C_{btw}(v)=\\dfrac{1}{\\binom{N-1}{2}}\\sum_{s\\ne v\\ne t}\\dfrac{\\sigma_{st}(v)}{\\sigma_{st}}', when:'Fraction of shortest paths through v. σ=#shortest paths.'},
+    {n:'Modularity', tex:'Q=\\dfrac{1}{2m}\\sum_{ij}\\Big(A_{ij}-\\dfrac{k_i k_j}{2m}\\Big)\\delta(c_i,c_j)', when:'Quality of a community partition; Louvain/Leiden maximize it.'}
+  ],
+  mnemonics:[
+    {phrase:'"Bridges have high BETWEENNESS, low degree"', expands:'The lonely broker connecting two worlds — 2025 PG#5.'},
+    {phrase:'"Leiden = Louvain + connectivity guarantee"', expands:'Both maximize modularity; Leiden fixes Louvain\'s disconnected-community bug.'}
+  ],
+  pitfalls:[
+    'Closeness uses **shortest-path distance**, not edge count — count hops via BFS.',
+    'Girvan–Newman removes **edges** by *edge* betweenness (not nodes!).',
+    'Don\'t confuse **degree** (local count) with **betweenness** (global bridging). The exam loves this trap.'
+  ],
+  summary:[
+    'Graph = nodes (entities) + edges (relations).',
+    'Centrality: Degree (count) · Closeness (reach, (N−1)/Σd) · Betweenness (bridge) · Eigenvector (prestige).',
+    'Community: Girvan–Newman (cut high-betweenness edges) · Louvain (greedy modularity) · Leiden (Louvain + connected guarantee). Quality = modularity Q.',
+    'Frequent subgraph mining: pattern appears ≥ minsup. gSpan.',
+    'Graph embeddings → vector space for downstream ML.'
+  ]
+},
+/* ========================= 2. TEXT & WEB MINING ========================= */
+{
+  id:'text', title:'Text & Web Mining', icon:'📝', weight:'hi',
+  examTag:'Heaviest topic: preprocessing, TF-IDF, embeddings, cosine, F1, web-scraping ethics',
+  dek:'From raw strings to vectors: how machines read, compare, classify and generate text — plus how to scrape the web ethically.',
+  readTime:14,
+  source:'Classical Text Mining · Feature Engineering for Text · GenAI Era · GenAI+LLM · UAS 2024 Q3,5,9 · UAS 2025 PG1-4, Isian1-3, Esai2',
+  bigPicture:'Computers can\'t do math on words, so **text mining = turn text into numbers, then mine**. The pipeline: **preprocess** (clean) → **represent** (vectorize: BoW, TF-IDF, embeddings) → **mine** (classify, cluster, similarity) → optionally **generate** (LLMs). **Web mining** is text mining where your corpus is the live web, adding crawling/scraping (and its ethics).',
+  concepts:[
+    {n:'Preprocessing pipeline', tl:'Normalize messy text into clean tokens',
+     body:[
+       'Standard steps, in order: **Tokenization** (split into words/tokens) → **case-folding** (lowercase) → **stopword removal** (drop "the", "and") → **stemming** (chop to root: "running"→"run", crude) **or lemmatization** (dictionary root: "better"→"good", smart) → optionally **n-grams** (keep 2-word "bigram" phrases).',
+       '**POS tagging** = label each token with its part of speech (noun/verb/adj/proper-noun). 2025 Isian#2 worked example: *"kue pedas disukai Gibran"* → kue=**NOUN**, pedas=**ADJ**, disukai=**VERB**, Gibran=**PROPN**. (PG#4: the *task* of labelling word classes per token = **POS tagging**.)'
+     ],
+     mnemonic:'TLSSN: Tokenize → Lowercase → Stopwords → Stem/Lemmatize → N-grams.',
+     viz:null},
+    {n:'Parsing: constituency vs dependency', tl:'Two ways to expose sentence structure',
+     body:[
+       '**Constituency parsing** asks *"what are the meaningful groups of words and how are they nested?"* — it builds a tree of phrases (NP, VP…). **Dependency parsing** asks *"which words depend on which other words, and what is the nature of that dependency?"* — it links each word to its head (subject→verb, etc.). That phrasing is verbatim the 2025 Isian#3 answer.'
+     ],
+     mnemonic:'Constituency = phrase BOXES (nesting). Dependency = ARROWS between words (head→dependent).'},
+    {n:'Representations: BoW → TF-IDF → Embeddings', tl:'The core vectorization ladder',
+     body:[
+       '**Bag of Words (BoW):** count each word. Ignores order, huge & **sparse**, every word equally important — bad.',
+       '**TF-IDF:** weight = **TF** (how often a word appears in *this* doc) × **IDF** $=\\log\\frac{N}{df}$ (how *rare* it is across all docs). Common words (high df) get IDF≈0 and vanish; rare, document-specific words score high. Still sparse, still no meaning.',
+       '**Word embeddings (Word2Vec, GloVe):** learn a **dense, low-dimensional** vector per word so that **similar meanings → nearby vectors**. UAS 2024 Q3 is the canonical picture: *Mathematics & Statistics* point the same way, *Tiger & Lion* point another way — the model learned this from **words sharing contexts** ("you shall know a word by the company it keeps"). 2025 Esai2c lists the benefits: captures **semantic meaning**, **lowers dimensionality** vs one-hot, **improves classifier accuracy/generalization**.',
+       '**Sentence / document embeddings:** combine word vectors into one. The simplest valid strategy (2025 Esai2d answer) = **average all the word embeddings** in the document. Better: models like Sentence-BERT.'
+     ],
+     mnemonic:'BoW counts · TF-IDF weights by rarity · Embeddings capture MEANING.',
+     viz:'TfidfViz'},
+    {n:'Cosine similarity', tl:'Compare two vectors by ANGLE, not length',
+     body:[
+       'Once text is vectors, **cosine similarity** measures how alike two docs/words are: $\\cos\\theta=\\dfrac{\\mathbf{a}\\cdot\\mathbf{b}}{\\lVert\\mathbf{a}\\rVert\\,\\lVert\\mathbf{b}\\rVert}$. It uses the **angle**, so a long document and a short one on the same topic still score high (length-invariant) — which is exactly why text people prefer it over Euclidean distance.',
+       'Range: 1 = identical direction (same topic), 0 = orthogonal (unrelated), −1 = opposite.'
+     ],
+     viz:'EmbeddingViz'},
+    {n:'Text classification & evaluation', tl:'Predict a label; measure with P/R/F1',
+     body:[
+       'Feed embeddings/TF-IDF into a classifier (Naive Bayes, SVM, neural net) to predict labels (spam/ham, sentiment). Embeddings help because they **inject semantics** and **reduce dimensionality** (2025 Esai2c).',
+       'Evaluate with **Precision** = TP/(TP+FP) (of what I flagged, how much was right), **Recall** = TP/(TP+FN) (of all true positives, how many I caught), and **F1** = harmonic mean $=\\frac{2PR}{P+R}$. 2025 Esai2e: P=0.8, R=0.4 → F1 = 2(0.8)(0.4)/(1.2) = **0.53**.'
+     ],
+     viz:'MetricsViz'},
+    {n:'Web mining & scraping ethics', tl:'Text mining on the live web',
+     body:[
+       '**Web scraping** with e.g. BeautifulSoup: `requests.get(url)` → `soup = BeautifulSoup(html)` → `soup.find(tag)` returns the **first matching element with its contents** (2025 Esai2a). Setting a **User-Agent** header **disguises the request to look like a real browser** rather than a bot/script (2025 Esai2b).',
+       'UAS 2024 Q5 — challenges of web mining vs plain text mining: (1) **unstructured & inconsistent HTML/markup**, (2) **massive scale + dynamic/JS content**, (3) **noise** (ads, navbars), (4) **legal/ethical limits** (robots.txt, rate-limits).',
+       '**Ethics (2025 PG#3):** scraping is ethical if you don\'t overload the server, you respect `robots.txt`, you take only public/non-auth data, and you **attribute the source**. *Using scraped data commercially without crediting the source* is the **unethical** option.'
+     ]},
+    {n:'LLMs & Generative AI for text', tl:'The modern frontier',
+     body:[
+       '**LLMs** (GPT-family) are huge transformer models trained to predict the next token; they enable **GenAI** for summarization, Q&A, translation, code. UAS 2024 Q9 tests **prompt quality**: a **low-quality** prompt is vague ("write about marketing"); a **high-quality** prompt gives **role, context, task, format, constraints** ("You are a B2B copywriter. Write a 100-word LinkedIn post for a SaaS launch targeting CTOs, friendly tone, one CTA").',
+       'Key vocabulary: **zero-shot** (no examples), **few-shot** (a few examples in the prompt), **hallucination** (confident wrong output), **RAG** (ground the LLM on retrieved documents to reduce hallucination).'
+     ],
+     mnemonic:'Good prompt = Role + Context + Task + Format + Constraints (RCTFC).'}
+  ],
+  pipeline:'graph LR\n  A[Raw text/web] --> B[Preprocess<br/>tokenize·stopword·stem·POS]\n  B --> C[Represent<br/>BoW · TF-IDF · embeddings]\n  C --> D{Mine}\n  D --> E[Classify<br/>P/R/F1]\n  D --> F[Cluster]\n  D --> G[Cosine similarity]\n  C --> H[LLM / GenAI]',
+  formulas:[
+    {n:'TF-IDF', tex:'w_{t,d}=\\underbrace{\\mathrm{tf}(t,d)}_{\\text{freq here}}\\times\\underbrace{\\log\\dfrac{N}{df_t}}_{\\text{rarity (IDF)}}', when:'Down-weights common words, up-weights rare informative ones.'},
+    {n:'Cosine similarity', tex:'\\cos\\theta=\\dfrac{\\mathbf{a}\\cdot\\mathbf{b}}{\\lVert\\mathbf{a}\\rVert\\lVert\\mathbf{b}\\rVert}=\\dfrac{\\sum a_i b_i}{\\sqrt{\\sum a_i^2}\\sqrt{\\sum b_i^2}}', when:'Length-invariant text similarity. 1=same, 0=unrelated.'},
+    {n:'Precision / Recall / F1', tex:'P=\\dfrac{TP}{TP+FP},\\;\\; R=\\dfrac{TP}{TP+FN},\\;\\; F1=\\dfrac{2PR}{P+R}', when:'Classifier eval. P=.8,R=.4→F1=.53 (2025 Esai2e).'}
+  ],
+  mnemonics:[
+    {phrase:'"IDF kills the boring words"', expands:'A word in every document has df=N → log(N/N)=0.'},
+    {phrase:'"Cosine = angle, not length"', expands:'Why it beats Euclidean for documents of different sizes.'},
+    {phrase:'"Doc embedding = average of word embeddings"', expands:'Simplest valid aggregation (2025 Esai2d).'}
+  ],
+  pitfalls:[
+    'Stemming ≠ lemmatization: stemming chops crudely ("studies"→"studi"), lemmatization uses a dictionary ("studies"→"study").',
+    'F1 is the **harmonic** mean (2PR/(P+R)), NOT the average (P+R)/2.',
+    'Cosine **similarity** vs cosine **distance** = 1 − similarity. Exam HAC used cosine *distance*.'
+  ],
+  summary:[
+    'Pipeline: preprocess → represent → mine → (generate).',
+    'Represent ladder: BoW (count) → TF-IDF (tf×log(N/df)) → embeddings (dense, semantic).',
+    'POS tagging labels word classes; constituency=phrase nesting, dependency=word→head arrows.',
+    'Cosine = angle similarity. P/R/F1 for classification (F1 harmonic).',
+    'Web scraping ethics: don\'t overload, obey robots.txt, public data, attribute source.',
+    'LLM/GenAI: zero/few-shot, good prompt = Role+Context+Task+Format+Constraints.'
+  ]
+},
+/* ==================== 3. IMAGE, AUDIO & VIDEO MINING ==================== */
+{
+  id:'media', title:'Image · Audio · Video Mining', icon:'🎞️', weight:'hi',
+  examTag:'Representation, feature extraction (CNN/MFCC), pipelines, ethics',
+  dek:'How pixels, waveforms and frames become features a model can mine — and the ethics of doing so.',
+  readTime:13,
+  source:'CNN Intro · W10 Computer Vision · W11 Audio · Audio Tutorial · Image Mining w/ Ollama+Qwen3',
+  bigPicture:'Images, audio and video are just **numbers in disguise**. The job is always: **digital representation → feature extraction → model → task**. An **image** = a grid of pixels (H×W×channels; grayscale=1, RGB=3, each 0–255). **Audio** = a 1-D waveform sampled over time. **Video** = a stack of image frames + an audio track. Deep learning (CNNs) learns the features automatically instead of hand-crafting them.',
+  concepts:[
+    {n:'Digital image representation', tl:'Pixels, channels, resolution',
+     body:[
+       'An image is a **matrix of pixels**. Grayscale = one value per pixel (0=black…255=white). **RGB** = 3 channels (red, green, blue) stacked → shape **H×W×3**. More pixels = higher resolution = more detail + more compute.',
+       '(GIS tie-in from 2025 PG#1: a **raster** image stores data in a **cell/grid of pixels** and gets **blurry when zoomed**; a **vector** image uses **mathematical equations** for lines/shapes and stays sharp — SHP is a vector format.)'
+     ],
+     mnemonic:'Image = H × W × Channels. RGB = 3 channels, each 0–255.'},
+    {n:'CNNs & convolution — the core of computer vision', tl:'Learned filters that detect patterns',
+     body:[
+       'A **Convolutional Neural Network** slides small **kernels/filters** over the image. Each **convolution** computes Σ(image patch × kernel) → a **feature map** that highlights a pattern (an edge, a corner). Early layers detect edges; deeper layers compose them into textures → object parts → objects (hierarchical features).',
+       '**Pooling** (e.g. max-pooling) shrinks feature maps → fewer parameters, translation-tolerance. Output size of one conv layer: $\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$ (W=input, K=kernel, P=padding, S=stride). The huge win of CNNs: **automatic feature extraction** — no hand-engineering.',
+       '**Parameter sharing** (the same kernel scans the whole image) is why CNNs need far fewer weights than a dense net and generalize to where-ever the pattern appears.'
+     ],
+     mnemonic:'Conv = detect · Pool = shrink · Deeper = more abstract. Out=(W−K+2P)/S+1.',
+     viz:'ConvViz'},
+    {n:'Audio representation & features', tl:'Waveform → spectrogram → MFCC',
+     body:[
+       'Sound is a **continuous wave**; we **sample** it (e.g. 44.1 kHz = 44,100 samples/sec — Nyquist: sample ≥ 2× the highest frequency you want to keep). That gives a 1-D **waveform** (amplitude over time).',
+       'Time-domain alone is hard to mine, so transform to the **frequency domain** via the **Fourier transform** → a **spectrogram** (time × frequency × energy heat-map). From it we extract **MFCCs (Mel-Frequency Cepstral Coefficients)** — compact features matching how *humans* hear (the Mel scale). MFCCs are the classic input for speech/audio classification.'
+     ],
+     mnemonic:'Waveform → (Fourier) → Spectrogram → MFCC. Sample ≥ 2× max freq (Nyquist).'},
+    {n:'Deep learning & the media pipeline', tl:'Same recipe across modalities',
+     body:[
+       'Whether image, audio (as spectrogram) or video, the pipeline is identical: **acquire → preprocess (resize/normalize/denoise) → extract features (CNN / MFCC) → model (classify / detect / cluster) → evaluate**. **Video** adds the **temporal** dimension: handle frames with 3-D CNNs or CNN+RNN/transformer to capture motion, plus the audio stream.',
+       'Modern shortcut (your Image-Mining-with-Ollama+Qwen3 tutorial): instead of training a CNN, hand the image to a **vision-language model** and just *ask* it — covered next topic.'
+     ],
+     viz:null}
+  ],
+  pipeline:'graph LR\n  A[Acquire<br/>pixels/waveform/frames] --> B[Preprocess<br/>resize·normalize·denoise]\n  B --> C[Feature extraction<br/>CNN · MFCC · 3D-CNN]\n  C --> D[Model<br/>classify·detect·cluster]\n  D --> E[Evaluate + Ethics]',
+  formulas:[
+    {n:'Conv output size', tex:'O=\\left\\lfloor\\dfrac{W-K+2P}{S}\\right\\rfloor+1', when:'W=input, K=kernel, P=padding, S=stride. 5×5 ∗ 3×3, P0 S1 → 3×3.'},
+    {n:'Nyquist sampling', tex:'f_s \\ge 2\\,f_{\\max}', when:'Sample rate must be ≥ twice the highest frequency to avoid aliasing.'}
+  ],
+  mnemonics:[
+    {phrase:'"Image=grid, Audio=wave, Video=frames+sound"', expands:'Each becomes a tensor of numbers.'},
+    {phrase:'"CNN: convolve, pool, repeat, classify"', expands:'Hierarchical learned features.'}
+  ],
+  pitfalls:[
+    'Raster (pixels, blurs on zoom) vs vector (equations, stays sharp) — 2025 PG#1.',
+    'A spectrogram is an *image of sound* — that\'s why CNNs work on audio.',
+    'Conv output-size formula: don\'t forget +1.'
+  ],
+  summary:[
+    'Everything → numbers: image=H×W×C, audio=sampled waveform, video=frames+audio.',
+    'CNN = sliding learned kernels (convolution) + pooling → automatic hierarchical features. Out=(W−K+2P)/S+1.',
+    'Audio: waveform → Fourier → spectrogram → MFCC. Nyquist: fs≥2·fmax.',
+    'Pipeline: acquire→preprocess→extract→model→evaluate(+ethics). Video adds time.'
+  ]
+},
+/* ==================== 4. MULTIMODAL & VLM ==================== */
+{
+  id:'vlm', title:'Multimodal Mining & VLM', icon:'🔗', weight:'hi',
+  examTag:'CLIP, zero-/few-shot, challenges — newest topic, likely tested',
+  dek:'One model, many senses: aligning images and text in a shared space so machines can reason across modalities.',
+  readTime:9,
+  source:'W12 Multimodal · lecture14-vlm · Image Mining w/ Ollama+Qwen3',
+  bigPicture:'**Multimodal mining** combines ≥2 data types (image+text, audio+video…). The star example is a **Vision-Language Model (VLM)** built on **CLIP**: train an **image encoder** and a **text encoder** so that a picture and its caption land at the **same point in a shared embedding space**. Once image and text live in one space, you can compare them with **cosine similarity** — unlocking zero-shot classification, image search by text, and captioning.',
+  concepts:[
+    {n:'CLIP & contrastive learning', tl:'Align images and text in one vector space',
+     body:[
+       '**CLIP (Contrastive Language–Image Pre-training)** is trained on millions of (image, caption) pairs. The **contrastive** objective: for each batch, **pull matching image–text pairs together** and **push non-matching pairs apart** in the embedding space. Result: `embed(dog photo)` ≈ `embed("a photo of a dog")`.',
+       'Concretely it builds an image×text similarity matrix and maximizes the diagonal (correct pairs) while minimizing off-diagonal — exactly the matrix in the demo below.'
+     ],
+     mnemonic:'CLIP = pull matching pairs together, push mismatches apart (contrastive).',
+     viz:'ClipViz'},
+    {n:'Zero-shot & few-shot learning', tl:'Classify with no/few training examples',
+     body:[
+       '**Zero-shot:** classify an image into categories the model was *never explicitly trained on*, just by writing text prompts. Embed the image, embed each candidate prompt ("a photo of a {cat/dog/car}"), pick the **highest cosine similarity**. No labelled training set, no retraining.',
+       '**Few-shot:** give the model a *handful* of labelled examples (in-context) to adapt to a new task. The spectrum: zero-shot (0 examples) → few-shot (a few) → fine-tuning (many).'
+     ],
+     mnemonic:'Zero-shot = compare image to text prompts via cosine; 0 examples needed.'},
+    {n:'Challenges & ethics of VLMs', tl:'Why it\'s not magic',
+     body:[
+       'Key challenges (likely a short-answer question): (1) **Bias** inherited from uncurated web training data; (2) **Hallucination** — confidently describing things not in the image; (3) huge **compute/data cost**; (4) **prompt sensitivity** — wording changes results; (5) **weak fine-grained/compositional reasoning** (counting, exact spatial relations, "red cube *left of* blue sphere"); (6) **privacy & misuse** (surveillance, deepfakes).'
+     ]}
+  ],
+  pipeline:'graph LR\n  I[Image] --> IE[Image encoder]\n  T["Text prompt"] --> TE[Text encoder]\n  IE --> S((Shared<br/>embedding space))\n  TE --> S\n  S --> C[Cosine similarity<br/>→ match / classify]',
+  formulas:[
+    {n:'Zero-shot decision', tex:'\\hat{y}=\\arg\\max_{c}\\;\\cos\\!\\big(\\mathbf{e}_{\\text{img}},\\,\\mathbf{e}_{\\text{text}_c}\\big)', when:'Pick the class whose prompt embedding is closest to the image.'},
+    {n:'Contrastive idea', tex:'\\max\\;\\text{sim}(I,T^{+})\\;-\\;\\text{sim}(I,T^{-})', when:'Pull matched pair (T+) together, push mismatch (T−) apart.'}
+  ],
+  mnemonics:[
+    {phrase:'"Shared space = compare anything with cosine"', expands:'Image and text become comparable vectors.'},
+    {phrase:'"Zero-shot = prompts instead of training"', expands:'Write the classes as text at inference time.'}
+  ],
+  pitfalls:[
+    'CLIP doesn\'t "understand" — it matches embeddings; it can be fooled (typographic attacks).',
+    'Zero-shot quality depends heavily on **prompt wording** ("a photo of a ___").',
+    'Multimodal ≠ just concatenating; the point is a **shared aligned space**.'
+  ],
+  summary:[
+    'Multimodal = combine modalities (image+text). VLM = CLIP-style.',
+    'CLIP: contrastive training → image & text in one space → compare with cosine.',
+    'Zero-shot = argmax cosine over text prompts (0 examples); few-shot = a few examples.',
+    'Challenges: bias, hallucination, compute, prompt-sensitivity, weak compositional reasoning, privacy.'
+  ]
+},
+/* ==================== 5. CLUSTERING & DISTANCE (toolkit) ==================== */
+{
+  id:'cluster', title:'Clustering & Distance Metrics', icon:'🔵', weight:'core',
+  examTag:'Esai compute every year: HAC + dendrogram, DBSCAN, distance choice',
+  dek:'The exam\'s favourite hand-calculation: group points with no labels, draw the dendrogram, pick the right distance.',
+  readTime:11,
+  source:'UAS 2024 Q4 (HAC), Q2 (DBSCAN), Q8 (geo) · UAS 2025 Esai3 (avg-linkage cities)',
+  bigPicture:'**Clustering = unsupervised grouping**: no labels, just "put similar points together." Two families dominate the exam: **Hierarchical Agglomerative Clustering (HAC)** — bottom-up merging that produces a **dendrogram** — and **DBSCAN** — density-based, finds arbitrary shapes and flags **outliers**. Everything rests on a **distance metric**, and choosing it (Euclidean vs cosine vs Haversine) is itself a test favourite.',
+  concepts:[
+    {n:'Distance metrics — pick the right ruler', tl:'Euclidean · Manhattan · Cosine · Haversine',
+     body:[
+       '**Euclidean** $\\sqrt{\\sum(a_i-b_i)^2}$ — straight-line; default for low-dim numeric points.',
+       '**Manhattan** $\\sum|a_i-b_i|$ — grid/city-block.',
+       '**Cosine distance** $=1-\\cos\\theta$ — angle-based; use for **text/high-dim** where magnitude shouldn\'t matter.',
+       '**Haversine** — great-circle distance on a sphere; use for **lat/long geographic** points (2025 Esai3 used a Haversine city matrix; 2024 Q8: for homes on a map, plain Euclidean ignores roads, so a **road-network/graph distance** is more relevant than straight-line).'
+     ],
+     mnemonic:'Euclidean=straight, Manhattan=grid, Cosine=angle(text), Haversine=globe.'},
+    {n:'Hierarchical Agglomerative Clustering (HAC)', tl:'Merge nearest clusters bottom-up → dendrogram',
+     body:[
+       'Algorithm: (1) start with **each point its own cluster**; (2) compute all pairwise distances; (3) **merge the two closest clusters**; (4) update distances; (5) repeat until one cluster. The merge heights draw the **dendrogram**; cut it at a height to get k clusters.',
+       'The **linkage** defines "distance between clusters": **single** = min pairwise (nearest points; makes chains), **complete** = max pairwise (tightest), **average** = mean of all pairwise (2025 Esai3), **Ward** = minimize variance increase.',
+       '2025 Esai3 worked answer (average linkage, Indonesian cities → 2 clusters): **{Medan, Padang}** and **{Jakarta, Bandung, Surabaya, Denpasar}** (Jakarta–Bandung merge first at d=116, the smallest distance).'
+     ],
+     mnemonic:'Single=nearest(chain) · Complete=farthest(compact) · Average=mean · Ward=variance.',
+     viz:'DendroViz'},
+    {n:'DBSCAN & outlier detection', tl:'Density clusters + noise points',
+     body:[
+       'DBSCAN groups points that are **densely packed**. Two params: **ε** (radius) and **minPts** (min neighbours to be "dense"). Point types: **core** (≥minPts neighbours within ε), **border** (near a core but not dense itself), **noise/outlier** (neither). ',
+       '2024 Q2 — DBSCAN **detects outliers** naturally: any point that is **not reachable from a dense region** (sparse neighbourhood) is labelled **noise** = an outlier. Unlike k-means, DBSCAN needs no k, finds **arbitrary shapes**, and is **robust to outliers** because it refuses to force them into a cluster.'
+     ],
+     mnemonic:'DBSCAN: core / border / noise. Noise = outlier. Needs ε & minPts, not k.'},
+    {n:'k-means (contrast) & SMOTE (related)', tl:'Centroid clustering + class-imbalance fix',
+     body:[
+       '**k-means:** pick k, assign points to nearest **centroid**, recompute centroids, repeat. Fast but needs k, assumes round clusters, sensitive to outliers.',
+       '**SMOTE** (2024 Q7) isn\'t clustering but uses the same k-NN idea to fix **class imbalance**: pick a minority point, find its **k nearest minority neighbours**, and synthesize a new point *on the line between them*. A neighbour can\'t be chosen if it is **not among the k-nearest** (or is a majority-class point).'
+     ]}
+  ],
+  pipeline:'graph TD\n  A[Unlabeled points] --> B{Choose distance<br/>Euclid/Cosine/Haversine}\n  B --> C[HAC<br/>merge nearest → dendrogram]\n  B --> D[DBSCAN<br/>ε,minPts → core/border/noise]\n  B --> E[k-means<br/>k centroids]\n  C --> F[Cut tree → k clusters]\n  D --> G[Noise = outliers]',
+  formulas:[
+    {n:'Euclidean distance', tex:'d(\\mathbf{a},\\mathbf{b})=\\sqrt{\\textstyle\\sum_i (a_i-b_i)^2}', when:'Default numeric straight-line distance.'},
+    {n:'Cosine distance', tex:'d=1-\\dfrac{\\mathbf{a}\\cdot\\mathbf{b}}{\\lVert\\mathbf{a}\\rVert\\lVert\\mathbf{b}\\rVert}', when:'High-dim/text where direction matters, not magnitude.'},
+    {n:'Single vs complete vs average linkage', tex:'d_{\\text{single}}=\\min_{x\\in A,y\\in B}d(x,y),\\;\\; d_{\\text{avg}}=\\tfrac{1}{|A||B|}\\!\\sum d(x,y)', when:'Cluster-to-cluster distance rule for HAC.'}
+  ],
+  mnemonics:[
+    {phrase:'"Dendrogram: low bar = merged early = most similar"', expands:'Read bottom-up; cut to choose k.'},
+    {phrase:'"DBSCAN gives outliers for free"', expands:'Noise points = outliers, no k needed.'}
+  ],
+  pitfalls:[
+    'Single linkage uses **minimum** distance (causes chaining); complete uses **maximum**.',
+    'Cosine *distance* = 1 − cosine *similarity* — watch which the question wants.',
+    'Always show the **merge order + heights** to earn full dendrogram marks (exam note).',
+    'For geographic points, straight-line distance ignores roads — mention road-network distance (2024 Q8).'
+  ],
+  summary:[
+    'Clustering = unsupervised grouping. Choose a distance first.',
+    'HAC: start singletons → merge nearest (single/complete/average/Ward) → dendrogram → cut for k.',
+    'DBSCAN: ε + minPts → core/border/noise; noise=outliers; arbitrary shapes, no k.',
+    'k-means needs k & round clusters. SMOTE = k-NN synthetic minority oversampling.'
+  ]
+},
+/* ==================== 6. TIME SERIES & FORECASTING (toolkit) ==================== */
+{
+  id:'ts', title:'Time Series & Forecasting', icon:'📈', weight:'core',
+  examTag:'Guaranteed compute: RMSE/MAE/MAPE; concept: decomposition, stationarity, ARIMA',
+  dek:'Data indexed by time: decompose it, test stationarity, forecast it, then score the forecast.',
+  readTime:10,
+  source:'UAS 2024 Q6 (MAE/RMSE/MAPE) · UAS 2025 PG8-10 + Isian5-6 + Esai4 (RMSE/MAPE)',
+  bigPicture:'A **time series** is values ordered in time (daily temperature, monthly sales). Mining it = **decompose** into structure + **forecast** the future + **evaluate** the forecast. The exam *always* hands you an actual-vs-predicted table and asks for **MAE, RMSE, MAPE** — pure, guaranteed points if you memorize three formulas.',
+  concepts:[
+    {n:'Decomposition: the 4 components', tl:'Level · Trend · Seasonality · Noise',
+     body:[
+       'Every series decomposes into: **Level** (the average), **Trend** (long-term up/down), **Seasonality** (fixed-period cycles, e.g. yearly), and **Noise/residual** (random). 2025 Isian#5: the components **every** series always has are **Level and Noise** (trend & seasonality are optional).',
+       '**Additive** model $y=T+S+N$ when seasonal swings are **constant**; **Multiplicative** $y=T\\times S\\times N$ when swings **grow with the level** (2025 PG#8 = multiplicative). 2025 PG#9: a **non-systematic** component = **Noise** (trend/level/seasonality/cycle are systematic).'
+     ],
+     mnemonic:'LTSN. Always present: Level + Noise. Growing swings → Multiplicative.',
+     viz:'TSViz'},
+    {n:'Stationarity', tl:'Constant statistical properties over time',
+     body:[
+       'A series is **stationary** if its **mean, variance and autocorrelation are constant over time** (no trend, no changing spread). Most forecasting (ARIMA) **requires stationarity**; you achieve it by **differencing** (subtracting the previous value) and/or transforms (log).',
+       '2025 Isian#6 worked example: a series whose swings *narrow over time* has a **constant mean but a changing (non-constant) variance → NOT stationary**. Check both mean *and* variance.'
+     ],
+     mnemonic:'Stationary = flat mean + flat variance + stable autocorrelation. Fix with differencing.'},
+    {n:'ARIMA (p, d, q)', tl:'The classic forecasting model',
+     body:[
+       '**ARIMA** = AutoRegressive Integrated Moving Average, with 3 params: **p** = AR lags (how many past *values*), **d** = degree of **differencing** needed to make it stationary, **q** = MA lags (how many past *errors*). 2025 PG#10 trap: you read **p from the PACF** cut-off and **q from the ACF** cut-off (the question\'s wrong option said p from PACF — careful which one the question calls false).',
+       'Mental model: **AR** = "tomorrow looks like a weighted blend of recent days"; **MA** = "correct using recent forecast errors"; **I** = "difference until stationary."'
+     ],
+     mnemonic:'ARIMA(p,d,q): p=AR lags, d=differencing, q=MA error-lags.'},
+    {n:'Forecast error metrics — the guaranteed points', tl:'MAE · RMSE · MAPE',
+     body:[
+       'Given actuals $y_i$ and predictions $\\hat{y}_i$ over $n$ points:',
+       '**MAE** $=\\frac1n\\sum|y_i-\\hat y_i|$ — average absolute error, same units, robust to outliers.',
+       '**RMSE** $=\\sqrt{\\frac1n\\sum(y_i-\\hat y_i)^2}$ — like MAE but **squares** errors, so it **punishes large mistakes harder**.',
+       '**MAPE** $=\\frac{100\\%}{n}\\sum\\big|\\frac{y_i-\\hat y_i}{y_i}\\big|$ — average *percentage* error, unit-free, comparable across datasets.',
+       'Lower = better. 2025 Esai4: Model B beat Model A on both RMSE (2.0 vs 6.0) and MAPE (1.31% vs 3.55%). Always show every term for full marks.'
+     ],
+     viz:null}
+  ],
+  pipeline:'graph LR\n  A[Time series] --> B[Decompose<br/>Level·Trend·Season·Noise]\n  A --> C[Make stationary<br/>differencing]\n  C --> D[ARIMA p,d,q]\n  D --> E[Forecast]\n  E --> F[Evaluate<br/>MAE·RMSE·MAPE]',
+  formulas:[
+    {n:'MAE', tex:'\\mathrm{MAE}=\\dfrac{1}{n}\\sum_{i=1}^{n}\\lvert y_i-\\hat y_i\\rvert', when:'Average absolute error; robust, same units.'},
+    {n:'RMSE', tex:'\\mathrm{RMSE}=\\sqrt{\\dfrac{1}{n}\\sum_{i=1}^{n}(y_i-\\hat y_i)^2}', when:'Penalizes big errors. 2025 Esai4: Model A=6.0, B=2.0.'},
+    {n:'MAPE', tex:'\\mathrm{MAPE}=\\dfrac{100\\%}{n}\\sum_{i=1}^{n}\\left\\lvert\\dfrac{y_i-\\hat y_i}{y_i}\\right\\rvert', when:'Unit-free percentage error; fails if any yᵢ=0.'}
+  ],
+  mnemonics:[
+    {phrase:'"RMSE punishes big misses (it squares)"', expands:'Outlier-sensitive vs MAE.'},
+    {phrase:'"MAPE is a percentage — divide by actual"', expands:'Comparable across scales; undefined at y=0.'},
+    {phrase:'"Every series has Level + Noise"', expands:'Trend & seasonality are optional (2025 Isian5).'}
+  ],
+  pitfalls:[
+    'RMSE squares **then** roots — don\'t forget the square root.',
+    'MAPE divides by the **actual** yᵢ (not the prediction); blows up near zero.',
+    'Stationarity needs constant mean **and** variance — a flat mean alone isn\'t enough (2025 Isian6).'
+  ],
+  summary:[
+    'Decompose: Level+Trend+Season+Noise. Always present: Level+Noise. Growing swings→multiplicative.',
+    'Stationary = constant mean+variance+autocorr; fix by differencing (ARIMA needs it).',
+    'ARIMA(p,d,q): p=AR, d=differencing, q=MA.',
+    'Score forecasts: MAE (abs), RMSE (squares→punishes big), MAPE (percent). Lower=better.'
+  ]
+}
+];
+
+/* ===================== PRACTICE PROBLEMS (from real UAS) ===================== */
+window.PROBLEMS = [
+  {id:'p1', topic:'graph', type:'compute', diff:'hard', source:'UAS 2025 · Esai 1',
+   q:'For the graph below, compute **Degree**, **normalized Closeness**, and **normalized Betweenness** centrality for node **S**. Show every step.',
+   given:'Edges: P-S, P-R, P-Q, S-R, S-U, S-V, R-Q, R-T, R-U, U-T, T-Q, T-V\nNodes: P Q R S T U V  (N = 7)',
+   steps:[
+     'Degree(S): count edges on S → S-P, S-R, S-U, S-V = **4**.',
+     'Closeness: BFS shortest-path lengths from S → P:1, Q:2, R:1, T:1, U:1, V:2. Σd = 1+2+1+1+1+2 = 8.',
+     'Closeness (raw) = 1/Σd = 1/8 = 0.125. Normalized = (N−1)/Σd = 6/8 = **0.75**.',
+     'Betweenness: count shortest paths through S (source≠S≠target): P–T(½), P–U(½), P–V(2/4), R–T(1/3) → sum = ½+½+2/4+1/3 = 11/6.',
+     'Normalize by C(N−1,2)=C(6,2)=15 → (11/6)/15 = 11/90 = **0.122**.'
+   ],
+   answer:'Degree(S)=4 · Closeness(norm)=0.75 · Betweenness(norm)=11/90 ≈ 0.122',
+   tip:'Closeness uses shortest-path *lengths* (BFS), not edge count. Betweenness splits credit when there are multiple equal shortest paths.'},
+
+  {id:'p2', topic:'cluster', type:'compute', diff:'hard', source:'UAS 2025 · Esai 3',
+   q:'Using the city distance matrix (Haversine), run **agglomerative clustering with average linkage** down to **2 clusters**. Draw the dendrogram logic.',
+   given:'        Medan Padang Jakarta Surabaya Bandung Denpasar\nMedan      0    537   1418    1974    1534    2285\nPadang   537     0    929    1543    1045    1856\nJakarta 1418   929      0     663     116     962\nSurabaya1974  1543    663       0     568     313\nBandung 1534  1045    116     568       0     859\nDenpasar2285  1856    962     313     859       0',
+   steps:[
+     'Smallest distance overall = Jakarta–Bandung = 116 → merge first into {Jkt,Bdg}.',
+     'Next smallest = Surabaya–Denpasar = 313 → merge {Sby,Dps}.',
+     'Average-link {Jkt,Bdg}–{Sby,Dps} ≈ avg(663,962,568,859)=763; Medan–Padang=537 is smaller → merge {Medan,Padang}.',
+     'Now merge the two Java/Bali groups {Jkt,Bdg}+{Sby,Dps} at ~763.',
+     'Stop at 2 clusters: {Medan,Padang} vs {Jakarta,Bandung,Surabaya,Denpasar}.'
+   ],
+   answer:'Two clusters: {Medan, Padang} and {Jakarta, Bandung, Surabaya, Denpasar}.',
+   tip:'Average linkage = mean of ALL cross-cluster pairwise distances. Sumatra cities (Medan,Padang) separate from Java/Bali — geographically sensible.'},
+
+  {id:'p3', topic:'ts', type:'compute', diff:'med', source:'UAS 2025 · Esai 4',
+   q:'Actual vs two forecast models over 6 months. Compute **RMSE** and **MAPE** for each; which is better?',
+   given:'Bln  Aktual  ModelA  ModelB\nJan   120    118    122\nFeb   135    142    137\nMar   150    145    148\nApr   165    172    167\nMei   180    175    182\nJun   195    203    193',
+   steps:[
+     'Errors A: −2,+7,−5,+7,−5,+8 → squares 4,49,25,49,25,64 sum=216.',
+     'RMSE_A = √(216/6) = √36 = **6.0**. Errors B: +2,+2,−2,+2,+2,−2 → squares all 4, sum=24 → RMSE_B=√(24/6)=√4=**2.0**.',
+     'MAPE_A = (2/120+7/135+5/150+7/165+5/180+8/195)/6 ×100 = **3.55%**.',
+     'MAPE_B = (2/120+2/135+2/150+2/165+2/180+2/195)/6 ×100 = **1.31%**.'
+   ],
+   answer:'RMSE: A=6.0, B=2.0 · MAPE: A=3.55%, B=1.31% → **Model B is better** (lower on both).',
+   tip:'RMSE: square → average → root. MAPE: each |error|/actual, average, ×100.'},
+
+  {id:'p4', topic:'cluster', type:'compute', diff:'med', source:'UAS 2024 · Q4a',
+   q:'Points A(5,4) B(2,2) C(1,3) D(5,5). Run **HAC, single linkage, Euclidean distance**. Give merge order + dendrogram heights.',
+   given:'A=(5,4) B=(2,2) C=(1,3) D=(5,5)',
+   steps:[
+     'Pairwise Euclidean: A-D=√(0+1)=1.00 (smallest); B-C=√(1+1)=1.41; A-B=3.61; C-D=4.47…',
+     'Merge A-D at height 1.00.',
+     'Merge B-C at height 1.41.',
+     'Single-link {A,D}–{B,C} = min over pairs = D? no → min(A-B,A-C,D-B,D-C). A-C=√(16+1)=4.12, A-B=3.61, D-B=4.24, D-C=4.47 → min = 3.61.',
+     'Final merge {A,D}∪{B,C} at height ≈3.61.'
+   ],
+   answer:'Merge A–D @1.00, B–C @1.41, then join @≈3.6. Two natural clusters: {A,D} and {B,C}.',
+   tip:'Single linkage = MINIMUM pairwise distance between clusters. Compute all pairs first, merge the smallest each round.'},
+
+  {id:'p5', topic:'text', type:'compute', diff:'easy', source:'UAS 2025 · Esai 2e',
+   q:'A text classifier has **Precision = 0.8** and **Recall = 0.4**. Compute the **F1-score**.',
+   steps:['F1 = 2·P·R/(P+R).','= 2·0.8·0.4 / (0.8+0.4) = 0.64/1.2.','= 0.533…'],
+   answer:'F1 ≈ **0.53**',
+   tip:'F1 is the HARMONIC mean — always closer to the smaller of P/R, so a low recall drags it down.'},
+
+  {id:'p6', topic:'text', type:'concept', diff:'easy', source:'UAS 2025 · Isian 2',
+   q:'Give the **POS tags** for the sentence: *"kue pedas disukai Gibran"* (use ADJ, NOUN, PROPN, VERB).',
+   steps:['kue = the food item → noun.','pedas = describes the kue → adjective.','disukai = the action (is liked) → verb.','Gibran = a person\'s name → proper noun.'],
+   answer:'kue→NOUN · pedas→ADJ · disukai→VERB · Gibran→PROPN',
+   tip:'PROPN = proper noun (specific named entity). POS tagging = labelling each token\'s word class.'},
+
+  {id:'p7', topic:'graph', type:'concept', diff:'med', source:'UAS 2025 · PG 5 & 6',
+   q:'(a) Node X has **high betweenness but low degree** — interpret it. (b) How does **Girvan–Newman** detect communities?',
+   steps:['(a) Few direct connections (low degree) yet lies on many shortest paths (high betweenness).','→ X is a **bridge/broker between communities**; removing it can disconnect the graph.','(b) Girvan–Newman is divisive: it repeatedly **removes the edge with the highest edge-betweenness**…','…peeling apart communities as the bridging edges are cut.'],
+   answer:'(a) X = a bridge connecting otherwise-separate communities. (b) Iteratively remove highest edge-betweenness edges.',
+   tip:'Edge betweenness (for cutting) vs node betweenness (for ranking nodes) — same idea, different object.'},
+
+  {id:'p8', topic:'cluster', type:'concept', diff:'med', source:'UAS 2024 · Q2',
+   q:'Explain how **DBSCAN** can be used to **detect outliers**.',
+   steps:['DBSCAN labels points as core (≥minPts within ε), border, or noise.','Outliers fall in **low-density** regions: too few neighbours within ε.','They\'re unreachable from any core point, so DBSCAN tags them **noise**.','Those noise points ARE the outliers — detected automatically, no k or threshold per-point needed.'],
+   answer:'Points in sparse neighbourhoods (not density-reachable from any core point) are labelled **noise** = outliers.',
+   tip:'This is DBSCAN\'s superpower vs k-means: it refuses to force outliers into clusters.'},
+
+  {id:'p9', topic:'text', type:'concept', diff:'easy', source:'UAS 2024 · Q3',
+   q:'How can **word embeddings** produce vectors where *Mathematics≈Statistics* and *Tiger≈Lion* but the two pairs point differently?',
+   steps:['Embeddings are learned from **context** — "you shall know a word by the company it keeps."','Mathematics & Statistics co-occur with similar words (data, equation, probability) → similar vectors.','Tiger & Lion co-occur with (jungle, predator, animal) → similar to each other, different region.','So semantic similarity becomes geometric closeness; cosine similarity is high within a pair, low across.'],
+   answer:'Distributional training places words with similar contexts near each other in vector space → the two themed pairs cluster in different directions.',
+   tip:'This is the distributional hypothesis. Cosine similarity reads the angle between these learned vectors.'},
+
+  {id:'p10', topic:'ts', type:'compute', diff:'med', source:'UAS 2024 · Q6',
+   q:'Compute **MAE, RMSE, MAPE** for Technique A and B (5 days). Which is better?',
+   given:'Date  Actual  Pred-A  Pred-B\n5/20   20     20     20\n5/21   23     33     26\n5/22   21     21     25\n5/23   25     25     26\n5/24   24     24     22',
+   steps:['Errors A: 0,−10,0,0,0 → |e|:0,10,0,0,0. MAE_A=10/5=2.0; RMSE_A=√(100/5)=√20≈4.47; MAPE_A=(10/23)/5×100≈8.7%.','Errors B: 0,+3,+4,+1,−2 → |e|:0,3,4,1,2 sum=10. MAE_B=10/5=2.0.','RMSE_B=√((0+9+16+1+4)/5)=√(30/5)=√6≈2.45.','MAPE_B=(0+3/23+4/21+1/25+2/24)/5×100≈(0+.130+.190+.040+.083)/5×100≈8.9%.'],
+   answer:'MAE tie (2.0). RMSE: A≈4.47 vs B≈2.45 → **B better** (A made one huge 10-error that RMSE punishes).',
+   tip:'Equal MAE but different RMSE shows RMSE\'s sensitivity to a single large error — A\'s one 10-miss.'},
+
+  {id:'p11', topic:'media', type:'concept', diff:'med', source:'Derived · CNN/W10',
+   q:'A 5×5 grayscale image is convolved with a 3×3 kernel, stride 1, no padding. What is the **output feature-map size**, and what does an **edge kernel** detect?',
+   steps:['Output size = (W−K+2P)/S + 1 = (5−3+0)/1 + 1 = **3×3**.','An edge kernel has a positive centre and negative surround (sums to ~0).','On flat regions the responses cancel → ~0; at a brightness change the imbalance → large response.','So it lights up exactly at boundaries (edges).'],
+   answer:'3×3 feature map; the edge kernel responds strongly where pixel intensity changes (edges), ~0 on flat areas.',
+   tip:'Conv output formula and "edges = where the kernel response spikes" are both easy exam points.'},
+
+  {id:'p12', topic:'vlm', type:'concept', diff:'med', source:'Derived · W12/VLM',
+   q:'Explain how **CLIP** enables **zero-shot** image classification.',
+   steps:['CLIP trains image & text encoders contrastively → matching image-text pairs land close in a **shared embedding space**.','At test time, embed the image once.','Write text prompts for each candidate class: "a photo of a {dog/cat/car}", embed each.','Pick the class whose prompt has the **highest cosine similarity** to the image — no training on those classes needed.'],
+   answer:'Embed image + each class prompt in CLIP\'s shared space; predict argmax cosine similarity. Zero training examples required.',
+   tip:'Zero-shot = swap "train a classifier" for "write the classes as text and compare." Prompt wording matters.'},
+
+  {id:'p13', topic:'text', type:'concept', diff:'easy', source:'UAS 2025 · PG3',
+   q:'Web scraping is considered **ethical** under all these conditions EXCEPT one. Which is unethical?',
+   steps:['Ethical: don\'t overload the server (reasonable request rate).','Ethical: obey the site\'s robots.txt.','Ethical: take only public data not behind auth.','Ethical: attribute the source when republishing. UNETHICAL: use the data commercially WITHOUT crediting the source.'],
+   answer:'Using scraped data for commercial purposes **without attributing the source** is the unethical option.',
+   tip:'The ethics checklist: rate-limit · robots.txt · public-only · attribute.'},
+
+  {id:'p14', topic:'ts', type:'concept', diff:'med', source:'UAS 2025 · Isian 6 & PG8',
+   q:'(a) A series\' oscillations shrink over time — is it stationary? (b) Seasonal swings GROW with the trend — additive or multiplicative?',
+   steps:['(a) Stationarity needs constant mean AND constant variance.','Shrinking oscillations = changing (non-constant) variance, even if mean is flat → **NOT stationary**.','(b) Growing seasonal amplitude with level → **multiplicative** decomposition (y = T×S×N).'],
+   answer:'(a) Not stationary (variance changes). (b) Multiplicative.',
+   tip:'Always check BOTH mean and variance for stationarity. Growing swings = multiplicative; constant swings = additive.'},
+
+  {id:'p15', topic:'graph', type:'concept', diff:'easy', source:'UAS 2025 · Isian 4 & PG7',
+   q:'(a) What parameter must a subgraph meet to be "frequent" in frequent subgraph mining? (b) Graph embeddings store relational/structural data in what?',
+   steps:['(a) It must occur at least **minimum support (minsup)** times across the graph database.','(b) Graph embeddings encode structure into a **vector space** (dense numeric vectors).'],
+   answer:'(a) Minimum support (minsup). (b) A vector space.',
+   tip:'minsup is the frequency threshold; embeddings = "graph → vectors" for ML.'},
+
+  {id:'p16', topic:'text', type:'concept', diff:'med', source:'UAS 2024 · Q5 / 2025 Esai2',
+   q:'Name 2 challenges of **web mining** vs ordinary text mining, and state what `BeautifulSoup.find()` returns.',
+   steps:['Challenge 1: web data is **unstructured & inconsistent** (messy HTML, ads, navigation noise).','Challenge 2: **scale + dynamic JS content + legal/ethical limits** (robots.txt, rate limiting).','find(): returns the **first** HTML element matching the given tag, **with its contents**.'],
+   answer:'Challenges: messy/unstructured HTML + huge dynamic scale & legal-ethical constraints. find() → first matching tag + its content.',
+   tip:'User-Agent header makes the request look like a browser, not a bot (2025 Esai2b).'}
+];
+
+/* ===================== MAIN APPLICATION (inline) ===================== */
+const CONTENT=window.CONTENT, PROBLEMS=window.PROBLEMS;
+const EXAM=new Date('2026-06-03T09:00:00');
+
+/* ---- inline-math + bold renderer ---- */
+function RichText({text}){
+  const parts=String(text).split(/(\$[^$]+\$)/g);
+  return <>{parts.map((p,i)=>{
+    if(p.length>1&&p[0]==='$'&&p[p.length-1]==='$') return <Tex key={i}>{p.slice(1,-1)}</Tex>;
+    const bs=p.split(/(\*\*[^*]+\*\*)/g);
+    return bs.map((b,j)=> (b.startsWith('**')&&b.endsWith('**'))
+      ? <strong key={i+'-'+j}>{b.slice(2,-2)}</strong>
+      : <React.Fragment key={i+'-'+j}>{b}</React.Fragment>);
+  })}</>;
+}
+
+/* ---- persistence ---- */
+function useStore(key,init){
+  const [v,setV]=useState(()=>{try{const s=localStorage.getItem(key);return s?JSON.parse(s):init;}catch(e){return init;}});
+  useEffect(()=>{try{localStorage.setItem(key,JSON.stringify(v));}catch(e){}},[key,v]);
+  return [v,setV];
+}
+
+/* ===================== POMODORO (50/5) ===================== */
+function Pomodoro(){
+  const [open,setOpen]=useState(false);
+  const [phase,setPhase]=useState('focus'); // focus|break
+  const [left,setLeft]=useState(50*60);
+  const [run,setRun]=useState(false);
+  const [done,setDone]=useStore('dm_focus_done',0);
+  const FOC=50*60, BRK=5*60;
+  useEffect(()=>{
+    if(!run) return;
+    const t=setInterval(()=>setLeft(l=>{
+      if(l<=1){
+        try{const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator();const g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=phase==='focus'?660:520;g.gain.value=.1;o.start();setTimeout(()=>{o.stop();a.close();},450);}catch(e){}
+        if(phase==='focus'){setDone(d=>d+1);setPhase('break');return BRK;}
+        else{setPhase('focus');return FOC;}
+      }
+      return l-1;
+    }),1000);
+    return ()=>clearInterval(t);
+  },[run,phase]);
+  const mm=String(Math.floor(left/60)).padStart(2,'0'),ss=String(left%60).padStart(2,'0');
+  if(!open) return <button className="pomo-fab" title="Study timer (50/5)" onClick={()=>setOpen(true)}>🍅</button>;
+  return(
+    <div className="pomo">
+      <div className="pomo-head">
+        <span className="pomo-phase">{phase==='focus'?'🎯 Focus':'☕ Break'}</span>
+        <span style={{cursor:'pointer'}} onClick={()=>setOpen(false)}>✕</span>
+      </div>
+      <div className="pomo-body">
+        <div className={'pomo-time'+(phase==='break'?' break':'')}>{mm}:{ss}</div>
+        <div className="pomo-ctrl">
+          <button className="primary" onClick={()=>setRun(r=>!r)}>{run?'Pause':'Start'}</button>
+          <button onClick={()=>{setRun(false);setLeft(phase==='focus'?FOC:BRK);}}>Reset</button>
+          <button onClick={()=>{setRun(false);if(phase==='focus'){setPhase('break');setLeft(BRK);}else{setPhase('focus');setLeft(FOC);}}}>Skip</button>
+        </div>
+        <div className="pomo-meta">🔥 {done} focus blocks done · 50 min study / 5 min process</div>
+      </div>
+    </div>
+  );
+}
+
+/* ===================== NAV RAIL ===================== */
+function Rail({view,go,open,setOpen,progress}){
+  const badge=w=>w==='hi'?'b-hi':w==='med'?'b-med':'b-core';
+  const lab=w=>w==='hi'?'HIGH':w==='med'?'MED':'CORE';
+  return(
+    <aside className={'rail'+(open?' open':'')}>
+      <div className="brand" onClick={()=>{go({type:'home'});setOpen(false);}}>
+        <div className="brand-mark">∂</div>
+        <div><div className="brand-name">DatMin Cram</div><div className="brand-sub">Penambangan Data · UAS</div></div>
+      </div>
+      <div className="nav-label">Study</div>
+      <div className={'nav-item'+(view.type==='home'?' active':'')} onClick={()=>{go({type:'home'});setOpen(false);}}>
+        <span className="nav-ico">🏠</span> Dashboard</div>
+      <div className="nav-label">Topics</div>
+      {CONTENT.map(t=>{
+        const total=t.concepts.length, got=t.concepts.filter((_,i)=>progress.concepts[t.id+'_'+i]).length;
+        const full=total>0&&got>=total;
+        return(<div key={t.id} className={'nav-item'+(view.type==='topic'&&view.id===t.id?' active':'')} onClick={()=>{go({type:'topic',id:t.id});setOpen(false);}}>
+          <span className="nav-ico">{t.icon}</span>
+          <span style={{flex:1,minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.title}</span>
+          {full?<span className="nav-dot" title="all concepts marked"></span>:<span className={'nav-badge '+badge(t.weight)}>{lab(t.weight)}</span>}
+        </div>);
+      })}
+      <div className="nav-label">Practice</div>
+      <div className={'nav-item'+(view.type==='practice'?' active':'')} onClick={()=>{go({type:'practice'});setOpen(false);}}>
+        <span className="nav-ico">✍️</span> Problem Engine</div>
+      <div className="nav-label">Cheatsheet</div>
+      <div className={'nav-item'+(view.type==='master'?' active':'')} onClick={()=>{go({type:'master'});setOpen(false);}}>
+        <span className="nav-ico">📄</span> Ready 3-Sheet <span className="nav-badge b-hi">WRITE</span></div>
+      <div className={'nav-item'+(view.type==='cheat'?' active':'')} onClick={()=>{go({type:'cheat'});setOpen(false);}}>
+        <span className="nav-ico">📋</span> Cheatsheet Builder</div>
+    </aside>
+  );
+}
+
+/* ===================== DASHBOARD ===================== */
+function Countdown(){
+  const [now,setNow]=useState(Date.now());
+  useEffect(()=>{const t=setInterval(()=>setNow(Date.now()),1000);return()=>clearInterval(t);},[]);
+  const ms=EXAM-now; const past=ms<=0;
+  const h=Math.floor(Math.abs(ms)/3.6e6),d=Math.floor(h/24),hh=h%24,mm=Math.floor((Math.abs(ms)%3.6e6)/6e4);
+  return <div className="count"><span className="dotpulse"></span>{past?'Exam in progress — good luck!':`UAS in ${d}d ${hh}h ${mm}m · Wed 3 Jun 2026, 09:00–11:30`}</div>;
+}
+function Dashboard({go,progress}){
+  const probsRated=Object.keys(progress.recall||{}).length;
+  const conceptsDone=Object.keys(progress.concepts||{}).filter(k=>progress.concepts[k]).length;
+  const conceptsTotal=CONTENT.reduce((s,t)=>s+t.concepts.length,0);
+  const plan=[
+    ['🕸️','Graph centrality drill','Degree/closeness/betweenness — guaranteed Esai. Do problem p1 + p7.','graph'],
+    ['🔵','Clustering + dendrogram','HAC single/average linkage, draw the tree. Problems p2, p4.','cluster'],
+    ['📈','Forecasting metrics','RMSE/MAE/MAPE by hand. Problems p3, p10. Pure points.','ts'],
+    ['📝','Text: TF-IDF, cosine, F1','Vectorization ladder + P/R/F1. Problems p5, p9.','text'],
+    ['🎞️','Media + VLM concepts','CNN/MFCC representation, CLIP zero-shot. p11, p12.','media'],
+  ];
+  return(
+    <div className="read fade-in">
+      <div className="hero">
+        <Countdown/>
+        <div className="kicker">Last-Minute Cram Hub</div>
+        <h1 className="h-title">Master Data Mining<br/>before tomorrow.</h1>
+        <p className="dek">A deep, visual, exam-targeted study hub built from your Fasilkom UI slides and the real UAS 2024 & 2025 papers. Skim smart, drill the high-yield computations, build your cheatsheet.</p>
+      </div>
+      <div className="stat-row">
+        <div className="stat"><div className="stat-v">{CONTENT.length}</div><div className="stat-l">High-yield topics</div></div>
+        <div className="stat"><div className="stat-v">{PROBLEMS.length}</div><div className="stat-l">Real exam problems</div></div>
+        <div className="stat"><div className="stat-v">{conceptsDone}/{conceptsTotal}</div><div className="stat-l">Concepts marked</div></div>
+        <div className="stat"><div className="stat-v">{probsRated}</div><div className="stat-l">Problems attempted</div></div>
+      </div>
+
+      <h2 className="sec-h">Your cram plan (high-yield first)</h2><div className="sec-rule"></div>
+      <p style={{color:'var(--ink-faint)',fontFamily:'var(--sans)',fontSize:15}}>The exam reliably rewards <b>computational</b> questions. Drill these in 50-min focus blocks (use the 🍅 timer, bottom-right). Cramming works best on procedures you can replay — not passive reading.</p>
+      <div className="grid-cards">
+        {plan.map(([ic,t,d,id],i)=>{
+          const tp=CONTENT.find(x=>x.id===id); const total=tp.concepts.length,gc=tp.concepts.filter((_,j)=>progress.concepts[id+'_'+j]).length;
+          return(<div key={i} className="tcard" onClick={()=>go({type:'topic',id})}>
+            <div className="tcard-ico">{ic}</div>
+            <div className="tcard-t">{i+1}. {t}</div>
+            <div className="tcard-d">{d}</div>
+            <div className="tcard-bar"><i style={{width:(total?gc/total*100:0)+'%'}}></i></div>
+            <div className="tcard-foot"><span>{gc}/{total} concepts</span><span>Open →</span></div>
+          </div>);
+        })}
+      </div>
+
+      <div className="callout gold">
+        <div className="callout-t">📌 Official exam rules — Tata Tertib UAS 2025/2026</div>
+        <div className="summary-grid">
+          {[
+            "**Wed 3 Jun 2026, 09:00–11:30**, offline (luring). Scope = all post-UTS topics: graph · text & web (incl GenAI+LLM) · image · audio · multimodal mining.",
+            "**Max 3 sheets** A4/folio cheatsheet — your **own handwriting** (or digital-handwritten then printed). Collected after the exam. Build yours in the **Cheatsheet Builder**.",
+            "Round **every numeric answer to 2 decimals** unless told otherwise — applies to all RMSE/MAPE/centrality computations.",
+            "Allowed: ID card, pens, **non-programmable calculator**, cheatsheet. Phones off, in bag. No borrowing stationery.",
+            "Write in **pen** on the answer sheet; put **name + NPM on every page**. There is a **penalty for illegible handwriting**.",
+            "If a question is unclear you may **state an assumption** (as long as it doesn't contradict the question). Leaving the room = you've finished."
+          ].map((s,i)=><div key={i} className="summary-row"><span className="n">›</span><span><RichText text={s}/></span></div>)}
+        </div>
+        <div style={{marginTop:8,fontFamily:'var(--sans)',fontSize:13.5,color:'var(--gold)'}}>Scoring: PG @2 · Isian Pendek @4 · Esai @10, rescaled to 0–100. Cheating ⇒ automatic 0.</div>
+      </div>
+
+      <h2 className="sec-h">All topics</h2><div className="sec-rule"></div>
+      <div className="grid-cards">
+        {CONTENT.map(t=>{const total=t.concepts.length,gc=t.concepts.filter((_,j)=>progress.concepts[t.id+'_'+j]).length;
+          return(<div key={t.id} className="tcard" onClick={()=>go({type:'topic',id:t.id})}>
+            <div className="tcard-ico">{t.icon}</div>
+            <div className="tcard-t">{t.title}</div>
+            <div className="tcard-d">{t.dek.length>92?t.dek.slice(0,92)+'…':t.dek}</div>
+            <div className="tcard-bar"><i style={{width:(total?gc/total*100:0)+'%'}}></i></div>
+            <div className="tcard-foot"><span className={'tag '+t.weight}>{t.weight==='hi'?'High yield':t.weight==='med'?'Medium':'Core toolkit'}</span><span>{t.readTime} min</span></div>
+          </div>);
+        })}
+      </div>
+    </div>
+  );
+}
+
+/* ===================== TOPIC VIEW ===================== */
+function FormulaRow({f,topicId,cheat,setCheat}){
+  const key=topicId+'::'+f.n;
+  const inSheet=cheat.some(c=>c.key===key);
+  return(
+    <div className="formula">
+      <div className="formula-top">
+        <span className="formula-n">{f.n}</span>
+        <button className={'cheat-add'+(inSheet?' in':'')} onClick={()=>{
+          setCheat(inSheet?cheat.filter(c=>c.key!==key):[...cheat,{key,n:f.n,tex:f.tex,topic:topicId,when:f.when}]);
+        }}>{inSheet?'✓ on sheet':'+ cheatsheet'}</button>
+      </div>
+      <div className="formula-body"><Tex block>{f.tex}</Tex></div>
+      <div className="formula-when"><RichText text={f.when}/></div>
+    </div>
+  );
+}
+function TopicView({topic,progress,setProgress,cheat,setCheat,go}){
+  useEffect(()=>{window.scrollTo(0,0);},[topic.id]);
+  const mark=(i)=>setProgress(p=>({...p,concepts:{...p.concepts,[topic.id+'_'+i]:!p.concepts[topic.id+'_'+i]}}));
+  const topicProbs=PROBLEMS.filter(p=>p.topic===topic.id);
+  return(
+    <div className="read fade-in">
+      <div style={{paddingTop:34}}>
+        <div className="kicker">{topic.icon} {topic.weight==='hi'?'High-yield topic':topic.weight==='med'?'Likely tested':'Core toolkit'}</div>
+        <h1 className="h-title" style={{fontSize:'clamp(30px,4.4vw,46px)'}}>{topic.title}</h1>
+        <p className="dek">{topic.dek}</p>
+        <div className="byline">
+          <span>⏱ {topic.readTime} min read</span><span>·</span>
+          <span className="tag hi" style={{fontSize:11}}>🎯 {topic.examTag}</span>
+        </div>
+      </div>
+
+      <div className="callout">
+        <div className="callout-t">🧠 The big picture — read this first</div>
+        <p style={{margin:0,fontSize:18}}><RichText text={topic.bigPicture}/></p>
+      </div>
+
+      {topic.pipeline && <div className="viz"><div className="viz-title">🗺️ How it fits together</div><Mermaid chart={topic.pipeline}/></div>}
+
+      {topic.concepts.map((c,i)=>{
+        const Viz=c.viz?VIZ[c.viz]:null; const done=!!progress.concepts[topic.id+'_'+i];
+        return(<div key={i}>
+          <div className="concept" style={done?{borderColor:'var(--good)',boxShadow:'var(--shadow)'}:{}}>
+            <div className="concept-h">
+              <span className="concept-n">{c.n}</span>
+            </div>
+            <div className="concept-tl">{c.tl}</div>
+            {c.body.map((para,j)=><p key={j}><RichText text={para}/></p>)}
+            {c.mnemonic && <div className="mnem">🧩 {c.mnemonic}</div>}
+            <div style={{marginTop:12}}>
+              <button className={'cheat-add'+(done?' in':'')} onClick={()=>mark(i)}>{done?'✓ understood':'mark understood'}</button>
+            </div>
+          </div>
+          {Viz && <Viz/>}
+        </div>);
+      })}
+
+      <h2 className="sec-h">Formula sheet</h2><div className="sec-rule"></div>
+      <p style={{color:'var(--ink-faint)',fontFamily:'var(--sans)',fontSize:15}}>Tap <b>+ cheatsheet</b> to send a formula to your printable 3-sheet builder.</p>
+      {topic.formulas.map((f,i)=><FormulaRow key={i} f={f} topicId={topic.id} cheat={cheat} setCheat={setCheat}/>)}
+
+      <h2 className="sec-h">Mnemonics &amp; memory hooks</h2><div className="sec-rule"></div>
+      {topic.mnemonics.map((m,i)=><div key={i} className="card" style={{margin:'12px 0',padding:'15px 18px'}}>
+        <div style={{fontFamily:'var(--sans)',fontWeight:700,color:'var(--gold)',fontSize:16}}>{m.phrase}</div>
+        <div style={{fontFamily:'var(--sans)',color:'var(--ink-faint)',fontSize:14.5,marginTop:4}}><RichText text={m.expands}/></div>
+      </div>)}
+
+      <div className="callout hi">
+        <div className="callout-t">⚠️ Common mistakes (exam traps)</div>
+        <div className="summary-grid">{topic.pitfalls.map((p,i)=><div key={i} className="summary-row"><span className="n">✗</span><span><RichText text={p}/></span></div>)}</div>
+      </div>
+
+      <h2 className="sec-h">Structure at a glance</h2><div className="sec-rule"></div>
+      <div className="card"><div className="summary-grid">
+        {topic.summary.map((s,i)=><div key={i} className="summary-row"><span className="n">{i+1}</span><span><RichText text={s}/></span></div>)}
+      </div></div>
+
+      {topicProbs.length>0 && <>
+        <h2 className="sec-h">Drill it now ({topicProbs.length})</h2><div className="sec-rule"></div>
+        {topicProbs.map(p=><ProblemCard key={p.id} p={p} progress={progress} setProgress={setProgress}/>)}
+      </>}
+
+      <div className="callout gold" style={{marginTop:30}}>
+        <div className="callout-t">📚 Go deeper — your source slides</div>
+        <RichText text={"This topic is distilled from: **"+topic.source+"**. If a section feels thin, open that PDF in your UAS folder — these notes are the high-yield map, the slides are the territory."}/>
+      </div>
+
+      <div className="no-print" style={{display:'flex',justifyContent:'space-between',marginTop:40,gap:12,flexWrap:'wrap'}}>
+        <button className="pill-btn" onClick={()=>go({type:'home'})}>← Dashboard</button>
+        <button className="pill-btn" onClick={()=>go({type:'practice'})}>Practice all problems →</button>
+      </div>
+    </div>
+  );
+}
+
+/* ===================== PROBLEM CARD ===================== */
+function ProblemCard({p,progress,setProgress}){
+  const [open,setOpen]=useState(false);
+  const rated=progress.recall?.[p.id];
+  const setRate=(r)=>setProgress(pp=>({...pp,recall:{...pp.recall,[p.id]:r}}));
+  const dcol=p.diff==='hard'?'hi':p.diff==='med'?'med':'core';
+  return(
+    <div className="prob">
+      <div className="prob-meta">
+        <span className={'tag '+dcol}>{p.diff.toUpperCase()}</span>
+        <span className="tag">{p.type==='compute'?'🧮 compute':p.type==='concept'?'💡 concept':'📝 MCQ'}</span>
+        <span className="tag" style={{marginLeft:'auto'}}>📄 {p.source}</span>
+      </div>
+      <div className="prob-q"><RichText text={p.q}/></div>
+      {p.given && <div className="given">{p.given}</div>}
+      {!open && <button className="reveal-btn" onClick={()=>setOpen(true)}>Show worked solution ↓</button>}
+      {open && <div className="sol">
+        {p.steps.map((s,i)=><div key={i} className="step"><span className="step-n">{i+1}</span><span><RichText text={s}/></span></div>)}
+        <div className="ans"><b>Answer:</b> <RichText text={p.answer}/></div>
+        {p.tip && <div style={{fontFamily:'var(--sans)',fontSize:14,color:'var(--ink-faint)',marginTop:10}}>💡 <RichText text={p.tip}/></div>}
+        <div className="recall">
+          <span>How did you do? (active recall)</span>
+          <button className={'miss'+(rated==='miss'?' sel-miss':'')} onClick={()=>setRate('miss')}>Missed it</button>
+          <button className={'ok'+(rated==='ok'?' sel-ok':'')} onClick={()=>setRate('ok')}>Shaky</button>
+          <button className={'got'+(rated==='got'?' sel-got':'')} onClick={()=>setRate('got')}>Got it ✓</button>
+          <button className="reveal-btn" style={{background:'none',color:'var(--ink-faint)',padding:'6px 10px',marginLeft:'auto'}} onClick={()=>setOpen(false)}>Hide</button>
+        </div>
+      </div>}
+    </div>
+  );
+}
+
+/* ===================== PRACTICE ENGINE ===================== */
+function Practice({progress,setProgress}){
+  const [topicF,setTopicF]=useState('all');
+  const [diffF,setDiffF]=useState('all');
+  const [onlyWeak,setOnlyWeak]=useState(false);
+  const list=PROBLEMS.filter(p=>(topicF==='all'||p.topic===topicF)&&(diffF==='all'||p.diff===diffF)&&(!onlyWeak||['miss','ok'].includes(progress.recall?.[p.id])));
+  const counts={got:0,ok:0,miss:0};Object.values(progress.recall||{}).forEach(r=>counts[r]!==undefined&&counts[r]++);
+  return(
+    <div className="read fade-in">
+      <div style={{paddingTop:34}}>
+        <div className="kicker">✍️ Active Recall</div>
+        <h1 className="h-title" style={{fontSize:'clamp(30px,4.4vw,44px)'}}>Practice Engine</h1>
+        <p className="dek">Every problem is from the real UAS 2024 / 2025 papers (or directly derived). Try it on paper first — then reveal the step-by-step solution and rate yourself.</p>
+      </div>
+      <div className="stat-row">
+        <div className="stat"><div className="stat-v" style={{color:'var(--good)'}}>{counts.got}</div><div className="stat-l">Got it ✓</div></div>
+        <div className="stat"><div className="stat-v" style={{color:'var(--med)'}}>{counts.ok}</div><div className="stat-l">Shaky</div></div>
+        <div className="stat"><div className="stat-v" style={{color:'var(--hi)'}}>{counts.miss}</div><div className="stat-l">Missed</div></div>
+        <div className="stat"><div className="stat-v">{PROBLEMS.length}</div><div className="stat-l">Total</div></div>
+      </div>
+      <div style={{display:'flex',gap:12,flexWrap:'wrap',alignItems:'center',margin:'18px 0'}}>
+        <div className="seg">
+          <button className={topicF==='all'?'on':''} onClick={()=>setTopicF('all')}>All topics</button>
+          {CONTENT.map(t=><button key={t.id} className={topicF===t.id?'on':''} onClick={()=>setTopicF(t.id)}>{t.icon}</button>)}
+        </div>
+        <div className="seg">
+          {['all','easy','med','hard'].map(d=><button key={d} className={diffF===d?'on':''} onClick={()=>setDiffF(d)}>{d}</button>)}
+        </div>
+        <button className={'pill-btn'+(onlyWeak?' ':'')} style={onlyWeak?{borderColor:'var(--hi)',color:'var(--hi)'}:{}} onClick={()=>setOnlyWeak(w=>!w)}>{onlyWeak?'★ ':''}Only my weak ones</button>
+      </div>
+      {list.length===0?<div className="cheat-empty">No problems match — try clearing a filter. {onlyWeak&&'(Rate some problems "Shaky/Missed" to build your review list.)'}</div>
+        :list.map(p=><ProblemCard key={p.id} p={p} progress={progress} setProgress={setProgress}/>)}
+    </div>
+  );
+}
+
+/* ===================== CHEATSHEET BUILDER ===================== */
+function Cheatsheet({cheat,setCheat}){
+  const byTopic={};cheat.forEach(c=>{(byTopic[c.topic]=byTopic[c.topic]||[]).push(c);});
+  const tname=id=>{const t=CONTENT.find(x=>x.id===id);return t?t.icon+' '+t.title:id;};
+  return(
+    <div className="read fade-in">
+      <div style={{paddingTop:34}}>
+        <div className="kicker">📋 Allowed: 3 handwritten A4 sheets</div>
+        <h1 className="h-title" style={{fontSize:'clamp(30px,4.4vw,44px)'}}>Cheatsheet Builder</h1>
+        <p className="dek">Add formulas from any topic (the <b>+ cheatsheet</b> buttons). This prints to a dense 3-column layout — use it to plan what you'll handwrite onto your real sheets.</p>
+      </div>
+      <div className="no-print" style={{display:'flex',gap:12,flexWrap:'wrap',margin:'10px 0 6px'}}>
+        <button className="print-btn" onClick={()=>window.print()}>🖨️ Print / Save PDF</button>
+        {cheat.length>0 && <button className="pill-btn" onClick={()=>setCheat([])}>Clear all</button>}
+        <span style={{fontFamily:'var(--sans)',fontSize:14,color:'var(--ink-faint)',alignSelf:'center'}}>{cheat.length} formula{cheat.length!==1?'s':''} selected</span>
+      </div>
+      {cheat.length===0
+        ? <div className="cheat-empty">Your cheatsheet is empty.<br/>Open any topic → <b>Formula sheet</b> → tap <b>+ cheatsheet</b>.</div>
+        : <div className="cheat-page">
+            {Object.keys(byTopic).map(tid=><div key={tid}>
+              <div style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:11,color:'#2f5d50',borderBottom:'1px solid #ccc',marginBottom:6,paddingBottom:2,breakInside:'avoid'}}>{tname(tid)}</div>
+              {byTopic[tid].map((c,i)=><div key={i} className="cheat-item">
+                <div className="cn"><span>{c.n}</span><span className="rm no-print" onClick={()=>setCheat(cheat.filter(x=>x.key!==c.key))}>✕</span></div>
+                <div className="cx"><Tex block>{c.tex}</Tex></div>
+                {c.when && <div style={{fontSize:9.5,color:'#555',marginTop:3,fontFamily:'Inter,sans-serif'}}>{c.when.replace(/\*\*/g,'')}</div>}
+              </div>)}
+            </div>)}
+          </div>}
+    </div>
+  );
+}
+
+/* ===================== READY-TO-WRITE 3-SHEET CHEATSHEET ===================== */
+const MASTER=[
+ {n:1, title:'Graph Mining · Clustering · Distance', accent:'var(--hi)', sections:[
+   {h:'Graph basics & centrality', items:[
+     'Graph $G=(V,E)$: nodes = entities, edges = relations (may be labelled/directed).',
+     '**Degree** $C_{deg}(v)=\\dfrac{\\deg(v)}{N-1}$  — raw connections.',
+     '**Closeness** $C_{close}(v)=\\dfrac{N-1}{\\sum_u d(v,u)}$, $d$ = BFS shortest-path length.',
+     '**Betweenness** $C_{btw}(v)=\\sum_{s\\ne v\\ne t}\\dfrac{\\sigma_{st}(v)}{\\sigma_{st}}$; normalize $\\div\\binom{N-1}{2}$.',
+     '**High betweenness + low degree = BRIDGE** between communities (removing it disconnects).',
+     '**Eigenvector**: important if your neighbours are important (≈ PageRank).',
+     'Worked (2025): node S → deg=4, closeness=6/8=**0.75**, betweenness=11/90≈**0.12**.'
+   ]},
+   {h:'Community detection', items:[
+     'Modularity $Q=\\dfrac{1}{2m}\\sum_{ij}\\!\\big(A_{ij}-\\dfrac{k_ik_j}{2m}\\big)\\delta(c_i,c_j)$ — quality of a partition.',
+     '**Girvan–Newman** (divisive): repeatedly remove the **highest edge-betweenness** edge.',
+     '**Louvain** (greedy, bottom-up): maximize $Q$, fast; may yield disconnected communities.',
+     '**Leiden** = Louvain + guarantees every community is internally connected.',
+     '**Frequent subgraph**: subgraph appearing ≥ **minsup** times (gSpan). Embedding → vector space.'
+   ]},
+   {h:'Distance metrics', items:[
+     'Euclidean $\\sqrt{\\sum(a_i-b_i)^2}$ · Manhattan $\\sum|a_i-b_i|$ · Cosine dist $=1-\\cos\\theta$ · Haversine = geo.',
+     'Cosine sim $=\\dfrac{a\\cdot b}{\\lVert a\\rVert\\lVert b\\rVert}$ — angle, not magnitude → use for text/high-dim.'
+   ]},
+   {h:'Clustering', items:[
+     '**HAC**: start singletons → merge nearest → dendrogram → cut for k. SHOW merge order+heights.',
+     'Linkage: **single**=min (chains) · **complete**=max (compact) · **average**=mean · **Ward**=variance.',
+     '**DBSCAN**: ε + minPts → core / border / **noise(=outliers)**. No k, arbitrary shapes.',
+     '**k-means**: k centroids, assign→recompute→repeat; round clusters, outlier-sensitive.',
+     '**SMOTE**: new minority point on the line between a point & its k-NN minority neighbour.',
+     'Dendrogram: read bottom-up; lowest bar merged first = most similar.'
+   ]}
+ ]},
+ {n:2, title:'Text & Web Mining · Time Series', accent:'var(--accent)', sections:[
+   {h:'Text preprocessing & structure', items:[
+     'Pipeline: tokenize → lowercase → stopword → **stem/lemmatize** → n-gram.',
+     'Stem = crude chop; lemma = dictionary root. **POS tagging** = label word class (NOUN/VERB/ADJ/PROPN).',
+     'Constituency parse = phrase nesting (boxes); Dependency parse = word→head (arrows).'
+   ]},
+   {h:'Representation & similarity', items:[
+     '**BoW** = counts · **TF-IDF** $=tf\\times\\log\\dfrac{N}{df}$ (kills common words) · **embeddings** = dense semantic.',
+     'Doc embedding = **average** of word embeddings. Similar context → near vectors.',
+     'Cosine sim $=\\dfrac{a\\cdot b}{\\lVert a\\rVert\\lVert b\\rVert}$ (1=same, 0=unrelated).'
+   ]},
+   {h:'Classification metrics', items:[
+     'Precision $=\\dfrac{TP}{TP+FP}$ · Recall $=\\dfrac{TP}{TP+FN}$ · **F1** $=\\dfrac{2PR}{P+R}$ (harmonic).',
+     'e.g. P=0.8, R=0.4 → F1 = **0.53**.'
+   ]},
+   {h:'Web mining & GenAI', items:[
+     'BeautifulSoup `find()` → first matching tag + contents. User-Agent → look like a browser.',
+     'Ethics: don\'t overload · obey robots.txt · public data · **attribute source**.',
+     'Challenges vs text: unstructured HTML, scale + dynamic JS, noise, legal limits.',
+     'LLM/GenAI: zero/few-shot · hallucination · RAG. Good prompt = **R**ole+**C**ontext+**T**ask+**F**ormat+**C**onstraints.'
+   ]},
+   {h:'Time series', items:[
+     'Components L-T-S-N: **always Level + Noise** (noise = non-systematic).',
+     'Additive $y=T+S+N$ (constant swings) · **Multiplicative** $y=T\\times S\\times N$ (growing swings).',
+     'Stationary = constant mean **and** variance + stable autocorrelation; fix by **differencing**.',
+     '**ARIMA(p,d,q)**: p=AR lags (PACF), d=differencing, q=MA lags (ACF).',
+     'MAE $=\\frac1n\\sum|y-\\hat y|$ · **RMSE** $=\\sqrt{\\frac1n\\sum(y-\\hat y)^2}$ (punishes big) · MAPE $=\\frac{100\\%}{n}\\sum|\\frac{y-\\hat y}{y}|$. Lower better; round 2 dp.'
+   ]}
+ ]},
+ {n:3, title:'Image · Audio · Video · Multimodal (VLM) + Tactics', accent:'var(--core)', sections:[
+   {h:'Image / Computer Vision', items:[
+     'Image = H×W×C (gray=1, RGB=3, each 0–255). Raster=pixels (blurs on zoom); vector=equations (sharp, SHP).',
+     '**CNN**: kernels slide → convolution → feature map. Conv=detect, pool=shrink, deeper=abstract.',
+     'Conv out size $=\\big\\lfloor\\frac{W-K+2P}{S}\\big\\rfloor+1$. 5×5 ∗ 3×3, P0 S1 → 3×3.',
+     'Parameter sharing → far fewer weights. Edge kernel = + centre, − surround.'
+   ]},
+   {h:'Audio & Video', items:[
+     'Sound = sampled waveform. **Nyquist**: $f_s\\ge 2f_{max}$ (avoid aliasing).',
+     'Waveform → Fourier → **spectrogram** → **MFCC** (Mel scale ≈ human hearing).',
+     'Spectrogram = image of sound → CNN applies. Video = frames + audio → temporal (3D-CNN / CNN+RNN).',
+     'Pipeline (all media): acquire → preprocess → extract features → model → evaluate (+ ethics).'
+   ]},
+   {h:'Multimodal & VLM', items:[
+     '**CLIP**: contrastive — image & text encoders → shared space; pull matched pairs together, push mismatches apart.',
+     '**Zero-shot**: $\\hat y=\\arg\\max_c \\cos(e_{img},e_{text_c})$ — write classes as prompts, 0 examples.',
+     'Few-shot = a few in-context examples. Challenges: bias · hallucination · compute · prompt-sensitivity · weak compositional reasoning · privacy.'
+   ]},
+   {h:'⚡ Exam tactics', items:[
+     'SHOW every step (linkage, dendrogram, centrality path counts) — process earns marks.',
+     '**Round all numbers to 2 decimals** unless stated. Non-programmable calculator only.',
+     'Write **assumptions** if a question is unclear. Name + NPM on **every** page. Pen, legible (penalty for messy).'
+   ]}
+ ]}
+];
+
+function MasterSheet(){
+  return(
+    <div className="read fade-in">
+      <div style={{paddingTop:34}}>
+        <div className="kicker">📄 Copy this onto your 3 handwritten sheets</div>
+        <h1 className="h-title" style={{fontSize:'clamp(28px,4.2vw,42px)'}}>Ready-to-Write Cheatsheet</h1>
+        <p className="dek">A complete, balanced master sheet — every high-yield formula, procedure and exam-trap, split across the 3 A4 sheets you're allowed. Handwrite it tonight (the copying itself is revision), or print &amp; trace.</p>
+      </div>
+      <div className="no-print" style={{display:'flex',gap:12,flexWrap:'wrap',alignItems:'center',margin:'6px 0 4px'}}>
+        <button className="print-btn" onClick={()=>window.print()}>🖨️ Print all 3 sheets / Save PDF</button>
+        <span style={{fontFamily:'var(--sans)',fontSize:13.5,color:'var(--ink-faint)'}}>Rule: must be your <b>own</b> handwriting (or digital-handwritten then printed) · collected after exam.</span>
+      </div>
+      {MASTER.map(sheet=>(
+        <div key={sheet.n} style={{breakAfter:'page',pageBreakAfter:'always'}}>
+          <div style={{display:'flex',alignItems:'center',gap:10,margin:'26px 0 6px'}}>
+            <span style={{fontFamily:'var(--sans)',fontWeight:800,fontSize:12,letterSpacing:'.08em',color:'#fff',background:sheet.accent,padding:'4px 11px',borderRadius:20}}>SHEET {sheet.n} / 3</span>
+            <span style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:15,color:'var(--ink)'}}>{sheet.title}</span>
+          </div>
+          <div className="cheat-page">
+            {sheet.sections.map((sec,i)=>(
+              <div key={i} className="cheat-item" style={{breakInside:'avoid'}}>
+                <div style={{fontFamily:'var(--sans)',fontWeight:700,fontSize:11.5,color:'#2f5d50',borderBottom:'1px solid #d8d8d0',paddingBottom:3,marginBottom:6}}>{sec.h}</div>
+                {sec.items.map((it,j)=>(
+                  <div key={j} style={{display:'flex',gap:6,marginBottom:5,fontSize:11.5,lineHeight:1.5,color:'#161616'}}>
+                    <span style={{color:'#2f5d50',flex:'none'}}>▪</span>
+                    <span style={{minWidth:0}}><RichText text={it}/></span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="callout no-print" style={{marginTop:24}}>
+        <div className="callout-t">✍️ Want to customise it?</div>
+        <RichText text={"This is the *opinionated* master. To build your **own** from scratch (pick exactly the formulas you want), use the **Cheatsheet Builder** — every topic's Formula sheet has **+ cheatsheet** buttons."}/>
+      </div>
+    </div>
+  );
+}
+
+/* ===================== ROOT APP ===================== */
+function App(){
+  const [view,setView]=useState({type:'home'});
+  const [theme,setTheme]=useStore('dm_theme','light');
+  const [progress,setProgress]=useStore('dm_progress',{concepts:{},recall:{}});
+  const [cheat,setCheat]=useStore('dm_cheat',[]);
+  const [drawer,setDrawer]=useState(false);
+  useEffect(()=>{document.body.setAttribute('data-theme',theme);
+    if(window.mermaid){window.mermaid.initialize({startOnLoad:false,theme:theme==='dark'?'dark':'neutral',themeVariables:{fontFamily:'Inter,sans-serif'},flowchart:{curve:'basis'}});}
+  },[theme]);
+  const go=useCallback(v=>setView(v),[]);
+  const topic=view.type==='topic'?CONTENT.find(t=>t.id===view.id):null;
+  return(
+    <div className="shell">
+      <Rail view={view} go={go} open={drawer} setOpen={setDrawer} progress={progress}/>
+      {drawer && <div className="no-print" onClick={()=>setDrawer(false)} style={{position:'fixed',inset:0,background:'rgba(0,0,0,.3)',zIndex:55}}/>}
+      <div className="main">
+        <div className="topbar no-print">
+          <button className="hamb" onClick={()=>setDrawer(d=>!d)}>☰</button>
+          <button className="pill-btn" onClick={()=>go({type:'practice'})}>✍️ Practice</button>
+          <button className="pill-btn" onClick={()=>go({type:'cheat'})}>📋 Cheatsheet {cheat.length>0&&`(${cheat.length})`}</button>
+          <div className="bar-spacer"></div>
+          <button className="icon-btn" title="Toggle theme" onClick={()=>setTheme(t=>t==='light'?'dark':'light')}>{theme==='light'?'🌙':'☀️'}</button>
+        </div>
+        <div className="canvas">
+          {view.type==='home' && <Dashboard go={go} progress={progress}/>}
+          {view.type==='topic' && topic && <TopicView topic={topic} progress={progress} setProgress={setProgress} cheat={cheat} setCheat={setCheat} go={go}/>}
+          {view.type==='practice' && <Practice progress={progress} setProgress={setProgress}/>}
+          {view.type==='master' && <MasterSheet/>}
+          {view.type==='cheat' && <Cheatsheet cheat={cheat} setCheat={setCheat}/>}
+        </div>
+      </div>
+      <Pomodoro/>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
