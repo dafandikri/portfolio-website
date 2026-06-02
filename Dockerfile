@@ -2,7 +2,9 @@
 # Stage 1: Build the React application
 # ============================================
 FROM node:22-alpine AS builder
-RUN corepack enable
+# Pin pnpm directly (matches package.json "packageManager") — avoids corepack
+# signature-verification failures on the base image's bundled corepack.
+RUN npm install -g pnpm@10.30.3
 ARG TMDB_API_KEY
 WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
