@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getImage, getIcon } from '../assets';
@@ -6,6 +6,36 @@ import { getImage, getIcon } from '../assets';
 const Project = () => {
     // Updated project data based on CV
     const projects = [
+        {
+            title: "SIRA — Smart Invoice Reminder AI",
+            year: "2025",
+            description: "AI-powered invoice collection platform that predicts payment risk and sends tone-adapted reminders so finance teams stop chasing overdue clients manually. Built end-to-end by a 15-engineer team across a full semester, coordinating 214 merge requests through bot-driven automation.",
+            image: "sira_project",
+            features: [
+                "ML risk engine scores each client LOW/MEDIUM/HIGH and drives tone-adaptive reminders (SOPAN/TEGAS/PERINGATAN) over email, WhatsApp & SMS",
+                "FastAPI + Celery/Redis backend running daily scheduled overdue checks, validated end-to-end with Pydantic models",
+                "Killed N+1 queries via ORM profiling — invoice tracking latency cut from 217ms to 18ms",
+                "Three-tier QA gate (SonarQube static analysis, mutation/behavioral, performance) plus OWASP Top 10 hardening and Sentry telemetry"
+            ],
+            techStack: ["python", "fastapi", "react", "postgresql", "tailwind", "gitlab"],
+            liveLink: "/blog/sira-engineering-journey",
+            repoLink: "#"
+        },
+        {
+            title: "Boulder Coach",
+            year: "2026",
+            description: "An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.",
+            image: "", // No image
+            features: [
+                "Offline-first Next.js PWA: ACWR load monitoring, RAMP warm-ups, 6-week waved periodization & a safety-first adaptation engine",
+                "Pure-TypeScript domain layer with zero I/O; layering (domain ↛ data ↛ app) enforced automatically by dependency-cruiser",
+                "Deterministic 8-step quality gate — strict type-checked ESLint (bans any), 99% type-coverage, per-file 100% branch coverage on safety logic",
+                "AI harness with four enforcement tiers (in-loop, pre-commit, pre-push, CI), a safety reviewer and a learning ledger that promotes recurring failures into automated checks"
+            ],
+            techStack: ["nextjs", "typescript", "react", "tailwind", "playwright", "vitest"],
+            liveLink: "#",
+            repoLink: "https://github.com/dafandikri/boulder-coach"
+        },
         {
             title: "Portfolio Website",
             year: "2025",

@@ -3,6 +3,7 @@ import profileImg from './img/profile.jpg';
 import backgroundImg from './img/background.jpg';
 import interBioProject from './img/interbio_project.webp';
 import portfolioProject from './img/portfolio_project.webp';
+import siraProject from './img/sira_project.png';
 
 // Import favicon icons
 import briefcaseIcon from './img/favicon/briefcase.png';
@@ -41,6 +42,14 @@ import nodejsIcon from './img/favicon/nodejs.png';
 import viciiIcon from './img/favicon/vicii.png';
 import cameraIcon from './img/favicon/camera.png';
 import systatumIcon from './img/favicon/systatum.jpg';
+import typescriptIcon from './img/favicon/typescript.svg';
+import nextjsIcon from './img/favicon/nextjs.svg';
+import fastapiIcon from './img/favicon/fastapi.svg';
+import postgresqlIcon from './img/favicon/postgresql.svg';
+import gitlabIcon from './img/favicon/gitlab.svg';
+import playwrightIcon from './img/favicon/playwright.svg';
+import vitestIcon from './img/favicon/vitest.svg';
+import supabaseIcon from './img/favicon/supabase.svg';
 
 // Import skill icons
 import aiSkill from './img/skills/ai.png';
@@ -57,7 +66,8 @@ export const images = {
   profile: profileImg,
   background: backgroundImg,
   interbio_project: interBioProject,
-  portfolio_project: portfolioProject
+  portfolio_project: portfolioProject,
+  sira_project: siraProject
 };
 
 export const icons = {
@@ -96,7 +106,15 @@ export const icons = {
   nodejs: nodejsIcon,
   vicii: viciiIcon,
   camera: cameraIcon,
-  systatum: systatumIcon
+  systatum: systatumIcon,
+  typescript: typescriptIcon,
+  nextjs: nextjsIcon,
+  fastapi: fastapiIcon,
+  postgresql: postgresqlIcon,
+  gitlab: gitlabIcon,
+  playwright: playwrightIcon,
+  vitest: vitestIcon,
+  supabase: supabaseIcon
 };
 
 export const skills = {
