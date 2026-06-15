@@ -3,7 +3,8 @@ import profileImg from './img/profile.jpg';
 import backgroundImg from './img/background.jpg';
 import interBioProject from './img/interbio_project.webp';
 import portfolioProject from './img/portfolio_project.webp';
-import siraProject from './img/sira_project.png';
+import siraProject from './img/sira_project.webp';
+import boulderProject from './img/boulder_project.webp';
 
 // Import favicon icons
 import briefcaseIcon from './img/favicon/briefcase.png';
@@ -67,7 +68,8 @@ export const images = {
   background: backgroundImg,
   interbio_project: interBioProject,
   portfolio_project: portfolioProject,
-  sira_project: siraProject
+  sira_project: siraProject,
+  boulder_project: boulderProject
 };
 
 export const icons = {

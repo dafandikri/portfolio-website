@@ -25,7 +25,7 @@ const Project = () => {
             title: "Boulder Coach",
             year: "2026",
             description: "An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.",
-            image: "", // No image
+            image: "boulder_project",
             features: [
                 "Offline-first Next.js PWA: ACWR load monitoring, RAMP warm-ups, 6-week waved periodization & a safety-first adaptation engine",
                 "Pure-TypeScript domain layer with zero I/O; layering (domain ↛ data ↛ app) enforced automatically by dependency-cruiser",
