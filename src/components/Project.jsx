@@ -33,7 +33,7 @@ const Project = () => {
                 "AI harness with four enforcement tiers (in-loop, pre-commit, pre-push, CI), a safety reviewer and a learning ledger that promotes recurring failures into automated checks"
             ],
             techStack: ["nextjs", "typescript", "react", "tailwind", "playwright", "vitest"],
-            liveLink: "#",
+            liveLink: "https://boulder-coach-gamma.vercel.app",
             repoLink: "https://github.com/dafandikri/boulder-coach"
         },
         {
