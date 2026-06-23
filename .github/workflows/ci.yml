@@ -34,5 +34,8 @@ jobs:
       - name: Validate content data
         run: pnpm validate-data
 
+      - name: Test (with coverage)
+        run: pnpm test:cov
+
       - name: Build
         run: pnpm build

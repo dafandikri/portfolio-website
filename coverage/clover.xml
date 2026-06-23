@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1782237912516" clover="3.2.0">
+  <project timestamp="1782237912516" name="All files">
+    <metrics statements="71" coveredstatements="64" conditionals="39" coveredconditionals="28" methods="32" coveredmethods="28" elements="142" coveredelements="120" complexity="0" loc="71" ncloc="71" packages="2" files="6" classes="6"/>
+    <package name="components">
+      <metrics statements="59" coveredstatements="52" conditionals="37" coveredconditionals="26" methods="31" coveredmethods="27"/>
+      <file name="Experience.tsx" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/components/Experience.tsx">
+        <metrics statements="43" coveredstatements="36" conditionals="33" coveredconditionals="22" methods="22" coveredmethods="18"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="9" count="44" type="stmt"/>
+        <line num="12" count="11" type="stmt"/>
+        <line num="13" count="11" type="stmt"/>
+        <line num="16" count="11" type="stmt"/>
+        <line num="17" count="11" type="stmt"/>
+        <line num="18" count="11" type="stmt"/>
+        <line num="21" count="11" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="23" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="26" count="11" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="29" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="33" count="1" type="stmt"/>
+        <line num="37" count="11" type="stmt"/>
+        <line num="38" count="4" type="stmt"/>
+        <line num="39" count="4" type="cond" truecount="1" falsecount="1"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="46" count="11" type="stmt"/>
+        <line num="70" count="55" type="stmt"/>
+        <line num="71" count="44" type="stmt"/>
+        <line num="72" count="44" type="cond" truecount="1" falsecount="1"/>
+        <line num="73" count="44" type="cond" truecount="2" falsecount="0"/>
+        <line num="74" count="44" type="stmt"/>
+        <line num="77" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="78" count="5" type="stmt"/>
+        <line num="81" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="82" count="2" type="stmt"/>
+        <line num="85" count="108" type="cond" truecount="2" falsecount="0"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="97" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="98" count="1" type="stmt"/>
+        <line num="100" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="101" count="0" type="stmt"/>
+        <line num="105" count="8" type="stmt"/>
+        <line num="128" count="27" type="cond" truecount="1" falsecount="1"/>
+        <line num="129" count="11" type="cond" truecount="1" falsecount="1"/>
+        <line num="130" count="11" type="stmt"/>
+        <line num="151" count="38" type="stmt"/>
+        <line num="167" count="0" type="stmt"/>
+      </file>
+      <file name="Project.tsx" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/components/Project.tsx">
+        <metrics statements="16" coveredstatements="16" conditionals="4" coveredconditionals="4" methods="9" coveredmethods="9"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="8" type="stmt"/>
+        <line num="9" count="8" type="stmt"/>
+        <line num="12" count="8" type="stmt"/>
+        <line num="15" count="8" type="stmt"/>
+        <line num="16" count="8" type="stmt"/>
+        <line num="17" count="8" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
+        <line num="22" count="8" type="stmt"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="26" count="8" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="30" count="8" type="stmt"/>
+        <line num="68" count="16" type="stmt"/>
+        <line num="153" count="74" type="stmt"/>
+        <line num="181" count="64" type="stmt"/>
+      </file>
+    </package>
+    <package name="data">
+      <metrics statements="12" coveredstatements="12" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+      <file name="experiences.ts" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/data/experiences.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="11" count="3" type="stmt"/>
+      </file>
+      <file name="index.ts" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/data/index.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
+        <line num="19" count="8" type="cond" truecount="2" falsecount="0"/>
+        <line num="20" count="1" type="stmt"/>
+        <line num="22" count="7" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="26" count="3" type="stmt"/>
+      </file>
+      <file name="projects.ts" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/data/projects.ts">
+        <metrics statements="1" coveredstatements="1" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="13" count="3" type="stmt"/>
+      </file>
+      <file name="schema.ts" path="/Users/dafandikri/Documents/Personal/Portfolio Website/portfolio-website/src/data/schema.ts">
+        <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+        <line num="12" count="4" type="stmt"/>
+        <line num="26" count="4" type="stmt"/>
+        <line num="31" count="4" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="47" count="4" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

@@ -15,7 +15,7 @@ export type {
  * any malformed/incomplete data fails the build with a clear Zod error rather
  * than rendering broken or shipping silently.
  */
-function parseOrThrow<T>(label: string, result: { success: boolean; data?: T; error?: unknown }): T {
+export function parseOrThrow<T>(label: string, result: { success: boolean; data?: T; error?: unknown }): T {
   if (!result.success) {
     throw new Error(`Invalid content in "${label}":\n${String(result.error)}`)
   }
