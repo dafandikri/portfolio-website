@@ -1,12 +1,19 @@
 name: Build and Deploy
 
+# Deploy only after the CI workflow succeeds on main — CI is the quality gate
+# (lint + typecheck + content validation + tests/coverage + build). A failing
+# CI run never reaches deploy.
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    # Guard: skip unless the triggering CI run actually succeeded.
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       contents: read
       packages: write   # required to push to ghcr.io
