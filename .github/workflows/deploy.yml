@@ -39,7 +39,7 @@ jobs:
       - name: Copy k8s manifests to droplet
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: 159.223.49.141
+          host: 165.245.144.120
           username: root
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           source: "k8s/"
@@ -48,7 +48,7 @@ jobs:
       - name: Deploy to k3s
         uses: appleboy/ssh-action@v1
         with:
-          host: 159.223.49.141
+          host: 165.245.144.120
           username: root
           key: ${{ secrets.DROPLET_SSH_PRIVATE_KEY }}
           script: |

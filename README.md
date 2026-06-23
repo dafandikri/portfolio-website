@@ -43,7 +43,7 @@ git push to main
         1. Build Docker image (TMDB_API_KEY baked in at build time,
            Letterboxd reviews fetched at build time via scripts/fetch-letterboxd.js)
         2. Push → ghcr.io/dafandikri/portfolio-website:latest
-        3. SSH into DigitalOcean Droplet (159.223.49.141)
+        3. SSH into DigitalOcean Droplet (165.245.144.120, Reserved IP)
         4. k3s kubectl rollout restart deployment/portfolio-app -n portfolio
            (imagePullPolicy: Always re-pulls :latest on every restart)
         5. k3s kubectl rollout status ... --timeout=120s
@@ -126,7 +126,7 @@ Push to `main` triggers the GitHub Actions workflow (`.github/workflows/deploy.y
 | Secret | Description |
 |--------|-------------|
 | `TMDB_API_KEY` | TMDB API key for Letterboxd review fetching |
-| `DROPLET_SSH_PRIVATE_KEY` | SSH private key for root@159.223.49.141 |
+| `DROPLET_SSH_PRIVATE_KEY` | SSH private key for root@165.245.144.120 |
 
 ## Kubernetes Manifests (`k8s/`)
 
