@@ -13,6 +13,8 @@ export default defineConfig({
         'src/data/**/*.ts',
         'src/components/Project.tsx',
         'src/components/Experience.tsx',
+        'src/components/TechStackDialog.tsx',
+        'src/components/SkillsetsDialog.tsx',
       ],
       thresholds: {
         lines: 80,

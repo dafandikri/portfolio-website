@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { projects, experiences, parseOrThrow } from './index'
+import { projects, experiences, techStack, skills, parseOrThrow } from './index'
 import { projectSchema, experienceEntrySchema } from './schema'
 
 describe('parseOrThrow', () => {
@@ -35,5 +35,11 @@ describe('content data integrity', () => {
   it('uses unique experience entry ids', () => {
     const ids = Object.values(experiences).flatMap((y) => y.entries.map((e) => e.id))
     expect(new Set(ids).size).toBe(ids.length)
+  })
+
+  it('exposes non-empty tech stack rows and skills', () => {
+    expect(techStack.row1.length).toBeGreaterThan(0)
+    expect(techStack.row2.length).toBeGreaterThan(0)
+    expect(skills.length).toBeGreaterThan(0)
   })
 })

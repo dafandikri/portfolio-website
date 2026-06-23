@@ -2,70 +2,43 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/w95.css';
 import { getIcon } from '../assets';
+import { techStack, type TechItem } from '../data';
 
 const TechStackDialog = () => {
     const [container1Width, setContainer1Width] = useState(0);
     const [container2Width, setContainer2Width] = useState(0);
-    const scrollContainerRef = useRef(null);
-    const techIconsRef1 = useRef(null);
-    const techIconsRef2 = useRef(null);
-    
-    // Split tech stack into two arrays for the two sliders
-    const techStackRow1 = [
-        { name: "JavaScript", icon: "javascript" },
-        { name: "Dart", icon: "dart" },
-        { name: "Discord", icon: "discord" },
-        { name: "Django", icon: "django" },
-        { name: "Docker", icon: "docker" },
-        { name: "Figma", icon: "figma" },
-        { name: "Flutter", icon: "flutter" },
-        { name: "Gemini", icon: "gemini" },
-        { name: "GitHub", icon: "github" },
-        { name: "GPT", icon: "gpt" },
-        { name: "Postman", icon: "postman" },
-    ];
-    
-    const techStackRow2 = [
-        { name: "IntelliJ", icon: "ij" },
-        { name: "Java", icon: "java" },
-        { name: "Python", icon: "python" },
-        { name: "React", icon: "react" },
-        { name: "Selenium", icon: "selenium" },
-        { name: "Spring Boot", icon: "springboot" },
-        { name: "Tailwind", icon: "tailwind" },
-        { name: "Ubuntu", icon: "ubuntu" },
-        { name: "VS Code", icon: "vsc" },
-        { name: "WordPress", icon: "wordpress" },
-        { name: "Node.js", icon: "nodejs" }
-    ];
-    
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const techIconsRef1 = useRef<HTMLDivElement>(null);
+    const techIconsRef2 = useRef<HTMLDivElement>(null);
+
+    const techStackRow1 = techStack.row1;
+    const techStackRow2 = techStack.row2;
+
     // Measure the width of both icon containers for the animations
     useEffect(() => {
         if (techIconsRef1.current) {
-            const width1 = techIconsRef1.current.offsetWidth;
-            setContainer1Width(width1);
+            setContainer1Width(techIconsRef1.current.offsetWidth);
         }
         if (techIconsRef2.current) {
-            const width2 = techIconsRef2.current.offsetWidth;
-            setContainer2Width(width2);
+            setContainer2Width(techIconsRef2.current.offsetWidth);
         }
     }, []);
-    
-    const renderTechIcons = (techStack) => {
-        return techStack.map((tech, index) => (
+
+    const renderTechIcons = (items: TechItem[]) => {
+        return items.map((tech, index) => (
             <div key={index} className="tech-icon mx-3" style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
                 <div style={{width: "48px", height: "48px", border: "2px solid #000", borderRightColor: "#DFDFDF", borderBottomColor: "#DFDFDF", padding: "4px", backgroundColor: "#C0C0C0"}}>
-                    <img 
-                        src={getIcon(tech.icon)} 
-                        alt={tech.name} 
-                        style={{width: "36px", height: "36px", imageRendering: "pixelated"}} 
+                    <img
+                        src={getIcon(tech.icon)}
+                        alt={tech.name}
+                        style={{width: "36px", height: "36px", imageRendering: "pixelated"}}
                     />
                 </div>
                 <span style={{fontSize: "10px", marginTop: "4px"}}>{tech.name}</span>
             </div>
         ));
     };
-    
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -88,29 +61,29 @@ const TechStackDialog = () => {
                         <strong>My Tech Stack and Tools:</strong>
                     </div>
                     {/* Icon scrolling container */}
-                    <div 
+                    <div
                         ref={scrollContainerRef}
-                        className="tech-stack-container flex-grow-1" 
+                        className="tech-stack-container flex-grow-1"
                         style={{
-                            position: "relative", 
-                            overflow: "hidden", 
+                            position: "relative",
+                            overflow: "hidden",
                             height: "160px",
-                            border: "1px solid #888", 
-                            borderRightColor: "#FFF", 
-                            borderBottomColor: "#FFF", 
-                            backgroundColor: "#FFF", 
-                            padding: "4px 0", // Consistent padding
+                            border: "1px solid #888",
+                            borderRightColor: "#FFF",
+                            borderBottomColor: "#FFF",
+                            backgroundColor: "#FFF",
+                            padding: "4px 0",
                             display: "flex",
                             flexDirection: "column",
-                            justifyContent: "space-around" // Distribute space evenly
+                            justifyContent: "space-around"
                         }}
                     >
                         {/* First row - left to right */}
-                        <div 
+                        <div
                             className="tech-icons-wrapper"
                             style={{
-                                display: "flex", 
-                                width: "max-content", 
+                                display: "flex",
+                                width: "max-content",
                                 animation: container1Width ? `scrollTechRight ${techStackRow1.length * 2}s linear infinite` : 'none'
                             }}
                         >
@@ -118,19 +91,19 @@ const TechStackDialog = () => {
                             <div ref={techIconsRef1} className="tech-icons" style={{display: "flex"}}>
                                 {renderTechIcons(techStackRow1)}
                             </div>
-                            
+
                             {/* Duplicate set for seamless loop */}
                             <div className="tech-icons" style={{display: "flex"}}>
                                 {renderTechIcons(techStackRow1)}
                             </div>
                         </div>
-                        
+
                         {/* Second row - right to left */}
-                        <div 
+                        <div
                             className="tech-icons-wrapper"
                             style={{
-                                display: "flex", 
-                                width: "max-content", 
+                                display: "flex",
+                                width: "max-content",
                                 animation: container2Width ? `scrollTechLeft ${techStackRow2.length * 2}s linear infinite` : 'none'
                             }}
                         >
@@ -138,14 +111,14 @@ const TechStackDialog = () => {
                             <div ref={techIconsRef2} className="tech-icons" style={{display: "flex"}}>
                                 {renderTechIcons(techStackRow2)}
                             </div>
-                            
+
                             {/* Duplicate set for seamless loop */}
                             <div className="tech-icons" style={{display: "flex"}}>
                                 {renderTechIcons(techStackRow2)}
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="d-flex justify-content-end mt-4">
                         <button className="btn btn-sm mr-2 btn-primary border-dark" type="button">
                             <span className="btn-text">Nice!</span>
@@ -154,14 +127,14 @@ const TechStackDialog = () => {
                 </div>
             </div>
             {/* End of Tech Stack Dialog */}
-            
+
             {/* CSS for animations */}
-            <style jsx>{`
+            <style>{`
                 @keyframes scrollTechLeft {
                     0% { transform: translateX(0); }
                     100% { transform: translateX(-${container2Width}px); }
                 }
-                
+
                 @keyframes scrollTechRight {
                     0% { transform: translateX(-${container1Width}px); }
                     100% { transform: translateX(0); }

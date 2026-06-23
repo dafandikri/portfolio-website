@@ -1,12 +1,16 @@
-import { projectsSchema, experiencesSchema } from './schema'
+import { projectsSchema, experiencesSchema, techStackSchema, skillsSchema } from './schema'
 import { projectsData } from './projects'
 import { experiencesData } from './experiences'
+import { techStackData, skillsData } from './skills'
 
 export type {
   Project,
   ExperienceEntry,
   ExperienceYear,
   Experiences,
+  TechItem,
+  TechStack,
+  Skill,
 } from './schema'
 
 /**
@@ -24,3 +28,5 @@ export function parseOrThrow<T>(label: string, result: { success: boolean; data?
 
 export const projects = parseOrThrow('projects', projectsSchema.safeParse(projectsData))
 export const experiences = parseOrThrow('experiences', experiencesSchema.safeParse(experiencesData))
+export const techStack = parseOrThrow('techStack', techStackSchema.safeParse(techStackData))
+export const skills = parseOrThrow('skills', skillsSchema.safeParse(skillsData))
