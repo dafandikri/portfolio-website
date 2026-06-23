@@ -9,7 +9,6 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "serve -s dist -l $PORT",
     "fetch-reviews": "node scripts/fetch-letterboxd.js",
     "build-with-reviews": "npm run fetch-reviews && npm run build"
   },
@@ -25,7 +24,6 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.13.1",
-    "serve": "^14.2.4",
     "terser": "^5.43.1"
   },
   "devDependencies": {
