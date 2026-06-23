@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     // Popover
     $('[data-toggle="popover"]').each(function () {
-        var popoverClass = '';
+        let popoverClass = '';
         if ($(this).data('color')) {
             popoverClass = 'popover-' + $(this).data('color');
         }
@@ -39,6 +39,7 @@ $(document).ready(function () {
     }).trigger('blur');
 
     // When in viewport
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     $('[data-toggle="on-screen"]')[0] && $('[data-toggle="on-screen"]').onScreen({
         container: window,
         direction: 'vertical',
@@ -56,8 +57,8 @@ $(document).ready(function () {
 
     // Scroll to anchor with scroll animation
     $('[data-toggle="scroll"]').on('click', function (event) {
-        var hash = $(this).attr('href');
-        var offset = $(this).data('offset') ? $(this).data('offset') : 0;
+        const hash = $(this).attr('href');
+        const offset = $(this).data('offset') ? $(this).data('offset') : 0;
 
         // Animate scroll to the selected section
         $('html, body').stop(true, true).animate({
@@ -68,13 +69,13 @@ $(document).ready(function () {
     });
 
     function formatAMPM(date) {
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var ampm = hours >= 12 ? 'pm' : 'am';
+        let hours = date.getHours();
+        let minutes = date.getMinutes();
+        const ampm = hours >= 12 ? 'pm' : 'am';
         hours = hours % 12;
         hours = hours ? hours : 12; // the hour '0' should be '12'
         minutes = minutes < 10 ? '0'+minutes : minutes;
-        var strTime = hours + ':' + minutes + ' ' + ampm;
+        const strTime = hours + ':' + minutes + ' ' + ampm;
         return strTime;
     }
 
@@ -82,11 +83,11 @@ $(document).ready(function () {
 
     // copy docs
     $('.copy-docs').on('click', function () {
-        var $copy = $(this);
-        var htmlEntities = $copy.parents('.nav-wrapper').siblings('.card').find('.tab-pane:last-of-type').html();
-        var htmlDecoded = $('<div/>').html(htmlEntities).text().trim();
+        const $copy = $(this);
+        const htmlEntities = $copy.parents('.nav-wrapper').siblings('.card').find('.tab-pane:last-of-type').html();
+        const htmlDecoded = $('<div/>').html(htmlEntities).text().trim();
 
-        var $temp = $('<textarea>');
+        const $temp = $('<textarea>');
         $('body').append($temp);
         $temp.val(htmlDecoded).select();
         document.execCommand('copy');

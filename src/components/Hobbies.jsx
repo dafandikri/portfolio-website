@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/w95.css';
-import { getImage, getIcon } from '../assets';
 
 const Hobbies = () => {
     const [activeTab, setActiveTab] = useState('films');
     const [movieReviews, setMovieReviews] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [, setError] = useState(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [climbingContent, setClimbingContent] = useState([]);
     const [climbingLoading, setClimbingLoading] = useState(true);

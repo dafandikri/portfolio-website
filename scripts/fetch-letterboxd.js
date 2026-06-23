@@ -113,7 +113,7 @@ function parseLetterboxdItem(item) {
 function parseReviewFromDescription(htmlContent) {
     try {
         // Remove CDATA wrapper if present
-        let content = htmlContent.replace(/<!\[CDATA\[(.*?)\]\]>/s, '$1').trim();
+        const content = htmlContent.replace(/<!\[CDATA\[(.*?)\]\]>/s, '$1').trim();
         
         // Letterboxd format: <p><img ...></p> <p>review text</p><p>more review text</p>
         // We want to extract all <p> tags that contain text (not just images)

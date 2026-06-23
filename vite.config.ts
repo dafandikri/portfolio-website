@@ -10,32 +10,28 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          animations: ['framer-motion']
-        }
-      }
+          animations: ['framer-motion'],
+        },
+      },
     },
     // Enable minification
     minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
-      }
+        drop_debugger: true,
+      },
     },
     // Optimize assets - reduce inline limit to prioritize external loading
     assetsInlineLimit: 2048,
     chunkSizeWarningLimit: 800,
     // Enable CSS code splitting
-    cssCodeSplit: true
+    cssCodeSplit: true,
   },
   // Optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom', 'framer-motion'],
     // Force pre-bundling of critical dependencies
-    force: true
+    force: true,
   },
-  // Enable compression
-  server: {
-    compress: true
-  }
 })
