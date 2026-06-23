@@ -58,4 +58,4 @@ jobs:
             k3s kubectl apply -f /tmp/portfolio-deploy/k8s/service.yaml
             k3s kubectl apply -f /tmp/portfolio-deploy/k8s/ingress.yaml
             k3s kubectl rollout restart deployment/portfolio-app -n portfolio
-            k3s kubectl rollout status deployment/portfolio-app -n portfolio --timeout=120s
+            k3s kubectl rollout status deployment/portfolio-app -n portfolio --timeout=300s
