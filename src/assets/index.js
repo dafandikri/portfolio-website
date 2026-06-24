@@ -48,7 +48,7 @@ import nextjsIcon from './img/favicon/nextjs.svg';
 import fastapiIcon from './img/favicon/fastapi.svg';
 import postgresqlIcon from './img/favicon/postgresql.svg';
 import gitlabIcon from './img/favicon/gitlab.svg';
-import blogIcon from './img/favicon/blog.svg';
+import blogIcon from './img/favicon/blog.png';
 import playwrightIcon from './img/favicon/playwright.svg';
 import vitestIcon from './img/favicon/vitest.svg';
 import supabaseIcon from './img/favicon/supabase.svg';
