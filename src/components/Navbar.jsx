@@ -17,7 +17,7 @@ const Navbar = () => {
         { name: "Experience", icon: "briefcase", target: "#experience" },
         { name: "Projects", icon: "folder", target: "#projects" },
         { name: "Hobbies", icon: "camera", target: "#hobbies" },
-        { name: "Blog", icon: "folder", target: "/blog" },
+        { name: "Blog", icon: "blog", target: "/blog" },
         { name: "Contact", icon: "envelope", target: "#contact" }
     ];
     
