@@ -11,6 +11,8 @@ export type {
   TechItem,
   TechStack,
   Skill,
+  Card,
+  CardField,
 } from './schema'
 
 /**
@@ -30,3 +32,7 @@ export const projects = parseOrThrow('projects', projectsSchema.safeParse(projec
 export const experiences = parseOrThrow('experiences', experiencesSchema.safeParse(experiencesData))
 export const techStack = parseOrThrow('techStack', techStackSchema.safeParse(techStackData))
 export const skills = parseOrThrow('skills', skillsSchema.safeParse(skillsData))
+
+// The card validates itself at its own module, so that rendering it does not
+// drag the rest of the content into the bundle. Re-exported here for scripts.
+export { card } from './card'

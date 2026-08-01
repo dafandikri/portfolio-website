@@ -69,3 +69,34 @@ export const skillSchema = namedIconSchema
 export type Skill = z.infer<typeof skillSchema>
 
 export const skillsSchema = z.array(skillSchema).min(1)
+
+// ---------------------------------------------------------------------------
+// Business card (the whole site, as of v2)
+// ---------------------------------------------------------------------------
+
+/**
+ * A field printed on the card. `label` is what the paper says; `href` is where it
+ * goes. `href: null` means the field is ink only and not interactive — the
+ * location in the footer rule is the case that needs it.
+ */
+export const cardFieldSchema = z.object({
+  label: z.string().min(1),
+  href: z.string().min(1).nullable(),
+})
+export type CardField = z.infer<typeof cardFieldSchema>
+
+export const cardSchema = z.object({
+  /** Top left, first line. */
+  phone: cardFieldSchema,
+  /** Top left, second line. */
+  email: cardFieldSchema,
+  /** Top right. Bateman's card reads "MERGERS AND ACQUISITIONS". */
+  industry: z.string().min(1),
+  /** Centre of the card, set widest. */
+  name: z.string().min(1),
+  /** Directly beneath the name; the only line not set in small caps. */
+  role: z.string().min(1),
+  /** Bottom rule — the modern descendant of "address · fax · telex". */
+  footer: z.array(cardFieldSchema).min(1),
+})
+export type Card = z.infer<typeof cardSchema>

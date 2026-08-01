@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The card on its dark desk. Vector so it stays crisp at every tab size. -->
+  <rect width="32" height="32" rx="6" fill="#14120f"/>
+  <rect x="3.5" y="9.5" width="25" height="14.3" rx="1.4" fill="#ebe4d0"/>
+  <g fill="#2a2724">
+    <rect x="6.5" y="15.4" width="14" height="1.5" opacity="0.62"/>
+    <rect x="6.5" y="18.6" width="8" height="1" opacity="0.34"/>
+  </g>
+</svg>

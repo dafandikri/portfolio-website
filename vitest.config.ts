@@ -11,19 +11,17 @@ export default defineConfig({
       provider: 'v8',
       include: [
         'src/data/**/*.ts',
-        'src/components/Project.tsx',
-        'src/components/Experience.tsx',
-        'src/components/TechStackDialog.tsx',
-        'src/components/SkillsetsDialog.tsx',
+        'src/hooks/**/*.ts',
+        'src/components/BusinessCard.tsx',
       ],
       thresholds: {
         lines: 80,
         statements: 80,
         functions: 80,
-        // Branch floor is 70: the remaining uncovered branches are framer-motion
-        // hover/setTimeout UI plumbing in Experience.tsx, where chasing the last
-        // few branches needs brittle fake-timer tests for little real value.
-        // CI still enforces this as a ratchet against regressions.
+        // Branch floor is 70: the uncovered remainder is inside the rAF loop in
+        // useCardTilt, where driving real animation frames needs brittle timer
+        // fakes for little real value. The tilt maths itself is a pure function
+        // and is covered directly. CI still enforces this as a regression ratchet.
         branches: 70,
       },
     },

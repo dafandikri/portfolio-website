@@ -1,0 +1,72 @@
+/*
+ * Design tokens for the card.
+ *
+ * The palette deliberately avoids pure white and pure black. Letterpress ink on
+ * uncoated cotton never reads as #000, and "bone" stock is warm and faintly
+ * green-grey rather than white — Bateman's line is "the subtle off-white
+ * colouring", and the subtlety is the whole point.
+ */
+
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Stock ------------------------------------------------------------------ */
+  --bone: #ebe4d0;
+  --bone-lit: #f6f1e3;
+  --bone-shade: #d6ceb5;
+
+  /* Ink -------------------------------------------------------------------- */
+  --ink: #2a2724;
+  --ink-soft: #4c463d;
+
+  /* The desk the card is lying on ------------------------------------------ */
+  --backdrop: #14120f;
+  --backdrop-lit: #1f1c17;
+
+  /*
+   * Small caps must come from real SC glyphs. Setting font-variant-caps against
+   * a family without them makes the browser synthesise small caps by scaling
+   * capitals down, which thins the strokes and looks visibly wrong at the sizes
+   * used here. Cormorant SC ships genuine ones.
+   */
+  --font-sc: 'Cormorant SC', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-text: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  /* Card geometry ---------------------------------------------------------- */
+  --card-w: clamp(19rem, 88vw, 40rem);
+  --card-ratio: 3.5 / 2; /* the real business-card aspect */
+}

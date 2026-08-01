@@ -1,18 +1,22 @@
 import '@testing-library/jest-dom'
+import { vi } from 'vitest'
 
-// jsdom does not implement IntersectionObserver, which framer-motion's
-// `whileInView` relies on. Provide a no-op stub so components render in tests.
-class IntersectionObserverStub {
-  readonly root = null
-  readonly rootMargin = ''
-  readonly thresholds: ReadonlyArray<number> = []
-  observe(): void {}
-  unobserve(): void {}
-  disconnect(): void {}
-  takeRecords(): IntersectionObserverEntry[] {
-    return []
-  }
+/**
+ * jsdom does not implement matchMedia, which useCardTilt queries to decide
+ * whether to animate at all. Default to "motion is fine"; tests that care about
+ * the reduced-motion path override this per case.
+ */
+export function stubMatchMedia(matches: boolean): void {
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }))
 }
 
-globalThis.IntersectionObserver =
-  IntersectionObserverStub as unknown as typeof IntersectionObserver
+stubMatchMedia(false)
