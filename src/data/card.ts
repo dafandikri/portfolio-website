@@ -16,8 +16,7 @@ import type { Card } from './schema'
  * the cost of shipping the whole validation runtime to render six strings.
  */
 export const card: Card = {
-  // PLACEHOLDER — replace with the real number before shipping.
-  phone: { label: '+62 812 0000 0000', href: 'tel:+6281200000000' },
+  phone: { label: '+62 821 2277 6141', href: 'tel:+6282122776141' },
   email: { label: 'dafandikri@gmail.com', href: 'mailto:dafandikri@gmail.com' },
 
   // Bateman's card reads "MERGERS AND ACQUISITIONS", which the film sets against

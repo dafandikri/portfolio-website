@@ -15,7 +15,7 @@
   padding: 1.5rem;
   /* Perspective lives here, on the tilted element's grandparent. */
   perspective: 1400px;
-  background: radial-gradient(ellipse 80% 65% at 50% 42%, var(--backdrop-lit), var(--backdrop) 72%);
+  background: var(--backdrop);
 }
 
 /*
@@ -34,8 +34,8 @@
 @keyframes card-drop {
   0% {
     transform: translate3d(0, -130vh, 0) rotate(-2.5deg);
-    /* Far away: a big, soft, weak shadow. */
-    box-shadow: 0 8rem 7rem -3rem rgba(0, 0, 0, 0.55);
+    /* Far from the surface: a wide, soft, weak shadow. */
+    box-shadow: 0 7rem 6rem -2.5rem rgba(0, 0, 0, 0.16);
     opacity: 0;
   }
   6% {
@@ -43,10 +43,16 @@
   }
   100% {
     transform: translate3d(0, 0, 0) rotate(0deg);
-    /* Landed: tight and dark. The shadow tightening is what sells the descent. */
+    /*
+     * Landed. Three layers rather than one: a wide ambient pool, a mid
+     * falloff, and a tight contact shadow at the very edge. Against white,
+     * a single heavy shadow reads as grime — the depth has to come from
+     * stacking soft, low-opacity layers instead.
+     */
     box-shadow:
-      0 1.5rem 2.75rem -1rem rgba(0, 0, 0, 0.66),
-      0 0.35rem 0.7rem -0.25rem rgba(0, 0, 0, 0.5);
+      0 2.75rem 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
+      0 1.1rem 2rem -0.7rem rgba(0, 0, 0, 0.18),
+      0 0.2rem 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
     opacity: 1;
   }
 }
@@ -57,16 +63,21 @@
   height: 100%;
   border-radius: inherit;
   overflow: hidden;
-  background: linear-gradient(158deg, var(--bone-lit) 0%, var(--bone) 45%, var(--bone-shade) 100%);
+  /*
+   * Nearly flat. A pronounced gradient across the face reads as sheen, which
+   * is the opposite of uncoated stock — the little variation left is closer to
+   * uneven pulp than to a lit surface.
+   */
+  background: linear-gradient(158deg, var(--bone-lit) 0%, var(--bone) 52%, var(--bone-shade) 100%);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   will-change: transform;
   /* Let the card own drag gestures instead of the browser's scroll/zoom. */
   touch-action: none;
   /* The stock's thickness, read as a lit top edge and a shaded bottom one. */
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.17),
-    inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
 /*
@@ -81,18 +92,29 @@
   inset: 0;
   pointer-events: none;
   mix-blend-mode: multiply;
-  opacity: 0.42;
+  opacity: 0.5;
   background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23f)' opacity='0.55'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.028' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23c)' opacity='0.28'/%3E%3C/svg%3E");
+    /* Fine tooth — this is the layer that actually reads as uncoated stock. */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23f)' opacity='0.62'/%3E%3C/svg%3E"),
+    /*
+     * Coarse mottle, kept deliberately faint. Pushed any harder it stops
+     * reading as uneven pulp and starts reading as water staining, because
+     * the blobs grow large enough to look like discrete marks.
+     */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
   background-size: 170px 170px, 420px 420px;
 }
 
 /*
- * The moving highlight. Its centre is driven by --mx/--my, which the tilt hook
- * derives from the rotation itself, so the light and the geometry cannot drift
- * out of sync. soft-light keeps it reading as sheen on paper rather than as a
- * white blob laid over the top.
+ * Diffuse light on a matte surface. Its centre is driven by --mx/--my, which
+ * the tilt hook derives from the rotation itself, so light and geometry cannot
+ * drift out of sync.
+ *
+ * Matte and gloss differ in the *shape* of the highlight, not its amount: gloss
+ * is a tight bright hotspot with hard falloff, while uncoated paper scatters
+ * light broadly and dimly across the whole face. Hence the very wide radius and
+ * low opacity. Removing it altogether would leave the tilt as pure geometry
+ * with no light response, which reads as cardboard rather than paper.
  */
 .card__specular {
   position: absolute;
@@ -100,10 +122,10 @@
   pointer-events: none;
   mix-blend-mode: soft-light;
   background: radial-gradient(
-    46% 62% at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(255, 255, 255, 0.3) 34%,
-    rgba(255, 255, 255, 0) 70%
+    95% 120% at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(0, 0, 0, 0.035) 100%
   );
 }
 
@@ -211,8 +233,8 @@
 .card__meta,
 .card__industry {
   text-shadow:
-    0 1px 0 rgba(255, 253, 245, 0.72),
-    0 -1px 1px rgba(0, 0, 0, 0.2);
+    0 1px 0 rgba(255, 255, 250, 0.85),
+    0 -1px 1px rgba(0, 0, 0, 0.16);
 }
 
 a.card__meta {
@@ -224,10 +246,9 @@ a.card__meta {
 /* Hover deepens the impression rather than underlining — an underline would
    break the print illusion instantly. */
 a.card__meta:hover {
-  color: #15120e;
   text-shadow:
-    0 1px 0 rgba(255, 253, 245, 0.9),
-    0 -1px 1.5px rgba(0, 0, 0, 0.34);
+    0 1px 0 rgba(255, 255, 250, 1),
+    0 -1px 1.5px rgba(0, 0, 0, 0.4);
 }
 
 a.card__meta:focus-visible {
@@ -313,8 +334,9 @@ a.card__meta:focus-visible {
     to {
       opacity: 1;
       box-shadow:
-        0 1.5rem 2.75rem -1rem rgba(0, 0, 0, 0.66),
-        0 0.35rem 0.7rem -0.25rem rgba(0, 0, 0, 0.5);
+        0 2.75rem 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
+        0 1.1rem 2rem -0.7rem rgba(0, 0, 0, 0.18),
+        0 0.2rem 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
     }
   }
 }

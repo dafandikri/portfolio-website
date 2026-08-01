@@ -28,6 +28,6 @@ body {
 }
 
 ::selection {
-  background: rgba(42, 39, 36, 0.85);
+  background: rgba(0, 0, 0, 0.82);
   color: var(--bone);
 }

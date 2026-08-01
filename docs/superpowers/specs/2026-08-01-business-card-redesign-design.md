@@ -98,10 +98,19 @@ row → `href`. Since the card is the whole site, the links are the only way out
 
 ## Material and typography
 
-**Colour.** Bone, not white (`#EAE6DA`-ish — warm, faintly green-grey). Charcoal,
-not black (`#2A2724`-ish), because letterpress ink on cotton never reads as pure
-black. The page behind the card is a dark desaturated surface so the card reads as
-an object on a desk rather than as a page.
+**Colour.** A warm bone card on a **white** page, with **black** ink throughout —
+matching the Moo "Patrick Bateman" template. The card is the only colour on screen,
+so it separates from the ground by warmth and shadow rather than by contrast.
+
+The bone tokens are pitched warmer and lighter than the colour that should end up
+on screen (`--bone: #F4EDD9`), because the grain layer multiplies desaturated noise
+over the top and both darkens and greys the result. They are input values, not
+finished ones — read the rendered card, not the hex.
+
+Shadows had to be fully retuned for the white ground. Values that read as depth
+against a dark backdrop read as *grime* against white, so the card sits on three
+stacked layers — a wide ambient pool, a mid falloff, and a tight contact shadow —
+all at low opacity, rather than one heavy shadow.
 
 **Deboss.** Two `text-shadow`s per glyph — light below-right, dark above-left. This
 is the inverse of a conventional emboss and is what reads as *pressed into* paper.
@@ -131,12 +140,22 @@ entire purpose is contact information).
 
 Layer stack, bottom to top:
 
-1. Bone base colour
+1. Bone base colour, kept nearly flat — a pronounced gradient across the face
+   reads as sheen, which is the opposite of uncoated stock
 2. Baked `feTurbulence` grain as a data-URI (baked once, not filtered live, because
-   live SVG filters on large elements are expensive on low-end mobile)
+   live SVG filters on large elements are expensive on low-end mobile). A fine
+   tooth layer carries the paper impression; the coarse mottle stays deliberately
+   faint, since pushed harder its blobs stop reading as uneven pulp and start
+   reading as water staining
 3. Debossed text
-4. Specular sweep — a radial gradient whose centre tracks the pointer
+4. Diffuse light sweep — a radial gradient whose centre tracks the pointer
 5. Edge and thickness — inset plus drop shadow
+
+**Matte, not glossy.** The two differ in the *shape* of the highlight, not its
+amount: gloss is a tight bright hotspot with hard falloff, while uncoated paper
+scatters light broadly and dimly across the whole face. The highlight is therefore
+very wide and very low-opacity. Deleting it outright would leave the tilt as pure
+geometry with no light response, which reads as cardboard rather than paper.
 
 All five rotate together inside one 3D transform, so grain and highlight move *with*
 the tilt rather than sliding across a static surface.
@@ -229,6 +248,6 @@ cursor, and a measured box ratio of 1.7502.
 - The `fetch-reviews` and `build-with-reviews` scripts and the TMDB env var become
   dead weight once nothing renders Letterboxd data. Script file left in place but
   dropped from the build path.
-- Real phone number and LinkedIn handle need filling into `src/data/card.ts`.
+- LinkedIn handle in `src/data/card.ts` is still a guess and needs confirming.
 - `public/images/` holds 23 MB of Win95-era screenshots that nothing references.
   Left in place pending a decision; recoverable from tag `v1-win95` if removed.

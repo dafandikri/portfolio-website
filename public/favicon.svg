@@ -1,9 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- The card on its dark desk. Vector so it stays crisp at every tab size. -->
-  <rect width="32" height="32" rx="6" fill="#14120f"/>
-  <rect x="3.5" y="9.5" width="25" height="14.3" rx="1.4" fill="#ebe4d0"/>
-  <g fill="#2a2724">
-    <rect x="6.5" y="15.4" width="14" height="1.5" opacity="0.62"/>
-    <rect x="6.5" y="18.6" width="8" height="1" opacity="0.34"/>
+  <!--
+    The card on white. Transparent ground with a hairline border, so it stays
+    legible against a light tab bar (where a bone card alone would vanish) and
+    against a dark one (where the bone reads on its own).
+  -->
+  <rect x="2.5" y="8.5" width="27" height="15.5" rx="1.6" fill="#ece5d3"
+        stroke="#000000" stroke-opacity="0.28" stroke-width="1"/>
+  <g fill="#000000">
+    <rect x="6" y="14.6" width="15" height="1.7" opacity="0.82"/>
+    <rect x="6" y="18.2" width="8.5" height="1.1" opacity="0.45"/>
   </g>
 </svg>

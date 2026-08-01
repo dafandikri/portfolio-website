@@ -44,18 +44,25 @@
 }
 
 :root {
-  /* Stock ------------------------------------------------------------------ */
-  --bone: #ebe4d0;
-  --bone-lit: #f6f1e3;
-  --bone-shade: #d6ceb5;
+  /*
+   * Stock.
+   *
+   * Pitched warmer and lighter than the colour that should end up on screen,
+   * because the grain layer multiplies a desaturated noise over the top and
+   * both darkens and greys the result. These are the input values, not the
+   * finished ones.
+   */
+  --bone: #f4edd9;
+  --bone-lit: #f9f3e5;
+  --bone-shade: #ebe2c9;
 
   /* Ink -------------------------------------------------------------------- */
-  --ink: #2a2724;
-  --ink-soft: #4c463d;
+  --ink: #000000;
+  --ink-soft: #000000;
 
-  /* The desk the card is lying on ------------------------------------------ */
-  --backdrop: #14120f;
-  --backdrop-lit: #1f1c17;
+  /* The white surface the card is lying on --------------------------------- */
+  --backdrop: #ffffff;
+  --backdrop-lit: #ffffff;
 
   /*
    * Small caps must come from real SC glyphs. Setting font-variant-caps against
