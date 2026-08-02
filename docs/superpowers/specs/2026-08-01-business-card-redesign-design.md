@@ -1,4 +1,4 @@
-# Design — dafandikri.tech v2: The Card
+# Design — dafandikri.dev v2: The Card
 
 **Date:** 2026-08-01
 **Status:** Approved
@@ -29,7 +29,7 @@ image, and k3s manifests are all wired to this repo and are stack-agnostic.
 
 1. Tag current `main` as `v1-win95` and push the tag (Win95 site stays recoverable).
 2. Branch `feat/bateman-card` off `main`.
-3. Merge to `main` when done; Vercel auto-deploys to `dafandikri.tech`.
+3. Merge to `main` when done; Vercel auto-deploys to `dafandikri.dev`.
 
 The Docker/k3s path needs no change — it serves whatever `dist/` contains.
 

@@ -28,7 +28,7 @@ export const card: Card = {
   role: 'Software Engineer',
 
   footer: [
-    { label: 'dafandikri.tech', href: 'https://dafandikri.tech' },
+    { label: 'dafandikri.dev', href: 'https://dafandikri.dev' },
     {
       label: 'Solution Engineer Intern @ InterBio Technologies, Prev Start-Ups & Government Institutions',
       href: null,

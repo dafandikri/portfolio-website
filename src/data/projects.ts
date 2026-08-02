@@ -56,7 +56,7 @@ export const projectsData: Project[] = [
       'SEO optimized with meta tags, robots.txt, and social media previews',
     ],
     techStack: ['react', 'javascript', 'vsc', 'github'],
-    liveLink: 'https://dafandikri.tech',
+    liveLink: 'https://dafandikri.dev',
     repoLink: 'https://github.com/dafandikri/portfolio-website',
   },
   {
