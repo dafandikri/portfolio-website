@@ -219,6 +219,7 @@
 }
 
 .card__identity {
+  position: relative;
   text-align: center;
   /* Nudge the block off dead centre; optically it reads as centred. */
   margin-top: -0.6em;

@@ -70,9 +70,23 @@ describe('BusinessCard', () => {
   it('hides the decorative paper layers from assistive technology', () => {
     const { container } = render(<BusinessCard />)
 
-    for (const cls of ['.card__grain', '.card__specular']) {
+    for (const cls of ['.card__grain', '.card__specular', '.blood']) {
       expect(container.querySelector(cls)).toHaveAttribute('aria-hidden', 'true')
     }
+  })
+
+  it('lands the blood under the name, inside the card face', () => {
+    const { container } = render(<BusinessCard />)
+    const blood = container.querySelector('.blood')!
+    const identity = container.querySelector('.card__identity')!
+
+    // Anchored to the identity block so it tracks the name rather than the
+    // card edge, and clipped by the card like every other printed layer.
+    expect(identity.contains(blood)).toBe(true)
+    expect(container.querySelector('.card')!.contains(blood)).toBe(true)
+    // Carries both stages: the falling drop and the pool it becomes.
+    expect(blood.querySelector('.blood__drip')).not.toBeNull()
+    expect(blood.querySelector('.blood__pool')).not.toBeNull()
   })
 
   it('drives the tilt through CSS custom properties, not React state', async () => {

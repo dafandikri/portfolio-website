@@ -1,6 +1,7 @@
 import { card } from '../data/card'
 import type { CardField } from '../data/schema'
 import { useCardTilt } from '../hooks/useCardTilt'
+import BloodDrop from './BloodDrop'
 import './BusinessCard.css'
 
 /**
@@ -58,6 +59,7 @@ export default function BusinessCard() {
             </header>
 
             <div className="card__identity">
+              <BloodDrop />
               <h1 className="card__name card__reveal card__reveal--4">{card.name}</h1>
               <p className="card__role card__reveal card__reveal--5">{card.role}</p>
             </div>
