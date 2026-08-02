@@ -108,9 +108,29 @@ over the top and both darkens and greys the result. They are input values, not
 finished ones — read the rendered card, not the hex.
 
 Shadows had to be fully retuned for the white ground. Values that read as depth
-against a dark backdrop read as *grime* against white, so the card sits on three
-stacked layers — a wide ambient pool, a mid falloff, and a tight contact shadow —
-all at low opacity, rather than one heavy shadow.
+against a dark backdrop read as *grime* against white, so the depth comes from
+soft, low-opacity layers rather than one heavy shadow.
+
+**The cast shadow is geometry, not a `box-shadow`.** This took two attempts to get
+right, and the first was a symptom fix worth recording.
+
+`box-shadow` is painted from the *border box* of whichever element carries it, and
+a border box is always an axis-aligned rectangle. So a `box-shadow` stays a
+rectangle however the card is rotated, while the card itself projects to a
+trapezoid. The eye judges depth by comparing the shadow's silhouette against the
+object's, and rectangle-under-trapezoid reads as a sticker sliding beneath a card.
+Offsetting the shadow to track the tilt — the first attempt — changed its
+*position* while leaving its *shape* wrong, so it still read as flat.
+
+The fix is a pair of shadow planes that carry the same `--rx`/`--ry` as the card,
+inside the same perspective, offset in Z and Y and blurred. Sharing the transform
+is what makes their projections skew and foreshorten exactly as the card's does,
+and because the two planes sit at different depths their projections diverge as
+the card turns — that parallax is the depth cue.
+
+Because the planes derive their own placement from the rotation, there is no
+separate shadow-offset calculation; adding one would double-count the same
+rotation.
 
 **Deboss.** Two `text-shadow`s per glyph — light below-right, dark above-left. This
 is the inverse of a conventional emboss and is what reads as *pressed into* paper.

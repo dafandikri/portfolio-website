@@ -87,24 +87,26 @@ describe('BusinessCard', () => {
     // the component would re-render on every pointer move.
     expect(wrapper!.style.getPropertyValue('--rx')).toMatch(/deg$/)
     expect(wrapper!.style.getPropertyValue('--mx')).toMatch(/%$/)
-    expect(wrapper!.style.getPropertyValue('--sx')).toMatch(/px$/)
   })
 
-  it('writes the tilt above both the shadow and the rotation', async () => {
+  it('casts the shadow with real planes, not a box-shadow', async () => {
     const { container } = render(<BusinessCard />)
-    const wrapper = container.querySelector<HTMLElement>('.card-drop')
-
-    await nextFrame()
-    await nextFrame()
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')!
+    const planes = container.querySelectorAll('.card-shadow')
 
     /*
-     * The cast shadow sits on .card-drop and the rotation on .card. Custom
-     * properties only inherit downward, so writing them to .card would leave
-     * the shadow unable to read them — which is the bug where the card tilted
-     * and its shadow stayed put.
+     * A box-shadow is painted from an axis-aligned border box, so it stays a
+     * rectangle however the card is rotated, while the card projects to a
+     * trapezoid. That silhouette mismatch is what made the shadow read as flat.
+     * The shadow must therefore be geometry that shares the card's rotation.
      */
-    expect(wrapper!.contains(container.querySelector('.card'))).toBe(true)
-    expect(container.querySelector<HTMLElement>('.card')!.style.getPropertyValue('--rx')).toBe('')
+    expect(planes.length).toBeGreaterThanOrEqual(2)
+    for (const plane of planes) {
+      expect(plane).toHaveAttribute('aria-hidden', 'true')
+      // Siblings of .card, so they inherit --rx/--ry from the same wrapper.
+      expect(plane.parentElement).toBe(wrapper)
+    }
+    expect(container.querySelector('.card')!.parentElement).toBe(wrapper)
   })
 
   it('leaves the card completely still under prefers-reduced-motion', async () => {
@@ -118,6 +120,6 @@ describe('BusinessCard', () => {
     // No loop started, so nothing was ever written.
     expect(wrapper!.style.getPropertyValue('--rx')).toBe('')
     expect(wrapper!.style.getPropertyValue('--mx')).toBe('')
-    expect(wrapper!.style.getPropertyValue('--sx')).toBe('')
+
   })
 })

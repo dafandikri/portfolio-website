@@ -32,6 +32,14 @@ export default function BusinessCard() {
   return (
     <div className="stage">
       <div className="card-drop" ref={tiltRef}>
+        {/*
+          Cast shadow planes. They share the card's rotation so their
+          projections skew with it — a box-shadow could not, being painted from
+          an axis-aligned border box.
+        */}
+        <div className="card-shadow" aria-hidden="true" />
+        <div className="card-shadow card-shadow--contact" aria-hidden="true" />
+
         <article className="card">
           {/* Paper fibre and moving light. Decorative, so hidden from AT. */}
           <div className="card__grain" aria-hidden="true" />

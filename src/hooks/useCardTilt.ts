@@ -75,27 +75,11 @@ export function specularFromTilt({ rx, ry }: Tilt): { mx: number; my: number } {
   }
 }
 
-/** How far the cast shadow slides, in px, at maximum tilt. */
-export const SHADOW_SHIFT_PX = 16
-
-/**
- * Where the cast shadow falls, in px, given the card's rotation.
- *
- * The shadow cannot simply ride along with the card: a box-shadow is painted in
- * its element's local space, so putting it on the rotating element would tumble
- * it through 3D as though glued to the card's back. A real cast shadow stays
- * flat on the surface underneath and only slides and stretches. So it lives on
- * the non-rotating wrapper and is displaced from here instead.
- *
- * Lifting an edge toward the viewer pushes the shadow away from that edge:
- * raise the top and the shadow slides down, raise the right and it slides left.
+/*
+ * There is deliberately no shadow-offset maths here. The cast shadow is a pair
+ * of real planes that carry --rx/--ry themselves, so the 3D projection places
+ * them; computing a separate offset would double-count the same rotation.
  */
-export function shadowFromTilt({ rx, ry }: Tilt): { sx: number; sy: number } {
-  return {
-    sx: (ry / MAX_TILT_DEG) * SHADOW_SHIFT_PX,
-    sy: (-rx / MAX_TILT_DEG) * SHADOW_SHIFT_PX,
-  }
-}
 
 /**
  * Drives the card's 3D tilt.
@@ -105,10 +89,9 @@ export function shadowFromTilt({ rx, ry }: Tilt): { sx: number; sy: number } {
  * through state would re-render the component on every mouse event, whereas
  * this way React renders once and the compositor does the rest.
  *
- * Attach this to the card's *wrapper*, not the rotating card itself. Custom
- * properties only inherit downward, and the cast shadow sits on the wrapper
- * (it must not rotate) while the rotation sits on the child — so the values
- * have to be written above both of them for either to read them.
+ * Attach this to the card's *wrapper*, not the card itself. Custom properties
+ * only inherit downward, and both the card and its cast-shadow planes are
+ * siblings that need --rx/--ry, so the values have to be written above them.
  *
  * Under prefers-reduced-motion the hook attaches no listener and starts no
  * loop, so the card simply sits still.
@@ -141,13 +124,10 @@ export function useCardTilt<T extends HTMLElement>() {
       current.rx += (target.rx - current.rx) * FOLLOW
       current.ry += (target.ry - current.ry) * FOLLOW
       const { mx, my } = specularFromTilt(current)
-      const { sx, sy } = shadowFromTilt(current)
       el.style.setProperty('--rx', `${current.rx.toFixed(3)}deg`)
       el.style.setProperty('--ry', `${current.ry.toFixed(3)}deg`)
       el.style.setProperty('--mx', `${(mx * 100).toFixed(2)}%`)
       el.style.setProperty('--my', `${(my * 100).toFixed(2)}%`)
-      el.style.setProperty('--sx', `${sx.toFixed(2)}px`)
-      el.style.setProperty('--sy', `${sy.toFixed(2)}px`)
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)

@@ -29,7 +29,10 @@ export const card: Card = {
 
   footer: [
     { label: 'dafandikri.tech', href: 'https://dafandikri.tech' },
-    { label: 'Software Engineer Intern', href: null },
+    {
+      label: 'Solution Engineer Intern @ InterBio Technologies, Prev Start-Ups & Government Institutions',
+      href: null,
+    },
     { label: 'Jakarta, Indonesia', href: null },
   ],
 }

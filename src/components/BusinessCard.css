@@ -29,29 +29,46 @@
   border-radius: 3px;
   transform-style: preserve-3d;
   animation: card-drop 1000ms cubic-bezier(0.3, 1.22, 0.5, 1) both;
-  /*
-   * The cast shadow. It lives here, on the element that never rotates, and is
-   * displaced by --sx/--sy which the tilt hook derives from the card's
-   * rotation. Painting it on the rotating card instead would tumble it through
-   * 3D as if glued to the card's back; a real shadow stays flat on the surface
-   * below and only slides.
-   *
-   * Three layers rather than one — a wide ambient pool, a mid falloff, and a
-   * tight contact shadow. Against white a single heavy shadow reads as grime,
-   * so the depth comes from stacking soft, low-opacity layers. Each layer
-   * slides by a different amount, and that parallax between them is most of
-   * what sells the card as a thing sitting above a surface.
-   */
-  box-shadow:
-    calc(var(--sx, 0px) * 1.7) calc(2.75rem + var(--sy, 0px) * 1.7) 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
-    calc(var(--sx, 0px) * 0.85) calc(1.1rem + var(--sy, 0px) * 0.85) 2rem -0.7rem rgba(0, 0, 0, 0.18),
-    calc(var(--sx, 0px) * 0.3) calc(0.2rem + var(--sy, 0px) * 0.3) 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
 }
 
 /*
- * The entrance animates transform and opacity only. It deliberately does not
- * touch box-shadow: `fill-mode: both` would pin the shadow at the keyframe's
- * value and permanently override the tilt-driven one above.
+ * The cast shadow, as real geometry rather than as a paint effect.
+ *
+ * box-shadow cannot do this job. It is painted from the border box of whatever
+ * element carries it, and that box is always an axis-aligned rectangle — so a
+ * box-shadow stays a rectangle no matter how the card is rotated, while the
+ * card itself projects to a trapezoid. The eye reads 3D by comparing the two
+ * silhouettes, and rectangle-under-trapezoid reads as a sticker sliding around
+ * beneath a card. Offsetting it does not help; the problem is the shape.
+ *
+ * So the shadow is a plane carrying the *same* rotation as the card, inside
+ * the same perspective, pushed back in Z and down in Y. Sharing the transform
+ * is what makes its projection skew and foreshorten exactly as the card's
+ * does. Two planes at different depths give the soft/tight falloff that the
+ * old stacked box-shadows provided, and because they sit at different Z their
+ * projections diverge as the card turns — that parallax is the depth cue.
+ */
+.card-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.4);
+  transform: translate3d(0, 1.6rem, -90px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  filter: blur(30px);
+  will-change: transform;
+}
+
+/* The near, tighter contact shadow. */
+.card-shadow--contact {
+  background: rgba(0, 0, 0, 0.3);
+  transform: translate3d(0, 0.45rem, -22px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  filter: blur(9px);
+}
+
+/*
+ * The entrance animates transform and opacity only, so it cannot fight the
+ * tilt-driven transforms on the shadow planes above.
  */
 @keyframes card-drop {
   0% {
@@ -242,7 +259,30 @@
 .card__footer .card__meta {
   font-size: 0.84em;
   letter-spacing: 0.1em;
+  line-height: 1.5;
+  /*
+   * The middle field carries a full sentence, too long for one line at card
+   * width. `balance` splits it into even lines instead of leaving a long line
+   * over a stub; the short outer fields fit on one line and so never wrap.
+   */
+  text-wrap: balance;
+  text-align: center;
+}
+
+/* The outer fields are short enough to hold one line, and flex would otherwise
+   squeeze them into breaking too. */
+.card__footer .card__meta:first-child,
+.card__footer .card__meta:last-child {
   white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card__footer .card__meta:first-child {
+  text-align: left;
+}
+
+.card__footer .card__meta:last-child {
+  text-align: right;
 }
 
 /* ---------------------------------------------------------------------------
@@ -360,16 +400,14 @@ a.card__meta:focus-visible {
     opacity: 1;
     transform: none;
   }
+  /* The shadow planes need no special case: with no tilt they sit squarely
+     behind the card, which is exactly the resting appearance. */
   @keyframes card-settle {
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
-      box-shadow:
-        0 2.75rem 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
-        0 1.1rem 2rem -0.7rem rgba(0, 0, 0, 0.18),
-        0 0.2rem 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
     }
   }
 }

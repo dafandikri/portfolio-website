@@ -3,11 +3,9 @@ import {
   pointerToTilt,
   idleTilt,
   specularFromTilt,
-  shadowFromTilt,
   MAX_TILT_DEG,
   IDLE_TILT_DEG,
   IDLE_PERIOD_MS,
-  SHADOW_SHIFT_PX,
 } from './useCardTilt'
 
 /**
@@ -97,31 +95,3 @@ describe('specularFromTilt', () => {
     expect(my).toBeLessThanOrEqual(1)
   })
 })
-
-describe('shadowFromTilt', () => {
-  it('sits centred when the card lies flat', () => {
-    expect(shadowFromTilt({ rx: 0, ry: 0 })).toEqual({ sx: 0, sy: -0 })
-  })
-
-  it('pushes the shadow away from whichever edge lifts', () => {
-    // Raising the top edge (negative rx) should slide the shadow downward.
-    expect(shadowFromTilt({ rx: -MAX_TILT_DEG, ry: 0 }).sy).toBeCloseTo(SHADOW_SHIFT_PX)
-    expect(shadowFromTilt({ rx: MAX_TILT_DEG, ry: 0 }).sy).toBeCloseTo(-SHADOW_SHIFT_PX)
-    // Raising the right edge (negative ry) should slide the shadow left.
-    expect(shadowFromTilt({ rx: 0, ry: -MAX_TILT_DEG }).sx).toBeCloseTo(-SHADOW_SHIFT_PX)
-    expect(shadowFromTilt({ rx: 0, ry: MAX_TILT_DEG }).sx).toBeCloseTo(SHADOW_SHIFT_PX)
-  })
-
-  it('moves opposite the highlight, as a light source from one side requires', () => {
-    // Pointer upper-right: the highlight rides up-right while the shadow, cast
-    // by the same light, must fall down-left.
-    const tilt = pointerToTilt(90, 10, BOX)
-    const { mx, my } = specularFromTilt(tilt)
-    const { sx, sy } = shadowFromTilt(tilt)
-    expect(mx).toBeGreaterThan(0.5)
-    expect(sx).toBeLessThan(0)
-    expect(my).toBeLessThan(0.5)
-    expect(sy).toBeGreaterThan(0)
-  })
-})
-
