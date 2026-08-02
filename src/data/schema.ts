@@ -90,8 +90,15 @@ export const cardSchema = z.object({
   phone: cardFieldSchema,
   /** Top left, second line. */
   email: cardFieldSchema,
-  /** Top right. Bateman's card reads "MERGERS AND ACQUISITIONS". */
-  industry: z.string().min(1),
+  /**
+   * Top right. The film's cards carry the firm on one line with its trade set
+   * beneath it — "PIERCE & PIERCE" over "MERGERS AND ACQUISITIONS" — and the
+   * institution/field pair sits in that slot the same way.
+   */
+  affiliation: z.object({
+    name: z.string().min(1),
+    detail: z.string().min(1),
+  }),
   /** Centre of the card, set widest. */
   name: z.string().min(1),
   /** Directly beneath the name; the only line not set in small caps. */

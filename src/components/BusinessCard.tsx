@@ -24,12 +24,15 @@ function Field({ field, className }: { field: CardField; className: string }) {
 }
 
 export default function BusinessCard() {
-  const tiltRef = useCardTilt<HTMLElement>()
+  // On the wrapper, not the card: the cast shadow lives here (it must not
+  // rotate) and the rotation lives on the child, so the custom properties both
+  // read have to be written above the pair of them.
+  const tiltRef = useCardTilt<HTMLDivElement>()
 
   return (
     <div className="stage">
-      <div className="card-drop">
-        <article className="card" ref={tiltRef}>
+      <div className="card-drop" ref={tiltRef}>
+        <article className="card">
           {/* Paper fibre and moving light. Decorative, so hidden from AT. */}
           <div className="card__grain" aria-hidden="true" />
           <div className="card__specular" aria-hidden="true" />
@@ -40,7 +43,10 @@ export default function BusinessCard() {
                 <Field field={card.phone} className="card__meta card__reveal card__reveal--1" />
                 <Field field={card.email} className="card__meta card__reveal card__reveal--2" />
               </div>
-              <p className="card__industry card__reveal card__reveal--3">{card.industry}</p>
+              <div className="card__affiliation card__reveal card__reveal--3">
+                <p className="card__meta card__affiliation-name">{card.affiliation.name}</p>
+                <p className="card__meta card__affiliation-detail">{card.affiliation.detail}</p>
+              </div>
             </header>
 
             <div className="card__identity">

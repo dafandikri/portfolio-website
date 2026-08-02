@@ -17,7 +17,8 @@ describe('BusinessCard', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: card.name })).toBeInTheDocument()
     expect(screen.getByText(card.role)).toBeInTheDocument()
-    expect(screen.getByText(card.industry)).toBeInTheDocument()
+    expect(screen.getByText(card.affiliation.name)).toBeInTheDocument()
+    expect(screen.getByText(card.affiliation.detail)).toBeInTheDocument()
     expect(screen.getByText(card.phone.label)).toBeInTheDocument()
     expect(screen.getByText(card.email.label)).toBeInTheDocument()
     for (const field of card.footer) {
@@ -76,28 +77,47 @@ describe('BusinessCard', () => {
 
   it('drives the tilt through CSS custom properties, not React state', async () => {
     const { container } = render(<BusinessCard />)
-    const cardEl = container.querySelector<HTMLElement>('.card')
-    expect(cardEl).not.toBeNull()
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')
+    expect(wrapper).not.toBeNull()
 
     await nextFrame()
     await nextFrame()
 
     // Written straight to the node by the rAF loop. If these were React state
     // the component would re-render on every pointer move.
-    expect(cardEl!.style.getPropertyValue('--rx')).toMatch(/deg$/)
-    expect(cardEl!.style.getPropertyValue('--mx')).toMatch(/%$/)
+    expect(wrapper!.style.getPropertyValue('--rx')).toMatch(/deg$/)
+    expect(wrapper!.style.getPropertyValue('--mx')).toMatch(/%$/)
+    expect(wrapper!.style.getPropertyValue('--sx')).toMatch(/px$/)
+  })
+
+  it('writes the tilt above both the shadow and the rotation', async () => {
+    const { container } = render(<BusinessCard />)
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')
+
+    await nextFrame()
+    await nextFrame()
+
+    /*
+     * The cast shadow sits on .card-drop and the rotation on .card. Custom
+     * properties only inherit downward, so writing them to .card would leave
+     * the shadow unable to read them — which is the bug where the card tilted
+     * and its shadow stayed put.
+     */
+    expect(wrapper!.contains(container.querySelector('.card'))).toBe(true)
+    expect(container.querySelector<HTMLElement>('.card')!.style.getPropertyValue('--rx')).toBe('')
   })
 
   it('leaves the card completely still under prefers-reduced-motion', async () => {
     stubMatchMedia(true)
     const { container } = render(<BusinessCard />)
-    const cardEl = container.querySelector<HTMLElement>('.card')
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')
 
     await nextFrame()
     await nextFrame()
 
     // No loop started, so nothing was ever written.
-    expect(cardEl!.style.getPropertyValue('--rx')).toBe('')
-    expect(cardEl!.style.getPropertyValue('--mx')).toBe('')
+    expect(wrapper!.style.getPropertyValue('--rx')).toBe('')
+    expect(wrapper!.style.getPropertyValue('--mx')).toBe('')
+    expect(wrapper!.style.getPropertyValue('--sx')).toBe('')
   })
 })

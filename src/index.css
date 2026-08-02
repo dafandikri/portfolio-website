@@ -29,5 +29,5 @@ body {
 
 ::selection {
   background: rgba(0, 0, 0, 0.82);
-  color: var(--bone);
+  color: var(--stock);
 }

@@ -29,13 +29,33 @@
   border-radius: 3px;
   transform-style: preserve-3d;
   animation: card-drop 1000ms cubic-bezier(0.3, 1.22, 0.5, 1) both;
+  /*
+   * The cast shadow. It lives here, on the element that never rotates, and is
+   * displaced by --sx/--sy which the tilt hook derives from the card's
+   * rotation. Painting it on the rotating card instead would tumble it through
+   * 3D as if glued to the card's back; a real shadow stays flat on the surface
+   * below and only slides.
+   *
+   * Three layers rather than one — a wide ambient pool, a mid falloff, and a
+   * tight contact shadow. Against white a single heavy shadow reads as grime,
+   * so the depth comes from stacking soft, low-opacity layers. Each layer
+   * slides by a different amount, and that parallax between them is most of
+   * what sells the card as a thing sitting above a surface.
+   */
+  box-shadow:
+    calc(var(--sx, 0px) * 1.7) calc(2.75rem + var(--sy, 0px) * 1.7) 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
+    calc(var(--sx, 0px) * 0.85) calc(1.1rem + var(--sy, 0px) * 0.85) 2rem -0.7rem rgba(0, 0, 0, 0.18),
+    calc(var(--sx, 0px) * 0.3) calc(0.2rem + var(--sy, 0px) * 0.3) 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
 }
 
+/*
+ * The entrance animates transform and opacity only. It deliberately does not
+ * touch box-shadow: `fill-mode: both` would pin the shadow at the keyframe's
+ * value and permanently override the tilt-driven one above.
+ */
 @keyframes card-drop {
   0% {
     transform: translate3d(0, -130vh, 0) rotate(-2.5deg);
-    /* Far from the surface: a wide, soft, weak shadow. */
-    box-shadow: 0 7rem 6rem -2.5rem rgba(0, 0, 0, 0.16);
     opacity: 0;
   }
   6% {
@@ -43,16 +63,6 @@
   }
   100% {
     transform: translate3d(0, 0, 0) rotate(0deg);
-    /*
-     * Landed. Three layers rather than one: a wide ambient pool, a mid
-     * falloff, and a tight contact shadow at the very edge. Against white,
-     * a single heavy shadow reads as grime — the depth has to come from
-     * stacking soft, low-opacity layers instead.
-     */
-    box-shadow:
-      0 2.75rem 4.5rem -1.4rem rgba(0, 0, 0, 0.34),
-      0 1.1rem 2rem -0.7rem rgba(0, 0, 0, 0.18),
-      0 0.2rem 0.5rem -0.1rem rgba(0, 0, 0, 0.13);
     opacity: 1;
   }
 }
@@ -68,7 +78,7 @@
    * is the opposite of uncoated stock — the little variation left is closer to
    * uneven pulp than to a lit surface.
    */
-  background: linear-gradient(158deg, var(--bone-lit) 0%, var(--bone) 52%, var(--bone-shade) 100%);
+  background: linear-gradient(158deg, var(--stock-lit) 0%, var(--stock) 52%, var(--stock-shade) 100%);
   transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
   will-change: transform;
   /* Let the card own drag gestures instead of the browser's scroll/zoom. */
@@ -92,7 +102,12 @@
   inset: 0;
   pointer-events: none;
   mix-blend-mode: multiply;
-  opacity: 0.5;
+  /*
+   * Much lighter than on the cream stock. Multiply darkens whatever is beneath
+   * it, so the same value that gave cream its tooth would visibly grey a white
+   * card — enough tooth to read as paper, not enough to tint it.
+   */
+  opacity: 0.22;
   background-image:
     /* Fine tooth — this is the layer that actually reads as uncoated stock. */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23f)' opacity='0.62'/%3E%3C/svg%3E"),
@@ -160,8 +175,7 @@
   align-items: flex-start;
 }
 
-.card__meta,
-.card__industry {
+.card__meta {
   font-family: var(--font-sc);
   font-weight: 500;
   font-size: 1em;
@@ -170,10 +184,20 @@
   margin: 0;
 }
 
-.card__industry {
+/*
+ * Institution over field, mirroring the film's firm-over-trade block. Each
+ * line holds together on its own — wrapped mid-phrase it reads as an accident
+ * rather than as typesetting.
+ */
+.card__affiliation {
   text-align: right;
-  /* The trade sits on a single line, as it does on the film's cards. Wrapped
-     across two it reads as an accident rather than as typesetting. */
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.card__affiliation-name,
+.card__affiliation-detail {
   white-space: nowrap;
 }
 
@@ -197,10 +221,14 @@
 .card__role {
   font-family: var(--font-text);
   font-style: italic;
+  /* A real 600 cut. Cormorant is a high-contrast display serif, so at 400 its
+     hairlines vanish next to the name's small caps and the line reads grey
+     even when the colour is pure black. */
+  font-weight: 600;
   font-size: 1.45em;
   letter-spacing: 0.04em;
   margin: 0.35em 0 0;
-  color: var(--ink-soft);
+  color: var(--ink);
 }
 
 .card__footer {
@@ -209,9 +237,6 @@
   justify-content: space-between;
   gap: 1em;
   padding-top: 1.1em;
-  /* A debossed hairline: dark groove, lit lip beneath it. */
-  border-top: 1px solid rgba(0, 0, 0, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .card__footer .card__meta {
@@ -230,8 +255,7 @@
 
 .card__name,
 .card__role,
-.card__meta,
-.card__industry {
+.card__meta {
   text-shadow:
     0 1px 0 rgba(255, 255, 250, 0.85),
     0 -1px 1px rgba(0, 0, 0, 0.16);
@@ -303,6 +327,15 @@ a.card__meta:focus-visible {
     font-size: 2.9em;
     letter-spacing: 0.12em;
     margin-left: 0.12em;
+  }
+  /* Both head columns run their full width here, so the affiliation gives a
+     little back to keep it clear of the email address. */
+  .card__head {
+    gap: 0.9em;
+  }
+  .card__affiliation .card__meta {
+    font-size: 0.92em;
+    letter-spacing: 0.1em;
   }
   .card__footer {
     flex-wrap: wrap;

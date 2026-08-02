@@ -19,18 +19,17 @@ export const card: Card = {
   phone: { label: '+62 821 2277 6141', href: 'tel:+6282122776141' },
   email: { label: 'dafandikri@gmail.com', href: 'mailto:dafandikri@gmail.com' },
 
-  // Bateman's card reads "MERGERS AND ACQUISITIONS", which the film sets against
-  // his "murders and executions". A developer merges branches.
-  industry: 'Merges and Acquisitions',
+  affiliation: {
+    name: 'Universitas Indonesia',
+    detail: 'Majoring in Computer Science',
+  },
 
   name: 'Erdafa Andikri',
   role: 'Software Engineer',
 
   footer: [
     { label: 'dafandikri.tech', href: 'https://dafandikri.tech' },
-    { label: 'github/dafandikri', href: 'https://github.com/dafandikri' },
-    // PLACEHOLDER — confirm the handle resolves before shipping.
-    { label: 'linkedin/dafandikri', href: 'https://linkedin.com/in/dafandikri' },
-    { label: 'Jakarta, ID', href: null },
+    { label: 'Software Engineer Intern', href: null },
+    { label: 'Jakarta, Indonesia', href: null },
   ],
 }

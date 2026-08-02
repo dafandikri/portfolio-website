@@ -1,10 +1,9 @@
 /*
  * Design tokens for the card.
  *
- * The palette deliberately avoids pure white and pure black. Letterpress ink on
- * uncoated cotton never reads as #000, and "bone" stock is warm and faintly
- * green-grey rather than white — Bateman's line is "the subtle off-white
- * colouring", and the subtlety is the whole point.
+ * A white card on a white page, printed in black. With no colour difference
+ * between stock and ground, the card is held together entirely by its shadow
+ * and by the faint tooth of the paper grain.
  */
 
 @font-face {
@@ -42,19 +41,29 @@
   font-style: italic;
   font-display: swap;
 }
+/*
+ * A real 600 cut, not a synthesised one. Asking for a weight the family does
+ * not ship makes the browser fake it by drawing the glyphs offset from
+ * themselves, which on a high-contrast serif like Cormorant thickens the
+ * hairlines unevenly and reads as blur rather than as weight.
+ */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-600-italic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
 
 :root {
   /*
-   * Stock.
-   *
-   * Pitched warmer and lighter than the colour that should end up on screen,
-   * because the grain layer multiplies a desaturated noise over the top and
-   * both darkens and greys the result. These are the input values, not the
-   * finished ones.
+   * Stock — white. The card no longer separates from the page by colour at
+   * all, only by its shadow and the faint tooth of the grain, which is what
+   * makes it read as a white card resting on white rather than as a hole.
    */
-  --bone: #f4edd9;
-  --bone-lit: #f9f3e5;
-  --bone-shade: #ebe2c9;
+  --stock: #ffffff;
+  --stock-lit: #ffffff;
+  --stock-shade: #fbfaf9;
 
   /* Ink -------------------------------------------------------------------- */
   --ink: #000000;
