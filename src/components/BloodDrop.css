@@ -20,7 +20,7 @@
    * it. The offset is set so that point lands on the role's line rather than
    * up in the name.
    */
-  bottom: -3.9em;
+  bottom: -5.3em;
   left: 77%;
   width: 15.5em;
   height: 9.3em;
@@ -157,7 +157,7 @@
   .blood {
     width: 8.2em;
     height: 4.9em;
-    bottom: -2em;
+    bottom: -2.8em;
     left: 80%;
     transform: translate(-50%, 0);
   }
