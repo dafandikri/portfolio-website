@@ -9,13 +9,22 @@
 
 .blood {
   position: absolute;
-  /* Sits in the empty band between the role line and the footer rule. */
-  top: 100%;
-  left: 50%;
+  /*
+   * Off to the right, level with the role line — the empty quarter of the card
+   * beside "Software Engineer". Anchored from the bottom so the pool sits on
+   * that line regardless of how tall the name above it renders.
+   */
+  /*
+   * The container is much taller than the stain — most of its height is the
+   * runway the drop falls down — and the pool sits around 52% of the way down
+   * it. The offset is set so that point lands on the role's line rather than
+   * up in the name.
+   */
+  bottom: -3.9em;
+  left: 77%;
   width: 15.5em;
   height: 9.3em;
-  /* Nudged off dead centre: a falling drop would not land perfectly aligned. */
-  transform: translate(-46%, 0.9em);
+  transform: translate(-50%, 0);
   pointer-events: none;
   /*
    * Multiply lets the paper grain read *through* the stain. Painted opaquely it
@@ -148,7 +157,9 @@
   .blood {
     width: 8.2em;
     height: 4.9em;
-    transform: translate(-46%, 0.1em);
+    bottom: -2em;
+    left: 80%;
+    transform: translate(-50%, 0);
   }
   .blood__drip {
     width: 0.5em;

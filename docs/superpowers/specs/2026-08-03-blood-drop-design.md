@@ -70,13 +70,20 @@ A few sparse, asymmetric satellite specks sell the impact.
 
 ## Placement
 
-Anchored to `.card__identity` rather than to the card edge, so it tracks the name.
-Centred under the name but nudged off dead-centre, because a falling drop would
-not land perfectly aligned.
+Off to the right, under the tail of the name and level with the role line — the
+empty quarter of the card beside "Software Engineer". Anchored to
+`.card__identity` rather than to the card edge, so it tracks the name.
 
-On narrow screens the footer wraps to three stacked lines and eats most of the
-band the stain sits in; at desktop proportions it drips onto the domain. It
-therefore shrinks and tucks up close under the role line below 36rem.
+Anchored from the *bottom* rather than the top. The container is much taller than
+the stain, because most of its height is the runway the drop falls down, and the
+pool sits around 52% of the way into it. Positioning from the top makes that
+offset depend on how tall the name renders; positioning from the bottom puts the
+pool on the role's line directly. Getting this wrong is what first parked the
+stain on top of "ANDIKRI".
+
+On narrow screens the footer wraps to three stacked lines and eats the band below,
+so the stain shrinks and shifts further right to stay clear of both the role and
+the domain.
 
 ## Structure
 
