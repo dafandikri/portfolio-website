@@ -106,6 +106,7 @@ export function useCardTilt<T extends HTMLElement>() {
 
     let frame = 0
     let pointerActive = false
+    let onScreen = true
     const start = performance.now()
     const current: Tilt = { rx: 0, ry: 0 }
     let target: Tilt = { rx: 0, ry: 0 }
@@ -120,6 +121,12 @@ export function useCardTilt<T extends HTMLElement>() {
     }
 
     const tick = (now: number) => {
+      // Scenes follow the card now, so this loop would otherwise keep animating
+      // an element nobody can see. Park it and let the observer restart it.
+      if (!onScreen) {
+        frame = 0
+        return
+      }
       if (!pointerActive) target = idleTilt(now - start)
       current.rx += (target.rx - current.rx) * FOLLOW
       current.ry += (target.ry - current.ry) * FOLLOW
@@ -132,6 +139,20 @@ export function useCardTilt<T extends HTMLElement>() {
     }
     frame = requestAnimationFrame(tick)
 
+    // Fails open: without IntersectionObserver the loop simply keeps running,
+    // which costs battery but never leaves the card frozen.
+    const visibility =
+      typeof IntersectionObserver === 'undefined'
+        ? null
+        : new IntersectionObserver(
+            (entries) => {
+              onScreen = entries.some((entry) => entry.isIntersecting)
+              if (onScreen && frame === 0) frame = requestAnimationFrame(tick)
+            },
+            { threshold: 0 },
+          )
+    visibility?.observe(el)
+
     el.addEventListener('pointermove', onPointerMove)
     el.addEventListener('pointerleave', onPointerRest)
     el.addEventListener('pointerup', onPointerRest)
@@ -139,6 +160,7 @@ export function useCardTilt<T extends HTMLElement>() {
 
     return () => {
       cancelAnimationFrame(frame)
+      visibility?.disconnect()
       el.removeEventListener('pointermove', onPointerMove)
       el.removeEventListener('pointerleave', onPointerRest)
       el.removeEventListener('pointerup', onPointerRest)

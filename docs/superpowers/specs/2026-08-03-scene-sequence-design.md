@@ -1,7 +1,7 @@
 # Design — The Scene Sequence
 
 **Date:** 2026-08-03
-**Status:** Approved, phased
+**Status:** Phase 1 built; Phases 2–3 approved
 **Extends:** [2026-08-01 business card redesign](./2026-08-01-business-card-redesign-design.md)
 
 ## Summary
@@ -18,7 +18,7 @@ have.** This is what separates a portfolio from a demo reel.
 | Film | Iconography | Maps to | Verdict |
 |---|---|---|---|
 | American Psycho | The business card | Name, contact, affiliation | **Built** |
-| Back to the Future | Time-circuit display (DESTINATION / PRESENT / LAST DEPARTED) | `experiences.ts` — 5 roles, 2023→2026, month-labelled | **Build** |
+| Back to the Future | Time-circuit display (DESTINATION / PRESENT / LAST DEPARTED) | `experiences.ts` — 5 roles, 2023→2026, month-labelled | **Built** |
 | Jurassic Park | "It's a UNIX system!" — the `fsn` 3D file browser | `skills.ts` (22 tech) + `projects.ts` (8 projects) | **Build** |
 | Bouldering | Coloured holds around a climbing photo | `Boulder Coach` project, personal register | **Build** |
 | Fight Club, Titanic, Independence Day, Toy Story, Disney | — | Nothing | **Cut** |
@@ -36,7 +36,7 @@ This is several projects. Each phase ships on its own and leaves the site workin
 
 | Phase | Scope | New dependencies |
 |---|---|---|
-| **1** | Scroll shell + Back to the Future scene | None |
+| **1 — built** | Scroll shell + Back to the Future scene | None |
 | **2** | Jurassic Park `fsn` scene | Three.js, lazy-loaded |
 | **3** | Bouldering scene | None, or light 3D |
 
@@ -74,7 +74,10 @@ battery on every device. The hook gains an in-view check and parks itself when t
 card is not visible.
 
 Scenes below the fold mount lazily via `IntersectionObserver`, so the card's
-time-to-interactive is unchanged no matter how many scenes are added later.
+time-to-interactive is unchanged no matter how many scenes are added later. The
+timeline uses a negative bottom root margin (`0px 0px -12%`): because scene two
+starts exactly at the first viewport's edge, a positive prefetch margin would
+count it as visible on initial load and quietly turn the lazy mount eager.
 
 ## The Back to the Future scene
 
@@ -111,8 +114,9 @@ src/
     scenes/
       CardScene.tsx        wraps the existing BusinessCard
       TimeCircuitsScene.tsx
-      TimeCircuits.tsx     the panel itself
-      SegmentDisplay.tsx   one segmented column
+    TimeCircuits.tsx       the panel itself
+    SevenSegment.tsx       one physical seven-segment digit/column
+    ScrollCue.tsx          delayed affordance below the card
   hooks/
     useInView.ts           IntersectionObserver, shared
 ```
@@ -129,3 +133,21 @@ should stay that way.
 - Scenes below the fold do not mount until observed
 
 Not tested: LED colours, flicker timing, scroll positions.
+
+## Phase 1 verification
+
+- TypeScript, ESLint, data validation and production build pass.
+- 62 tests pass across 11 files.
+- Coverage: 96.25% statements, 86.04% branches, 96% functions, 98.2% lines.
+- Production bundle: 193.48 KB / 61.66 KB gzip for app JavaScript. The first
+  implementation imported the all-data Zod barrel and reached 81.54 KB gzip;
+  rendering now imports the typed experience literal directly while CI retains
+  the Zod parse, avoiding projects, skills and the validator in the browser.
+- Real Chromium at 1440×900: five roles render; scrolling to July 2025 changes
+  DESTINATION to `JUL 2025`, keeps PRESENT at `JAN 2026`, and changes LAST TIME
+  DEPARTED to `JUN 2024`.
+- Real Chromium at 390×844: the panel is 350 px inside a 390 px scene, all five
+  roles mount after scrolling, and there is no horizontal overflow.
+- Before any scroll, the real browser reports zero `.circuits-stop` nodes;
+  after entering scene two it reports all five. This verifies the lazy mount
+  against actual layout rather than only a mocked observer.

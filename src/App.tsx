@@ -1,10 +1,17 @@
-import BusinessCard from './components/BusinessCard'
+import CardScene from './components/scenes/CardScene'
+import TimeCircuitsScene from './components/scenes/TimeCircuitsScene'
 
 /**
- * v2 is a single screen holding a single card. No router, no routes — the card
- * is the site. Content in src/data/ beyond card.ts is retained for later phases
- * but renders nowhere yet.
+ * A sequence of cult-film set pieces, each carrying real content.
+ *
+ * Scene one is the American Psycho card, unchanged. Scenes below it render the
+ * portfolio data that has been sitting in src/data/ since the redesign.
  */
 export default function App() {
-  return <BusinessCard />
+  return (
+    <main>
+      <CardScene />
+      <TimeCircuitsScene />
+    </main>
+  )
 }

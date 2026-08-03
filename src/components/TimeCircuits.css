@@ -1,0 +1,140 @@
+/*
+ * The time circuits panel.
+ *
+ * Colours are taken from the prop: red destination, green present, amber last
+ * departed, on a black chassis. Each row glows in its own colour, which is what
+ * makes three otherwise identical readouts legible at a glance.
+ */
+
+.circuits {
+  --seg-on: #ff2d1c;
+  --seg-off: rgba(255, 45, 28, 0.11);
+  width: min(100%, 46rem);
+  padding: clamp(0.9rem, 2.5vw, 1.6rem);
+  border-radius: 0.4rem;
+  background: linear-gradient(#141210, #0a0908);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.55);
+  font-family: var(--font-sc);
+}
+
+.circuits__headers,
+.circuits__row {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 8rem) 1fr;
+  align-items: center;
+  gap: clamp(0.5rem, 2vw, 1.2rem);
+}
+
+.circuits__headers {
+  padding-bottom: 0.35rem;
+}
+
+.circuits__readout {
+  display: grid;
+  grid-template-columns: 3.2fr 2fr 4fr 2fr 2fr;
+  gap: clamp(0.3rem, 1.4vw, 0.9rem);
+  align-items: center;
+}
+
+.circuits__col {
+  font-size: clamp(0.5rem, 1.2vw, 0.66rem);
+  letter-spacing: 0.18em;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.circuits__label {
+  font-size: clamp(0.52rem, 1.25vw, 0.7rem);
+  letter-spacing: 0.14em;
+  line-height: 1.25;
+  text-align: right;
+  color: var(--seg-on);
+  /* The label plates on the prop are lit acrylic, not printed card. */
+  text-shadow: 0 0 0.7em currentColor;
+}
+
+.circuits__row {
+  padding: clamp(0.3rem, 1vw, 0.55rem) 0;
+}
+
+.circuits__row--present {
+  --seg-on: #35e06a;
+  --seg-off: rgba(53, 224, 106, 0.11);
+}
+
+.circuits__row--departed {
+  --seg-on: #ffb01f;
+  --seg-off: rgba(255, 176, 31, 0.11);
+}
+
+/* The month is a lit legend on the prop rather than a segmented figure —
+   seven segments cannot render M, W or K legibly, so faking it would look
+   worse than the real thing does. */
+.circuits__month {
+  font-size: clamp(0.95rem, 3vw, 1.7rem);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: center;
+  color: var(--seg-on);
+  text-shadow: 0 0 0.5em currentColor;
+  min-height: 1em;
+}
+
+.segment-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.12em;
+}
+
+.segment {
+  width: clamp(0.6rem, 2vw, 1.15rem);
+  height: auto;
+}
+
+.segment__on {
+  fill: var(--seg-on);
+  filter: drop-shadow(0 0 0.18rem var(--seg-on));
+}
+
+/*
+ * Unlit segments stay faintly visible. This is the whole reason the digits are
+ * drawn rather than set in a font: on real hardware the full figure-eight is
+ * always there behind the number.
+ */
+.segment__off {
+  fill: var(--seg-off);
+}
+
+/* The prop sputters before a newly selected destination settles. The row is
+   keyed by the experience id in React, so changing stops restarts this short
+   hardware flicker without timers or component state. */
+.circuits__row--destination .circuits__month,
+.circuits__row--destination .segment__on {
+  animation: circuit-settle 360ms steps(2, end);
+}
+
+@keyframes circuit-settle {
+  0%,
+  28% {
+    opacity: 0.22;
+  }
+  14%,
+  52% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.48;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuits__row--destination .circuits__month,
+  .circuits__row--destination .segment__on {
+    animation: none;
+  }
+}

@@ -1,0 +1,111 @@
+/*
+ * Scene two. The panel sticks to the top of the viewport while the roles scroll
+ * beneath it, so the readout and the role being read are on screen together.
+ */
+
+.scene--circuits {
+  position: relative;
+  min-height: 100svh;
+  background: #0a0908;
+  color: rgba(255, 255, 255, 0.86);
+  padding: clamp(2rem, 6vw, 4rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 12vw, 9rem);
+}
+
+.circuits-scene__placeholder {
+  min-height: 100svh;
+}
+
+.circuits-scene__panel {
+  position: sticky;
+  top: clamp(1rem, 4vh, 2.5rem);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  /* The panel is the light source for the scene; the dark backdrop bleeds
+     upward behind it so it does not sit on a hard seam while sticking. */
+  padding-bottom: clamp(1rem, 3vw, 2rem);
+  background: linear-gradient(#0a0908 78%, transparent);
+}
+
+.circuits-scene__stops {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0;
+  width: min(100%, 46rem);
+}
+
+.circuits-stop {
+  /* Tall enough that one role is clearly the centred one, without forcing a
+     full viewport of scrolling per entry. */
+  min-height: 68svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vw, 3rem) 0;
+  opacity: 0.32;
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease;
+  transform: translateY(0.6rem);
+}
+
+.circuits-stop.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.circuits-stop__when {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-sc);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  color: #ff2d1c;
+}
+
+.circuits-stop__title {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-sc);
+  font-weight: 600;
+  font-size: clamp(1.2rem, 3.6vw, 1.9rem);
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.circuits-stop__date {
+  margin: 0 0 1rem;
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.circuits-stop__description {
+  margin: 0 0 1rem;
+  font-family: var(--font-text);
+  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  line-height: 1.6;
+  max-width: 42ch;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.circuits-stop__achievements {
+  margin: 0;
+  padding-left: 1.1rem;
+  max-width: 46ch;
+  font-family: var(--font-text);
+  font-size: clamp(0.95rem, 2.2vw, 1.05rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.circuits-stop__achievements li {
+  margin-bottom: 0.4rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuits-stop {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

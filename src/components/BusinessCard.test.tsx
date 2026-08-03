@@ -1,13 +1,15 @@
-import { describe, it, expect, afterEach } from 'vitest'
-import { render, screen, cleanup } from '@testing-library/react'
+import { describe, it, expect, afterEach, vi } from 'vitest'
+import { act, render, screen, cleanup } from '@testing-library/react'
 import BusinessCard from './BusinessCard'
 import { card } from '../data/card'
-import { stubMatchMedia } from '../test/setup'
+import { stubIntersectionObserver, stubMatchMedia } from '../test/setup'
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
 
 afterEach(() => {
   cleanup()
+  vi.restoreAllMocks()
+  vi.unstubAllGlobals()
   stubMatchMedia(false)
 })
 
@@ -101,6 +103,40 @@ describe('BusinessCard', () => {
     // the component would re-render on every pointer move.
     expect(wrapper!.style.getPropertyValue('--rx')).toMatch(/deg$/)
     expect(wrapper!.style.getPropertyValue('--mx')).toMatch(/%$/)
+  })
+
+  it('parks its animation loop offscreen and restarts when the card returns', () => {
+    const observers = stubIntersectionObserver()
+    const callbacks = new Map<number, FrameRequestCallback>()
+    let nextId = 0
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      const id = ++nextId
+      callbacks.set(id, callback)
+      return id
+    })
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
+      callbacks.delete(id)
+    })
+    const flushFrame = (now: number) => {
+      const pending = [...callbacks.values()]
+      callbacks.clear()
+      pending.forEach((callback) => callback(now))
+    }
+
+    const { container } = render(<BusinessCard />)
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')!
+    expect(callbacks.size).toBe(1)
+
+    act(() => observers[0]?.trigger(wrapper, false, 0))
+    act(() => flushFrame(16))
+    expect(callbacks.size).toBe(0)
+    expect(wrapper.style.getPropertyValue('--rx')).toBe('')
+
+    act(() => observers[0]?.trigger(wrapper, true, 1))
+    expect(callbacks.size).toBe(1)
+    act(() => flushFrame(32))
+    expect(wrapper.style.getPropertyValue('--rx')).toMatch(/deg$/)
+    expect(callbacks.size).toBe(1)
   })
 
   it('casts the shadow with real planes, not a box-shadow', async () => {

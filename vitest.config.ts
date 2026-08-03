@@ -10,9 +10,10 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: [
+        'src/App.tsx',
         'src/data/**/*.ts',
         'src/hooks/**/*.ts',
-        'src/components/BusinessCard.tsx',
+        'src/components/**/*.tsx',
       ],
       thresholds: {
         lines: 80,
