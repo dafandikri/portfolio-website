@@ -189,14 +189,16 @@ export default function DepartureScene() {
               printing means the plate is legible at every angle while still
               turning like a solid object.
             */}
-            <span className="departure__plate-spin">
-              <span className="departure__plate-face">
-                <span className="departure__plate-state">California</span>
-                <span className="departure__plate-text">OUTATIME</span>
-              </span>
-              <span className="departure__plate-face departure__plate-face--back">
-                <span className="departure__plate-state">California</span>
-                <span className="departure__plate-text">OUTATIME</span>
+            <span className="departure__plate-float">
+              <span className="departure__plate-spin">
+                <span className="departure__plate-face">
+                  <span className="departure__plate-state">California</span>
+                  <span className="departure__plate-text">OUTATIME</span>
+                </span>
+                <span className="departure__plate-face departure__plate-face--back">
+                  <span className="departure__plate-state">California</span>
+                  <span className="departure__plate-text">OUTATIME</span>
+                </span>
               </span>
             </span>
           </div>

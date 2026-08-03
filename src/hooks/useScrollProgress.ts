@@ -1,6 +1,31 @@
 import { useEffect, useRef } from 'react'
 
 /**
+ * Time constant for scroll smoothing. Short enough to stay attached to the
+ * wheel, long enough to bridge the gaps between discrete mouse-wheel notches.
+ */
+export const SCROLL_SMOOTHING_MS = 95
+
+/**
+ * Move a progress value towards its target without depending on refresh rate.
+ *
+ * A fixed `current += (target - current) * 0.1` feels different at 60 and
+ * 120 Hz. Exponential smoothing uses elapsed time instead, so the plate arrives
+ * with the same weight on both displays and never overshoots the scroll target.
+ */
+export function smoothProgress(
+  current: number,
+  target: number,
+  elapsedMs: number,
+  smoothingMs = SCROLL_SMOOTHING_MS,
+): number {
+  if (smoothingMs <= 0) return target
+  const elapsed = Math.max(0, elapsedMs)
+  const follow = 1 - Math.exp(-elapsed / smoothingMs)
+  return current + (target - current) * follow
+}
+
+/**
  * Writes an element's scroll progress, 0 → 1, to a CSS custom property.
  *
  * The point is that the sequence is *scrubbed* rather than triggered. A
@@ -42,11 +67,37 @@ export function useScrollProgress<T extends HTMLElement>(
       return
     }
 
-    let frame = 0
-    let queued = false
+    let measureFrame = 0
+    let motionFrame = 0
+    let initialized = false
+    let current = 0
+    let target = 0
+    let previousTime = 0
+
+    const write = () => {
+      el.style.setProperty(property, current.toFixed(4))
+    }
+
+    const animate = (now: number) => {
+      const elapsed = Math.min(64, now - previousTime)
+      previousTime = now
+      current = smoothProgress(current, target, elapsed)
+
+      // Stop the loop once the remaining difference is below the precision we
+      // write to CSS. Leaving it alive would wake the compositor forever for a
+      // value that cannot visibly change.
+      if (Math.abs(target - current) < 0.00005) current = target
+      write()
+
+      if (current === target) {
+        motionFrame = 0
+      } else {
+        motionFrame = requestAnimationFrame(animate)
+      }
+    }
 
     const measure = () => {
-      queued = false
+      measureFrame = 0
       const rect = el.getBoundingClientRect()
       let raw: number
       if (mode === 'pin') {
@@ -59,17 +110,29 @@ export function useScrollProgress<T extends HTMLElement>(
         const span = rect.height + window.innerHeight
         raw = span === 0 ? 0 : (window.innerHeight - rect.top) / span
       }
-      const progress = Math.min(1, Math.max(0, raw))
-      el.style.setProperty(property, progress.toFixed(4))
+      target = Math.min(1, Math.max(0, raw))
+
+      // A refresh in the middle of the scene should restore the exact scroll
+      // state immediately. Only movement after mount needs smoothing.
+      if (!initialized) {
+        initialized = true
+        current = target
+        write()
+        return
+      }
+
+      if (motionFrame === 0 && current !== target) {
+        previousTime = performance.now()
+        motionFrame = requestAnimationFrame(animate)
+      }
     }
 
     // Scroll fires far more often than the compositor paints, so the read is
     // coalesced into one frame. Reading layout on every scroll event is the
     // usual cause of scroll-linked jank.
     const onScroll = () => {
-      if (queued) return
-      queued = true
-      frame = requestAnimationFrame(measure)
+      if (measureFrame !== 0) return
+      measureFrame = requestAnimationFrame(measure)
     }
 
     measure()
@@ -77,7 +140,8 @@ export function useScrollProgress<T extends HTMLElement>(
     window.addEventListener('resize', onScroll, { passive: true })
 
     return () => {
-      cancelAnimationFrame(frame)
+      cancelAnimationFrame(measureFrame)
+      cancelAnimationFrame(motionFrame)
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }

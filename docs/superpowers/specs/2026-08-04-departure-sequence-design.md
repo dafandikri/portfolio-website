@@ -30,6 +30,15 @@ bright, the whole frame blowing out for a beat.
 Out of the flash, the **OUTATIME licence plate tumbles** through frame like a
 tossed coin, turning over itself, catching light on each face, and settles.
 
+The arrival and the perpetual turn use separate nested transforms. The outer
+plane is scroll-scrubbed through translation, scale and deceleration; an inner
+wrapper supplies a slow float and roll; the plate itself keeps constant angular
+velocity. Scroll progress follows wheel input through refresh-rate-independent
+exponential smoothing, so a discrete mouse-wheel notch cannot jump the arrival
+while the turn continues on another clock. Front and back faces sit on opposite
+sides of a metal mid-plane rather than coplanar, preventing the one-frame blink
+that otherwise occurs when both faces cross edge-on together.
+
 ### Act III — Arrival
 
 The **flux capacitor** pulses into view — the Y of three arms firing in sequence.
@@ -73,7 +82,7 @@ No 3D library. Everything here is CSS perspective, gradients and SVG:
 |---|---|
 | Fire trails | Two elements in a shared `perspective`, receding to a vanishing point; gradient body, `feTurbulence` displacement for flame edge |
 | Horizon flash | A radial burst scaled up over ~140 ms, then gone |
-| Licence plate | `rotateX`/`rotateY` tumble under perspective, with face shading per quarter-turn |
+| Licence plate | Nested scroll arrival, slow float/roll and constant `rotateY`; two depth-separated printed faces around a metal mid-plane |
 | Flux capacitor | SVG Y, three arms firing in sequence |
 | Readouts | The existing `TimeCircuits` and `SevenSegment`, unchanged |
 

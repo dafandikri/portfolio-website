@@ -504,6 +504,7 @@
 .departure__plate {
   transform-style: preserve-3d;
   animation-name: plate-arrive;
+  will-change: transform, opacity;
 }
 
 /*
@@ -515,14 +516,41 @@
   0%,
   62% {
     opacity: 0;
-    transform: translate3d(0, -6rem, 16rem) scale(0.3);
+    transform: translate3d(0, -6rem, -16rem) scale(0.35) rotateX(-12deg) rotateZ(5deg);
+    /* A physical ease into the foreground rather than a linear zoom. Scroll
+       progress is already smoothed; this curve supplies the deceleration of an
+       object losing momentum as it reaches the viewer. */
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
   72% {
     opacity: 1;
   }
   100% {
     opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1) rotateX(0deg) rotateZ(0deg);
+  }
+}
+
+/*
+ * The slow secondary motion is deliberately separate from the turn. One
+ * animation previously owned the whole transform, which meant adding a float
+ * or roll required rewriting the 360° turn and made its loop easy to kink.
+ * Nested transforms compose instead: this wrapper breathes and rolls while the
+ * child keeps a constant angular velocity.
+ */
+.departure__plate-float {
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: plate-float 4.8s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes plate-float {
+  from {
+    transform: translate3d(-0.22rem, 0.12rem, -0.35rem) rotateX(6deg) rotateZ(-1.6deg);
+  }
+  to {
+    transform: translate3d(0.22rem, -0.3rem, 0.45rem) rotateX(13deg) rotateZ(1.6deg);
   }
 }
 
@@ -531,7 +559,22 @@
   position: relative;
   display: inline-block;
   transform-style: preserve-3d;
-  animation: plate-swirl 6.5s linear infinite;
+  transform-origin: 50% 50%;
+  animation: plate-swirl 7.2s linear infinite;
+  will-change: transform;
+}
+
+/* A dark metal mid-plane makes the plate retain thickness while edge-on. With
+   only two coplanar faces, both vanished at 90° and the plate blinked for a
+   frame — perceived as a hitch even though the animation clock never stopped. */
+.departure__plate-spin::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 0.1em solid #34363c;
+  border-radius: 0.25rem;
+  background: #777980;
+  transform: translateZ(0);
 }
 
 .departure__plate-face {
@@ -548,8 +591,10 @@
     0 0.8rem 2rem -0.5rem rgba(0, 0, 0, 0.8);
   font-family: var(--font-tech);
   color: #14306b;
+  transform: translateZ(0.08rem);
   /* Each face is invisible from behind, so exactly one is ever on show. */
   backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* The reverse, printed the same way round so the plate stays readable through
@@ -558,7 +603,10 @@
   position: absolute;
   inset: 0;
   justify-content: center;
-  transform: rotateY(180deg);
+  /* Translate first in the face's local space, then turn it around. The two
+     faces therefore sit on opposite sides of the metal mid-plane instead of
+     z-fighting in the same plane as they cross edge-on. */
+  transform: rotateY(180deg) translateZ(0.08rem);
 }
 
 @keyframes plate-swirl {
@@ -601,6 +649,10 @@
   .flame__tongue,
   .departure__plate-spin {
     animation: none;
+  }
+  .departure__plate-float {
+    animation: none;
+    transform: none;
   }
   .departure__track,
   .departure__flash {
