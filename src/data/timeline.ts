@@ -1,5 +1,6 @@
 import { experiencesData as experiences } from './experiences'
 import type { ExperienceEntry } from './schema'
+import type { Readout } from '../hooks/useClock'
 
 /**
  * The experience data, flattened and ordered for the time circuits.
@@ -28,6 +29,25 @@ const MONTHS = [
   'NOV',
   'DEC',
 ] as const
+
+/**
+ * Plausible clock values for the DAY / HOUR / MIN columns.
+ *
+ * These are **decorative, not data**. The source records months and years only,
+ * and three permanently blank columns make the panel look broken rather than
+ * authentic. They are derived from the entry id so a given role always shows the
+ * same numbers — a random value per render would flicker on every keystroke and
+ * quietly imply a precision the data does not have.
+ */
+export function syntheticClock(id: string): { day: string; hour: string; min: string } {
+  let hash = 0
+  for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  return {
+    day: String((hash % 28) + 1).padStart(2, '0'),
+    hour: String((hash >>> 5) % 24).padStart(2, '0'),
+    min: String((hash >>> 11) % 60).padStart(2, '0'),
+  }
+}
 
 export interface TimelineStop {
   entry: ExperienceEntry
@@ -67,3 +87,9 @@ export const timeline: TimelineStop[] = Object.keys(experiences)
       .map((entry) => ({ entry, ...parseMonthLabel(entry.monthLabel) }))
       .sort((a, b) => monthIndex(b.month) - monthIndex(a.month)),
   )
+
+/** A timeline stop rendered as panel columns, with decorative clock digits. */
+export function readoutFromStop(stop: TimelineStop | null): Readout | null {
+  if (!stop) return null
+  return { month: stop.month, year: stop.year, ...syntheticClock(stop.entry.id) }
+}

@@ -2,6 +2,7 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { timeline } from '../data/timeline'
 import TimeCircuits from './TimeCircuits'
+import { readoutFromStop } from '../data/timeline'
 
 describe('TimeCircuits', () => {
   it('maps real timeline dates into destination, present and departed rows', () => {
@@ -9,7 +10,7 @@ describe('TimeCircuits', () => {
     const present = timeline[0]!
     const departed = timeline[2]!
     const { container } = render(
-      <TimeCircuits destination={destination} present={present} departed={departed} />,
+      <TimeCircuits destination={readoutFromStop(destination)} present={readoutFromStop(present)} departed={readoutFromStop(departed)} />,
     )
 
     expect(screen.getByText('Destination Time')).toBeInTheDocument()
@@ -26,7 +27,7 @@ describe('TimeCircuits', () => {
   it('leaves unknown columns unlit and names an empty departed row', () => {
     const stop = timeline.at(-1)!
     const { container } = render(
-      <TimeCircuits destination={stop} present={timeline[0]!} departed={null} />,
+      <TimeCircuits destination={readoutFromStop(stop)} present={readoutFromStop(timeline[0]!)} departed={null} />,
     )
 
     expect(screen.getByText('Not set')).toBeInTheDocument()

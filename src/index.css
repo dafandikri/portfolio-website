@@ -13,6 +13,23 @@ body {
   height: 100%;
 }
 
+/*
+ * The magnetism behind the timeline. `proximity` rather than `mandatory`:
+ * mandatory can trap a visitor between snap points when a section is taller
+ * than the viewport, whereas proximity settles when you are close and otherwise
+ * leaves the scroll alone. Only elements that opt in with scroll-snap-align
+ * actually catch.
+ */
+html {
+  scroll-snap-type: y proximity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+}
+
 body {
   background: var(--backdrop);
   color: var(--ink);

@@ -47,6 +47,20 @@
  * themselves, which on a high-contrast serif like Cormorant thickens the
  * hairlines unevenly and reads as blur rather than as weight.
  */
+/*
+ * Orbitron carries the Back to the Future scenes. The card's Garamond is
+ * letterpress and belongs to 1987 Manhattan; borrowing it for a DeLorean
+ * dashboard would make both scenes read as the same place. One variable file
+ * covers every weight the scene uses.
+ */
+@font-face {
+  font-family: 'Orbitron';
+  src: url('/fonts/orbitron-var.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'Cormorant Garamond';
   src: url('/fonts/cormorant-garamond-600-italic.woff2') format('woff2');
@@ -81,6 +95,8 @@
    */
   --font-sc: 'Cormorant SC', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-text: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  /* The dashboard voice: machined, technical, unmistakably not the card. */
+  --font-tech: 'Orbitron', 'Eurostile', 'Helvetica Neue', sans-serif;
 
   /* Card geometry ---------------------------------------------------------- */
   --card-w: clamp(19rem, 88vw, 40rem);

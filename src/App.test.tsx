@@ -5,11 +5,25 @@ import App from './App'
 afterEach(() => vi.unstubAllGlobals())
 
 describe('App', () => {
-  it('keeps the card as scene one and exposes the experience scene to navigation', () => {
+  it('keeps the card as scene one and exposes the experience scene to navigation', async () => {
     vi.stubGlobal('IntersectionObserver', undefined)
     render(<App />)
 
+    // The card is in the first chunk, so it is present immediately.
     expect(screen.getByRole('region', { name: 'Business card introduction' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 2, name: 'Experience' })).toBeInTheDocument()
+
+    // The scenes below it are code-split, so they arrive a tick later once
+    // Suspense resolves. Awaiting here is the test acknowledging that the
+    // landing no longer ships their JavaScript.
+    // Generous timeout: this is a real dynamic import, and under a loaded test
+    // runner it resolves well past findBy's one-second default. The wait is the
+    // point of the assertion, not incidental to it.
+    expect(
+      await screen.findByRole(
+        'heading',
+        { level: 2, name: 'Experience' },
+        { timeout: 5000 },
+      ),
+    ).toBeInTheDocument()
   })
 })

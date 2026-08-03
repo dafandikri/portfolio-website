@@ -16,7 +16,7 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.07),
     0 1.5rem 3rem -1rem rgba(0, 0, 0, 0.55);
-  font-family: var(--font-sc);
+  font-family: var(--font-tech);
 }
 
 .circuits__headers,
@@ -51,8 +51,11 @@
   line-height: 1.25;
   text-align: right;
   color: var(--seg-on);
-  /* The label plates on the prop are lit acrylic, not printed card. */
-  text-shadow: 0 0 0.7em currentColor;
+  font-weight: 500;
+  /* Lit acrylic, not printed card. */
+  text-shadow:
+    0 0 0.05em rgba(255, 255, 255, 0.7),
+    0 0 0.7em currentColor;
 }
 
 .circuits__row {

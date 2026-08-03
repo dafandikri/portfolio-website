@@ -21,6 +21,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "@xmldom/xmldom": "^0.9.8",
     "dotenv": "^17.2.1",
+    "motion": "^12.43.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "terser": "^5.43.1",

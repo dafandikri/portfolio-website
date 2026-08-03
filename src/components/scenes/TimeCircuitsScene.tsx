@@ -1,101 +1,67 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import TimeCircuits from '../TimeCircuits'
-import { timeline } from '../../data/timeline'
+import { readoutFromStop } from '../../data/timeline'
+import FluxCapacitor from '../FluxCapacitor'
+import ExperienceDeck from '../ExperienceDeck'
 import { useInView } from '../../hooks/useInView'
+import { useClock } from '../../hooks/useClock'
+import { timeline } from '../../data/timeline'
 import './TimeCircuitsScene.css'
 
 /**
  * The Back to the Future scene.
  *
- * The panel sticks while the roles scroll past it, and whichever role is
- * currently centred becomes the DESTINATION. PRESENT holds the current role and
- * LAST TIME DEPARTED holds the one before the destination — which is how the
- * prop behaves and how a career timeline reads.
- *
- * Scrolling is never intercepted. The scene reacts to where the page already is
- * rather than taking the wheel, so keyboard, trackpad momentum and find-in-page
- * all keep working.
+ * The deck is the control and the circuits are the readout: picking a card sets
+ * the destination, exactly as punching a date into the dashboard does. Selection
+ * lives here rather than inside the deck so both readouts and the hand stay in
+ * agreement — two components each holding their own idea of "current" is how
+ * they drift apart.
  */
 export default function TimeCircuitsScene() {
-  // The scene begins exactly at the first viewport's lower edge. A positive
-  // prefetch margin would therefore count it as visible on initial load and
-  // defeat the lazy mount; shrinking the bottom edge waits for real scrolling.
-  const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px -12%', true)
-  const [active, setActive] = useState(0)
-  const stopRefs = useRef<(HTMLElement | null)[]>([])
-
-  useEffect(() => {
-    if (!hasEntered) return
-    const nodes = stopRefs.current.filter((n): n is HTMLElement => n !== null)
-    if (nodes.length === 0) return
-    if (typeof IntersectionObserver === 'undefined') return
-
-    // Track ratios for every stop and pick the most visible, so a fast scroll
-    // cannot leave the panel showing a role that has already left the screen.
-    const ratios = new Map<Element, number>()
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) ratios.set(entry.target, entry.intersectionRatio)
-        let best = 0
-        let bestRatio = -1
-        nodes.forEach((node, i) => {
-          const ratio = ratios.get(node) ?? 0
-          if (ratio > bestRatio) {
-            bestRatio = ratio
-            best = i
-          }
-        })
-        setActive(best)
-      },
-      { threshold: [0, 0.25, 0.5, 0.75, 1] },
-    )
-    nodes.forEach((node) => observer.observe(node))
-    return () => observer.disconnect()
-  }, [hasEntered])
-
   const present = timeline[0]
+  const [activeId, setActiveId] = useState<string | null>(present?.entry.id ?? null)
+  const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px -12%', true)
+  // PRESENT TIME is the visitor's own clock, in their own timezone.
+  const now = useClock()
+
   if (!present) return null
 
-  const destination = timeline[active] ?? present
-  const departed = timeline[active + 1] ?? null
+  const activeIndex = Math.max(
+    0,
+    timeline.findIndex((stop) => stop.entry.id === activeId),
+  )
+  const destination = timeline[activeIndex] ?? present
+  const departed = timeline[activeIndex + 1] ?? null
 
   return (
-    <section
-      ref={sceneRef}
-      className="scene scene--circuits"
-      aria-labelledby="experience-heading"
-    >
+    <section ref={sceneRef} className="scene scene--circuits" aria-labelledby="experience-heading">
       <h2 id="experience-heading" className="visually-hidden">
         Experience
       </h2>
 
       {hasEntered ? (
         <>
-          <div className="circuits-scene__panel">
-            <TimeCircuits destination={destination} present={present} departed={departed} />
+          {/* Dashboard: the capacitor sits to the left of the circuits, the
+              way it does behind the seats, rather than floating alone. */}
+          <div className="circuits-scene__top">
+            <div className="circuits-scene__dash">
+              <FluxCapacitor />
+              <TimeCircuits
+                destination={readoutFromStop(destination)}
+                present={now}
+                departed={readoutFromStop(departed)}
+              />
+            </div>
           </div>
 
-          <ol className="circuits-scene__stops">
-            {timeline.map((stop, i) => (
-              <li
-                key={stop.entry.id}
-                ref={(node) => {
-                  stopRefs.current[i] = node
-                }}
-                className={`circuits-stop${i === active ? ' is-active' : ''}`}
-              >
-                <p className="circuits-stop__when">{stop.entry.monthLabel}</p>
-                <h3 className="circuits-stop__title">{stop.entry.title}</h3>
-                <p className="circuits-stop__date">{stop.entry.date}</p>
-                <p className="circuits-stop__description">{stop.entry.description}</p>
-                <ul className="circuits-stop__achievements">
-                  {stop.entry.achievements.map((achievement) => (
-                    <li key={achievement}>{achievement}</li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ol>
+          <ExperienceDeck selectedId={destination.entry.id} onSelect={setActiveId} />
+
+          {/* The lower readout: the role name in neon. */}
+          <div className="circuits-scene__bottom" aria-hidden="true">
+            <span className="circuits-scene__role" key={destination.entry.id}>
+              {destination.entry.title}
+            </span>
+          </div>
         </>
       ) : (
         <div className="circuits-scene__placeholder" aria-hidden="true" />

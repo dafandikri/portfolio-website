@@ -1,0 +1,351 @@
+/*
+ * Act I: the departure, scrubbed by scroll.
+ *
+ * Every beat is a paused animation seeked with a negative delay from
+ * --progress, so the whole sequence runs forward on the way down and backward on
+ * the way up. Nothing here has its own clock except the flame flicker, which
+ * should keep moving even when the page is still — fire does not hold a pose.
+ *
+ * Scroll progress → beat:
+ *   0.00 – 0.30   the card's white washes down to black; the tracks ignite
+ *   0.15 – 0.62   the trails race away and converge on the vanishing point
+ *   0.58 – 0.72   one hard flash where they meet
+ *   0.66 – 1.00   the plate tumbles out of the flash and settles
+ */
+
+/*
+ * A tall section holding a sticky stage. The stage is glued to the viewport for
+ * the whole of the section's extra height, so the sequence plays in front of a
+ * still camera instead of scrolling past. The section's height is the sequence's
+ * duration.
+ */
+.scene--departure {
+  position: relative;
+  height: 320svh;
+  background: #050403;
+}
+
+.departure__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  display: grid;
+  place-items: center;
+}
+
+.departure__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/*
+ * Every scrubbed element shares this: a one-second animation that never plays,
+ * seeked by scroll instead. Keyframe percentages therefore read directly as
+ * scroll progress.
+ */
+.departure__wash,
+.departure__trail,
+.departure__flash,
+.departure__plate {
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-delay: calc(var(--progress, 0) * -1s);
+}
+
+/* --------------------------------------------------------------------------
+ * The wash — the card's white burning down to black
+ * ------------------------------------------------------------------------ */
+
+.departure__wash {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  animation-name: wash-out;
+}
+
+/*
+ * A translucent tint, never an opaque fill. The mid keyframe used to be solid
+ * #b8641f, which painted the entire viewport orange and hid the whole scene
+ * behind it — a full-bleed overlay has to stay transparent enough to see
+ * through at every step.
+ */
+@keyframes wash-out {
+  0% {
+    background: rgba(255, 255, 255, 1);
+  }
+  16% {
+    background: rgba(255, 232, 198, 0.72);
+  }
+  26% {
+    background: rgba(184, 100, 31, 0.28);
+  }
+  36%,
+  100% {
+    background: rgba(5, 4, 3, 0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The trails
+ * ------------------------------------------------------------------------ */
+
+.departure__road {
+  position: absolute;
+  inset: 0;
+  perspective: 34rem;
+  perspective-origin: 50% 52%;
+  transform-style: preserve-3d;
+}
+
+.departure__trail {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: clamp(3rem, 7vw, 5.5rem);
+  height: 86vh;
+  transform-origin: 50% 0;
+  animation-name: trail-run;
+}
+
+.departure__trail--left {
+  --lane: -1;
+}
+.departure__trail--right {
+  --lane: 1;
+}
+
+.flame {
+  position: absolute;
+  inset: 0;
+  filter: url(#flame-goo);
+  mix-blend-mode: screen;
+}
+
+/*
+ * Each tongue is a soft blob rising and shrinking on its own phase. Alone they
+ * are blobs; merged by the goo filter they become one flame whose outline is
+ * never the same twice.
+ */
+.flame__tongue {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 62%;
+  height: 46%;
+  border-radius: 50%;
+  /*
+   * Hottest at the near end and cooling toward the vanishing point. The ramp
+   * used to run the other way, which put the white core up at the horizon and
+   * made the pair read as light shining *out of* the centre rather than as two
+   * burning tracks receding *into* it. Depth is carried by the ramp, not the
+   * shape.
+   */
+  background: radial-gradient(
+    ellipse at 50% 22%,
+    rgba(255, 252, 236, 1) 0%,
+    rgba(255, 214, 118, 0.98) 22%,
+    rgba(255, 132, 26, 0.94) 48%,
+    rgba(204, 46, 8, 0.6) 74%,
+    rgba(120, 22, 6, 0) 100%
+  );
+  /* Unblurred fill: the goo filter on the parent shapes the silhouette, and
+     anything it blurs heavily loses its colour ramp to averaging. */
+  animation: tongue-rise 1.15s ease-out infinite;
+}
+
+/* Staggered phases and slightly different sizes: fire is never symmetrical. */
+.flame__tongue--0 { animation-delay: 0ms;   --sway: -6%;  width: 70%; }
+.flame__tongue--1 { animation-delay: -230ms; --sway: 9%;  width: 52%; }
+.flame__tongue--2 { animation-delay: -460ms; --sway: -12%; width: 44%; }
+.flame__tongue--3 { animation-delay: -690ms; --sway: 5%;  width: 60%; }
+.flame__tongue--4 { animation-delay: -920ms; --sway: -3%; width: 38%; }
+
+@keyframes tongue-rise {
+  0% {
+    transform: translate(-50%, 10%) scale(0.55);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    /* Rises, narrows and drifts sideways — the taper of a real tongue. */
+    transform: translate(calc(-50% + var(--sway)), -125%) scale(0.16, 0.72);
+    opacity: 0;
+  }
+}
+
+@keyframes trail-run {
+  0% {
+    opacity: 0;
+    transform: translate3d(calc(var(--lane) * 7vw - 50%), 0, 22rem) rotateX(80deg) scaleY(0.2);
+  }
+  15% {
+    opacity: 0;
+  }
+  26% {
+    opacity: 1;
+  }
+  52% {
+    opacity: 1;
+  }
+  62% {
+    opacity: 0;
+    transform: translate3d(calc(var(--lane) * 0.6vw - 50%), 0, -18rem) rotateX(80deg) scaleY(1.7);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(var(--lane) * 0.6vw - 50%), 0, -18rem) rotateX(80deg) scaleY(1.7);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The flash — one burst, never strobing
+ * ------------------------------------------------------------------------ */
+
+.departure__flash {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 14rem;
+  height: 14rem;
+  margin: -7rem 0 0 -7rem;
+  border-radius: 50%;
+  z-index: 3;
+  animation-name: flash-burst;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 246, 220, 0.92) 16%,
+    rgba(255, 178, 70, 0.34) 40%,
+    rgba(255, 140, 30, 0) 70%
+  );
+}
+
+@keyframes flash-burst {
+  0%,
+  57% {
+    opacity: 0;
+    transform: scale(0.04);
+  }
+  61% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  66% {
+    opacity: 0.7;
+    transform: scale(4);
+  }
+  74%,
+  100% {
+    opacity: 0;
+    transform: scale(9);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The plate — small, and turning the whole way down
+ * ------------------------------------------------------------------------ */
+
+.departure__plate-well {
+  position: relative;
+  z-index: 5;
+  perspective: 30rem;
+}
+
+.departure__plate {
+  transform-style: preserve-3d;
+  animation-name: plate-arrive;
+}
+
+/*
+ * Scroll drives where the plate is; a separate, always-running rotation keeps
+ * it turning. Splitting them is what makes it read as an object that happens to
+ * be spinning rather than an animation that ends.
+ */
+@keyframes plate-arrive {
+  0%,
+  62% {
+    opacity: 0;
+    transform: translate3d(0, -6rem, 16rem) scale(0.3);
+  }
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+.departure__plate-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  padding: 0.4em 0.85em 0.5em;
+  border-radius: 0.25rem;
+  border: 0.12em solid #14306b;
+  background: linear-gradient(#fdfdf8, #deded2);
+  box-shadow:
+    inset 0 0 0 0.07em #fdfdf8,
+    0 0.8rem 2rem -0.5rem rgba(0, 0, 0, 0.8);
+  font-family: var(--font-tech);
+  color: #14306b;
+  /* Small and cinematic — a prop caught in frame, not a banner. */
+  transform-style: preserve-3d;
+  animation: plate-swirl 6.5s linear infinite;
+}
+
+@keyframes plate-swirl {
+  from {
+    transform: rotateY(0deg) rotateX(9deg);
+  }
+  to {
+    transform: rotateY(360deg) rotateX(9deg);
+  }
+}
+
+.departure__plate-state {
+  font-size: clamp(0.34rem, 0.85vw, 0.46rem);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+}
+
+.departure__plate-text {
+  font-size: clamp(0.85rem, 2.4vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+/* --------------------------------------------------------------------------
+ * Reduced motion — the whole act is motion for its own sake
+ * ------------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .scene--departure {
+    min-height: 60svh;
+  }
+  .departure__wash,
+  .departure__trail,
+  .departure__flash,
+  .flame__tongue,
+  .departure__plate-face {
+    animation: none;
+  }
+  .departure__trail,
+  .departure__flash {
+    opacity: 0;
+  }
+  .departure__plate {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
