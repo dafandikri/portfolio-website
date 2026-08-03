@@ -29,6 +29,7 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
   // Oldest first, so the fan reads past → present left to right.
   const hand = [...timeline].reverse()
   const mid = (hand.length - 1) / 2
+  const selectedIndex = hand.findIndex((stop) => stop.entry.id === selected)
 
   return (
     <div className="deck">
@@ -38,6 +39,14 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
           // Fan the hand: each card rotates and lifts by its distance from the
           // middle, the way a hand of cards splays in a palm.
           const offset = i - mid
+          /*
+           * A raised card grows to 1.08 and would otherwise swallow whatever sits
+           * beside it — measured at 36% of its neighbour's width. Its neighbours
+           * step away from it instead, which both frees the card underneath and
+           * is what a hand does when you pull one out of it.
+           */
+          const shove =
+            selectedIndex < 0 || isOpen ? 0 : Math.sign(i - selectedIndex) * 13
           return (
             <motion.li
               key={stop.entry.id}
@@ -51,6 +60,7 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                */
               animate={{
                 rotate: isOpen ? 0 : offset * 4.5,
+                x: shove,
                 y: isOpen ? -26 : Math.abs(offset) * 9,
                 scale: isOpen ? 1.08 : 1,
                 /*
@@ -73,8 +83,8 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                */
               whileHover={
                 isOpen
-                  ? { y: -26, rotate: 0, scale: 1.08 }
-                  : { y: -14, rotate: offset * 2, scale: 1.04 }
+                  ? { x: 0, y: -26, rotate: 0, scale: 1.08 }
+                  : { x: shove, y: -14, rotate: offset * 2, scale: 1.04 }
               }
               whileTap={{ scale: 0.98 }}
               transition={SPRING}

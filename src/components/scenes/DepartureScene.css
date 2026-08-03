@@ -400,10 +400,16 @@
    * spread as it grew, which reads as the lamp widening rather than the beam
    * reaching further.
    */
-  -webkit-mask-image: linear-gradient(to bottom, #000 0 126vh, rgba(0, 0, 0, 0) 175vh);
-  mask-image: linear-gradient(to bottom, #000 0 126vh, rgba(0, 0, 0, 0) 175vh);
-  -webkit-mask-size: 100% 300vh;
-  mask-size: 100% 300vh;
+  /*
+   * The opaque band has to be longer than the beam itself. `mask-repeat` is
+   * no-repeat, so anything above the mask box is outside the mask and therefore
+   * hidden — with a band shorter than the element, the finished wipe left a hard
+   * horizontal cut across the top of the beam where the mask simply ran out.
+   */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 150vh, rgba(0, 0, 0, 0) 205vh);
+  mask-image: linear-gradient(to bottom, #000 0 150vh, rgba(0, 0, 0, 0) 205vh);
+  -webkit-mask-size: 100% 340vh;
+  mask-size: 100% 340vh;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   animation-name: spot-descend, spot-sway;
@@ -428,8 +434,8 @@
      * point of the mask with the same point of the box rather than offsetting
      * it, so the wipe ran backwards and uncovered the bottom of the beam first.
      */
-    -webkit-mask-position: 0 -140vh;
-    mask-position: 0 -140vh;
+    -webkit-mask-position: 0 -205vh;
+    mask-position: 0 -205vh;
   }
   66% {
     opacity: 1;
@@ -443,8 +449,10 @@
   90%,
   100% {
     opacity: 1;
-    -webkit-mask-position: 0 12vh;
-    mask-position: 0 12vh;
+    /* Exactly 0: the mask box top meets the element top, so no strip of beam is
+       ever left outside it. */
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
   }
 }
 
