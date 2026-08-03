@@ -55,13 +55,6 @@ export default function TimeCircuitsScene() {
           </div>
 
           <ExperienceDeck selectedId={destination.entry.id} onSelect={setActiveId} />
-
-          {/* The lower readout: the role name in neon. */}
-          <div className="circuits-scene__bottom" aria-hidden="true">
-            <span className="circuits-scene__role" key={destination.entry.id}>
-              {destination.entry.title}
-            </span>
-          </div>
         </>
       ) : (
         <div className="circuits-scene__placeholder" aria-hidden="true" />

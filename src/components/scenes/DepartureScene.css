@@ -7,9 +7,10 @@
  * should keep moving even when the page is still — fire does not hold a pose.
  *
  * Scroll progress → beat:
- *   0.00 – 0.30   the card's white washes down to black; the tracks ignite
- *   0.15 – 0.62   the trails race away and converge on the vanishing point
- *   0.58 – 0.72   one hard flash where they meet
+ *   0.00 – 0.36   the card's white washes down to black
+ *   0.16 – 0.54   the tracks ignite, sweeping from the camera to the horizon
+ *   0.52 – 0.68   one hard flash where they meet
+ *   0.55 – 0.70   the tracks burn out behind it
  *   0.66 – 1.00   the plate tumbles out of the flash and settles
  */
 
@@ -32,6 +33,9 @@
   overflow: clip;
   display: grid;
   place-items: center;
+  /* Everything on the road is measured from this one point, so the two tracks
+     cannot help but meet at it. */
+  --vanish-y: 50%;
 }
 
 .departure__defs {
@@ -46,7 +50,7 @@
  * scroll progress.
  */
 .departure__wash,
-.departure__trail,
+.departure__track,
 .departure__flash,
 .departure__plate {
   animation-duration: 1s;
@@ -78,140 +82,226 @@
   0% {
     background: rgba(255, 255, 255, 1);
   }
-  16% {
-    background: rgba(255, 232, 198, 0.72);
+  14% {
+    background: rgba(255, 234, 202, 0.6);
   }
-  26% {
-    background: rgba(184, 100, 31, 0.28);
+  22% {
+    background: rgba(184, 100, 31, 0.14);
   }
-  36%,
+  30%,
   100% {
     background: rgba(5, 4, 3, 0);
   }
 }
 
 /* --------------------------------------------------------------------------
- * The trails
+ * The tracks
+ *
+ * Two ribbons of fire lying on the tarmac, left behind by a car that is already
+ * out of frame. They do not move: their near ends are fixed near the bottom
+ * corners and their far ends are the vanishing point itself, so they converge at
+ * the middle of the screen because that is where the geometry puts them, not
+ * because they travel towards each other. What travels is the ignition.
  * ------------------------------------------------------------------------ */
 
 .departure__road {
   position: absolute;
   inset: 0;
-  perspective: 34rem;
-  perspective-origin: 50% 52%;
-  transform-style: preserve-3d;
 }
 
-.departure__trail {
+.departure__track {
   position: absolute;
-  left: 50%;
-  top: 52%;
-  width: clamp(3rem, 7vw, 5.5rem);
-  height: 86vh;
-  transform-origin: 50% 0;
-  animation-name: trail-run;
+  inset: 0;
+  animation-name: track-burnout;
 }
 
-.departure__trail--left {
-  --lane: -1;
+.departure__track--left {
+  --dir: -1;
 }
-.departure__trail--right {
-  --lane: 1;
+.departure__track--right {
+  --dir: 1;
+}
+
+/*
+ * The blur has to live on a wrapper. clip-path is applied *after* filter, so a
+ * blur on the wedge itself would soften the fire and leave the polygon's
+ * straight edges perfectly sharp — exactly backwards.
+ */
+.departure__bed-blur {
+  position: absolute;
+  inset: 0;
+  filter: blur(0.7vh);
+  mix-blend-mode: screen;
+}
+
+/*
+ * The trailing flame: one wedge running from the camera to the vanishing point.
+ * Its far vertex *is* the vanishing point, so the two trails cannot help but
+ * meet at the middle of the screen — convergence is geometry here, not a
+ * perspective value tuned until it looked about right.
+ */
+.departure__bed {
+  position: absolute;
+  inset: 0;
+  /* The base sits past the bottom of the frame: at exactly 100% its straight
+     edge landed on screen and read as the cut end of a fluorescent tube. */
+  clip-path: polygon(
+    50% var(--vanish-y),
+    calc(50% + var(--dir) * 20.4%) 114%,
+    calc(50% + var(--dir) * 13.2%) 114%
+  );
+  /* Hot against the camera, cooling to nothing at the horizon. The stops sit in
+     the bottom half because that is the only half the wedge occupies. */
+  background: linear-gradient(
+    to top,
+    rgba(255, 232, 176, 0.82) 0%,
+    rgba(255, 188, 72, 0.86) 13%,
+    rgba(255, 112, 16, 0.78) 26%,
+    rgba(204, 42, 8, 0.5) 37%,
+    rgba(120, 16, 4, 0.18) 45%,
+    rgba(40, 6, 2, 0) 49%
+  );
+  transform-origin: 50% 100%;
+  animation-name: bed-lay;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-delay: calc(var(--progress, 0) * -1s);
+}
+
+/*
+ * The flame front running away from the camera. Squashing the wedge from its
+ * base keeps the near end pinned where the car started and walks the burning tip
+ * up to the vanishing point — the tip is the car. The stops decelerate, because
+ * something receding covers less screen per second the further out it gets, and
+ * that deceleration is most of what reads as distance.
+ */
+@keyframes bed-lay {
+  0%,
+  16% {
+    transform: scaleY(0);
+  }
+  25.5% {
+    transform: scaleY(0.465);
+  }
+  35% {
+    transform: scaleY(0.782);
+  }
+  44.5% {
+    transform: scaleY(0.953);
+  }
+  54%,
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+/* One hard wipe when the flash goes off, rather than 36 blobs each fading. */
+@keyframes track-burnout {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  70%,
+  100% {
+    opacity: 0;
+  }
 }
 
 .flame {
   position: absolute;
   inset: 0;
   filter: url(#flame-goo);
+  /* Fire is additive light; screen keeps the overlaps hot instead of muddy. */
   mix-blend-mode: screen;
 }
 
 /*
- * Each tongue is a soft blob rising and shrinking on its own phase. Alone they
- * are blobs; merged by the goo filter they become one flame whose outline is
- * never the same twice.
+ * One blob of the ribbon. Position, size and heat all come from its depth, set
+ * per element in DepartureScene.tsx — it is much easier to reason about a
+ * perspective divide in TypeScript than to fake one in calc().
+ *
+ * Position lives in `left`/`top` rather than a transform so the scrubbed
+ * ignition can own opacity and the flicker inside can own transform, without
+ * the two fighting over the same property.
+ */
+.flame__ember {
+  position: absolute;
+  left: calc(50% + var(--x) * 1vw);
+  top: calc(var(--vanish-y) + var(--y) * 1vh);
+  /*
+   * Wider than tall. A lick standing up in a narrow teardrop is a candle; fire
+   * lying flat on tarmac is foreshortened by the camera, so it spreads across
+   * the road and stays low.
+   */
+  width: calc(var(--size) * 1.1vh);
+  height: calc(var(--size) * 0.55vh);
+  margin-left: calc(var(--size) * -0.55vh);
+  margin-top: calc(var(--size) * -0.275vh);
+  animation: ember-ignite 1s linear both paused;
+  /*
+   * Negative scrub plus a positive per-blob offset. Because the offset is added
+   * after the scrub, a blob simply lights later in the scroll than its
+   * neighbour — which, read across the ribbon, is a car pulling away.
+   */
+  animation-delay: calc(var(--progress, 0) * -1s + var(--ignite) * 1s);
+}
+
+@keyframes ember-ignite {
+  0% {
+    opacity: 0;
+  }
+  9%,
+  100% {
+    opacity: 1;
+  }
+}
+
+/*
+ * The lick. It never goes out — it swells, drifts a little towards the horizon
+ * and sinks back, so the trail keeps burning between beats instead of blinking.
+ * The earlier version faded to nothing at the end of every cycle, which left two
+ * or three lit blobs on screen at any instant and nothing for the goo filter to
+ * merge.
  */
 .flame__tongue {
   position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 62%;
-  height: 46%;
-  border-radius: 50%;
-  /*
-   * Hottest at the near end and cooling toward the vanishing point. The ramp
-   * used to run the other way, which put the white core up at the horizon and
-   * made the pair read as light shining *out of* the centre rather than as two
-   * burning tracks receding *into* it. Depth is carried by the ramp, not the
-   * shape.
-   */
+  inset: 0;
+  border-radius: 54% 46% 50% 50% / 58% 58% 42% 42%;
   background: radial-gradient(
-    ellipse at 50% 22%,
-    rgba(255, 252, 236, 1) 0%,
-    rgba(255, 214, 118, 0.98) 22%,
-    rgba(255, 132, 26, 0.94) 48%,
-    rgba(204, 46, 8, 0.6) 74%,
-    rgba(120, 22, 6, 0) 100%
+    ellipse at 50% 68%,
+    rgba(255, 253, 242, var(--heat)) 0%,
+    rgba(255, 214, 118, 0.96) 26%,
+    rgba(255, 128, 22, 0.9) 54%,
+    rgba(196, 40, 8, 0.55) 78%,
+    rgba(104, 18, 4, 0) 100%
   );
-  /* Unblurred fill: the goo filter on the parent shapes the silhouette, and
-     anything it blurs heavily loses its colour ramp to averaging. */
-  animation: tongue-rise 1.15s ease-out infinite;
+  animation: tongue-lick var(--beat) ease-in-out infinite alternate;
+  animation-delay: var(--phase);
 }
 
-/* Staggered phases and slightly different sizes: fire is never symmetrical. */
-.flame__tongue--0 { animation-delay: 0ms;   --sway: -6%;  width: 70%; }
-.flame__tongue--1 { animation-delay: -230ms; --sway: 9%;  width: 52%; }
-.flame__tongue--2 { animation-delay: -460ms; --sway: -12%; width: 44%; }
-.flame__tongue--3 { animation-delay: -690ms; --sway: 5%;  width: 60%; }
-.flame__tongue--4 { animation-delay: -920ms; --sway: -3%; width: 38%; }
-
-@keyframes tongue-rise {
+@keyframes tongue-lick {
   0% {
-    transform: translate(-50%, 10%) scale(0.55);
-    opacity: 0;
-  }
-  18% {
-    opacity: 1;
+    transform: translateY(6%) scale(0.86, 0.72);
+    opacity: 0.62;
   }
   100% {
-    /* Rises, narrows and drifts sideways — the taper of a real tongue. */
-    transform: translate(calc(-50% + var(--sway)), -125%) scale(0.16, 0.72);
-    opacity: 0;
-  }
-}
-
-@keyframes trail-run {
-  0% {
-    opacity: 0;
-    transform: translate3d(calc(var(--lane) * 7vw - 50%), 0, 22rem) rotateX(80deg) scaleY(0.2);
-  }
-  15% {
-    opacity: 0;
-  }
-  26% {
+    /* Drifts up-screen, which on a road laid out in perspective is downwind
+       towards the horizon — the direction the car went. */
+    transform: translateY(-22%) scale(1.14, 1.3);
     opacity: 1;
-  }
-  52% {
-    opacity: 1;
-  }
-  62% {
-    opacity: 0;
-    transform: translate3d(calc(var(--lane) * 0.6vw - 50%), 0, -18rem) rotateX(80deg) scaleY(1.7);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(calc(var(--lane) * 0.6vw - 50%), 0, -18rem) rotateX(80deg) scaleY(1.7);
   }
 }
 
 /* --------------------------------------------------------------------------
- * The flash — one burst, never strobing
+ * The flash — one burst at the vanishing point, never strobing
  * ------------------------------------------------------------------------ */
 
 .departure__flash {
   position: absolute;
   left: 50%;
-  top: 52%;
+  top: var(--vanish-y);
   width: 14rem;
   height: 14rem;
   margin: -7rem 0 0 -7rem;
@@ -229,19 +319,19 @@
 
 @keyframes flash-burst {
   0%,
-  57% {
+  52% {
     opacity: 0;
     transform: scale(0.04);
   }
-  61% {
+  57% {
     opacity: 1;
     transform: scale(1.4);
   }
-  66% {
+  63% {
     opacity: 0.7;
     transform: scale(4);
   }
-  74%,
+  72%,
   100% {
     opacity: 0;
     transform: scale(9);
@@ -251,6 +341,151 @@
 /* --------------------------------------------------------------------------
  * The plate — small, and turning the whole way down
  * ------------------------------------------------------------------------ */
+
+/* --------------------------------------------------------------------------
+ * The show light
+ *
+ * A cone struck from above the frame, and the pool it throws on the floor. Both
+ * come up with the plate, so the beam and the thing it lights arrive together.
+ * ------------------------------------------------------------------------ */
+
+.departure__spot,
+.departure__spot-pool {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-delay: calc(var(--progress, 0) * -1s);
+}
+
+/*
+ * The beam. A cone narrow at the lamp and open at the floor, cut with a polygon
+ * and softened by a blur — a gradient alone would be a rectangle of light,
+ * because a beam is a *shape* before it is a brightness.
+ */
+.departure__spot {
+  left: 0;
+  right: 0;
+  /* Runs past the bottom of the stage: ending the cone inside the frame left a
+     straight horizontal cut where the light simply stopped. */
+  top: -10%;
+  height: 130%;
+  clip-path: polygon(47.4% 0, 52.6% 0, 71% 100%, 29% 100%);
+  /*
+   * Very faint. A beam is the little you can see of light passing through air,
+   * not a lit surface — at the opacity this started on it read as a solid grey
+   * wedge laid over the scene.
+   */
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 250, 235, 0.2) 0%,
+    rgba(255, 244, 220, 0.1) 38%,
+    rgba(255, 238, 205, 0.042) 72%,
+    rgba(255, 236, 200, 0) 100%
+  );
+  /* Heavy feather. The cone is cut by a polygon, so without it the beam has
+     razor-straight sides — light in air has no edge, only a falloff. */
+  filter: blur(3.2vh);
+  /* Pivots at the lamp, so the sway swings the far end of the beam and not the
+     source — which is how a hung light actually moves. */
+  transform-origin: 50% 0;
+  /*
+   * The beam is revealed by a mask that slides down it, so the light travels
+   * from the lamp to the floor under the scroll rather than simply fading up in
+   * place. Scaling the cone instead would have worked as a wipe but changed its
+   * spread as it grew, which reads as the lamp widening rather than the beam
+   * reaching further.
+   */
+  -webkit-mask-image: linear-gradient(to bottom, #000 0 126vh, rgba(0, 0, 0, 0) 175vh);
+  mask-image: linear-gradient(to bottom, #000 0 126vh, rgba(0, 0, 0, 0) 175vh);
+  -webkit-mask-size: 100% 300vh;
+  mask-size: 100% 300vh;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  animation-name: spot-descend, spot-sway;
+  animation-duration: 1s, 7s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: 1, infinite;
+  animation-direction: normal, alternate;
+  animation-play-state: paused, running;
+  animation-delay: calc(var(--progress, 0) * -1s), 0s;
+}
+
+/*
+ * Struck at the flash and then reaching down, arriving at the floor just as the
+ * plate settles into it.
+ */
+@keyframes spot-descend {
+  0%,
+  60% {
+    opacity: 0;
+    /*
+     * Absolute units, not percentages. A percentage `mask-position` aligns that
+     * point of the mask with the same point of the box rather than offsetting
+     * it, so the wipe ran backwards and uncovered the bottom of the beam first.
+     */
+    -webkit-mask-position: 0 -140vh;
+    mask-position: 0 -140vh;
+  }
+  66% {
+    opacity: 1;
+  }
+  72% {
+    opacity: 0.75;
+  }
+  80% {
+    opacity: 1;
+  }
+  90%,
+  100% {
+    opacity: 1;
+    -webkit-mask-position: 0 12vh;
+    mask-position: 0 12vh;
+  }
+}
+
+/* The pool on the floor, directly under the plate. */
+.departure__spot-pool {
+  left: 50%;
+  top: 76%;
+  width: 46vw;
+  height: 15vh;
+  margin-left: -23vw;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 50%,
+    rgba(255, 246, 224, 0.22) 0%,
+    rgba(255, 238, 205, 0.09) 45%,
+    rgba(255, 236, 200, 0) 74%
+  );
+  filter: blur(1vh);
+  animation-name: spot-strike;
+}
+
+/* Struck hard, like a lamp coming up to full, then held. */
+@keyframes spot-strike {
+  0%,
+  80% {
+    opacity: 0;
+  }
+  92%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spot-sway {
+  from {
+    transform: rotate(-1.1deg);
+  }
+  to {
+    transform: rotate(1.1deg);
+  }
+}
 
 .departure__plate-well {
   position: relative;
@@ -283,6 +518,14 @@
   }
 }
 
+/* Small and cinematic — a prop caught in frame, not a banner. */
+.departure__plate-spin {
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  animation: plate-swirl 6.5s linear infinite;
+}
+
 .departure__plate-face {
   display: flex;
   flex-direction: column;
@@ -297,9 +540,17 @@
     0 0.8rem 2rem -0.5rem rgba(0, 0, 0, 0.8);
   font-family: var(--font-tech);
   color: #14306b;
-  /* Small and cinematic — a prop caught in frame, not a banner. */
-  transform-style: preserve-3d;
-  animation: plate-swirl 6.5s linear infinite;
+  /* Each face is invisible from behind, so exactly one is ever on show. */
+  backface-visibility: hidden;
+}
+
+/* The reverse, printed the same way round so the plate stays readable through
+   the whole turn. */
+.departure__plate-face--back {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  transform: rotateY(180deg);
 }
 
 @keyframes plate-swirl {
@@ -312,13 +563,13 @@
 }
 
 .departure__plate-state {
-  font-size: clamp(0.34rem, 0.85vw, 0.46rem);
+  font-size: clamp(0.5rem, 1.15vw, 0.72rem);
   font-weight: 500;
   letter-spacing: 0.3em;
 }
 
 .departure__plate-text {
-  font-size: clamp(0.85rem, 2.4vw, 1.35rem);
+  font-size: clamp(1.3rem, 3.4vw, 2.15rem);
   font-weight: 700;
   letter-spacing: 0.1em;
   line-height: 1;
@@ -333,13 +584,17 @@
     min-height: 60svh;
   }
   .departure__wash,
-  .departure__trail,
+  .departure__track,
+  .departure__bed,
   .departure__flash,
+  .departure__spot,
+  .departure__spot-pool,
+  .flame__ember,
   .flame__tongue,
-  .departure__plate-face {
+  .departure__plate-spin {
     animation: none;
   }
-  .departure__trail,
+  .departure__track,
   .departure__flash {
     opacity: 0;
   }

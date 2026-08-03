@@ -1,6 +1,6 @@
 import { act, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { timeline } from '../../data/timeline'
+import { fullTitle, timeline } from '../../data/timeline'
 import { stubIntersectionObserver } from '../../test/setup'
 import TimeCircuitsScene from './TimeCircuitsScene'
 
@@ -30,7 +30,7 @@ describe('TimeCircuitsScene', () => {
     act(() => observers[0]?.trigger(container.querySelector('.scene--circuits')!, true, 1))
 
     for (const stop of timeline) {
-      expect(screen.getByRole('button', { name: new RegExp(stop.entry.title, 'i') })).toBeVisible()
+      expect(screen.getByRole('button', { name: fullTitle(stop.entry) })).toBeVisible()
     }
   })
 
@@ -41,7 +41,7 @@ describe('TimeCircuitsScene', () => {
 
     // A role that is not the default, so the change is actually observable.
     const target = timeline[2]!
-    const card = screen.getByRole('button', { name: new RegExp(target.entry.title, 'i') })
+    const card = screen.getByRole('button', { name: fullTitle(target.entry) })
     act(() => card.click())
 
     const destination = container.querySelector('.circuits__row--destination')!

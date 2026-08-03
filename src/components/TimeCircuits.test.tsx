@@ -17,11 +17,20 @@ describe('TimeCircuits', () => {
     expect(screen.getByText('Present Time')).toBeInTheDocument()
     expect(screen.getByText('Last Time Departed')).toBeInTheDocument()
 
+    /*
+     * Expectations are read out of the same records the component was handed,
+     * not written down as literals. Hard-coding "AUG 2025" made this test fail
+     * every time a job was added to the CV, which tells you nothing about
+     * whether the panel maps its three rows correctly — which is all it is for.
+     */
+    const label = (stop: (typeof timeline)[number]) =>
+      `${stop.month ?? ''} ${stop.year ?? ''}`.trim()
+
     const rows = container.querySelectorAll('.circuits__row')
-    expect(within(rows[0] as HTMLElement).getByText('AUG 2025')).toBeInTheDocument()
-    expect(within(rows[1] as HTMLElement).getByText('JAN 2026')).toBeInTheDocument()
-    expect(within(rows[2] as HTMLElement).getByText('JUL 2025')).toBeInTheDocument()
-    expect(rows[0]?.querySelector('[data-display="2025"]')).not.toBeNull()
+    expect(within(rows[0] as HTMLElement).getByText(label(destination))).toBeInTheDocument()
+    expect(within(rows[1] as HTMLElement).getByText(label(present))).toBeInTheDocument()
+    expect(within(rows[2] as HTMLElement).getByText(label(departed))).toBeInTheDocument()
+    expect(rows[0]?.querySelector(`[data-display="${destination.year}"]`)).not.toBeNull()
   })
 
   it('leaves unknown columns unlit and names an empty departed row', () => {

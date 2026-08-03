@@ -31,7 +31,17 @@ export const projectsSchema = z.array(projectSchema).min(1)
 export const experienceEntrySchema = z.object({
   id: z.string().min(1),
   monthLabel: z.string().min(1),
-  title: z.string().min(1),
+  /**
+   * The job, and who it was for, held apart rather than as one "Role - Org"
+   * string. They are read in different places — the card face shows only the
+   * organisation and the readout below it names the role — so storing the
+   * joined line would mean splitting it back apart at every use.
+   *
+   * `org` is the short display name, not the legal one: it has to fit on a
+   * playing card without wrapping.
+   */
+  role: z.string().min(1),
+  org: z.string().min(1).max(14),
   date: z.string().min(1),
   description: z.string().min(1),
   achievements: z.array(z.string().min(1)).min(1),

@@ -26,13 +26,15 @@ describe('timeline', () => {
     expect(new Set(timeline.map(({ entry }) => entry.id))).toEqual(new Set(sourceIds))
   })
 
+  /*
+   * Asserted as a property of the ordering rather than as a literal list. The
+   * ids encode "<year>-<month>", so a descending sort of the ids *is* newest
+   * first — and stating it that way means adding a job to the CV no longer
+   * breaks a test that has nothing to do with the change.
+   */
   it('orders roles from newest to oldest, including entries in the same year', () => {
-    expect(timeline.map(({ entry }) => entry.id)).toEqual([
-      '2026-01',
-      '2025-08',
-      '2025-07',
-      '2024-06',
-      '2023-01',
-    ])
+    const ids = timeline.map(({ entry }) => entry.id)
+    expect(ids).toEqual([...ids].sort().reverse())
+    expect(ids.length).toBeGreaterThan(1)
   })
 })

@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'motion/react'
-import { timeline } from '../data/timeline'
+import { fullTitle, timeline } from '../data/timeline'
 import './ExperienceDeck.css'
 
 /**
@@ -53,9 +53,29 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                 rotate: isOpen ? 0 : offset * 4.5,
                 y: isOpen ? -26 : Math.abs(offset) * 9,
                 scale: isOpen ? 1.08 : 1,
-                zIndex: isOpen ? 20 : 10 - Math.abs(Math.round(offset)),
+                /*
+                 * Strictly left-to-right, with the raised card above everything.
+                 * Stacking outwards from the middle instead — which is what
+                 * `10 - |offset|` did — put the highest card in the centre and
+                 * made the two halves of the fan overlap in opposite directions,
+                 * so the middle cards were buried from both sides at once.
+                 */
+                zIndex: isOpen ? 30 : i,
               }}
-              whileHover={isOpen ? undefined : { y: -14, rotate: offset * 2, scale: 1.04 }}
+              /*
+               * Always a variant, never `undefined`. Swapping the whole prop out
+               * for the raised card left a hover entry on the gesture stack with
+               * nothing to override it, so a card deselected while the pointer
+               * was still over it stayed in the air until the next pointer event
+               * shook it loose — which is exactly the "only goes down if you
+               * hover it" symptom. Same rule as `animate` below: state every
+               * branch rather than omitting one.
+               */
+              whileHover={
+                isOpen
+                  ? { y: -26, rotate: 0, scale: 1.08 }
+                  : { y: -14, rotate: offset * 2, scale: 1.04 }
+              }
               whileTap={{ scale: 0.98 }}
               transition={SPRING}
             >
@@ -63,11 +83,14 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                 type="button"
                 className="deck__face"
                 aria-expanded={isOpen}
+                /* The face prints the organisation; the accessible name carries
+                   the role too, which the visible layout has no room for. */
+                aria-label={fullTitle(stop.entry)}
                 onClick={() => onSelect(stop.entry.id)}
               >
                 <span className="deck__year">{stop.year ?? ''}</span>
                 <span className="deck__month">{stop.month ?? ''}</span>
-                <span className="deck__title">{stop.entry.title}</span>
+                <span className="deck__org">{stop.entry.org}</span>
               </button>
             </motion.li>
           )
@@ -90,6 +113,12 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
               if (!stop) return null
               return (
                 <>
+                  {/* The role reads as a lit sign above its own description,
+                      rather than as a caption stranded at the bottom of the
+                      scene where nothing connected it to the card you picked. */}
+                  <p className="deck__detail-role">
+                    <span className="deck__neon">{stop.entry.role}</span>
+                  </p>
                   <p className="deck__detail-when">{stop.entry.date}</p>
                   <p className="deck__detail-text">{stop.entry.description}</p>
                 </>

@@ -22,7 +22,8 @@ const validProject = {
 const validEntry = {
   id: '2025-01',
   monthLabel: 'January 2025',
-  title: 'Mock Role - Test Co',
+  role: 'Mock Role',
+  org: 'Test Co',
   date: 'January 2025 - Present',
   description: 'A mock experience entry used for testing.',
   achievements: ['did a mock thing'],

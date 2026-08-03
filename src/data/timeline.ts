@@ -40,12 +40,25 @@ const MONTHS = [
  * quietly imply a precision the data does not have.
  */
 export function syntheticClock(id: string): { day: string; hour: string; min: string } {
-  let hash = 0
-  for (let i = 0; i < id.length; i += 1) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  /*
+   * FNV-1a with a final avalanche. A plain `hash * 31 + c` leaves the high bits
+   * barely disturbed by the last character, so ids that differ only in their
+   * tail — which every id here does, being "<year>-<month>" — produced the same
+   * HOUR and MIN. Half the panel read identically from one role to the next,
+   * which looks less like a prop and more like a bug.
+   */
+  let hash = 2166136261
+  for (let i = 0; i < id.length; i += 1) {
+    hash = Math.imul(hash ^ id.charCodeAt(i), 16777619) >>> 0
+  }
+  hash = Math.imul(hash ^ (hash >>> 16), 2246822507) >>> 0
+  hash = Math.imul(hash ^ (hash >>> 13), 3266489909) >>> 0
+  hash = (hash ^ (hash >>> 16)) >>> 0
+
   return {
     day: String((hash % 28) + 1).padStart(2, '0'),
-    hour: String((hash >>> 5) % 24).padStart(2, '0'),
-    min: String((hash >>> 11) % 60).padStart(2, '0'),
+    hour: String((hash >>> 8) % 24).padStart(2, '0'),
+    min: String((hash >>> 17) % 60).padStart(2, '0'),
   }
 }
 
@@ -87,6 +100,18 @@ export const timeline: TimelineStop[] = Object.keys(experiences)
       .map((entry) => ({ entry, ...parseMonthLabel(entry.monthLabel) }))
       .sort((a, b) => monthIndex(b.month) - monthIndex(a.month)),
   )
+
+/**
+ * The full CV line, "Role — Org".
+ *
+ * Nothing on screen prints this: the card shows the organisation and the readout
+ * beneath it shows the role, because a card face is too narrow to hold both
+ * without wrapping to four lines. It exists for the card's accessible name,
+ * where "SYSTATUM" alone would tell a screen-reader user nothing about the job.
+ */
+export function fullTitle(entry: ExperienceEntry): string {
+  return `${entry.role} — ${entry.org}`
+}
 
 /** A timeline stop rendered as panel columns, with decorative clock digits. */
 export function readoutFromStop(stop: TimelineStop | null): Readout | null {

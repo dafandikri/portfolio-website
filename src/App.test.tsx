@@ -17,13 +17,11 @@ describe('App', () => {
     // landing no longer ships their JavaScript.
     // Generous timeout: this is a real dynamic import, and under a loaded test
     // runner it resolves well past findBy's one-second default. The wait is the
-    // point of the assertion, not incidental to it.
+    // point of the assertion, not incidental to it. The test's own budget has to
+    // exceed the query's, or the runner gives up before the query does and
+    // reports a timeout that says nothing about the import.
     expect(
-      await screen.findByRole(
-        'heading',
-        { level: 2, name: 'Experience' },
-        { timeout: 5000 },
-      ),
+      await screen.findByRole('heading', { level: 2, name: 'Experience' }, { timeout: 10_000 }),
     ).toBeInTheDocument()
-  })
+  }, 20_000)
 })
