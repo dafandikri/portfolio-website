@@ -17,6 +17,9 @@ import './ExperienceDeck.css'
 /** Stiff and underdamped: it arrives fast and rings once, like a dealt card. */
 const SPRING = { type: 'spring', stiffness: 420, damping: 26, mass: 0.9 } as const
 
+/** Kept in step with the card's footer link in `src/data/card.ts`. */
+const RESUME_HREF = '/cv-erdafa-andikri.pdf'
+
 export interface ExperienceDeckProps {
   /** Which role is currently punched into the circuits. */
   selectedId: string
@@ -131,6 +134,17 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                   </p>
                   <p className="deck__detail-when">{stop.entry.date}</p>
                   <p className="deck__detail-text">{stop.entry.description}</p>
+                  {/* The detail is deliberately one sentence; this is where the
+                      depth actually lives, and where someone who has just read
+                      the roles goes looking for it. */}
+                  <a
+                    className="deck__cv"
+                    href={RESUME_HREF}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Full résumé
+                  </a>
                 </>
               )
             })()}

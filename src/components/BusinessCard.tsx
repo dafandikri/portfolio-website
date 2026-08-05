@@ -12,7 +12,12 @@ function Field({ field, className }: { field: CardField; className: string }) {
   if (field.href === null) {
     return <span className={className}>{field.label}</span>
   }
-  const external = field.href.startsWith('http')
+  /*
+   * A new tab for anything that isn't a page navigation we own. The CV is a
+   * same-origin path but still a file the visitor is leaving the card to read —
+   * navigating the tab away from a single-page site means losing it.
+   */
+  const external = field.href.startsWith('http') || field.href.endsWith('.pdf')
   return (
     <a
       className={className}

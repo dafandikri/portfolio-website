@@ -29,6 +29,15 @@ export const card: Card = {
 
   footer: [
     { label: 'dafandikri.dev', href: 'https://dafandikri.dev' },
+    /*
+     * The card is the whole landing scene, so this is the only route to the CV
+     * for a recruiter who never scrolls — which is most of them.
+     *
+     * Served under a neutral filename deliberately: `public/` is published
+     * verbatim, so whatever the file is called becomes a URL anyone can read.
+     * The original name carried the company it was tailored for and the date.
+     */
+    { label: 'Résumé', href: '/cv-erdafa-andikri.pdf' },
     {
       label: 'Solution Engineer Intern @ InterBio Technologies, Prev Start-Ups & Government Institutions',
       href: null,

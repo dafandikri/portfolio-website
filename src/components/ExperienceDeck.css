@@ -183,6 +183,41 @@
   color: #35e06a;
 }
 
+/*
+ * The way out to the CV. Understated against the neon above it — the sign is the
+ * headline, this is the door.
+ */
+.deck__cv {
+  display: inline-block;
+  margin-top: 1.4rem;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(96, 240, 255, 0.45);
+  font-family: var(--font-tech);
+  font-size: clamp(0.62rem, 1.4vw, 0.74rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(180, 246, 255, 0.9);
+  transition:
+    color 180ms ease,
+    border-color 180ms ease,
+    text-shadow 180ms ease;
+}
+
+.deck__cv::after {
+  content: ' \2197';
+}
+
+.deck__cv:hover,
+.deck__cv:focus-visible {
+  color: #eafdff;
+  border-color: rgba(96, 240, 255, 0.95);
+  text-shadow:
+    0 0 0.4em rgba(96, 240, 255, 0.9),
+    0 0 1.2em rgba(96, 240, 255, 0.5);
+}
+
 /* The dashboard voice, not the card's letterpress serif — the two scenes are
    different places and should not share a typeface. */
 .deck__detail-text {

@@ -18,16 +18,16 @@ export const experiencesData: Experiences = {
         org: 'Interbio',
         date: 'June 2026 - Present',
         description:
-          'Building a real-time analytics pipeline: MySQL change data capture through Debezium and Kafka into ClickHouse, surfaced in Grafana.',
+          'Analytics infrastructure for the facial-recognition middleware behind e-KTP. Moved dashboards off the live identity database onto a Debezium, Kafka and ClickHouse pipeline, cutting load from ten minutes to near zero.',
         achievements: [
-          'Designed and stood up the end-to-end CDC pipeline from MySQL binlog to live Grafana dashboards',
+          'Migrated dashboard analytics off the live OLTP identity database onto a Change Data Capture pipeline, cutting load from roughly ten minutes to near zero',
         ],
         logo: 'interbio',
       },
       {
         id: '2026-01',
         monthLabel: 'January 2026',
-        role: 'Backend Developer Intern',
+        role: 'Backend Engineer Intern',
         org: 'Systatum',
         date: 'January 2026 - February 2026',
         description:
@@ -44,7 +44,7 @@ export const experiencesData: Experiences = {
       {
         id: '2025-07',
         monthLabel: 'July 2025',
-        role: 'Intern',
+        role: 'Software Engineer Intern',
         org: 'Kementrans',
         date: 'July 2025 - August 2025',
         description:
@@ -77,7 +77,7 @@ export const experiencesData: Experiences = {
       {
         id: '2024-06',
         monthLabel: 'June 2024',
-        role: 'IT Developer Intern',
+        role: 'Software Developer Intern',
         org: 'Interbio',
         date: 'June 2024 - August 2024',
         description:
