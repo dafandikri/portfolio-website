@@ -270,19 +270,30 @@
   text-align: center;
 }
 
-/* The outer fields are short enough to hold one line, and flex would otherwise
-   squeeze them into breaking too. */
-.card__footer .card__meta:first-child,
-.card__footer .card__meta:last-child {
+/*
+ * A column of the rule. The left one carries the domain with the résumé stacked
+ * beneath it; the others are a single line each.
+ */
+.card__footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  min-width: 0;
+}
+
+/* The outer columns are short enough to hold one line each, and flex would
+   otherwise squeeze them into breaking too. */
+.card__footer-col:first-child,
+.card__footer-col:last-child {
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-.card__footer .card__meta:first-child {
+.card__footer-col:first-child .card__meta {
   text-align: left;
 }
 
-.card__footer .card__meta:last-child {
+.card__footer-col:last-child .card__meta {
   text-align: right;
 }
 

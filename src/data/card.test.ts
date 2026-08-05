@@ -25,7 +25,7 @@ describe('card content', () => {
    * the live domain.
    */
   it('gives every footer link an unambiguous destination', () => {
-    for (const field of card.footer) {
+    for (const field of card.footer.flat()) {
       if (field.href !== null) {
         expect(field.href).toMatch(/^(https:\/\/|\/)/)
       }
@@ -33,7 +33,13 @@ describe('card content', () => {
   })
 
   it('keeps the footer short enough to sit on one printed rule', () => {
-    // Five or more fields overflow the bottom rule at desktop widths.
-    expect(card.footer.length).toBeLessThanOrEqual(4)
+    // Four or more columns overflow the bottom rule at desktop widths; the
+    // limit is on columns, not lines, since a column stacks.
+    expect(card.footer.length).toBeLessThanOrEqual(3)
+  })
+
+  it('publishes the résumé from the card, since it is the whole landing scene', () => {
+    const hrefs = card.footer.flat().map((field) => field.href)
+    expect(hrefs).toContain('/cv-erdafa-andikri.pdf')
   })
 })

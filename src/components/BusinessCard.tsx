@@ -70,8 +70,12 @@ export default function BusinessCard() {
             </div>
 
             <footer className="card__footer card__reveal card__reveal--6">
-              {card.footer.map((field) => (
-                <Field key={field.label} field={field} className="card__meta" />
+              {card.footer.map((column) => (
+                <div className="card__footer-col" key={column[0]?.label}>
+                  {column.map((field) => (
+                    <Field key={field.label} field={field} className="card__meta" />
+                  ))}
+                </div>
               ))}
             </footer>
           </div>

@@ -113,7 +113,14 @@ export const cardSchema = z.object({
   name: z.string().min(1),
   /** Directly beneath the name; the only line not set in small caps. */
   role: z.string().min(1),
-  /** Bottom rule — the modern descendant of "address · fax · telex". */
-  footer: z.array(cardFieldSchema).min(1),
+  /**
+   * Bottom rule — the modern descendant of "address · fax · telex".
+   *
+   * An array of *columns*, each holding one or more stacked lines. A flat list
+   * could only ever be one row, which left the layout leaning on `:first-child`
+   * and `:last-child` to mean "outer column" — positional CSS that silently
+   * breaks the moment the data is reordered.
+   */
+  footer: z.array(z.array(cardFieldSchema).min(1)).min(1),
 })
 export type Card = z.infer<typeof cardSchema>

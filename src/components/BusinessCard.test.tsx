@@ -23,7 +23,8 @@ describe('BusinessCard', () => {
     expect(screen.getByText(card.affiliation.detail)).toBeInTheDocument()
     expect(screen.getByText(card.phone.label)).toBeInTheDocument()
     expect(screen.getByText(card.email.label)).toBeInTheDocument()
-    for (const field of card.footer) {
+    // Flattened: the footer is columns of stacked lines, and every line prints.
+    for (const field of card.footer.flat()) {
       expect(screen.getByText(field.label)).toBeInTheDocument()
     }
   })
@@ -46,7 +47,7 @@ describe('BusinessCard', () => {
   it('links every footer field that has a destination and leaves the rest as ink', () => {
     render(<BusinessCard />)
 
-    for (const field of card.footer) {
+    for (const field of card.footer.flat()) {
       const node = screen.getByText(field.label)
       if (field.href === null) {
         expect(node.tagName).toBe('SPAN')
@@ -60,8 +61,10 @@ describe('BusinessCard', () => {
   it('opens outbound links safely in a new tab', () => {
     render(<BusinessCard />)
 
-    for (const field of card.footer) {
-      if (field.href?.startsWith('http')) {
+    // The résumé counts too: it is same-origin but still takes the visitor away
+    // from a single-page site, so it opens in its own tab.
+    for (const field of card.footer.flat()) {
+      if (field.href?.startsWith('http') || field.href?.endsWith('.pdf')) {
         const link = screen.getByRole('link', { name: field.label })
         expect(link).toHaveAttribute('target', '_blank')
         expect(link.getAttribute('rel')).toContain('noopener')
