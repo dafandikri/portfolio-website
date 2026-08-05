@@ -57,6 +57,7 @@ export default function GateScene() {
   const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px 10%', true)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
+  const creditRef = useRef<HTMLDetailsElement>(null)
   const [failed, setFailed] = useState(false)
   const [projectsVisible, setProjectsVisible] = useState(false)
 
@@ -360,6 +361,15 @@ export default function GateScene() {
       const progress = Math.min(1, Math.max(0, raw))
       const motion = gateMotion(progress, reduced)
 
+      section.style.setProperty('--credit-strength', motion.creditStrength.toFixed(3))
+      const credit = creditRef.current
+      if (credit) {
+        const creditActive = motion.creditStrength > 0.05
+        credit.inert = !creditActive
+        credit.setAttribute('aria-hidden', String(!creditActive))
+        if (!creditActive) credit.open = false
+      }
+
       section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
       const showProjects = motion.projectStrength >= 0.999
       if (showProjects !== projectState) {
@@ -452,7 +462,7 @@ export default function GateScene() {
 
         {projectsVisible && <ParkScene />}
 
-        <details className="gate__credit">
+        <details ref={creditRef} className="gate__credit" inert aria-hidden="true">
           <summary aria-label="Gate model credit">i</summary>
           <p>
             Gate asset:{' '}

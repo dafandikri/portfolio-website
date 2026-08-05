@@ -73,7 +73,16 @@
   width: min(21rem, calc(100vw - 2rem));
   font-family: var(--font-tech);
   color: rgba(255, 240, 214, 0.76);
-  transition: opacity 220ms ease;
+  opacity: var(--credit-strength, 0);
+  pointer-events: none;
+  transform: translateY(calc((1 - var(--credit-strength, 0)) * -0.55rem))
+    scale(calc(0.92 + var(--credit-strength, 0) * 0.08));
+  transform-origin: 100% 0;
+  will-change: opacity, transform;
+}
+
+.gate__credit:not([inert]) {
+  pointer-events: auto;
 }
 
 .gate__credit summary {

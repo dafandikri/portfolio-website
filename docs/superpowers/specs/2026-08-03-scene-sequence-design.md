@@ -93,8 +93,12 @@ entry. Each chamber accepts either an image or a muted looping video through
 `projectMedia.ts`; missing media remains an honest locked feed rather than a
 fabricated screenshot.
 
-The gate model credit is a compact `i` control at the frame edge. It exists only
-inside the gate's sticky viewport and fades before the project hand appears. The
+The gate model credit is a compact `i` control at the frame edge, synchronized
+to the gate shot rather than merely present in its DOM. It fades from 0 to full
+strength over scroll progress 0.01–0.08, remains available through the roar,
+door swing and most of the dolly, then fades out over 0.60–0.68 before the
+containment interface arrives. At zero strength it becomes `inert`, is removed
+from pointer and keyboard interaction, and closes an expanded disclosure. The
 expanded control carries title, creator, source, licence, and an adaptation
 notice; the same details are repeated in `docs/ATTRIBUTIONS.md` for repository
 readers.
@@ -119,11 +123,15 @@ readers.
   centre; the dossier remains inside 9.4–380.6 px, and the selected cell no
   longer covers the heading.
 - With `prefers-reduced-motion: reduce`, all eight cells are immediately static,
-  the roar is absent, and the credit control remains available.
+  the roar is absent, and the gate-only credit control is inert because the gate
+  shot is skipped; the persistent repository attribution remains available.
+- Browser measurement confirms the credit `i` at opacity 0/inert at progress 0,
+  opacity 0.402 and interactive at 0.04, opacity 1 at 0.12–0.50, opacity 0.493
+  at 0.64, and opacity 0/inert/closed at 0.68 when the project scene mounts.
 - TypeScript, ESLint, data validation, production build, and 90 tests pass.
-  Coverage is 90.49% statements, 79.09% branches, 93.02% functions, and 92.64%
+  Coverage is 90.51% statements, 79.09% branches, 93.02% functions, and 92.66%
   lines. The lazy gate chunk, including Three.js and the containment hand, is
-  629.30 KB / 158.36 KB gzip.
+  629.61 KB / 158.46 KB gzip.
 
 ---
 

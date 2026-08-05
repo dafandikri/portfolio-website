@@ -19,6 +19,12 @@ describe('gateMotion', () => {
     expect(gateMotion(0.68).dollyProgress).toBe(1)
     expect(gateMotion(0.65).projectStrength).toBe(0)
     expect(gateMotion(0.68).projectStrength).toBe(1)
+
+    expect(gateMotion(0).creditStrength).toBe(0)
+    expect(gateMotion(0.12).creditStrength).toBe(1)
+    expect(gateMotion(0.64).creditStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.64).creditStrength).toBeLessThan(1)
+    expect(gateMotion(0.68).creditStrength).toBe(0)
   })
 
   it('clamps progress and gives reduced-motion visitors a static open gate', () => {
@@ -29,6 +35,7 @@ describe('gateMotion', () => {
       dollyProgress: 0,
       roarStrength: 0,
       projectStrength: 1,
+      creditStrength: 0,
     })
   })
 })

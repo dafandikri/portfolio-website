@@ -22,6 +22,8 @@ export interface GateMotion {
   roarStrength: number
   /** Gate-to-project handoff after the camera has crossed the threshold. */
   projectStrength: number
+  /** Visibility of the compact model-credit control during the gate shot. */
+  creditStrength: number
 }
 
 /**
@@ -38,17 +40,23 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
       dollyProgress: 0,
       roarStrength: 0,
       projectStrength: 1,
+      creditStrength: 0,
     }
   }
 
   const p = clamp01(progress)
   const roarIn = smoothstep(0.06, 0.12, p)
   const roarOut = 1 - smoothstep(0.3, 0.39, p)
+  const creditIn = smoothstep(0.01, 0.08, p)
+  const creditOut = 1 - smoothstep(0.6, 0.68, p)
 
   return {
     doorAngle: smoothstep(0.16, 0.4, p) * GATE_OPEN_ANGLE,
     dollyProgress: smoothstep(0.34, 0.68, p),
     roarStrength: roarIn * roarOut,
+    // Attribution belongs to the gate shot, not the project interface. It
+    // arrives gently after the scene enters and is gone when the dolly ends.
+    creditStrength: creditIn * creditOut,
     /*
      * The handoff completes on the same scroll frame as the dolly. Once this
      * reaches one, the project cards run on their own CSS clock; the visitor
