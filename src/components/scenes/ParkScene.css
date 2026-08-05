@@ -1,360 +1,349 @@
 /*
- * Inside the park.
- *
- * Steel warning plates on a fence at night. Palette sampled from the reference
- * model's albedo map: weathered stone grey, hazard gold, and the deep red of the
- * park's own signage.
+ * Projects arrive as a dealt hand after the gate dolly, not as another page.
+ * The cards keep the paddock-sign language — steel, hazard gold, status lamps —
+ * while the fan, overlap, lift and stagger borrow Balatro's physical rhythm.
  */
 
-.scene--park {
-  position: relative;
-  min-height: 100svh;
+.park {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(1.25rem, 3.5vw, 2.25rem);
-  padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 8vw, 5rem);
-  /* Jungle at night: warm floodlight above, black undergrowth below. */
+  gap: clamp(0.75rem, 2vh, 1.25rem);
+  padding: clamp(1.1rem, 3vw, 2.25rem) clamp(0.65rem, 2.5vw, 2rem);
+  overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 46% at 50% 0%, rgba(226, 164, 23, 0.12) 0%, rgba(6, 5, 3, 0) 62%),
-    linear-gradient(to bottom, #100c07 0%, #070502 58%, #040301 100%);
-  color: rgba(255, 240, 214, 0.86);
-  overflow: clip;
+    radial-gradient(ellipse 70% 46% at 50% 58%, rgba(168, 39, 24, 0.18), transparent 66%),
+    linear-gradient(to bottom, rgba(3, 2, 1, 0.32), rgba(3, 2, 1, 0.88));
+  color: #fff0d6;
+  animation: park-stage-in 540ms ease-out both;
 }
 
-.park__placeholder {
-  min-height: 100svh;
-}
-
-.park {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(1.25rem, 3.5vw, 2.25rem);
-  width: 100%;
-}
-
-/* --------------------------------------------------------------------------
- * Heading
- * ------------------------------------------------------------------------ */
-
-.park__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 0;
-  font-family: var(--font-tech);
-  font-size: clamp(0.58rem, 1.4vw, 0.74rem);
-  font-weight: 700;
-  letter-spacing: 0.42em;
-  text-indent: 0.42em;
-  text-transform: uppercase;
-  color: #e2a417;
-}
-
-/* Hazard striping, drawn rather than imaged. */
-.park__stripe {
-  width: clamp(2.5rem, 9vw, 6rem);
-  height: 0.55rem;
-  background: repeating-linear-gradient(
-    -45deg,
-    #e2a417 0 0.42rem,
-    #14100a 0.42rem 0.84rem
-  );
-  opacity: 0.85;
-}
-
-/* --------------------------------------------------------------------------
- * The signs
- * ------------------------------------------------------------------------ */
-
-.park__signs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
-  gap: clamp(0.85rem, 2vw, 1.35rem);
-  width: min(100%, 62rem);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.park__sign {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.4rem;
-  width: 100%;
-  padding: 1.15rem 1rem 1rem;
-  /* Brushed steel plate, lit from above. */
-  border: 1px solid rgba(226, 164, 23, 0.22);
-  border-radius: 2px;
-  background:
-    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px),
-    linear-gradient(to bottom, #33312c 0%, #23211d 46%, #15140f 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 226, 170, 0.14),
-    0 0.7rem 1.6rem -0.7rem rgba(0, 0, 0, 0.95);
-  font-family: var(--font-tech);
-  text-align: left;
-  cursor: pointer;
-  transition:
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
-}
-
-.park__sign:hover,
-.park__sign:focus-visible {
-  transform: translateY(-2px);
-  border-color: rgba(226, 164, 23, 0.6);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 226, 170, 0.2),
-    0 0 1.6rem -0.3rem rgba(226, 164, 23, 0.35),
-    0 0.9rem 1.8rem -0.7rem rgba(0, 0, 0, 0.95);
-}
-
-.park__sign:focus-visible {
-  outline: 2px solid #e2a417;
-  outline-offset: 3px;
-}
-
-/* The striped strip across the top of every plate. */
-.park__hazard {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 0.36rem;
-  background: repeating-linear-gradient(
-    -45deg,
-    #e2a417 0 0.4rem,
-    #14100a 0.4rem 0.8rem
-  );
-  opacity: 0.75;
-}
-
-.park__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 0.5rem;
-}
-
-.park__paddock {
-  font-size: 0.5rem;
-  font-weight: 700;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: rgba(226, 164, 23, 0.75);
-}
-
-/* Dark until the enclosure is selected — a lamp that is always lit says nothing. */
-.park__lamp {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: #2c2721;
-  box-shadow: inset 0 0 0 1px rgba(255, 226, 170, 0.16);
-  transition:
-    background 200ms ease,
-    box-shadow 200ms ease;
-}
-
-.park__title {
-  font-size: clamp(0.68rem, 1.5vw, 0.8rem);
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0.05em;
-  color: rgba(255, 244, 226, 0.94);
-}
-
-.park__year {
-  font-size: 0.54rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  color: rgba(255, 240, 214, 0.42);
-}
-
-/* Rivets: what makes a rectangle read as a bolted plate. */
-.park__rivets i {
-  position: absolute;
-  width: 0.28rem;
-  height: 0.28rem;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #6a655c 0%, #2a2620 70%);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
-}
-
-.park__rivets i:nth-child(1) {
-  left: 0.45rem;
-  top: 0.62rem;
-}
-.park__rivets i:nth-child(2) {
-  right: 0.45rem;
-  top: 0.62rem;
-}
-.park__rivets i:nth-child(3) {
-  left: 0.45rem;
-  bottom: 0.45rem;
-}
-.park__rivets i:nth-child(4) {
-  right: 0.45rem;
-  bottom: 0.45rem;
-}
-
-/* Selected: the enclosure is live. */
-.is-open .park__sign {
-  border-color: #e2a417;
-  background:
-    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px),
-    linear-gradient(to bottom, #4a4238 0%, #2f2b23 46%, #1b1912 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 226, 170, 0.24),
-    0 0 2.2rem -0.4rem rgba(226, 164, 23, 0.5),
-    0 0.9rem 1.8rem -0.7rem rgba(0, 0, 0, 0.95);
-}
-
-.is-open .park__lamp {
-  background: #ff3b26;
-  box-shadow:
-    0 0 0.4rem rgba(255, 59, 38, 0.9),
-    0 0 1rem rgba(255, 59, 38, 0.55);
-  animation: park-lamp 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes park-lamp {
+@keyframes park-stage-in {
   from {
-    opacity: 0.62;
+    opacity: 0;
   }
   to {
     opacity: 1;
   }
 }
 
-/* --------------------------------------------------------------------------
- * The readout — the park's own information board
- * ------------------------------------------------------------------------ */
-
-.park__readout {
-  width: min(100%, 46rem);
-  min-height: 9rem;
+.park__header {
   text-align: center;
 }
 
-.park__hint {
+.park__kicker,
+.park__detail-index {
   margin: 0;
   font-family: var(--font-tech);
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
+  font-size: clamp(0.46rem, 1vw, 0.58rem);
+  letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(226, 164, 23, 0.42);
+  color: rgba(226, 164, 23, 0.62);
+}
+
+.park__heading {
+  margin: 0.16em 0 0;
+  font-family: var(--font-tech);
+  font-size: clamp(1rem, 2.5vw, 1.55rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: #f0b51f;
+  text-shadow:
+    0 0 0.7rem rgba(226, 164, 23, 0.52),
+    0 2px 0 #60110d;
+}
+
+.park__hand {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: min(100%, 72rem);
+  min-height: clamp(11rem, 25vw, 17rem);
+  margin: 0;
+  padding: 0 1.5rem;
+  list-style: none;
+  perspective: 1100px;
+}
+
+.park__card {
+  position: relative;
+  flex: 0 0 clamp(6.7rem, 11vw, 9.4rem);
+  margin-inline: clamp(-2.7rem, -3.1vw, -1.15rem);
+  transform-origin: 50% 125%;
+  opacity: 0;
+  animation: park-deal 720ms cubic-bezier(0.2, 1.35, 0.35, 1) var(--deal-delay) forwards;
+}
+
+@keyframes park-deal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 74vh, 0) rotate(var(--deal-angle)) scale(0.72);
+  }
+  72% {
+    opacity: 1;
+    transform: translate3d(0, calc(var(--rise) * -1 - 0.65rem), 0) rotate(var(--angle)) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, calc(var(--rise) * -1), 0) rotate(var(--angle)) scale(1);
+  }
+}
+
+.park__card-face {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  padding: 0.4rem;
+  overflow: hidden;
+  border: 1px solid rgba(226, 164, 23, 0.42);
+  border-radius: 0.34rem;
+  background:
+    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 4px),
+    linear-gradient(145deg, #38342d, #17130e 62%, #080705);
+  box-shadow:
+    inset 0 1px rgba(255, 225, 171, 0.18),
+    0 1.2rem 2.2rem -0.8rem rgba(0, 0, 0, 0.92);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 220ms cubic-bezier(0.2, 1.4, 0.4, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.park__card-face:hover,
+.park__card-face:focus-visible {
+  transform: translateY(-0.7rem) scale(1.035);
+  border-color: rgba(240, 181, 31, 0.88);
+  outline: none;
+}
+
+.park__card.is-open .park__card-face {
+  transform: translateY(-1.4rem) scale(1.08);
+  border-color: #f0b51f;
+  box-shadow:
+    inset 0 1px rgba(255, 234, 192, 0.25),
+    0 0 1.8rem rgba(200, 39, 25, 0.34),
+    0 1.5rem 2.5rem -0.7rem rgba(0, 0, 0, 0.95);
+}
+
+.park__media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 53%;
+  overflow: hidden;
+  border: 1px solid rgba(226, 164, 23, 0.24);
+  border-radius: 0.18rem;
+  background:
+    linear-gradient(rgba(226, 164, 23, 0.05), rgba(136, 25, 18, 0.18)),
+    repeating-linear-gradient(-45deg, #17130e 0 0.38rem, #211b13 0.38rem 0.76rem);
+}
+
+.park__media-file {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.82) contrast(1.08) brightness(0.78);
+}
+
+.park__media-placeholder {
+  padding: 0.5rem;
+  font-family: var(--font-tech);
+  font-size: clamp(0.42rem, 0.75vw, 0.54rem);
+  letter-spacing: 0.2em;
+  line-height: 1.45;
+  text-align: center;
+  text-transform: uppercase;
+  color: rgba(226, 164, 23, 0.44);
+}
+
+.park__scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0, 0, 0, 0.16) 3px 4px);
+  mix-blend-mode: multiply;
+}
+
+.park__card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  margin-top: 0.42rem;
+}
+
+.park__paddock,
+.park__year {
+  font-family: var(--font-tech);
+  font-size: clamp(0.4rem, 0.66vw, 0.52rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(226, 164, 23, 0.68);
+}
+
+.park__lamp {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 50%;
+  background: #2b251e;
+  box-shadow: inset 0 0 0 1px rgba(255, 226, 170, 0.18);
+}
+
+.is-open .park__lamp {
+  background: #ff3b26;
+  box-shadow:
+    0 0 0.35rem rgba(255, 59, 38, 0.95),
+    0 0 0.85rem rgba(255, 59, 38, 0.6);
+  animation: park-lamp 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes park-lamp {
+  to {
+    opacity: 0.55;
+  }
+}
+
+.park__card-title {
+  margin-top: auto;
+  font-family: var(--font-tech);
+  font-size: clamp(0.56rem, 1vw, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  color: rgba(255, 244, 226, 0.95);
+}
+
+.park__year {
+  margin-top: 0.2rem;
+  color: rgba(255, 240, 214, 0.38);
+}
+
+.park__detail {
+  width: min(100%, 48rem);
+  min-height: 9.3rem;
+  padding: 0.9rem 1.25rem 0.8rem;
+  border-top: 1px solid rgba(226, 164, 23, 0.24);
+  background: linear-gradient(to bottom, rgba(26, 20, 12, 0.76), rgba(7, 5, 3, 0));
+  text-align: center;
+  animation: park-readout 260ms ease-out both;
+}
+
+@keyframes park-readout {
+  from {
+    opacity: 0;
+    transform: translateY(0.45rem);
+  }
 }
 
 .park__detail-title {
-  display: inline-block;
-  margin: 0 0 0.85rem;
-  padding: 0.3em 0.9em 0.34em;
-  /* The park's board: gold on deep red, as on the gate. */
-  border: 2px solid #e2a417;
-  border-radius: 2px;
-  background: linear-gradient(to bottom, #d0241f 0%, #a81a17 60%, #7d120f 100%);
+  margin: 0.28rem 0 0.42rem;
   font-family: var(--font-tech);
-  font-size: clamp(0.72rem, 1.8vw, 0.95rem);
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: #e2a417;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  font-size: clamp(0.76rem, 1.7vw, 1rem);
+  letter-spacing: 0.08em;
+  color: #f0b51f;
 }
 
 .park__detail-text {
+  display: -webkit-box;
+  max-width: 68ch;
   margin: 0 auto;
-  max-width: 56ch;
+  overflow: hidden;
   font-family: var(--font-tech);
-  font-size: clamp(0.68rem, 1.5vw, 0.78rem);
-  line-height: 1.75;
-  color: rgba(255, 240, 214, 0.6);
+  font-size: clamp(0.58rem, 1.15vw, 0.7rem);
+  line-height: 1.55;
+  color: rgba(255, 240, 214, 0.66);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
-.park__chips {
+.park__chips,
+.park__links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.35rem;
-  margin: 0.95rem 0 0;
+  margin: 0.58rem 0 0;
   padding: 0;
   list-style: none;
 }
 
 .park__chip {
-  padding: 0.2em 0.6em;
-  border: 1px solid rgba(226, 164, 23, 0.3);
-  border-radius: 2px;
+  padding: 0.16em 0.5em;
+  border: 1px solid rgba(226, 164, 23, 0.26);
   font-family: var(--font-tech);
-  font-size: 0.54rem;
-  letter-spacing: 0.16em;
+  font-size: 0.46rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(226, 164, 23, 0.8);
+  color: rgba(226, 164, 23, 0.72);
 }
 
 .park__links {
-  display: flex;
-  justify-content: center;
-  gap: 1.4rem;
-  margin: 1.1rem 0 0;
+  gap: 1.2rem;
 }
 
 .park__link {
+  border-bottom: 1px solid rgba(226, 164, 23, 0.5);
   font-family: var(--font-tech);
-  font-size: 0.6rem;
+  font-size: 0.52rem;
   font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+  letter-spacing: 0.2em;
   text-decoration: none;
-  color: #e2a417;
-  border-bottom: 1px solid rgba(226, 164, 23, 0.45);
-  padding-bottom: 0.15rem;
+  text-transform: uppercase;
+  color: #f0b51f;
 }
 
 .park__link:hover,
 .park__link:focus-visible {
-  color: #ffd166;
-  border-color: #ffd166;
+  color: #ffe29a;
+  border-color: #ffe29a;
 }
 
-/* --------------------------------------------------------------------------
- * Licence credit
- * ------------------------------------------------------------------------ */
+@media (max-width: 640px) {
+  .park {
+    justify-content: flex-start;
+    padding-top: max(3.5rem, env(safe-area-inset-top));
+  }
 
-.park__credit {
-  margin: clamp(1.5rem, 4vw, 2.5rem) 0 0;
-  max-width: 52rem;
-  font-family: var(--font-tech);
-  font-size: 0.52rem;
-  line-height: 1.9;
-  letter-spacing: 0.12em;
-  color: rgba(255, 240, 214, 0.3);
-  text-align: center;
-}
+  .park__hand {
+    min-height: 12.5rem;
+    padding-inline: 0.5rem;
+  }
 
-.park__credit-link {
-  color: rgba(226, 164, 23, 0.6);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
+  .park__card {
+    flex-basis: clamp(5.25rem, 24vw, 6.1rem);
+    margin-inline: clamp(-2rem, -10vw, -1.45rem);
+  }
 
-.park__credit-link:hover,
-.park__credit-link:focus-visible {
-  color: rgba(255, 209, 102, 0.95);
+  .park__detail {
+    min-height: 0;
+    padding-inline: 0.45rem;
+  }
+
+  .park__detail-text {
+    -webkit-line-clamp: 4;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .park__sign {
-    transition: none;
-  }
+  .park,
+  .park__card,
+  .park__detail,
   .is-open .park__lamp {
     animation: none;
+  }
+
+  .park__card {
+    opacity: 1;
+    transform: translateY(calc(var(--rise) * -1)) rotate(var(--angle));
   }
 }

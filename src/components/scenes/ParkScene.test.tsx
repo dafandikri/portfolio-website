@@ -1,110 +1,115 @@
-import { act, cleanup, render, screen, within } from '@testing-library/react'
+import { act, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { projectsData } from '../../data/projects'
-import { stubIntersectionObserver } from '../../test/setup'
-import ParkScene from './ParkScene'
+import ParkScene, { ProjectMediaView } from './ParkScene'
 
 afterEach(() => {
   cleanup()
   vi.unstubAllGlobals()
 })
 
-/** Mount the scene and bring it into view, which is what deals the signs. */
-function enter() {
-  const observers = stubIntersectionObserver()
-  const result = render(<ParkScene />)
-  const scene = result.container.querySelector('.scene--park')!
-  act(() => observers[0]?.trigger(scene, true, 1))
-  return result
+function projectButton(index: number) {
+  const project = projectsData[index]!
+  return screen.getByRole('button', {
+    name: `${project.title}, paddock ${String(index + 1).padStart(2, '0')}`,
+  })
 }
 
 describe('ParkScene', () => {
-  it('does not mount the signs until the scene approaches', () => {
-    const observers = stubIntersectionObserver()
+  it('deals one accessible card per project with the first enclosure selected', () => {
     const { container } = render(<ParkScene />)
 
-    // The heading is always there; the signs are the below-fold cost.
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__sign')).toHaveLength(0)
+    expect(container.querySelectorAll('.park__card')).toHaveLength(projectsData.length)
 
-    act(() =>
-      observers[0]?.trigger(container.querySelector('.scene--park')!, true, 1),
+    projectsData.forEach((_, index) => expect(projectButton(index)).toBeVisible())
+    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'true')
+    expect(
+      screen.getByRole('heading', { level: 3, name: projectsData[0]!.title }),
+    ).toBeInTheDocument()
+  })
+
+  it('selects a card and replaces the project readout', () => {
+    const { container } = render(<ParkScene />)
+    const index = 1
+    const project = projectsData[index]!
+
+    act(() => projectButton(index).click())
+
+    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'false')
+    expect(projectButton(index)).toHaveAttribute('aria-expanded', 'true')
+    expect(screen.getByRole('heading', { level: 3, name: project.title })).toBeInTheDocument()
+    expect(screen.getByText(project.description)).toBeInTheDocument()
+    expect(container.querySelectorAll('.park__chip')).toHaveLength(project.techStack.length)
+  })
+
+  it('renders existing stills and honest placeholders for projects without media', () => {
+    const { container } = render(<ParkScene />)
+    const mediaCount = projectsData.filter(({ image }) => image.length > 0).length
+
+    expect(container.querySelectorAll('.park__media-file')).toHaveLength(mediaCount)
+    expect(screen.getAllByLabelText('Project media not added yet')).toHaveLength(
+      projectsData.length - mediaCount,
     )
-    expect(container.querySelectorAll('.park__sign')).toHaveLength(projectsData.length)
   })
 
-  it('gives every project a sign that is reachable as a button', () => {
-    enter()
-    for (const project of projectsData) {
-      expect(screen.getByRole('button', { name: new RegExp(project.title, 'i') })).toBeVisible()
-    }
-  })
+  it('prints links only where the selected project has real destinations', () => {
+    render(<ParkScene />)
+    const withoutLinksIndex = projectsData.findIndex(
+      (project) => project.liveLink === '#' && project.repoLink === '#',
+    )
+    const withRepoIndex = projectsData.findIndex((project) => project.repoLink !== '#')
 
-  it('opens an enclosure and closes it again on a second press', () => {
-    const { container } = enter()
-    const target = projectsData[0]!
-    const sign = screen.getByRole('button', { name: new RegExp(target.title, 'i') })
-
-    expect(screen.getByText('Select an enclosure')).toBeInTheDocument()
-
-    act(() => sign.click())
-    expect(sign).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('heading', { level: 3, name: target.title })).toBeInTheDocument()
-    expect(screen.getByText(target.description)).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__chip')).toHaveLength(target.techStack.length)
-
-    // Pressing the open one again is a toggle, not a no-op.
-    act(() => sign.click())
-    expect(sign).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.getByText('Select an enclosure')).toBeInTheDocument()
-  })
-
-  it('prints a link only where the project actually has one', () => {
-    enter()
-
-    // "#" is the data's way of saying "nothing to link to yet", and a link that
-    // goes nowhere is worse than no link.
-    const withoutLinks = projectsData.find((p) => p.liveLink === '#' && p.repoLink === '#')
-    const withRepo = projectsData.find((p) => p.repoLink !== '#')
-
-    if (withoutLinks) {
-      act(() => screen.getByRole('button', { name: new RegExp(withoutLinks.title, 'i') }).click())
-      expect(screen.queryByRole('link', { name: 'Live' })).toBeNull()
+    if (withoutLinksIndex >= 0) {
+      act(() => projectButton(withoutLinksIndex).click())
+      expect(screen.queryByRole('link', { name: 'Visit' })).toBeNull()
       expect(screen.queryByRole('link', { name: 'Source' })).toBeNull()
     }
 
-    if (withRepo) {
-      act(() => screen.getByRole('button', { name: new RegExp(withRepo.title, 'i') }).click())
+    if (withRepoIndex >= 0) {
+      act(() => projectButton(withRepoIndex).click())
       const source = screen.getByRole('link', { name: 'Source' })
-      expect(source).toHaveAttribute('href', withRepo.repoLink)
+      expect(source).toHaveAttribute('href', projectsData[withRepoIndex]!.repoLink)
       expect(source).toHaveAttribute('target', '_blank')
       expect(source.getAttribute('rel')).toContain('noopener')
     }
   })
 
-  it('opens an off-site live link in a new tab and keeps a routed one in place', () => {
-    enter()
-    const external = projectsData.find((p) => p.liveLink.startsWith('http'))
-    const routed = projectsData.find((p) => p.liveLink !== '#' && !p.liveLink.startsWith('http'))
+  it('keeps routed visits in-page and opens external visits in a new tab', () => {
+    render(<ParkScene />)
+    const externalIndex = projectsData.findIndex((project) => project.liveLink.startsWith('http'))
+    const routedIndex = projectsData.findIndex(
+      (project) => project.liveLink !== '#' && !project.liveLink.startsWith('http'),
+    )
 
-    if (external) {
-      act(() => screen.getByRole('button', { name: new RegExp(external.title, 'i') }).click())
-      expect(screen.getByRole('link', { name: 'Live' })).toHaveAttribute('target', '_blank')
+    if (externalIndex >= 0) {
+      act(() => projectButton(externalIndex).click())
+      expect(screen.getByRole('link', { name: 'Visit' })).toHaveAttribute('target', '_blank')
     }
 
-    if (routed) {
-      act(() => screen.getByRole('button', { name: new RegExp(routed.title, 'i') }).click())
-      // A same-site route must not open a second tab.
-      expect(screen.getByRole('link', { name: 'Live' })).not.toHaveAttribute('target')
+    if (routedIndex >= 0) {
+      act(() => projectButton(routedIndex).click())
+      expect(screen.getByRole('link', { name: 'Visit' })).not.toHaveAttribute('target')
     }
   })
 
-  it('credits the CC BY gate model, which the licence requires', () => {
-    const { container } = enter()
-    const credit = container.querySelector('.park__credit')!
-    expect(within(credit as HTMLElement).getByText(/Mathzilla5335/)).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__credit-link[rel~="license"]').length).toBeGreaterThan(
-      0,
+  it('supports a muted looping video without changing project records', () => {
+    render(
+      <ProjectMediaView
+        media={{ kind: 'video', src: '/test-project.webm', label: 'Test project preview' }}
+      />,
     )
+
+    const video = screen.getByLabelText('Test project preview') as HTMLVideoElement
+    expect(video).toHaveAttribute('src', '/test-project.webm')
+    expect(video).toHaveAttribute('autoplay')
+    expect(video).toHaveAttribute('loop')
+    expect(video).toHaveAttribute('playsinline')
+    expect(video.muted).toBe(true)
+  })
+
+  it('renders a null-media placeholder directly', () => {
+    render(<ProjectMediaView media={null} />)
+    expect(screen.getByLabelText('Project media not added yet')).toHaveTextContent('Media locked')
   })
 })

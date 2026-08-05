@@ -20,6 +20,8 @@ export interface GateMotion {
   dollyProgress: number
   /** Strength of the off-screen roar, from silent to full impact. */
   roarStrength: number
+  /** Gate-to-project handoff after the camera has crossed the threshold. */
+  projectStrength: number
 }
 
 /**
@@ -31,7 +33,12 @@ export interface GateMotion {
  */
 export function gateMotion(progress: number, reducedMotion = false): GateMotion {
   if (reducedMotion) {
-    return { doorAngle: GATE_OPEN_ANGLE, dollyProgress: 0, roarStrength: 0 }
+    return {
+      doorAngle: GATE_OPEN_ANGLE,
+      dollyProgress: 0,
+      roarStrength: 0,
+      projectStrength: 1,
+    }
   }
 
   const p = clamp01(progress)
@@ -39,9 +46,15 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
   const roarOut = 1 - smoothstep(0.3, 0.39, p)
 
   return {
-    doorAngle: smoothstep(0.2, 0.56, p) * GATE_OPEN_ANGLE,
-    dollyProgress: smoothstep(0.5, 1, p),
+    doorAngle: smoothstep(0.16, 0.4, p) * GATE_OPEN_ANGLE,
+    dollyProgress: smoothstep(0.34, 0.68, p),
     roarStrength: roarIn * roarOut,
+    /*
+     * The handoff completes on the same scroll frame as the dolly. Once this
+     * reaches one, the project cards run on their own CSS clock; the visitor
+     * can stop the wheel and watch the deal finish.
+     */
+    projectStrength: smoothstep(0.66, 0.68, p),
   }
 }
 

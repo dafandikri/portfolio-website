@@ -25,7 +25,17 @@
   position: absolute;
   inset: 0;
   transform: translate3d(var(--roar-x, 0), var(--roar-y, 0), 0);
-  will-change: transform;
+  transition:
+    opacity 520ms ease,
+    filter 520ms ease;
+  will-change: transform, opacity, filter;
+}
+
+/* The gate remains physically behind the project hand after the dolly rather
+   than cutting to a new page. It falls out of focus as the cards take over. */
+.gate__stage.is-projects .gate__picture {
+  opacity: 0.34;
+  filter: brightness(0.48) saturate(0.72) blur(1.5px);
 }
 
 /* Night behind the model, and the whole picture where WebGL is unavailable. */
@@ -43,6 +53,75 @@
   display: block;
   width: 100%;
   height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+ * Asset credit
+ * ------------------------------------------------------------------------ */
+
+/*
+ * Kept at the frame edge rather than typeset into the Jurassic Park artwork.
+ * Because this control belongs to the sticky gate stage, it exists on screen
+ * only while that scene is in view. It then fades before the project hand is
+ * dealt, preserving the reveal without hiding the required attribution.
+ */
+.gate__credit {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  z-index: 40;
+  width: min(21rem, calc(100vw - 2rem));
+  font-family: var(--font-tech);
+  color: rgba(255, 240, 214, 0.76);
+  transition: opacity 220ms ease;
+}
+
+.gate__credit summary {
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  margin-left: auto;
+  border: 1px solid rgba(255, 218, 153, 0.38);
+  border-radius: 50%;
+  background: rgba(8, 6, 4, 0.68);
+  box-shadow: 0 0.35rem 1.1rem rgba(0, 0, 0, 0.48);
+  font-family: Georgia, serif;
+  font-size: 0.86rem;
+  font-style: italic;
+  cursor: pointer;
+  list-style: none;
+  backdrop-filter: blur(8px);
+}
+
+.gate__credit summary::-webkit-details-marker {
+  display: none;
+}
+
+.gate__credit[open] {
+  padding: 0.55rem;
+  border: 1px solid rgba(255, 218, 153, 0.2);
+  border-radius: 0.45rem;
+  background: rgba(7, 5, 3, 0.88);
+  box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.56);
+  backdrop-filter: blur(12px);
+}
+
+.gate__credit p {
+  margin: 0.55rem 0 0;
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  line-height: 1.55;
+}
+
+.gate__credit a {
+  color: #f3b744;
+  text-underline-offset: 0.16em;
+}
+
+.gate__stage.is-projects .gate__credit {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -130,5 +209,18 @@
   .gate__echo,
   .gate__roar-dust {
     animation: none;
+  }
+
+  .gate__picture,
+  .gate__credit {
+    transition: none;
+  }
+
+  /* Reduced motion skips directly to the static project state, so keep the
+     credit available there instead of fading it with an animation that never
+     had a preceding gate beat. */
+  .gate__stage.is-projects .gate__credit {
+    opacity: 1;
+    pointer-events: auto;
   }
 }

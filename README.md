@@ -29,6 +29,12 @@ A nostalgic Windows 95-themed portfolio website built with React + Vite, showcas
 - **Ingress / TLS**: Traefik v3 with Let's Encrypt ACME HTTP-01
 - **CI/CD**: GitHub Actions — build → push → rolling restart
 
+## Asset attributions
+
+Third-party model credits, licences, and adaptation notes are recorded in
+[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md). The site also exposes a compact
+credit control while the relevant scene is in view.
+
 ## Architecture
 
 ```

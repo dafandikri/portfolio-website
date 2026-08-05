@@ -12,7 +12,6 @@ import CardScene from './components/scenes/CardScene'
 const DepartureScene = lazy(() => import('./components/scenes/DepartureScene'))
 const TimeCircuitsScene = lazy(() => import('./components/scenes/TimeCircuitsScene'))
 const GateScene = lazy(() => import('./components/scenes/GateScene'))
-const ParkScene = lazy(() => import('./components/scenes/ParkScene'))
 
 export default function App() {
   return (
@@ -24,7 +23,6 @@ export default function App() {
         <DepartureScene />
         <TimeCircuitsScene />
         <GateScene />
-        <ParkScene />
       </Suspense>
     </main>
   )

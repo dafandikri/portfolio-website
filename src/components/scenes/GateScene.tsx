@@ -1,16 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  AmbientLight,
+  ACESFilmicToneMapping,
+  AdditiveBlending,
   Box3,
+  BufferGeometry,
   Color,
+  ConeGeometry,
   DirectionalLight,
   Group,
+  HemisphereLight,
+  Material,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
+  PCFSoftShadowMap,
   PerspectiveCamera,
+  PlaneGeometry,
+  PointLight,
   Scene,
+  SphereGeometry,
   SRGBColorSpace,
   TextureLoader,
+  Vector2,
   Vector3,
   WebGLRenderer,
   type Object3D,
@@ -19,6 +30,8 @@ import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'
 import { useInView } from '../../hooks/useInView'
 import { hingedDoor, splitGateGeometry } from './gateGeometry'
 import { gateMotion } from './gateMotion'
+import { GATE_TORCHES, torchFlicker } from './gateTorches'
+import ParkScene from './ParkScene'
 import './GateScene.css'
 
 /**
@@ -45,6 +58,7 @@ export default function GateScene() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
   const [failed, setFailed] = useState(false)
+  const [projectsVisible, setProjectsVisible] = useState(false)
 
   /*
    * jsdom has no WebGL context, so this integration path is verified in a real
@@ -67,47 +81,77 @@ export default function GateScene() {
       // No WebGL: the scene degrades to its poster background rather than a
       // blank hole in the page.
       setFailed(true)
+      setProjectsVisible(true)
       return
     }
 
     const gl = renderer
     gl.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     gl.outputColorSpace = SRGBColorSpace
+    gl.toneMapping = ACESFilmicToneMapping
+    gl.toneMappingExposure = 0.76
+    gl.shadowMap.enabled = true
+    gl.shadowMap.type = PCFSoftShadowMap
 
     const scene = new Scene()
     scene.background = null
 
-    const camera = new PerspectiveCamera(42, 1, 0.1, 4000)
+    const camera = new PerspectiveCamera(42, 1, 0.1, 40)
 
     /*
-     * Night at the gate: one warm key standing in for the torches, a second on
-     * the far side so the opening reads as a way through rather than a wall, and
-     * just enough ambient that the stone is not pure black.
+     * Real light, not colour painted over the mesh. A low blue hemisphere gives
+     * the night an environment; one moon key produces directional form and a
+     * shadow; the eight local point lights below put warm falloff on the stone.
      */
-    /*
-     * Directional, not point. The file declares meter="0.01", so the gate is
-     * over a thousand units across, and a point light's distance falloff leaves
-     * nothing at all on geometry that size. Parallel light has no falloff, which
-     * makes it scale-proof for an asset whose units you have not measured.
-     */
-    scene.add(new AmbientLight(new Color('#8a7350'), 1.15))
-    const key = new DirectionalLight(new Color('#ffc070'), 2.6)
-    key.position.set(0.45, 0.7, 1)
-    const rim = new DirectionalLight(new Color('#ffd9a0'), 1.1)
-    rim.position.set(-0.6, 0.2, -0.8)
+    scene.add(new HemisphereLight(new Color('#617493'), new Color('#100704'), 0.2))
+    const key = new DirectionalLight(new Color('#9db8d6'), 0.76)
+    key.position.set(1.8, 2.5, 2.8)
+    key.castShadow = true
+    key.shadow.mapSize.set(1536, 1536)
+    key.shadow.camera.left = -1.7
+    key.shadow.camera.right = 1.7
+    key.shadow.camera.top = 1.7
+    key.shadow.camera.bottom = -1.7
+    key.shadow.camera.near = 0.1
+    key.shadow.camera.far = 8
+    key.shadow.bias = -0.00045
+    key.shadow.normalBias = 0.018
+
+    const rim = new DirectionalLight(new Color('#7d3f20'), 0.24)
+    rim.position.set(-1.5, 0.4, -2.2)
     scene.add(key, rim)
 
     const textures = new TextureLoader()
     const albedo = textures.load('/gate/albedo.jpg')
     albedo.colorSpace = SRGBColorSpace
+    const ao = textures.load('/gate/ao.jpg')
+    const normal = textures.load('/gate/normal.png')
+    const roughness = textures.load('/gate/roughness.jpg')
+    const metallic = textures.load('/gate/metallic.jpg')
     const emissive = textures.load('/gate/emissive.jpg')
     emissive.colorSpace = SRGBColorSpace
+    const textureSet = [albedo, ao, normal, roughness, metallic, emissive]
+    const anisotropy = Math.min(8, gl.capabilities.getMaxAnisotropy())
+    for (const texture of textureSet) texture.anisotropy = anisotropy
 
     let centre = new Vector3()
     let span = 1
     let ready = false
     let leftHinge: Group | null = null
     let rightHinge: Group | null = null
+    const torchEffects: Array<{
+      light: PointLight
+      flame: Mesh
+      core: Mesh
+      halo: Mesh
+      phase: number
+      scale: number
+      intensity: number
+    }> = []
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let projectState = reduced
+    if (reduced) setProjectsVisible(true)
 
     new ColladaLoader().load(
       '/gate/gate.dae',
@@ -123,16 +167,30 @@ export default function GateScene() {
         const sourceMesh = model.getObjectByProperty('isMesh', true) as Mesh | undefined
         if (!sourceMesh || !sourceMesh.parent) {
           setFailed(true)
+          setProjectsVisible(true)
           return
+        }
+
+        /* AO uses the second UV channel. The source has one good unwrap, so
+           duplicate it before partitioning the merged mesh into door pieces. */
+        const uv = sourceMesh.geometry.getAttribute('uv')
+        if (uv && !sourceMesh.geometry.getAttribute('uv1')) {
+          sourceMesh.geometry.setAttribute('uv1', uv.clone())
         }
 
         const material = new MeshStandardMaterial({
           map: albedo,
+          aoMap: ao,
+          aoMapIntensity: 1.12,
+          normalMap: normal,
+          normalScale: new Vector2(0.72, 0.72),
+          roughnessMap: roughness,
+          metalnessMap: metallic,
           emissiveMap: emissive,
-          emissive: new Color('#ff9a3c'),
-          emissiveIntensity: 1.1,
-          roughness: 0.86,
-          metalness: 0.08,
+          emissive: new Color('#ff6e22'),
+          emissiveIntensity: 0.34,
+          roughness: 0.96,
+          metalness: 0.72,
         })
 
         const pieces = splitGateGeometry(sourceMesh.geometry)
@@ -142,9 +200,17 @@ export default function GateScene() {
         assembly.quaternion.copy(sourceMesh.quaternion)
         assembly.scale.copy(sourceMesh.scale)
 
-        assembly.add(new Mesh(pieces.static, material))
+        const staticGate = new Mesh(pieces.static, material)
+        staticGate.castShadow = true
+        staticGate.receiveShadow = true
+        assembly.add(staticGate)
         leftHinge = hingedDoor(pieces.left, material, 'left')
         rightHinge = hingedDoor(pieces.right, material, 'right')
+        for (const hinge of [leftHinge, rightHinge]) {
+          const door = hinge.children[0] as Mesh
+          door.castShadow = true
+          door.receiveShadow = true
+        }
         assembly.add(leftHinge, rightHinge)
         sourceMesh.parent.add(assembly)
         sourceMesh.parent.remove(sourceMesh)
@@ -184,12 +250,95 @@ export default function GateScene() {
         model.position.sub(centre)
         // Stand the camera at the height of the opening, not the model's middle.
         model.position.y -= span * 0.06
+
+        /* A dark, rough receiving plane gives the pylons contact and lets the
+           local lights pool on a surface. Without it the gate floats in a void,
+           however detailed its material is. */
+        const ground = new Mesh(
+          new PlaneGeometry(span * 6, span * 5),
+          new MeshStandardMaterial({
+            /* Match the painted night at rest; only real light should reveal
+               the floor, otherwise the plane produces a synthetic horizon. */
+            color: new Color('#050301'),
+            roughness: 1,
+            metalness: 0,
+            transparent: true,
+            opacity: 0.42,
+          }),
+        )
+        ground.rotation.x = -Math.PI / 2
+        ground.position.set(0, box.min.y - centre.y - span * 0.065, -span * 0.35)
+        ground.receiveShadow = true
+        scene.add(ground)
+
+        /*
+         * Four torches per pylon, including the cap brazier. The tiny meshes are
+         * the visible fire; each one also owns a real inverse-square point light
+         * whose independent phase keeps the stone from pulsing in unison.
+         */
+        const flameGeometry = new ConeGeometry(span * 0.011, span * 0.052, 10)
+        const coreGeometry = new ConeGeometry(span * 0.005, span * 0.032, 8)
+        const haloGeometry = new SphereGeometry(span * 0.017, 10, 8)
+        const flameMaterial = new MeshBasicMaterial({
+          color: new Color('#ff681e'),
+          transparent: true,
+          opacity: 0.84,
+          depthWrite: false,
+          blending: AdditiveBlending,
+        })
+        const coreMaterial = new MeshBasicMaterial({
+          color: new Color('#fff2b0'),
+          transparent: true,
+          opacity: 0.94,
+          depthWrite: false,
+          blending: AdditiveBlending,
+        })
+        const haloMaterial = new MeshBasicMaterial({
+          color: new Color('#ff7a26'),
+          transparent: true,
+          opacity: 0.2,
+          depthWrite: false,
+          blending: AdditiveBlending,
+        })
+
+        for (const torch of GATE_TORCHES) {
+          const holder = new Group()
+          holder.name = `gate-torch-${torch.side}-${torch.tier}`
+          holder.position.set(...torch.position)
+          const torchScale = torch.tier === 'cap' ? 1.28 : 1
+          holder.scale.setScalar(torchScale)
+
+          const flame = new Mesh(flameGeometry, flameMaterial)
+          flame.position.y = span * 0.028
+          const core = new Mesh(coreGeometry, coreMaterial)
+          core.position.y = span * 0.023
+          const halo = new Mesh(haloGeometry, haloMaterial)
+          halo.position.y = span * 0.02
+          const intensity = torch.tier === 'cap' ? 3.2 : 2.35
+          const light = new PointLight(new Color('#ff7a25'), intensity, span * 0.58, 2)
+          light.position.set(0, span * 0.028, span * 0.018)
+          holder.add(halo, flame, core, light)
+          model.add(holder)
+          torchEffects.push({
+            light,
+            flame,
+            core,
+            halo,
+            phase: torch.phase,
+            scale: torchScale,
+            intensity,
+          })
+        }
+
         scene.add(model)
         ready = true
       },
       undefined,
       () => {
-        if (!disposed) setFailed(true)
+        if (!disposed) {
+          setFailed(true)
+          setProjectsVisible(true)
+        }
       },
     )
 
@@ -201,8 +350,6 @@ export default function GateScene() {
       camera.updateProjectionMatrix()
     }
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
     const tick = (time = 0) => {
       frame = requestAnimationFrame(tick)
       if (!ready) return
@@ -212,6 +359,13 @@ export default function GateScene() {
       const raw = travel <= 0 ? 0 : -rect.top / travel
       const progress = Math.min(1, Math.max(0, raw))
       const motion = gateMotion(progress, reduced)
+
+      section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
+      const showProjects = motion.projectStrength >= 0.999
+      if (showProjects !== projectState) {
+        projectState = showProjects
+        setProjectsVisible(showProjects)
+      }
 
       if (leftHinge && rightHinge) {
         // Both leaves swing away from the camera and into the park.
@@ -223,6 +377,18 @@ export default function GateScene() {
       const jolt = Math.sin(time * 0.075) * motion.roarStrength
       section.style.setProperty('--roar-x', `${(jolt * 5).toFixed(2)}px`)
       section.style.setProperty('--roar-y', `${(Math.abs(jolt) * -2).toFixed(2)}px`)
+
+      for (const torch of torchEffects) {
+        const flicker = reduced ? 0.9 : torchFlicker(time, torch.phase)
+        torch.light.intensity = torch.intensity * flicker
+        torch.flame.scale.set(
+          0.86 + flicker * 0.14,
+          0.72 + flicker * 0.34,
+          0.86 + flicker * 0.14,
+        )
+        torch.core.scale.setScalar(0.82 + flicker * 0.18)
+        torch.halo.scale.setScalar(0.72 + flicker * 0.32)
+      }
 
       // The dolly starts only after the swing has cleared the opening.
       const eased = 1 - (1 - motion.dollyProgress) ** 2
@@ -242,16 +408,17 @@ export default function GateScene() {
       disposed = true
       cancelAnimationFrame(frame)
       window.removeEventListener('resize', resize)
-      albedo.dispose()
-      emissive.dispose()
-      const materials = new Set<MeshStandardMaterial>()
+      for (const texture of textureSet) texture.dispose()
+      const materials = new Set<Material>()
+      const geometries = new Set<BufferGeometry>()
       scene.traverse((child) => {
         const mesh = child as Mesh
         if (!mesh.isMesh) return
-        mesh.geometry.dispose()
+        geometries.add(mesh.geometry)
         const assigned = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
-        for (const item of assigned) materials.add(item as MeshStandardMaterial)
+        for (const item of assigned) materials.add(item)
       })
+      for (const geometry of geometries) geometry.dispose()
       for (const material of materials) material.dispose()
       gl.dispose()
     }
@@ -265,24 +432,48 @@ export default function GateScene() {
         sectionRef.current = node
       }}
       className="scene scene--gate"
-      aria-hidden="true"
     >
-      <div className="gate__stage">
+      <div className={`gate__stage${projectsVisible ? ' is-projects' : ''}`}>
         {/* Painted behind the canvas, so a device without WebGL still gets a lit
             night rather than a hole in the page. */}
-        <div className="gate__picture">
+        <div className="gate__picture" aria-hidden="true">
           <div className="gate__backdrop" />
           {hasEntered && !failed && <canvas ref={canvasRef} className="gate__canvas" />}
         </div>
 
         {/* The animal remains off-screen. Only the pressure of its roar enters
             the frame before the doors begin to move. */}
-        <div className="gate__roar">
+        <div className="gate__roar" aria-hidden="true">
           <span className="gate__echo gate__echo--1" />
           <span className="gate__echo gate__echo--2" />
           <span className="gate__echo gate__echo--3" />
           <span className="gate__roar-dust" />
         </div>
+
+        {projectsVisible && <ParkScene />}
+
+        <details className="gate__credit">
+          <summary aria-label="Gate model credit">i</summary>
+          <p>
+            Gate asset:{' '}
+            <a
+              href="https://sketchfab.com/3d-models/jurassic-park-gate-f85e89d2c0ef44beb3fe7fd7e72afdc7"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              &ldquo;Jurassic Park Gate&rdquo;
+            </a>{' '}
+            by Mathzilla5335 ·{' '}
+            <a
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noreferrer noopener license"
+            >
+              CC BY 4.0
+            </a>
+          </p>
+          <p>Adapted for web: PBR maps resized, doors animated, and lighting rebuilt.</p>
+        </details>
       </div>
     </section>
   )

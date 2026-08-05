@@ -37,7 +37,7 @@ This is several projects. Each phase ships on its own and leaves the site workin
 | Phase | Scope | New dependencies |
 |---|---|---|
 | **1 — built** | Scroll shell + Back to the Future scene | None |
-| **2 — built** | Jurassic Park gate + project paddocks | Three.js, lazy-loaded |
+| **2 — built** | Jurassic Park gate + automatic project hand | Three.js, lazy-loaded |
 | **3** | Bouldering scene | None, or light 3D |
 
 Phase 1 bundles the shell with the first scene deliberately — a scroll
@@ -61,10 +61,45 @@ pressure fronts, dust, and a restrained camera jolt before the doors move. This
 keeps the creature implied without asking CSS or an unsuitable full-body asset
 to draw a convincing close-up.
 
-Beyond the gate, the projects render as accessible paddock signs: riveted steel,
-hazard stripes, status lamps, and ordinary buttons/links. This replaced the
-planned `fsn` browser because a wireframe file grid still read as a terminal after
-being recoloured; it did not belong naturally inside the park.
+The gate uses the complete material set supplied with the licensed model: albedo,
+ambient occlusion, normal, roughness, metallic and emissive maps. ACES tone
+mapping, a cool directional key with one shadow map, and eight warm local point
+lights replace the original flat ambient wash. Each pylon carries three face
+torches and one cap brazier; the visible flames flicker independently while their
+point lights put real distance falloff across the stone.
+
+Beyond the gate, projects arrive as an accessible hand of paddock cards. The hand
+mounts on the same scroll frame that the camera finishes its dolly, then deals on
+its own CSS clock—no additional wheel movement is required. The cards retain the
+park language through steel, hazard gold and status lamps, but use Balatro-like
+overlap, fan angles and selection lift. Each media slot accepts either an image or
+a muted looping video through `projectMedia.ts`; missing media remains an honest
+placeholder rather than a fabricated screenshot.
+
+The gate model credit is a compact `i` control at the frame edge. It exists only
+inside the gate's sticky viewport and fades before the project hand appears. The
+expanded control carries title, creator, source, licence, and an adaptation
+notice; the same details are repeated in `docs/ATTRIBUTIONS.md` for repository
+readers.
+
+### Phase 2 realism revision verification
+
+- Real Chromium/WebGL2 at 1440×900 shows all eight flames in the closed and open
+  shots. The restrained exposure leaves normal-map relief, rough stone, wooden
+  door grain and local torch falloff visible instead of clipping the whole gate
+  to orange-white.
+- At the dolly endpoint the first card changed from `opacity: 0.837` and 86.6 px
+  below its destination to `opacity: 1` and its final fan position after 1.1 s,
+  while `scrollY` remained exactly 5926. This proves the deal finishes without
+  another wheel event.
+- At 390×844 all eight cards render with `scrollWidth === innerWidth === 390`.
+  The gate keeps all four flames on each column visible in the mobile crop.
+- With `prefers-reduced-motion: reduce`, all eight cards are immediately static,
+  the roar is absent, and the credit control remains available.
+- TypeScript, ESLint, data validation, production build, and 89 tests pass.
+  Coverage is 90.34% statements, 77.16% branches, 92.77% functions, and 92.51%
+  lines. The lazy gate chunk, including Three.js and the project hand, is 628.18
+  KB / 158.06 KB gzip.
 
 ---
 
