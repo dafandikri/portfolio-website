@@ -350,6 +350,7 @@
  * ------------------------------------------------------------------------ */
 
 .departure__spot,
+.departure__lamp,
 .departure__spot-pool {
   position: absolute;
   z-index: 2;
@@ -370,10 +371,16 @@
 .departure__spot {
   left: 0;
   right: 0;
-  /* Runs past the bottom of the stage: ending the cone inside the frame left a
-     straight horizontal cut where the light simply stopped. */
-  top: -10%;
-  height: 130%;
+  /*
+   * The apex sits at the top of the frame, where the lamp is, and the cone runs
+   * past the bottom. Hanging it above the frame instead put the beam at nearly
+   * full brightness exactly where `overflow: clip` on the stage cuts it — and
+   * that clip is on the ancestor, so it lands *after* this element's blur and
+   * the feather never reaches it. The result was a razor-straight grey line
+   * across the top of the screen.
+   */
+  top: 0;
+  height: 118%;
   clip-path: polygon(47.4% 0, 52.6% 0, 71% 100%, 29% 100%);
   /*
    * Very faint. A beam is the little you can see of light passing through air,
@@ -382,7 +389,10 @@
    */
   background: linear-gradient(
     to bottom,
-    rgba(255, 250, 235, 0.2) 0%,
+    /* Fades in over the first few percent so the cut edge has nothing to show,
+       and the lamp glow sits exactly there to justify it. */
+    rgba(255, 250, 235, 0) 0%,
+    rgba(255, 250, 235, 0.21) 6%,
     rgba(255, 244, 220, 0.1) 38%,
     rgba(255, 238, 205, 0.042) 72%,
     rgba(255, 236, 200, 0) 100%
@@ -454,6 +464,32 @@
     -webkit-mask-position: 0 0;
     mask-position: 0 0;
   }
+}
+
+/*
+ * The lamp. Small, and sitting over the beam's apex — a beam has to come from
+ * somewhere, and without a visible source the top of the cone can only ever read
+ * as the place the graphic stops.
+ */
+.departure__lamp {
+  left: 50%;
+  top: 0;
+  width: 30vh;
+  height: 15vh;
+  margin-left: -15vh;
+  /* Centred just inside the frame, not straddling it: the glow has to reach zero
+     before the stage clips it, or the lamp gets a flat top of its own. */
+  margin-top: -2.5vh;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 50% 62%,
+    rgba(255, 253, 244, 0.85) 0%,
+    rgba(255, 246, 222, 0.45) 28%,
+    rgba(255, 240, 206, 0.14) 54%,
+    rgba(255, 238, 200, 0) 78%
+  );
+  filter: blur(0.9vh);
+  animation-name: spot-descend;
 }
 
 /* The pool on the floor, directly under the plate. */
@@ -644,6 +680,7 @@
   .departure__bed,
   .departure__flash,
   .departure__spot,
+  .departure__lamp,
   .departure__spot-pool,
   .flame__ember,
   .flame__tongue,

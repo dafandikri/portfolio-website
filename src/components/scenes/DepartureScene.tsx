@@ -176,6 +176,7 @@ export default function DepartureScene() {
           floor under the plate. It is what gives the plate somewhere to be: a
           lit prop on a dark stage rather than a shape floating in a void.
         */}
+        <div className="departure__lamp" />
         <div className="departure__spot" />
         <div className="departure__spot-pool" />
 

@@ -32,3 +32,5 @@ coverage
 
 # Infrastructure
 certs/
+# Stray tooling output; also triggers dev-server page reloads when watched.
+.lavish/
