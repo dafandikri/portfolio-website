@@ -1,0 +1,125 @@
+/*
+ * The gate, rendered.
+ *
+ * The section is tall and holds a sticky stage; the camera dolly inside the
+ * canvas is driven from this section's own scroll position, so the shot runs
+ * forward going down and backward going up like every other scene here.
+ */
+
+.scene--gate {
+  position: relative;
+  height: 280svh;
+  background: #050301;
+}
+
+.gate__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  display: grid;
+  place-items: center;
+}
+
+/* Night behind the model, and the whole picture where WebGL is unavailable. */
+.gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 52% 46% at 50% 62%, rgba(255, 186, 84, 0.22) 0%, rgba(5, 3, 1, 0) 68%),
+    linear-gradient(to bottom, #0b0805 0%, #070502 58%, #040301 100%);
+}
+
+.gate__canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+ * The rex
+ * ------------------------------------------------------------------------ */
+
+.gate__rex {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(52vw, 38rem);
+  height: min(74svh, 34rem);
+  z-index: 5;
+  transform-origin: 0% 80%;
+  animation-name: gates-rex;
+  pointer-events: none;
+}
+
+/*
+ * The silhouette itself, painted through the sourced artwork as a mask. A mask
+ * rather than an <img> because the shape has to be *lit* — near-black with a
+ * warm rim off the torches — and an image would arrive already coloured.
+ */
+.gate__rex-shape {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: url('/trex-silhouette.svg');
+  mask-image: url('/trex-silhouette.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  /*
+   * Shown whole, not cropped to the head. Two attempts at zooming in on the
+   * skull produced an unreadable black mass: this silhouette's legibility lives
+   * in its whole-body proportions, so a crop destroys the very thing that makes
+   * it read as a rex. A head shot needs a head asset, not a magnified hip.
+   */
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background: linear-gradient(to top, #0d0806 0%, #050301 100%);
+  /* The artwork faces right; the rex has to be looking into the gate. */
+  transform: scaleX(-1);
+  filter: drop-shadow(0 0 2.6rem rgba(255, 150, 40, 0.4));
+}
+
+/*
+ * The echo. Arcs running out from the mouth, each only lit on its leading edge
+ * so it reads as pressure travelling rather than as a ring drawn around a point.
+ */
+.gate__echo {
+  position: absolute;
+  left: 58%;
+  top: 52%;
+  width: 42rem;
+  height: 42rem;
+  margin: -21rem 0 0 -21rem;
+  border: 2px solid rgba(255, 206, 140, 0.5);
+  border-radius: 50%;
+  -webkit-mask-image: linear-gradient(to right, transparent 46%, #000 76%);
+  mask-image: linear-gradient(to right, transparent 46%, #000 76%);
+  animation: gate-echo 1.5s ease-out infinite;
+}
+
+@keyframes gate-echo {
+  0% {
+    opacity: 0;
+    transform: scale(0.1);
+  }
+  18% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate__rex,
+  .gate__echo {
+    animation: none;
+  }
+  .gate__rex {
+    opacity: 0;
+  }
+}

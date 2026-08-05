@@ -11,7 +11,7 @@ import CardScene from './components/scenes/CardScene'
  */
 const DepartureScene = lazy(() => import('./components/scenes/DepartureScene'))
 const TimeCircuitsScene = lazy(() => import('./components/scenes/TimeCircuitsScene'))
-const GatesTransition = lazy(() => import('./components/scenes/GatesTransition'))
+const GateScene = lazy(() => import('./components/scenes/GateScene'))
 const ParkScene = lazy(() => import('./components/scenes/ParkScene'))
 
 export default function App() {
@@ -23,7 +23,7 @@ export default function App() {
       <Suspense fallback={<div style={{ minHeight: '100svh' }} aria-hidden="true" />}>
         <DepartureScene />
         <TimeCircuitsScene />
-        <GatesTransition />
+        <GateScene />
         <ParkScene />
       </Suspense>
     </main>
