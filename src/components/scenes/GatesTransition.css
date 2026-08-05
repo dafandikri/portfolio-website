@@ -139,6 +139,12 @@
   mask-image: url('/trex-silhouette.svg');
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+  /*
+   * Shown whole, not cropped to the head. Two attempts at zooming in on the
+   * skull produced an unreadable black mass: this silhouette's legibility lives
+   * in its whole-body proportions, so a crop destroys the very thing that makes
+   * it read as a rex. A head shot needs a head asset, not a magnified hip.
+   */
   -webkit-mask-position: left center;
   mask-position: left center;
   -webkit-mask-size: contain;

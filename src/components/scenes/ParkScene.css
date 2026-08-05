@@ -1,0 +1,360 @@
+/*
+ * Inside the park.
+ *
+ * Steel warning plates on a fence at night. Palette sampled from the reference
+ * model's albedo map: weathered stone grey, hazard gold, and the deep red of the
+ * park's own signage.
+ */
+
+.scene--park {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.25rem, 3.5vw, 2.25rem);
+  padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 3rem) clamp(3rem, 8vw, 5rem);
+  /* Jungle at night: warm floodlight above, black undergrowth below. */
+  background:
+    radial-gradient(ellipse 80% 46% at 50% 0%, rgba(226, 164, 23, 0.12) 0%, rgba(6, 5, 3, 0) 62%),
+    linear-gradient(to bottom, #100c07 0%, #070502 58%, #040301 100%);
+  color: rgba(255, 240, 214, 0.86);
+  overflow: clip;
+}
+
+.park__placeholder {
+  min-height: 100svh;
+}
+
+.park {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3.5vw, 2.25rem);
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+ * Heading
+ * ------------------------------------------------------------------------ */
+
+.park__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(0.58rem, 1.4vw, 0.74rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: #e2a417;
+}
+
+/* Hazard striping, drawn rather than imaged. */
+.park__stripe {
+  width: clamp(2.5rem, 9vw, 6rem);
+  height: 0.55rem;
+  background: repeating-linear-gradient(
+    -45deg,
+    #e2a417 0 0.42rem,
+    #14100a 0.42rem 0.84rem
+  );
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+ * The signs
+ * ------------------------------------------------------------------------ */
+
+.park__signs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
+  gap: clamp(0.85rem, 2vw, 1.35rem);
+  width: min(100%, 62rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.park__sign {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 1.15rem 1rem 1rem;
+  /* Brushed steel plate, lit from above. */
+  border: 1px solid rgba(226, 164, 23, 0.22);
+  border-radius: 2px;
+  background:
+    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px),
+    linear-gradient(to bottom, #33312c 0%, #23211d 46%, #15140f 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 170, 0.14),
+    0 0.7rem 1.6rem -0.7rem rgba(0, 0, 0, 0.95);
+  font-family: var(--font-tech);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.park__sign:hover,
+.park__sign:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(226, 164, 23, 0.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 170, 0.2),
+    0 0 1.6rem -0.3rem rgba(226, 164, 23, 0.35),
+    0 0.9rem 1.8rem -0.7rem rgba(0, 0, 0, 0.95);
+}
+
+.park__sign:focus-visible {
+  outline: 2px solid #e2a417;
+  outline-offset: 3px;
+}
+
+/* The striped strip across the top of every plate. */
+.park__hazard {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 0.36rem;
+  background: repeating-linear-gradient(
+    -45deg,
+    #e2a417 0 0.4rem,
+    #14100a 0.4rem 0.8rem
+  );
+  opacity: 0.75;
+}
+
+.park__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.park__paddock {
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(226, 164, 23, 0.75);
+}
+
+/* Dark until the enclosure is selected — a lamp that is always lit says nothing. */
+.park__lamp {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #2c2721;
+  box-shadow: inset 0 0 0 1px rgba(255, 226, 170, 0.16);
+  transition:
+    background 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.park__title {
+  font-size: clamp(0.68rem, 1.5vw, 0.8rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.05em;
+  color: rgba(255, 244, 226, 0.94);
+}
+
+.park__year {
+  font-size: 0.54rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  color: rgba(255, 240, 214, 0.42);
+}
+
+/* Rivets: what makes a rectangle read as a bolted plate. */
+.park__rivets i {
+  position: absolute;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #6a655c 0%, #2a2620 70%);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.park__rivets i:nth-child(1) {
+  left: 0.45rem;
+  top: 0.62rem;
+}
+.park__rivets i:nth-child(2) {
+  right: 0.45rem;
+  top: 0.62rem;
+}
+.park__rivets i:nth-child(3) {
+  left: 0.45rem;
+  bottom: 0.45rem;
+}
+.park__rivets i:nth-child(4) {
+  right: 0.45rem;
+  bottom: 0.45rem;
+}
+
+/* Selected: the enclosure is live. */
+.is-open .park__sign {
+  border-color: #e2a417;
+  background:
+    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 3px),
+    linear-gradient(to bottom, #4a4238 0%, #2f2b23 46%, #1b1912 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 170, 0.24),
+    0 0 2.2rem -0.4rem rgba(226, 164, 23, 0.5),
+    0 0.9rem 1.8rem -0.7rem rgba(0, 0, 0, 0.95);
+}
+
+.is-open .park__lamp {
+  background: #ff3b26;
+  box-shadow:
+    0 0 0.4rem rgba(255, 59, 38, 0.9),
+    0 0 1rem rgba(255, 59, 38, 0.55);
+  animation: park-lamp 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes park-lamp {
+  from {
+    opacity: 0.62;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * The readout — the park's own information board
+ * ------------------------------------------------------------------------ */
+
+.park__readout {
+  width: min(100%, 46rem);
+  min-height: 9rem;
+  text-align: center;
+}
+
+.park__hint {
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(226, 164, 23, 0.42);
+}
+
+.park__detail-title {
+  display: inline-block;
+  margin: 0 0 0.85rem;
+  padding: 0.3em 0.9em 0.34em;
+  /* The park's board: gold on deep red, as on the gate. */
+  border: 2px solid #e2a417;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #d0241f 0%, #a81a17 60%, #7d120f 100%);
+  font-family: var(--font-tech);
+  font-size: clamp(0.72rem, 1.8vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #e2a417;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.park__detail-text {
+  margin: 0 auto;
+  max-width: 56ch;
+  font-family: var(--font-tech);
+  font-size: clamp(0.68rem, 1.5vw, 0.78rem);
+  line-height: 1.75;
+  color: rgba(255, 240, 214, 0.6);
+}
+
+.park__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  margin: 0.95rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.park__chip {
+  padding: 0.2em 0.6em;
+  border: 1px solid rgba(226, 164, 23, 0.3);
+  border-radius: 2px;
+  font-family: var(--font-tech);
+  font-size: 0.54rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(226, 164, 23, 0.8);
+}
+
+.park__links {
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  margin: 1.1rem 0 0;
+}
+
+.park__link {
+  font-family: var(--font-tech);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #e2a417;
+  border-bottom: 1px solid rgba(226, 164, 23, 0.45);
+  padding-bottom: 0.15rem;
+}
+
+.park__link:hover,
+.park__link:focus-visible {
+  color: #ffd166;
+  border-color: #ffd166;
+}
+
+/* --------------------------------------------------------------------------
+ * Licence credit
+ * ------------------------------------------------------------------------ */
+
+.park__credit {
+  margin: clamp(1.5rem, 4vw, 2.5rem) 0 0;
+  max-width: 52rem;
+  font-family: var(--font-tech);
+  font-size: 0.52rem;
+  line-height: 1.9;
+  letter-spacing: 0.12em;
+  color: rgba(255, 240, 214, 0.3);
+  text-align: center;
+}
+
+.park__credit-link {
+  color: rgba(226, 164, 23, 0.6);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.park__credit-link:hover,
+.park__credit-link:focus-visible {
+  color: rgba(255, 209, 102, 0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .park__sign {
+    transition: none;
+  }
+  .is-open .park__lamp {
+    animation: none;
+  }
+}
