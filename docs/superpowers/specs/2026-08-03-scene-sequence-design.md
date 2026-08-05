@@ -68,13 +68,16 @@ lights replace the original flat ambient wash. Each pylon carries three face
 torches and one cap brazier; the visible flames flicker independently while their
 point lights put real distance falloff across the stone.
 
-Beyond the gate, projects arrive as an accessible hand of paddock cards. The hand
-mounts on the same scroll frame that the camera finishes its dolly, then deals on
-its own CSS clock—no additional wheel movement is required. The cards retain the
-park language through steel, hazard gold and status lamps, but use Balatro-like
-overlap, fan angles and selection lift. Each media slot accepts either an image or
-a muted looping video through `projectMedia.ts`; missing media remains an honest
-placeholder rather than a fabricated screenshot.
+Beyond the gate, projects arrive as an accessible hand of dinosaur-containment
+dossiers. The hand mounts on the same scroll frame that the camera finishes its
+dolly, then deals on its own CSS clock—no additional wheel movement is required.
+Balatro supplies the overlap, fan angles, deal cadence and selection lift;
+Jurassic Park supplies numbered containment headers, electrified-fence camera
+feeds, hazard tape, riveted steel and `SECURE` / `TRACKING` lamps. On narrow
+screens the hand shifts towards the selected edge card so the raised dossier is
+never clipped. Each media slot accepts either an image or a muted looping video
+through `projectMedia.ts`; missing media remains an honest locked feed rather
+than a fabricated screenshot.
 
 The gate model credit is a compact `i` control at the frame edge. It exists only
 inside the gate's sticky viewport and fades before the project hand appears. The
@@ -93,13 +96,15 @@ readers.
   while `scrollY` remained exactly 5926. This proves the deal finishes without
   another wheel event.
 - At 390×844 all eight cards render with `scrollWidth === innerWidth === 390`.
-  The gate keeps all four flames on each column visible in the mobile crop.
+  The gate keeps all four flames on each column visible in the mobile crop. The
+  selected first card measures 1.1–158.4 px and the selected last card
+  220.7–377.9 px, so both edge dossiers remain fully inside the viewport.
 - With `prefers-reduced-motion: reduce`, all eight cards are immediately static,
   the roar is absent, and the credit control remains available.
 - TypeScript, ESLint, data validation, production build, and 89 tests pass.
-  Coverage is 90.34% statements, 77.16% branches, 92.77% functions, and 92.51%
-  lines. The lazy gate chunk, including Three.js and the project hand, is 628.18
-  KB / 158.06 KB gzip.
+  Coverage is 90.37% statements, 77.1% branches, 92.77% functions, and 92.54%
+  lines. The lazy gate chunk, including Three.js and the project hand, is 628.95
+  KB / 158.26 KB gzip.
 
 ---
 

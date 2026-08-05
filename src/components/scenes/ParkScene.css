@@ -1,7 +1,7 @@
 /*
  * Projects arrive as a dealt hand after the gate dolly, not as another page.
- * The cards keep the paddock-sign language — steel, hazard gold, status lamps —
- * while the fan, overlap, lift and stagger borrow Balatro's physical rhythm.
+ * The fan, overlap, lift and stagger borrow Balatro's physical rhythm; each card
+ * is a Jurassic containment dossier rather than a generic playing card.
  */
 
 .park {
@@ -16,8 +16,8 @@
   padding: clamp(1.1rem, 3vw, 2.25rem) clamp(0.65rem, 2.5vw, 2rem);
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 46% at 50% 58%, rgba(168, 39, 24, 0.18), transparent 66%),
-    linear-gradient(to bottom, rgba(3, 2, 1, 0.32), rgba(3, 2, 1, 0.88));
+    radial-gradient(ellipse 70% 44% at 50% 54%, rgba(163, 31, 20, 0.2), transparent 66%),
+    linear-gradient(to bottom, rgba(3, 2, 1, 0.38), rgba(3, 2, 1, 0.94));
   color: #fff0d6;
   animation: park-stage-in 540ms ease-out both;
 }
@@ -52,7 +52,7 @@
   letter-spacing: 0.28em;
   text-indent: 0.28em;
   text-transform: uppercase;
-  color: #f0b51f;
+  color: #f4bd2b;
   text-shadow:
     0 0 0.7rem rgba(226, 164, 23, 0.52),
     0 2px 0 #60110d;
@@ -68,6 +68,7 @@
   padding: 0 1.5rem;
   list-style: none;
   perspective: 1100px;
+  transition: transform 320ms cubic-bezier(0.2, 1.1, 0.35, 1);
 }
 
 .park__card {
@@ -100,15 +101,16 @@
   flex-direction: column;
   width: 100%;
   aspect-ratio: 5 / 7;
-  padding: 0.4rem;
+  padding: 0.4rem 0.42rem 0.46rem;
   overflow: hidden;
-  border: 1px solid rgba(226, 164, 23, 0.42);
-  border-radius: 0.34rem;
+  border: 1px solid rgba(230, 177, 55, 0.5);
+  border-radius: 0.38rem;
   background:
     repeating-linear-gradient(to right, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 4px),
-    linear-gradient(145deg, #38342d, #17130e 62%, #080705);
+    linear-gradient(145deg, #484238 0%, #211d17 48%, #0b0907 100%);
   box-shadow:
-    inset 0 1px rgba(255, 225, 171, 0.18),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.62),
+    inset 0 1px rgba(255, 225, 171, 0.2),
     0 1.2rem 2.2rem -0.8rem rgba(0, 0, 0, 0.92);
   color: inherit;
   text-align: left;
@@ -131,17 +133,43 @@
   border-color: #f0b51f;
   box-shadow:
     inset 0 1px rgba(255, 234, 192, 0.25),
-    0 0 1.8rem rgba(200, 39, 25, 0.34),
+    0 0 0 1px rgba(240, 181, 31, 0.42),
+    0 0 1.8rem rgba(200, 39, 25, 0.46),
     0 1.5rem 2.5rem -0.7rem rgba(0, 0, 0, 0.95);
+}
+
+/* Black/yellow electrified-fence tape: the quickest possible read for
+   “containment”, and a strong top edge when the cards overlap. */
+.park__hazard {
+  flex: 0 0 0.34rem;
+  margin: -0.4rem -0.42rem 0.34rem;
+  background: repeating-linear-gradient(
+    -52deg,
+    #17130c 0 0.34rem,
+    #dca719 0.34rem 0.68rem
+  );
+  box-shadow: 0 1px rgba(255, 221, 119, 0.22);
+}
+
+.park__serial {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.28rem;
+  font-family: var(--font-tech);
+  font-size: clamp(0.38rem, 0.62vw, 0.49rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(237, 188, 65, 0.7);
 }
 
 .park__media {
   position: relative;
   display: grid;
   place-items: center;
-  height: 53%;
+  height: 47%;
   overflow: hidden;
-  border: 1px solid rgba(226, 164, 23, 0.24);
+  border: 1px solid rgba(226, 164, 23, 0.34);
   border-radius: 0.18rem;
   background:
     linear-gradient(rgba(226, 164, 23, 0.05), rgba(136, 25, 18, 0.18)),
@@ -152,7 +180,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.82) contrast(1.08) brightness(0.78);
+  filter: saturate(0.72) contrast(1.16) brightness(0.72) sepia(0.08);
 }
 
 .park__media-placeholder {
@@ -174,15 +202,42 @@
   mix-blend-mode: multiply;
 }
 
+/* Chain-link drawn over the camera feed. The content remains the project
+   screenshot/video; the fence is what places it inside a paddock. */
+.park__fence {
+  position: absolute;
+  inset: -0.2rem;
+  pointer-events: none;
+  opacity: 0.4;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 0.52rem, rgba(231, 190, 91, 0.5) 0.52rem 0.58rem),
+    repeating-linear-gradient(-45deg, transparent 0 0.52rem, rgba(231, 190, 91, 0.36) 0.52rem 0.58rem);
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.9));
+}
+
+.park__feed {
+  position: absolute;
+  right: 0.24rem;
+  bottom: 0.2rem;
+  padding: 0.12rem 0.24rem;
+  background: rgba(5, 4, 2, 0.78);
+  font-family: var(--font-tech);
+  font-size: clamp(0.3rem, 0.48vw, 0.4rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(238, 188, 64, 0.66);
+}
+
 .park__card-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.3rem;
-  margin-top: 0.42rem;
+  margin-top: 0.38rem;
 }
 
 .park__paddock,
+.park__status,
 .park__year {
   font-family: var(--font-tech);
   font-size: clamp(0.4rem, 0.66vw, 0.52rem);
@@ -191,19 +246,28 @@
   color: rgba(226, 164, 23, 0.68);
 }
 
+.park__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.24rem;
+  color: rgba(139, 211, 143, 0.76);
+}
+
 .park__lamp {
   width: 0.42rem;
   height: 0.42rem;
   border-radius: 50%;
-  background: #2b251e;
-  box-shadow: inset 0 0 0 1px rgba(255, 226, 170, 0.18);
+  background: #4db65c;
+  box-shadow:
+    0 0 0.3rem rgba(77, 182, 92, 0.68),
+    inset 0 0 0 1px rgba(226, 255, 217, 0.35);
 }
 
 .is-open .park__lamp {
-  background: #ff3b26;
+  background: #ffb21b;
   box-shadow:
-    0 0 0.35rem rgba(255, 59, 38, 0.95),
-    0 0 0.85rem rgba(255, 59, 38, 0.6);
+    0 0 0.35rem rgba(255, 178, 27, 0.95),
+    0 0 0.85rem rgba(255, 85, 28, 0.62);
   animation: park-lamp 1.1s ease-in-out infinite alternate;
 }
 
@@ -216,26 +280,74 @@
 .park__card-title {
   margin-top: auto;
   font-family: var(--font-tech);
-  font-size: clamp(0.56rem, 1vw, 0.72rem);
+  font-size: clamp(0.58rem, 1.05vw, 0.76rem);
   font-weight: 700;
   letter-spacing: 0.04em;
   line-height: 1.2;
   color: rgba(255, 244, 226, 0.95);
 }
 
-.park__year {
-  margin-top: 0.2rem;
+.park__card-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+  margin-top: 0.24rem;
+  font-family: var(--font-tech);
+  font-size: clamp(0.32rem, 0.5vw, 0.42rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: rgba(255, 240, 214, 0.38);
 }
 
+.park__year {
+  color: inherit;
+}
+
+/* Four bolt heads keep the card reading as a piece of containment hardware. */
+.park__rivets {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.park__rivets i {
+  position: absolute;
+  width: 0.22rem;
+  height: 0.22rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d6c9aa 0 12%, #6a604e 42%, #17130e 76%);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.8);
+}
+
+.park__rivets i:nth-child(1) { top: 0.12rem; left: 0.12rem; }
+.park__rivets i:nth-child(2) { top: 0.12rem; right: 0.12rem; }
+.park__rivets i:nth-child(3) { bottom: 0.12rem; left: 0.12rem; }
+.park__rivets i:nth-child(4) { right: 0.12rem; bottom: 0.12rem; }
+
 .park__detail {
+  position: relative;
   width: min(100%, 48rem);
   min-height: 9.3rem;
   padding: 0.9rem 1.25rem 0.8rem;
-  border-top: 1px solid rgba(226, 164, 23, 0.24);
-  background: linear-gradient(to bottom, rgba(26, 20, 12, 0.76), rgba(7, 5, 3, 0));
+  overflow: hidden;
+  border: 1px solid rgba(226, 164, 23, 0.22);
+  border-radius: 0.22rem;
+  background:
+    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 5px),
+    linear-gradient(to bottom, rgba(28, 22, 13, 0.9), rgba(7, 5, 3, 0.48));
+  box-shadow: 0 1rem 3rem -1.2rem rgba(0, 0, 0, 0.9);
   text-align: center;
   animation: park-readout 260ms ease-out both;
+}
+
+.park__detail::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.18rem;
+  background: repeating-linear-gradient(-52deg, #15110b 0 0.38rem, #d4a119 0.38rem 0.76rem);
 }
 
 @keyframes park-readout {
@@ -317,6 +429,7 @@
   .park__hand {
     min-height: 12.5rem;
     padding-inline: 0.5rem;
+    transform: translateX(var(--focus-shift, 0));
   }
 
   .park__card {
@@ -336,6 +449,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .park,
+  .park__hand,
   .park__card,
   .park__detail,
   .is-open .park__lamp {
@@ -345,5 +459,9 @@
   .park__card {
     opacity: 1;
     transform: translateY(calc(var(--rise) * -1)) rotate(var(--angle));
+  }
+
+  .park__hand {
+    transition: none;
   }
 }

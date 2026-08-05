@@ -20,7 +20,13 @@ describe('ParkScene', () => {
     const { container } = render(<ParkScene />)
 
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
+    expect(screen.getByText('Paddocks')).toBeInTheDocument()
     expect(container.querySelectorAll('.park__card')).toHaveLength(projectsData.length)
+    expect(container.querySelectorAll('.park__hazard')).toHaveLength(projectsData.length)
+    expect(container.querySelectorAll('.park__fence')).toHaveLength(projectsData.length)
+    expect(container.querySelectorAll('.park__rivets i')).toHaveLength(projectsData.length * 4)
+    expect(screen.getByText('Tracking')).toBeInTheDocument()
+    expect(screen.getAllByText('Secure')).toHaveLength(projectsData.length - 1)
 
     projectsData.forEach((_, index) => expect(projectButton(index)).toBeVisible())
     expect(projectButton(0)).toHaveAttribute('aria-expanded', 'true')

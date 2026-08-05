@@ -42,17 +42,20 @@ export default function ParkScene() {
   const [openIndex, setOpenIndex] = useState(0)
   const open = projectsData[openIndex]!
   const middle = (projectsData.length - 1) / 2
+  const handStyle: CardStyle = {
+    '--focus-shift': `${(middle === 0 ? 0 : ((middle - openIndex) / middle) * 20).toFixed(1)}vw`,
+  }
 
   return (
     <section className="park" aria-labelledby="projects-heading">
       <header className="park__header">
-        <p className="park__kicker">Isla Nublar // Asset Registry</p>
-        <h2 id="projects-heading" className="park__heading">
-          Projects
+        <p className="park__kicker">Isla Nublar // Containment Control</p>
+        <h2 id="projects-heading" className="park__heading" aria-label="Projects">
+          Paddocks
         </h2>
       </header>
 
-      <ul className="park__hand">
+      <ul className="park__hand" style={handStyle}>
         {projectsData.map((project, index) => {
           const offset = index - middle
           const isOpen = index === openIndex
@@ -74,16 +77,37 @@ export default function ParkScene() {
                 aria-expanded={isOpen}
                 onClick={() => setOpenIndex(index)}
               >
+                <span className="park__hazard" aria-hidden="true" />
+                <span className="park__serial">
+                  <span>Containment</span>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                </span>
                 <span className="park__media">
                   <ProjectMediaView media={media} />
+                  <span className="park__fence" aria-hidden="true" />
                   <span className="park__scan" aria-hidden="true" />
+                  <span className="park__feed" aria-hidden="true">
+                    Live paddock feed
+                  </span>
                 </span>
                 <span className="park__card-meta">
+                  <span className="park__status">
+                    <span className="park__lamp" aria-hidden="true" />
+                    {isOpen ? 'Tracking' : 'Secure'}
+                  </span>
                   <span className="park__paddock">Paddock {String(index + 1).padStart(2, '0')}</span>
-                  <span className="park__lamp" aria-hidden="true" />
                 </span>
                 <span className="park__card-title">{projectCardTitle(project.title)}</span>
-                <span className="park__year">{project.year}</span>
+                <span className="park__card-foot">
+                  <span>Project asset</span>
+                  <span className="park__year">{project.year}</span>
+                </span>
+                <span className="park__rivets" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                  <i />
+                </span>
               </button>
             </li>
           )
@@ -91,7 +115,9 @@ export default function ParkScene() {
       </ul>
 
       <article className="park__detail" key={open.title} aria-live="polite">
-        <p className="park__detail-index">Selected enclosure // {String(openIndex + 1).padStart(2, '0')}</p>
+        <p className="park__detail-index">
+          Containment file // {String(openIndex + 1).padStart(2, '0')} · Paddock secure
+        </p>
         <h3 className="park__detail-title">{open.title}</h3>
         <p className="park__detail-text">{open.description}</p>
         <ul className="park__chips" aria-label="Technology stack">
