@@ -3,19 +3,22 @@ import {
   AmbientLight,
   Box3,
   Color,
-  MeshStandardMaterial,
   DirectionalLight,
+  Group,
+  Mesh,
+  MeshStandardMaterial,
   PerspectiveCamera,
   Scene,
   SRGBColorSpace,
   TextureLoader,
   Vector3,
   WebGLRenderer,
-  type Mesh,
   type Object3D,
 } from 'three'
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'
 import { useInView } from '../../hooks/useInView'
+import { hingedDoor, splitGateGeometry } from './gateGeometry'
+import { gateMotion } from './gateMotion'
 import './GateScene.css'
 
 /**
@@ -25,11 +28,10 @@ import './GateScene.css'
  * like the film — it was a drawing of a gate from memory. This is the actual
  * model, so the geometry and materials are right.
  *
- * What it costs: the doors do not move. The source mesh is a single merged
- * object with one node, so there is no door to rotate — the swing would need the
- * mesh split by vertex position at build time. Instead the camera does the work
- * and dollies through the opening, which is a fair trade for a gate that finally
- * reads as the real one.
+ * The DAE arrives as one merged mesh. At load time its triangles are partitioned
+ * into the stonework and two door leaves, then the leaves are placed on hinge
+ * pivots. That keeps the reference model's geometry and textures while allowing
+ * the doors to swing before the camera moves through them.
  *
  * Purely choreographic, so hidden from assistive technology.
  */
@@ -44,6 +46,12 @@ export default function GateScene() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const [failed, setFailed] = useState(false)
 
+  /*
+   * jsdom has no WebGL context, so this integration path is verified in a real
+   * browser at closed, roar, mid-swing, open and through-the-gate positions.
+   * The mesh partition and choreography it calls are covered as pure modules.
+   */
+  /* v8 ignore start */
   useEffect(() => {
     const canvas = canvasRef.current
     const section = sectionRef.current
@@ -98,6 +106,8 @@ export default function GateScene() {
     let centre = new Vector3()
     let span = 1
     let ready = false
+    let leftHinge: Group | null = null
+    let rightHinge: Group | null = null
 
     new ColladaLoader().load(
       '/gate/gate.dae',
@@ -110,18 +120,35 @@ export default function GateScene() {
          * here. Painting the albedo on directly is what makes it the film's gate
          * rather than untextured grey geometry.
          */
-        model.traverse((child) => {
-          const mesh = child as Mesh
-          if (!mesh.isMesh) return
-          mesh.material = new MeshStandardMaterial({
-            map: albedo,
-            emissiveMap: emissive,
-            emissive: new Color('#ff9a3c'),
-            emissiveIntensity: 1.1,
-            roughness: 0.86,
-            metalness: 0.08,
-          })
+        const sourceMesh = model.getObjectByProperty('isMesh', true) as Mesh | undefined
+        if (!sourceMesh || !sourceMesh.parent) {
+          setFailed(true)
+          return
+        }
+
+        const material = new MeshStandardMaterial({
+          map: albedo,
+          emissiveMap: emissive,
+          emissive: new Color('#ff9a3c'),
+          emissiveIntensity: 1.1,
+          roughness: 0.86,
+          metalness: 0.08,
         })
+
+        const pieces = splitGateGeometry(sourceMesh.geometry)
+        const assembly = new Group()
+        assembly.name = 'animated-gate'
+        assembly.position.copy(sourceMesh.position)
+        assembly.quaternion.copy(sourceMesh.quaternion)
+        assembly.scale.copy(sourceMesh.scale)
+
+        assembly.add(new Mesh(pieces.static, material))
+        leftHinge = hingedDoor(pieces.left, material, 'left')
+        rightHinge = hingedDoor(pieces.right, material, 'right')
+        assembly.add(leftHinge, rightHinge)
+        sourceMesh.parent.add(assembly)
+        sourceMesh.parent.remove(sourceMesh)
+        sourceMesh.geometry.dispose()
 
         /*
          * Framed from the model's own bounds rather than from hard-coded
@@ -176,18 +203,29 @@ export default function GateScene() {
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-    const tick = () => {
+    const tick = (time = 0) => {
       frame = requestAnimationFrame(tick)
       if (!ready) return
 
       const rect = section.getBoundingClientRect()
       const travel = rect.height - window.innerHeight
       const raw = travel <= 0 ? 0 : -rect.top / travel
-      // Reduced motion parks the camera at the approach and never moves it.
-      const progress = reduced ? 0.18 : Math.min(1, Math.max(0, raw))
+      const progress = Math.min(1, Math.max(0, raw))
+      const motion = gateMotion(progress, reduced)
 
-      // Ease the dolly so it slows as it arrives at the threshold.
-      const eased = 1 - (1 - progress) ** 2
+      if (leftHinge && rightHinge) {
+        // Both leaves swing away from the camera and into the park.
+        leftHinge.rotation.y = motion.doorAngle
+        rightHinge.rotation.y = -motion.doorAngle
+      }
+
+      section.style.setProperty('--roar-strength', motion.roarStrength.toFixed(3))
+      const jolt = Math.sin(time * 0.075) * motion.roarStrength
+      section.style.setProperty('--roar-x', `${(jolt * 5).toFixed(2)}px`)
+      section.style.setProperty('--roar-y', `${(Math.abs(jolt) * -2).toFixed(2)}px`)
+
+      // The dolly starts only after the swing has cleared the opening.
+      const eased = 1 - (1 - motion.dollyProgress) ** 2
       const z = span * (DOLLY_FAR - (DOLLY_FAR - DOLLY_NEAR) * eased)
       camera.position.set(0, span * 0.02, z)
       camera.lookAt(0, 0, 0)
@@ -206,9 +244,19 @@ export default function GateScene() {
       window.removeEventListener('resize', resize)
       albedo.dispose()
       emissive.dispose()
+      const materials = new Set<MeshStandardMaterial>()
+      scene.traverse((child) => {
+        const mesh = child as Mesh
+        if (!mesh.isMesh) return
+        mesh.geometry.dispose()
+        const assigned = Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+        for (const item of assigned) materials.add(item as MeshStandardMaterial)
+      })
+      for (const material of materials) material.dispose()
       gl.dispose()
     }
   }, [hasEntered])
+  /* v8 ignore stop */
 
   return (
     <section
@@ -222,15 +270,18 @@ export default function GateScene() {
       <div className="gate__stage">
         {/* Painted behind the canvas, so a device without WebGL still gets a lit
             night rather than a hole in the page. */}
-        <div className="gate__backdrop" />
-        {hasEntered && !failed && <canvas ref={canvasRef} className="gate__canvas" />}
+        <div className="gate__picture">
+          <div className="gate__backdrop" />
+          {hasEntered && !failed && <canvas ref={canvasRef} className="gate__canvas" />}
+        </div>
 
-        {/* The rex still leans in from the left, over the render. */}
-        <div className="gate__rex">
-          <span className="gate__rex-shape" />
+        {/* The animal remains off-screen. Only the pressure of its roar enters
+            the frame before the doors begin to move. */}
+        <div className="gate__roar">
           <span className="gate__echo gate__echo--1" />
           <span className="gate__echo gate__echo--2" />
           <span className="gate__echo gate__echo--3" />
+          <span className="gate__roar-dust" />
         </div>
       </div>
     </section>

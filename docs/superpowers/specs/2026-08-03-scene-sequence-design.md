@@ -1,7 +1,7 @@
 # Design — The Scene Sequence
 
 **Date:** 2026-08-03
-**Status:** Phase 1 built; Phases 2–3 approved
+**Status:** Phases 1–2 built; Phase 3 approved
 **Extends:** [2026-08-01 business card redesign](./2026-08-01-business-card-redesign-design.md)
 
 ## Summary
@@ -19,7 +19,7 @@ have.** This is what separates a portfolio from a demo reel.
 |---|---|---|---|
 | American Psycho | The business card | Name, contact, affiliation | **Built** |
 | Back to the Future | Time-circuit display (DESTINATION / PRESENT / LAST DEPARTED) | `experiences.ts` — 5 roles, 2023→2026, month-labelled | **Built** |
-| Jurassic Park | "It's a UNIX system!" — the `fsn` 3D file browser | `skills.ts` (22 tech) + `projects.ts` (8 projects) | **Build** |
+| Jurassic Park | Film gate + paddock warning signs | `projects.ts` (8 projects) | **Built** |
 | Bouldering | Coloured holds around a climbing photo | `Boulder Coach` project, personal register | **Build** |
 | Fight Club, Titanic, Independence Day, Toy Story, Disney | — | Nothing | **Cut** |
 
@@ -37,7 +37,7 @@ This is several projects. Each phase ships on its own and leaves the site workin
 | Phase | Scope | New dependencies |
 |---|---|---|
 | **1 — built** | Scroll shell + Back to the Future scene | None |
-| **2** | Jurassic Park `fsn` scene | Three.js, lazy-loaded |
+| **2 — built** | Jurassic Park gate + project paddocks | Three.js, lazy-loaded |
 | **3** | Bouldering scene | None, or light 3D |
 
 Phase 1 bundles the shell with the first scene deliberately — a scroll
@@ -46,6 +46,25 @@ architecture with nothing to scroll to is not shippable.
 Ordering is forced by dependency: the shell must exist before any scene, and the
 two no-dependency scenes come before the one that costs 150 KB, so the bundle
 stays flat as long as possible.
+
+## Phase 2 — Jurassic Park gate + project paddocks
+
+The transition uses the licensed reference gate model rather than a CSS drawing.
+Although the DAE exports as one merged mesh, its central doorway triangles are
+partitioned at load time into 272 triangles per door leaf plus the static
+stonework. Each leaf is moved onto its real outside hinge and swings inward under
+scroll before the camera dollies through. Three.js, the model, and its textures
+remain isolated in the lazy gate chunk.
+
+The dinosaur never enters frame. A short off-screen roar is represented by
+pressure fronts, dust, and a restrained camera jolt before the doors move. This
+keeps the creature implied without asking CSS or an unsuitable full-body asset
+to draw a convincing close-up.
+
+Beyond the gate, the projects render as accessible paddock signs: riveted steel,
+hazard stripes, status lamps, and ordinary buttons/links. This replaced the
+planned `fsn` browser because a wireframe file grid still read as a terminal after
+being recoloured; it did not belong naturally inside the park.
 
 ---
 

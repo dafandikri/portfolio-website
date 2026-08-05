@@ -1,12 +1,15 @@
 import { render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from './App'
+import { stubIntersectionObserver } from './test/setup'
 
 afterEach(() => vi.unstubAllGlobals())
 
 describe('App', () => {
   it('keeps the card as scene one and exposes the experience scene to navigation', async () => {
-    vi.stubGlobal('IntersectionObserver', undefined)
+    // Keep below-fold scenes parked. The app test is about code-splitting and
+    // navigation structure; WebGL itself is exercised in a real browser.
+    stubIntersectionObserver()
     render(<App />)
 
     // The card is in the first chunk, so it is present immediately.

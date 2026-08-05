@@ -21,6 +21,13 @@
   place-items: center;
 }
 
+.gate__picture {
+  position: absolute;
+  inset: 0;
+  transform: translate3d(var(--roar-x, 0), var(--roar-y, 0), 0);
+  will-change: transform;
+}
+
 /* Night behind the model, and the whole picture where WebGL is unavailable. */
 .gate__backdrop {
   position: absolute;
@@ -39,65 +46,55 @@
 }
 
 /* --------------------------------------------------------------------------
- * The rex
+ * The off-screen roar
  * ------------------------------------------------------------------------ */
 
-.gate__rex {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: min(52vw, 38rem);
-  height: min(74svh, 34rem);
-  z-index: 5;
-  transform-origin: 0% 80%;
-  animation-name: gates-rex;
-  pointer-events: none;
-}
-
-/*
- * The silhouette itself, painted through the sourced artwork as a mask. A mask
- * rather than an <img> because the shape has to be *lit* — near-black with a
- * warm rim off the torches — and an image would arrive already coloured.
- */
-.gate__rex-shape {
+.gate__roar {
   position: absolute;
   inset: 0;
-  -webkit-mask-image: url('/trex-silhouette.svg');
-  mask-image: url('/trex-silhouette.svg');
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  /*
-   * Shown whole, not cropped to the head. Two attempts at zooming in on the
-   * skull produced an unreadable black mass: this silhouette's legibility lives
-   * in its whole-body proportions, so a crop destroys the very thing that makes
-   * it read as a rex. A head shot needs a head asset, not a magnified hip.
-   */
-  -webkit-mask-position: left center;
-  mask-position: left center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  background: linear-gradient(to top, #0d0806 0%, #050301 100%);
-  /* The artwork faces right; the rex has to be looking into the gate. */
-  transform: scaleX(-1);
-  filter: drop-shadow(0 0 2.6rem rgba(255, 150, 40, 0.4));
+  z-index: 5;
+  opacity: var(--roar-strength, 0);
+  pointer-events: none;
+  overflow: hidden;
 }
 
 /*
- * The echo. Arcs running out from the mouth, each only lit on its leading edge
- * so it reads as pressure travelling rather than as a ring drawn around a point.
+ * Nothing animal-shaped crosses the frame. These pressure fronts originate
+ * beyond the left edge, so the viewer feels a large body nearby without seeing
+ * a compromised illustration of it.
  */
 .gate__echo {
   position: absolute;
-  left: 58%;
+  left: clamp(-16rem, -18vw, -8rem);
   top: 52%;
-  width: 42rem;
-  height: 42rem;
-  margin: -21rem 0 0 -21rem;
-  border: 2px solid rgba(255, 206, 140, 0.5);
+  width: min(72vw, 52rem);
+  aspect-ratio: 1;
+  margin-top: min(-36vw, -26rem);
+  border: clamp(1px, 0.16vw, 2px) solid rgba(255, 206, 140, 0.62);
   border-radius: 50%;
-  -webkit-mask-image: linear-gradient(to right, transparent 46%, #000 76%);
-  mask-image: linear-gradient(to right, transparent 46%, #000 76%);
-  animation: gate-echo 1.5s ease-out infinite;
+  -webkit-mask-image: linear-gradient(to right, transparent 14%, #000 55%, transparent 96%);
+  mask-image: linear-gradient(to right, transparent 14%, #000 55%, transparent 96%);
+  animation: gate-echo 1.35s ease-out infinite;
+  filter: drop-shadow(0 0 0.7rem rgba(255, 151, 52, 0.34));
+}
+
+.gate__echo--2 {
+  animation-delay: -0.45s;
+}
+
+.gate__echo--3 {
+  animation-delay: -0.9s;
+}
+
+.gate__roar-dust {
+  position: absolute;
+  left: -7vw;
+  top: 36%;
+  width: 38vw;
+  height: 32vh;
+  background: radial-gradient(ellipse at left, rgba(210, 147, 70, 0.18), transparent 68%);
+  filter: blur(1.4rem);
+  animation: gate-roar-dust 0.48s ease-in-out infinite alternate;
 }
 
 @keyframes gate-echo {
@@ -110,16 +107,28 @@
   }
   100% {
     opacity: 0;
-    transform: scale(1);
+    transform: scale(1.45);
+  }
+}
+
+@keyframes gate-roar-dust {
+  from {
+    transform: translate3d(-3%, 0, 0) scale(0.92);
+  }
+  to {
+    transform: translate3d(8%, -2%, 0) scale(1.08);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gate__rex,
-  .gate__echo {
-    animation: none;
+  .gate__picture {
+    transform: none;
   }
-  .gate__rex {
-    opacity: 0;
+  .gate__roar {
+    display: none;
+  }
+  .gate__echo,
+  .gate__roar-dust {
+    animation: none;
   }
 }

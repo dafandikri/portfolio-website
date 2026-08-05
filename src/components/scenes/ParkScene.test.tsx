@@ -99,10 +99,9 @@ describe('ParkScene', () => {
     }
   })
 
-  it('credits both CC BY sources, which the licences require', () => {
+  it('credits the CC BY gate model, which the licence requires', () => {
     const { container } = enter()
     const credit = container.querySelector('.park__credit')!
-    expect(within(credit as HTMLElement).getByText(/Fred Wierum/)).toBeInTheDocument()
     expect(within(credit as HTMLElement).getByText(/Mathzilla5335/)).toBeInTheDocument()
     expect(container.querySelectorAll('.park__credit-link[rel~="license"]').length).toBeGreaterThan(
       0,

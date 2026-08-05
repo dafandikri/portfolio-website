@@ -122,21 +122,9 @@ export default function ParkScene() {
             )}
           </div>
 
-          {/*
-            Required by the licences, not decoration. Both sources are CC BY,
-            which obliges us to credit them somewhere a reader can find.
-          */}
+          {/* Required by the model licence, not decoration. */}
           <p className="park__credit">
-            <em>Tyrannosaurus</em> silhouette by Fred Wierum,{' '}
-            <a
-              className="park__credit-link"
-              href="https://creativecommons.org/licenses/by/4.0/"
-              target="_blank"
-              rel="noreferrer noopener license"
-            >
-              CC BY 4.0
-            </a>
-            , via PhyloPic. Gate materials referenced from{' '}
+            Gate model and materials from{' '}
             <a
               className="park__credit-link"
               href="https://skfb.ly/oLJFH"
