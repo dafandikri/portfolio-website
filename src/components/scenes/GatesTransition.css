@@ -214,8 +214,8 @@
   height: 15%;
   border-radius: 3px;
   background:
-    repeating-linear-gradient(to right, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 0.55rem),
-    linear-gradient(to bottom, #6f4726 0%, #4a2d16 56%, #2e1c0d 100%);
+    repeating-linear-gradient(to right, rgba(0, 0, 0, 0.2) 0 1px, transparent 1px 0.6rem),
+    linear-gradient(to bottom, #6b6a64 0%, #46453f 58%, #2a2925 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 196, 120, 0.26),
     0 0.7rem 1.6rem -0.4rem rgba(0, 0, 0, 0.9);
@@ -242,6 +242,18 @@
   display: flex;
   align-items: baseline;
   gap: 0.04em;
+  /*
+   * Gold on deep red, both sampled from the albedo map. The sign was amber
+   * carved into timber, which is a woodshop plaque; the real one is a painted
+   * board and the red is most of what makes it recognisable.
+   */
+  padding: 0.34em 1.1em 0.4em;
+  background: linear-gradient(to bottom, #d0241f 0%, #a81a17 60%, #7d120f 100%);
+  border: 2px solid #e2a417;
+  border-radius: 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 200, 140, 0.3),
+    0 0.4rem 1rem -0.2rem rgba(0, 0, 0, 0.85);
 }
 
 /*
@@ -256,12 +268,11 @@
   font-size: clamp(0.85rem, 2.9vw, 1.75rem);
   font-weight: 900;
   letter-spacing: 0.04em;
-  color: #f2d9a4;
-  /* Carved: dark above and light below, so the letters sit *in* the timber. */
+  color: #e2a417;
+  /* Painted on, with just enough relief to catch the torchlight. */
   text-shadow:
-    0 -1px 0 rgba(0, 0, 0, 0.75),
-    0 1px 0 rgba(255, 210, 150, 0.28),
-    0 0 0.7em rgba(255, 168, 60, 0.55);
+    0 1px 0 rgba(0, 0, 0, 0.6),
+    0 0 0.5em rgba(226, 164, 23, 0.5);
 }
 
 /* --------------------------------------------------------------------------
@@ -271,20 +282,26 @@
 .gates__pylon {
   position: absolute;
   top: 12%;
-  width: 13%;
+  width: 17%;
   height: 94%;
-  /* Stone, not timber: coarse banding and a cold cast against the warm doors. */
+  /*
+   * Weathered grey stone, sampled from the model's albedo map. The pylons were
+   * the same warm brown as the doors, which is the single biggest reason the
+   * gate did not read as the real one: on the reference, stone is the dominant
+   * material and it is decidedly cool.
+   */
   background:
-    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 2px, transparent 2px 2.6rem),
-    linear-gradient(to right, #241c16 0%, #57483a 44%, #322820 100%);
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.26) 0 2px, transparent 2px 3.2rem),
+    repeating-linear-gradient(to right, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 1.4rem),
+    linear-gradient(to right, #24231f 0%, #6e6d68 46%, #3b3a35 100%);
   box-shadow: 0 0.8rem 2rem -0.4rem rgba(0, 0, 0, 0.95);
 }
 
 .gates__pylon--left {
-  left: -13%;
+  left: -17%;
 }
 .gates__pylon--right {
-  right: -13%;
+  right: -17%;
 }
 
 /* A wider stone cap, which is what the braziers stand on. */
@@ -294,7 +311,7 @@
   right: -14%;
   top: -1.5%;
   height: 4%;
-  background: linear-gradient(to bottom, #6a5947 0%, #40342a 70%, #2a221b 100%);
+  background: linear-gradient(to bottom, #7d7c76 0%, #4a4944 70%, #2e2d29 100%);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
@@ -372,7 +389,7 @@
       rgba(255, 255, 255, 0.035) 2px 3px,
       transparent 3px 2.2rem
     ),
-    linear-gradient(to bottom, #64401f 0%, #472c15 50%, #2a190b 100%);
+    linear-gradient(to bottom, #4d3620 0%, #3a2716 52%, #201509 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 190, 110, 0.2),
     inset 0 -2.5rem 3.5rem -1.5rem rgba(0, 0, 0, 0.85);

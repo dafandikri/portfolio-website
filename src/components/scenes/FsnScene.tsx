@@ -153,7 +153,24 @@ export default function FsnScene() {
             >
               CC BY 4.0
             </a>
-            , via PhyloPic
+            , via PhyloPic. Gate materials referenced from{' '}
+            <a
+              className="fsn__credit-link"
+              href="https://skfb.ly/oLJFH"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              &ldquo;Jurassic Park Gate&rdquo;
+            </a>{' '}
+            by Mathzilla5335,{' '}
+            <a
+              className="fsn__credit-link"
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noreferrer noopener license"
+            >
+              CC BY 4.0
+            </a>
           </p>
         </div>
       ) : (

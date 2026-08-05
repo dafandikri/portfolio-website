@@ -34,3 +34,6 @@ coverage
 certs/
 # Stray tooling output; also triggers dev-server page reloads when watched.
 .lavish/
+
+# Large reference assets — never deployed, never committed.
+reference/
