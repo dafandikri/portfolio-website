@@ -8,8 +8,8 @@
 
 .scene--gates {
   position: relative;
-  height: 260svh;
-  background: #060402;
+  height: 280svh;
+  background: #050301;
 }
 
 .gates__stage {
@@ -26,29 +26,29 @@
 
 @keyframes gates-shake {
   0%,
-  17% {
+  19% {
     transform: translate3d(0, 0, 0);
   }
-  19% {
-    transform: translate3d(-0.5%, 0.4%, 0);
+  21% {
+    transform: translate3d(-0.55%, 0.45%, 0);
   }
-  22% {
-    transform: translate3d(0.45%, -0.3%, 0);
+  24% {
+    transform: translate3d(0.5%, -0.35%, 0);
   }
-  25% {
-    transform: translate3d(-0.3%, 0.25%, 0);
+  27% {
+    transform: translate3d(-0.35%, 0.3%, 0);
   }
-  28% {
-    transform: translate3d(0.2%, -0.15%, 0);
+  30% {
+    transform: translate3d(0.22%, -0.18%, 0);
   }
-  32%,
+  34%,
   100% {
     transform: translate3d(0, 0, 0);
   }
 }
 
 .gates__beyond,
-.gates__roar,
+.gates__rex,
 .gates__lintel,
 .gates__door {
   animation-duration: 1s;
@@ -66,87 +66,121 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 46% 60% at 50% 62%, rgba(255, 226, 158, 0.9) 0%, rgba(255, 186, 84, 0.45) 26%, rgba(120, 62, 16, 0.16) 52%, rgba(6, 4, 2, 0) 76%),
-    linear-gradient(to bottom, #0a0703 0%, #120b04 60%, #060402 100%);
+    radial-gradient(
+      ellipse 44% 58% at 50% 60%,
+      rgba(255, 226, 158, 0.92) 0%,
+      rgba(255, 182, 78, 0.46) 26%,
+      rgba(118, 60, 14, 0.16) 52%,
+      rgba(5, 3, 1, 0) 76%
+    ),
+    linear-gradient(to bottom, #0a0703 0%, #120b04 60%, #050301 100%);
   animation-name: gates-beyond;
 }
 
 @keyframes gates-beyond {
   0%,
-  30% {
-    opacity: 0.35;
+  34% {
+    opacity: 0.32;
   }
-  86% {
-    opacity: 1;
-  }
+  86%,
   100% {
     opacity: 1;
   }
 }
 
 /* --------------------------------------------------------------------------
- * The roar
- *
- * Rings expanding from off-frame left. A roar is pressure arriving before the
- * thing that made it, so it reads as rings crossing the frame rather than as a
- * mouth.
+ * The rex
  * ------------------------------------------------------------------------ */
 
-.gates__roar {
+.gates__rex {
   position: absolute;
-  left: -18%;
-  top: 44%;
-  width: 46rem;
-  height: 46rem;
-  margin-top: -23rem;
-  z-index: 4;
+  left: 0;
+  bottom: 0;
+  width: min(52vw, 38rem);
+  height: min(74svh, 34rem);
+  z-index: 5;
+  transform-origin: 0% 80%;
+  animation-name: gates-rex;
   pointer-events: none;
-  animation-name: gates-roar-window;
 }
 
-@keyframes gates-roar-window {
+/* Leans in, holds the roar, then pulls back out of frame before the doors open
+   — it is the reason the gates open, not a fixture of the shot. */
+@keyframes gates-rex {
   0%,
-  14% {
+  13% {
     opacity: 0;
+    transform: translateX(-58%) scale(0.92);
   }
-  18% {
+  20% {
     opacity: 1;
+    transform: translateX(-6%) scale(1);
   }
   31% {
     opacity: 1;
+    transform: translateX(0%) scale(1.02);
   }
-  36%,
+  42%,
   100% {
     opacity: 0;
+    transform: translateX(-52%) scale(0.95);
   }
 }
 
-.gates__wave {
+/*
+ * The silhouette itself, painted through the sourced artwork as a mask. A mask
+ * rather than an <img> because the shape has to be *lit* — near-black with a
+ * warm rim off the torches — and an image would arrive already coloured.
+ */
+.gates__rex-shape {
   position: absolute;
   inset: 0;
-  border: 2px solid rgba(255, 214, 150, 0.5);
+  -webkit-mask-image: url('/trex-silhouette.svg');
+  mask-image: url('/trex-silhouette.svg');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background: linear-gradient(to top, #0d0806 0%, #050301 100%);
+  /* The artwork faces right; the rex has to be looking into the gate. */
+  transform: scaleX(-1);
+  filter: drop-shadow(0 0 2.6rem rgba(255, 150, 40, 0.4));
+}
+
+/*
+ * The echo. Arcs running out from the mouth, each only lit on its leading edge
+ * so it reads as pressure travelling rather than as a ring drawn around a point.
+ */
+.gates__echo {
+  position: absolute;
+  left: 58%;
+  top: 52%;
+  width: 42rem;
+  height: 42rem;
+  margin: -21rem 0 0 -21rem;
+  border: 2px solid rgba(255, 206, 140, 0.5);
   border-radius: 50%;
-  /* Only the leading edge of each ring is lit, so they read as arcs of pressure
-     travelling outwards rather than as complete circles. */
-  -webkit-mask-image: linear-gradient(to right, transparent 42%, #000 72%);
-  mask-image: linear-gradient(to right, transparent 42%, #000 72%);
-  animation: gates-wave 1.4s ease-out infinite;
+  -webkit-mask-image: linear-gradient(to right, transparent 46%, #000 76%);
+  mask-image: linear-gradient(to right, transparent 46%, #000 76%);
+  animation: gates-echo 1.5s ease-out infinite;
 }
 
-.gates__wave--2 {
-  animation-delay: -0.46s;
+.gates__echo--2 {
+  animation-delay: -0.5s;
 }
-.gates__wave--3 {
-  animation-delay: -0.92s;
+.gates__echo--3 {
+  animation-delay: -1s;
 }
 
-@keyframes gates-wave {
+@keyframes gates-echo {
   0% {
     opacity: 0;
-    transform: scale(0.16);
+    transform: scale(0.1);
   }
-  22% {
-    opacity: 0.85;
+  18% {
+    opacity: 0.8;
   }
   100% {
     opacity: 0;
@@ -161,33 +195,30 @@
 .gates__frame {
   position: relative;
   z-index: 3;
-  /* Taller than wide. Park gates are meant to loom, and at 58rem across they
-     sat as a squat letterbox with the frame mostly empty around them. */
-  width: min(88vw, 46rem);
-  height: min(88svh, 44rem);
-  perspective: 90rem;
-  perspective-origin: 50% 50%;
+  /* Monumental: taller than wide, and filling the frame. */
+  width: min(84vw, 44rem);
+  height: min(90svh, 46rem);
+  perspective: 92rem;
+  perspective-origin: 50% 46%;
 }
 
-/* Timber, drawn rather than textured: two gradients give grain and a warm
-   top-light without shipping an image. */
+/* --------------------------------------------------------------------------
+ * The crossbeam and the sign
+ * ------------------------------------------------------------------------ */
+
 .gates__lintel {
   position: absolute;
-  left: -6%;
-  right: -6%;
+  left: -14%;
+  right: -14%;
   top: 0;
-  height: 13%;
+  height: 15%;
   border-radius: 3px;
   background:
-    repeating-linear-gradient(
-      to right,
-      rgba(0, 0, 0, 0.16) 0 1px,
-      transparent 1px 0.5rem
-    ),
-    linear-gradient(to bottom, #6b4423 0%, #4a2d16 58%, #33200f 100%);
+    repeating-linear-gradient(to right, rgba(0, 0, 0, 0.18) 0 1px, transparent 1px 0.55rem),
+    linear-gradient(to bottom, #6f4726 0%, #4a2d16 56%, #2e1c0d 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 196, 120, 0.24),
-    0 0.6rem 1.4rem -0.4rem rgba(0, 0, 0, 0.85);
+    inset 0 1px 0 rgba(255, 196, 120, 0.26),
+    0 0.7rem 1.6rem -0.4rem rgba(0, 0, 0, 0.9);
   display: grid;
   place-items: center;
   animation-name: gates-lift;
@@ -197,85 +228,130 @@
    follows. */
 @keyframes gates-lift {
   0%,
-  62% {
+  66% {
     transform: translateY(0);
     opacity: 1;
   }
   100% {
-    transform: translateY(-140%);
+    transform: translateY(-150%);
     opacity: 0;
   }
 }
 
-.gates__plaque {
-  font-family: var(--font-tech);
-  font-size: clamp(0.62rem, 1.8vw, 0.95rem);
-  font-weight: 700;
-  letter-spacing: 0.44em;
-  text-indent: 0.44em;
-  text-transform: uppercase;
-  color: #ffd48a;
+.gates__banner {
+  display: flex;
+  align-items: baseline;
+  gap: 0.04em;
+}
+
+/*
+ * Heavy, angular and slightly irregular — the three things that actually carry
+ * the film's lettering. Arial Black is the widest-installed face heavy enough to
+ * stand in; the per-letter rotation applied in the component supplies the
+ * hand-cut wobble that a uniform typeface cannot.
+ */
+.gates__glyph {
+  display: inline-block;
+  font-family: 'Arial Black', 'Helvetica Neue', Impact, sans-serif;
+  font-size: clamp(0.85rem, 2.9vw, 1.75rem);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #f2d9a4;
+  /* Carved: dark above and light below, so the letters sit *in* the timber. */
   text-shadow:
-    0 0 0.5em rgba(255, 176, 60, 0.7),
-    0 1px 0 rgba(0, 0, 0, 0.6);
+    0 -1px 0 rgba(0, 0, 0, 0.75),
+    0 1px 0 rgba(255, 210, 150, 0.28),
+    0 0 0.7em rgba(255, 168, 60, 0.55);
 }
 
-.gates__post {
+/* --------------------------------------------------------------------------
+ * The pylons
+ * ------------------------------------------------------------------------ */
+
+.gates__pylon {
   position: absolute;
-  top: 10%;
-  width: 8%;
-  height: 92%;
+  top: 12%;
+  width: 13%;
+  height: 94%;
+  /* Stone, not timber: coarse banding and a cold cast against the warm doors. */
   background:
-    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.14) 0 1px, transparent 1px 0.6rem),
-    linear-gradient(to right, #2b1a0c 0%, #6b4423 42%, #3a2412 100%);
-  box-shadow: 0 0.6rem 1.6rem -0.4rem rgba(0, 0, 0, 0.9);
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0 2px, transparent 2px 2.6rem),
+    linear-gradient(to right, #241c16 0%, #57483a 44%, #322820 100%);
+  box-shadow: 0 0.8rem 2rem -0.4rem rgba(0, 0, 0, 0.95);
 }
 
-.gates__post--left {
-  left: -6%;
+.gates__pylon--left {
+  left: -13%;
 }
-.gates__post--right {
-  right: -6%;
+.gates__pylon--right {
+  right: -13%;
 }
 
-/* The torches. A flame is a soft blob that never repeats, so it gets its own
+/* A wider stone cap, which is what the braziers stand on. */
+.gates__cap {
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  top: -1.5%;
+  height: 4%;
+  background: linear-gradient(to bottom, #6a5947 0%, #40342a 70%, #2a221b 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* The braziers. A flame is a soft blob that never repeats, so it gets its own
    clock rather than the scroll's. */
 .gates__torch {
   position: absolute;
   left: 50%;
-  /* Sitting on the cap of the post rather than floating alongside it. */
   bottom: 100%;
-  width: 2.6rem;
-  height: 3.8rem;
-  margin-left: -1.3rem;
-  margin-bottom: -0.5rem;
-  border-radius: 50% 50% 44% 44% / 62% 62% 38% 38%;
+  width: 3rem;
+  height: 4.4rem;
+  margin-left: -1.5rem;
+  margin-bottom: 0.4rem;
+  border-radius: 50% 50% 44% 44% / 64% 64% 36% 36%;
   background: radial-gradient(
-    ellipse at 50% 72%,
+    ellipse at 50% 74%,
     rgba(255, 252, 236, 0.95) 0%,
-    rgba(255, 208, 108, 0.9) 26%,
-    rgba(255, 132, 26, 0.75) 54%,
-    rgba(190, 52, 8, 0.35) 78%,
+    rgba(255, 208, 108, 0.9) 24%,
+    rgba(255, 132, 26, 0.78) 52%,
+    rgba(190, 52, 8, 0.36) 76%,
     rgba(120, 24, 4, 0) 100%
   );
   filter: blur(2px);
   mix-blend-mode: screen;
-  animation: gates-torch 0.9s ease-in-out infinite alternate;
+  animation: gates-torch 0.85s ease-in-out infinite alternate;
 }
 
-.gates__post--right .gates__torch {
-  animation-delay: -0.45s;
+.gates__pylon--right .gates__torch {
+  animation-delay: -0.42s;
 }
 
 @keyframes gates-torch {
   from {
-    transform: translateY(4%) scale(0.9, 0.86);
-    opacity: 0.78;
+    transform: translateY(5%) scale(0.88, 0.84);
+    opacity: 0.76;
   }
   to {
-    transform: translateY(-8%) scale(1.08, 1.16);
+    transform: translateY(-9%) scale(1.1, 1.18);
     opacity: 1;
   }
+}
+
+/* The pool of torchlight thrown down the face of each pylon. */
+.gates__lamp {
+  position: absolute;
+  left: -40%;
+  right: -40%;
+  top: -2%;
+  height: 46%;
+  background: radial-gradient(
+    ellipse 50% 100% at 50% 0%,
+    rgba(255, 186, 96, 0.34) 0%,
+    rgba(255, 150, 50, 0.12) 42%,
+    rgba(255, 140, 40, 0) 76%
+  );
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -284,25 +360,24 @@
 
 .gates__door {
   position: absolute;
-  top: 12%;
+  top: 14%;
   width: 50%;
-  height: 88%;
+  height: 86%;
   transform-style: preserve-3d;
   backface-visibility: hidden;
   background:
     repeating-linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.22) 0 2px,
-      rgba(255, 255, 255, 0.03) 2px 3px,
-      transparent 3px 2.4rem
+      rgba(0, 0, 0, 0.26) 0 2px,
+      rgba(255, 255, 255, 0.035) 2px 3px,
+      transparent 3px 2.2rem
     ),
-    linear-gradient(to bottom, #5e3b1e 0%, #462b14 52%, #2e1c0d 100%);
+    linear-gradient(to bottom, #64401f 0%, #472c15 50%, #2a190b 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 190, 110, 0.18),
-    inset 0 -2rem 3rem -1.5rem rgba(0, 0, 0, 0.8);
+    inset 0 1px 0 rgba(255, 190, 110, 0.2),
+    inset 0 -2.5rem 3.5rem -1.5rem rgba(0, 0, 0, 0.85);
 }
 
-/* Each leaf hinges on the post it hangs from. */
 .gates__door--left {
   left: 0;
   transform-origin: 0% 50%;
@@ -321,75 +396,79 @@
  */
 @keyframes gates-open-left {
   0%,
-  30% {
+  34% {
     transform: rotateY(0deg);
   }
   86%,
   100% {
-    transform: rotateY(96deg);
+    transform: rotateY(98deg);
   }
 }
 
 @keyframes gates-open-right {
   0%,
-  30% {
+  34% {
     transform: rotateY(0deg);
   }
   86%,
   100% {
-    transform: rotateY(-96deg);
+    transform: rotateY(-98deg);
   }
 }
 
 /* Iron banding across each leaf. */
 .gates__brace {
   position: absolute;
-  left: 4%;
-  right: 4%;
-  height: 6%;
-  background: linear-gradient(to bottom, #4a4038 0%, #26201a 55%, #16110d 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 220, 180, 0.16);
+  left: 3%;
+  right: 3%;
+  height: 5.5%;
+  background: linear-gradient(to bottom, #4c4239 0%, #272119 55%, #15100c 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 220, 180, 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .gates__brace--top {
-  top: 16%;
+  top: 12%;
+}
+.gates__brace--mid {
+  top: 47%;
 }
 .gates__brace--bottom {
-  bottom: 16%;
+  bottom: 12%;
 }
 
 /* The ring handle, on the closing edge of each leaf. */
 .gates__ring {
   position: absolute;
-  top: 47%;
-  width: 2.4rem;
-  height: 2.4rem;
-  margin-top: -1.2rem;
+  top: 56%;
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-top: -1.3rem;
   border: 4px solid #2b241d;
   border-radius: 50%;
   box-shadow:
     inset 0 1px 0 rgba(255, 220, 180, 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.7);
+    0 2px 4px rgba(0, 0, 0, 0.75);
 }
 
 .gates__door--left .gates__ring {
-  right: 8%;
+  right: 7%;
 }
 .gates__door--right .gates__ring {
-  left: 8%;
+  left: 7%;
 }
 
-/* The plank layer is drawn by the door's own background; this stays as a hook
-   for the grain overlay without adding a second paint on narrow screens. */
+/* Edge shading, so each leaf reads as a solid slab rather than a flat fill. */
 .gates__planks {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(0, 0, 0, 0.35) 0%,
-    rgba(0, 0, 0, 0) 18%,
-    rgba(0, 0, 0, 0) 82%,
-    rgba(0, 0, 0, 0.35) 100%
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0) 16%,
+    rgba(0, 0, 0, 0) 84%,
+    rgba(0, 0, 0, 0.4) 100%
   );
 }
 
@@ -399,21 +478,21 @@
   }
   .gates__stage,
   .gates__beyond,
-  .gates__roar,
+  .gates__rex,
   .gates__lintel,
   .gates__door,
   .gates__torch,
-  .gates__wave {
+  .gates__echo {
     animation: none;
   }
-  .gates__roar {
+  .gates__rex {
     opacity: 0;
   }
   .gates__door--left {
-    transform: rotateY(96deg);
+    transform: rotateY(98deg);
   }
   .gates__door--right {
-    transform: rotateY(-96deg);
+    transform: rotateY(-98deg);
   }
   .gates__beyond {
     opacity: 1;

@@ -137,6 +137,24 @@ export default function FsnScene() {
               <p className="fsn__hint">Select an enclosure</p>
             )}
           </div>
+
+          {/*
+            Required by the licence, not decoration. The rex silhouette in the
+            gates above is Fred Wierum's, used under CC BY 4.0, which obliges us
+            to credit him somewhere a reader can actually find it.
+          */}
+          <p className="fsn__credit">
+            <em>Tyrannosaurus</em> silhouette by Fred Wierum,{' '}
+            <a
+              className="fsn__credit-link"
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noreferrer noopener license"
+            >
+              CC BY 4.0
+            </a>
+            , via PhyloPic
+          </p>
         </div>
       ) : (
         <div className="fsn__placeholder" aria-hidden="true" />
