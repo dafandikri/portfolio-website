@@ -16,26 +16,25 @@ function projectButton(index: number) {
 }
 
 describe('ParkScene', () => {
-  it('deals one accessible card per project with the first enclosure selected', () => {
+  it('deploys one accessible closed containment cell per project', () => {
     const { container } = render(<ParkScene />)
 
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
     expect(screen.getByText('Paddocks')).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__card')).toHaveLength(projectsData.length)
+    expect(container.querySelectorAll('.park__containment')).toHaveLength(projectsData.length)
     expect(container.querySelectorAll('.park__hazard')).toHaveLength(projectsData.length)
     expect(container.querySelectorAll('.park__fence')).toHaveLength(projectsData.length)
-    expect(container.querySelectorAll('.park__rivets i')).toHaveLength(projectsData.length * 4)
-    expect(screen.getByText('Tracking')).toBeInTheDocument()
-    expect(screen.getAllByText('Secure')).toHaveLength(projectsData.length - 1)
+    expect(container.querySelectorAll('.park__fence i')).toHaveLength(projectsData.length * 7)
+    expect(container.querySelectorAll('.park__pylons')).toHaveLength(projectsData.length)
+    expect(container.querySelectorAll('.park__pylons i')).toHaveLength(projectsData.length * 2)
+    expect(screen.getAllByText('Secure')).toHaveLength(projectsData.length)
 
     projectsData.forEach((_, index) => expect(projectButton(index)).toBeVisible())
-    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'true')
-    expect(
-      screen.getByRole('heading', { level: 3, name: projectsData[0]!.title }),
-    ).toBeInTheDocument()
+    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('heading', { level: 3 })).toBeNull()
   })
 
-  it('selects a card and replaces the project readout', () => {
+  it('enters a cell and opens its project dossier', () => {
     const { container } = render(<ParkScene />)
     const index = 1
     const project = projectsData[index]!
@@ -47,6 +46,19 @@ describe('ParkScene', () => {
     expect(screen.getByRole('heading', { level: 3, name: project.title })).toBeInTheDocument()
     expect(screen.getByText(project.description)).toBeInTheDocument()
     expect(container.querySelectorAll('.park__chip')).toHaveLength(project.techStack.length)
+    expect(screen.getByRole('button', { name: 'Return to paddocks' })).toBeInTheDocument()
+  })
+
+  it('returns from the dossier to the complete paddock hand', () => {
+    render(<ParkScene />)
+
+    act(() => projectButton(0).click())
+    act(() => screen.getByRole('button', { name: 'Return to paddocks' }).click())
+
+    projectsData.forEach((_, index) =>
+      expect(projectButton(index)).toHaveAttribute('aria-expanded', 'false'),
+    )
+    expect(screen.queryByRole('heading', { level: 3 })).toBeNull()
   })
 
   it('renders existing stills and honest placeholders for projects without media', () => {

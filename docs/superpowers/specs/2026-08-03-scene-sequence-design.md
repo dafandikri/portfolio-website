@@ -68,16 +68,30 @@ lights replace the original flat ambient wash. Each pylon carries three face
 torches and one cap brazier; the visible flames flicker independently while their
 point lights put real distance falloff across the stone.
 
-Beyond the gate, projects arrive as an accessible hand of dinosaur-containment
-dossiers. The hand mounts on the same scroll frame that the camera finishes its
-dolly, then deals on its own CSS clock—no additional wheel movement is required.
-Balatro supplies the overlap, fan angles, deal cadence and selection lift;
-Jurassic Park supplies numbered containment headers, electrified-fence camera
-feeds, hazard tape, riveted steel and `SECURE` / `TRACKING` lamps. On narrow
-screens the hand shifts towards the selected edge card so the raised dossier is
-never clipped. Each media slot accepts either an image or a muted looping video
-through `projectMedia.ts`; missing media remains an honest locked feed rather
-than a fabricated screenshot.
+Beyond the gate, projects arrive as an accessible hand of miniature dinosaur
+containment cells. They are explicitly **not cards**: the button itself paints
+no rectangle, and each object is assembled from a thick overhead lintel, two
+concrete/steel pylons, a recessed chamber, seven vertical prison bars, welded
+cross rails, a protruding lock box, keypad, and heavy lower footing. Project
+media lives deep inside the chamber rather than being printed onto a surface.
+
+The hand mounts on the same scroll frame that the camera finishes its dolly,
+then plays out on its own CSS clock—no additional wheel movement is required.
+Balatro supplies only the overlap, fan angles, staggered fade/deal, overshoot and
+selection pop; Jurassic Park supplies the object and interface language. The
+control-room heading fades in first, each cell rises from the gate darkness and
+pops beyond full size before settling, and the interface completes with the
+project interaction.
+
+The initial state is the complete closed paddock row with no arbitrary default
+selection. Choosing a cell is an explicit entry: the chosen enclosure shifts to
+the centre and toward the camera, its barred gate swings inward, the other cells
+darken and recede, and a full containment dossier expands through the opening.
+`Return to paddocks` restores the complete hand. On narrow screens a separate
+41vw edge-focus range keeps even the first and last enclosure centred during
+entry. Each chamber accepts either an image or a muted looping video through
+`projectMedia.ts`; missing media remains an honest locked feed rather than a
+fabricated screenshot.
 
 The gate model credit is a compact `i` control at the frame edge. It exists only
 inside the gate's sticky viewport and fades before the project hand appears. The
@@ -91,20 +105,25 @@ readers.
   shots. The restrained exposure leaves normal-map relief, rough stone, wooden
   door grain and local torch falloff visible instead of clipping the whole gate
   to orange-white.
-- At the dolly endpoint the first card changed from `opacity: 0.837` and 86.6 px
-  below its destination to `opacity: 1` and its final fan position after 1.1 s,
-  while `scrollY` remained exactly 5926. This proves the deal finishes without
-  another wheel event.
-- At 390×844 all eight cards render with `scrollWidth === innerWidth === 390`.
-  The gate keeps all four flames on each column visible in the mobile crop. The
-  selected first card measures 1.1–158.4 px and the selected last card
-  220.7–377.9 px, so both edge dossiers remain fully inside the viewport.
-- With `prefers-reduced-motion: reduce`, all eight cards are immediately static,
+- At the dolly endpoint the first cell was captured during its overshoot at
+  297.1 px wide and then at its settled 259.7 px width without another scroll
+  event. Its CSS timeline begins at zero opacity with blur, crosses 1.12 scale,
+  compresses to 0.96, and settles at 1. This verifies the requested fade/pop is
+  a real temporal beat rather than an always-visible transform.
+- At 1440×900 all eight structural cells render in the closed row with no page
+  overflow. Entering edge paddock 08 centres it at x=706.1 against a 720 px
+  viewport centre, swings its gate to `rotateY(-72deg)`, and expands an 896 px
+  dossier below it.
+- At 390×844 all eight cells render with `scrollWidth === innerWidth === 390`.
+  Entering edge paddock 08 centres it at x=181.8 against a 195 px viewport
+  centre; the dossier remains inside 9.4–380.6 px, and the selected cell no
+  longer covers the heading.
+- With `prefers-reduced-motion: reduce`, all eight cells are immediately static,
   the roar is absent, and the credit control remains available.
-- TypeScript, ESLint, data validation, production build, and 89 tests pass.
-  Coverage is 90.37% statements, 77.1% branches, 92.77% functions, and 92.54%
-  lines. The lazy gate chunk, including Three.js and the project hand, is 628.95
-  KB / 158.26 KB gzip.
+- TypeScript, ESLint, data validation, production build, and 90 tests pass.
+  Coverage is 90.49% statements, 79.09% branches, 93.02% functions, and 92.64%
+  lines. The lazy gate chunk, including Three.js and the containment hand, is
+  629.30 KB / 158.36 KB gzip.
 
 ---
 

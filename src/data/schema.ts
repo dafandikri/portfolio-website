@@ -38,7 +38,7 @@ export const experienceEntrySchema = z.object({
    * joined line would mean splitting it back apart at every use.
    *
    * `org` is the short display name, not the legal one: it has to fit on a
-   * playing card without wrapping.
+   * compact timeline enclosure without wrapping.
    */
   role: z.string().min(1),
   org: z.string().min(1).max(14),
