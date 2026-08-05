@@ -1,11 +1,17 @@
-import { useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { projectsData } from '../../data/projects'
 import { projectCardTitle, projectMedia, type ProjectMedia } from './projectMedia'
 import './ParkScene.css'
 
 type ContainmentStyle = CSSProperties & Record<`--${string}`, string>
 
-export function ProjectMediaView({ media }: { media: ProjectMedia | null }) {
+export function ProjectMediaView({
+  media,
+  mode = 'cell',
+}: {
+  media: ProjectMedia | null
+  mode?: 'cell' | 'detail'
+}) {
   if (!media) {
     return (
       <span className="park__media-placeholder" aria-label="Project media not added yet">
@@ -17,7 +23,7 @@ export function ProjectMediaView({ media }: { media: ProjectMedia | null }) {
   if (media.kind === 'video') {
     return (
       <video
-        className="park__media-file"
+        className={`park__media-file park__media-file--${mode}`}
         src={media.src}
         poster={media.poster}
         aria-label={media.label}
@@ -25,11 +31,21 @@ export function ProjectMediaView({ media }: { media: ProjectMedia | null }) {
         loop
         muted
         playsInline
+        controls={mode === 'detail'}
+        preload={mode === 'detail' ? 'metadata' : 'none'}
       />
     )
   }
 
-  return <img className="park__media-file" src={media.src} alt={media.alt} loading="lazy" />
+  return (
+    <img
+      className={`park__media-file park__media-file--${mode}`}
+      src={media.src}
+      alt={media.alt}
+      loading={mode === 'detail' ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  )
 }
 
 /**
@@ -40,13 +56,21 @@ export function ProjectMediaView({ media }: { media: ProjectMedia | null }) {
  */
 export default function ParkScene() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const detailRef = useRef<HTMLElement>(null)
   const open = openIndex === null ? null : projectsData[openIndex]!
+  const openMedia = open ? projectMedia(open.image) : null
   const middle = (projectsData.length - 1) / 2
   const focus = openIndex === null || middle === 0 ? 0 : (middle - openIndex) / middle
   const handStyle: ContainmentStyle = {
     '--focus-shift': `${(focus * 27).toFixed(1)}vw`,
     '--focus-shift-mobile': `${(focus * 41).toFixed(1)}vw`,
   }
+
+  // The dossier is a genuine mode change, not supplementary text below the
+  // hand. Move focus into it without scrolling the sticky gate section away.
+  useEffect(() => {
+    if (openIndex !== null) detailRef.current?.focus({ preventScroll: true })
+  }, [openIndex])
 
   return (
     <section
@@ -134,7 +158,13 @@ export default function ParkScene() {
       </ul>
 
       {open && openIndex !== null && (
-        <article className="park__detail" key={open.title} aria-live="polite">
+        <article
+          ref={detailRef}
+          className="park__detail"
+          key={open.title}
+          aria-live="polite"
+          tabIndex={-1}
+        >
           <button
             type="button"
             className="park__detail-close"
@@ -142,41 +172,68 @@ export default function ParkScene() {
           >
             Return to paddocks
           </button>
-          <p className="park__detail-index">
-            Containment file // {String(openIndex + 1).padStart(2, '0')} · Access granted
-          </p>
-          <h3 className="park__detail-title">{open.title}</h3>
-          <p className="park__detail-text">{open.description}</p>
-          <ul className="park__chips" aria-label="Technology stack">
-            {open.techStack.map((tech) => (
-              <li key={tech} className="park__chip">
-                {tech}
-              </li>
-            ))}
-          </ul>
-          <p className="park__links">
-            {open.liveLink !== '#' && (
+          <div className="park__detail-media">
+            <span className="park__detail-feed-label">
+              Paddock {String(openIndex + 1).padStart(2, '0')} // Primary surveillance
+            </span>
+            <div className="park__detail-viewport">
+              <ProjectMediaView media={openMedia} mode="detail" />
+              <span className="park__detail-scan" aria-hidden="true" />
+            </div>
+            {openMedia?.kind === 'image' && (
               <a
-                className="park__link"
-                href={open.liveLink}
-                {...(open.liveLink.startsWith('http')
-                  ? { target: '_blank', rel: 'noreferrer noopener' }
-                  : {})}
-              >
-                Visit
-              </a>
-            )}
-            {open.repoLink !== '#' && (
-              <a
-                className="park__link"
-                href={open.repoLink}
+                className="park__media-expand"
+                href={openMedia.fullSrc ?? openMedia.src}
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                Source
+                Open full capture
               </a>
             )}
-          </p>
+          </div>
+
+          <div className="park__detail-copy">
+            <p className="park__detail-index">
+              Containment file // {String(openIndex + 1).padStart(2, '0')} · Access granted
+            </p>
+            <h3 className="park__detail-title">{open.title}</h3>
+            <p className="park__detail-text">{open.description}</p>
+            <ul className="park__features" aria-label="Project features">
+              {open.features.map((feature) => (
+                <li key={feature}>{feature}</li>
+              ))}
+            </ul>
+            <ul className="park__chips" aria-label="Technology stack">
+              {open.techStack.map((tech) => (
+                <li key={tech} className="park__chip">
+                  {tech}
+                </li>
+              ))}
+            </ul>
+            <p className="park__links">
+              {open.liveLink !== '#' && (
+                <a
+                  className="park__link"
+                  href={open.liveLink}
+                  {...(open.liveLink.startsWith('http')
+                    ? { target: '_blank', rel: 'noreferrer noopener' }
+                    : {})}
+                >
+                  Visit
+                </a>
+              )}
+              {open.repoLink !== '#' && (
+                <a
+                  className="park__link"
+                  href={open.repoLink}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  Source
+                </a>
+              )}
+            </p>
+          </div>
         </article>
       )}
     </section>

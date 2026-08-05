@@ -2,6 +2,7 @@ import { act, cleanup, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { projectsData } from '../../data/projects'
 import ParkScene, { ProjectMediaView } from './ParkScene'
+import { projectMedia } from './projectMedia'
 
 afterEach(() => {
   cleanup()
@@ -46,7 +47,14 @@ describe('ParkScene', () => {
     expect(screen.getByRole('heading', { level: 3, name: project.title })).toBeInTheDocument()
     expect(screen.getByText(project.description)).toBeInTheDocument()
     expect(container.querySelectorAll('.park__chip')).toHaveLength(project.techStack.length)
+    expect(container.querySelectorAll('.park__features li')).toHaveLength(project.features.length)
+    expect(screen.getByRole('article')).toHaveFocus()
     expect(screen.getByRole('button', { name: 'Return to paddocks' })).toBeInTheDocument()
+    const media = projectMedia(project.image)
+    expect(screen.getByRole('link', { name: 'Open full capture' })).toHaveAttribute(
+      'href',
+      media?.kind === 'image' ? (media.fullSrc ?? media.src) : undefined,
+    )
   })
 
   it('returns from the dossier to the complete paddock hand', () => {
@@ -123,7 +131,22 @@ describe('ParkScene', () => {
     expect(video).toHaveAttribute('autoplay')
     expect(video).toHaveAttribute('loop')
     expect(video).toHaveAttribute('playsinline')
+    expect(video).not.toHaveAttribute('controls')
     expect(video.muted).toBe(true)
+  })
+
+  it('gives video controls in the entered dossier view', () => {
+    render(
+      <ProjectMediaView
+        media={{ kind: 'video', src: '/test-project.webm', label: 'Detailed project preview' }}
+        mode="detail"
+      />,
+    )
+
+    const video = screen.getByLabelText('Detailed project preview')
+    expect(video).toHaveAttribute('controls')
+    expect(video).toHaveAttribute('preload', 'metadata')
+    expect(video).toHaveClass('park__media-file--detail')
   })
 
   it('renders a null-media placeholder directly', () => {

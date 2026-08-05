@@ -14,17 +14,18 @@ describe('gateMotion', () => {
     expect(gateMotion(0.3).doorAngle).toBeGreaterThan(0)
     expect(gateMotion(0.3).dollyProgress).toBe(0)
 
-    expect(gateMotion(0.4).doorAngle).toBeCloseTo(GATE_OPEN_ANGLE)
-    expect(gateMotion(0.5).dollyProgress).toBeGreaterThan(0)
-    expect(gateMotion(0.68).dollyProgress).toBe(1)
-    expect(gateMotion(0.65).projectStrength).toBe(0)
-    expect(gateMotion(0.68).projectStrength).toBe(1)
+    expect(gateMotion(0.46).doorAngle).toBeCloseTo(GATE_OPEN_ANGLE)
+    expect(gateMotion(0.46).dollyProgress).toBe(0)
+    expect(gateMotion(0.6).dollyProgress).toBeGreaterThan(0)
+    expect(gateMotion(0.78).dollyProgress).toBe(1)
+    expect(gateMotion(0.77).projectStrength).toBe(0)
+    expect(gateMotion(0.8).projectStrength).toBe(1)
 
     expect(gateMotion(0).creditStrength).toBe(0)
     expect(gateMotion(0.12).creditStrength).toBe(1)
-    expect(gateMotion(0.64).creditStrength).toBeGreaterThan(0)
-    expect(gateMotion(0.64).creditStrength).toBeLessThan(1)
-    expect(gateMotion(0.68).creditStrength).toBe(0)
+    expect(gateMotion(0.76).creditStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.76).creditStrength).toBeLessThan(1)
+    expect(gateMotion(0.8).creditStrength).toBe(0)
   })
 
   it('clamps progress and gives reduced-motion visitors a static open gate', () => {

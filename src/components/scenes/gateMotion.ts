@@ -48,11 +48,14 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
   const roarIn = smoothstep(0.06, 0.12, p)
   const roarOut = 1 - smoothstep(0.3, 0.39, p)
   const creditIn = smoothstep(0.01, 0.08, p)
-  const creditOut = 1 - smoothstep(0.6, 0.68, p)
+  const creditOut = 1 - smoothstep(0.7, 0.8, p)
 
   return {
-    doorAngle: smoothstep(0.16, 0.4, p) * GATE_OPEN_ANGLE,
-    dollyProgress: smoothstep(0.34, 0.68, p),
+    // The doors finish before the camera moves. The earlier windows overlapped,
+    // which made the push feel hurried and allowed the viewer to read it as a
+    // transition cut rather than physically travelling through the opening.
+    doorAngle: smoothstep(0.16, 0.46, p) * GATE_OPEN_ANGLE,
+    dollyProgress: smoothstep(0.48, 0.78, p),
     roarStrength: roarIn * roarOut,
     // Attribution belongs to the gate shot, not the project interface. It
     // arrives gently after the scene enters and is gone when the dolly ends.
@@ -62,7 +65,7 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
      * reaches one, the project cards run on their own CSS clock; the visitor
      * can stop the wheel and watch the deal finish.
      */
-    projectStrength: smoothstep(0.66, 0.68, p),
+    projectStrength: smoothstep(0.78, 0.8, p),
   }
 }
 

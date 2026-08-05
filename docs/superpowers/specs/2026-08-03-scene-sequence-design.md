@@ -68,6 +68,12 @@ lights replace the original flat ambient wash. Each pylon carries three face
 torches and one cap brazier; the visible flames flicker independently while their
 point lights put real distance falloff across the stone.
 
+The final choreography is deliberately unhurried and strictly sequential. The
+doors open over progress 0.16–0.46; the camera remains still until they finish,
+then dollies through over 0.48–0.78. Project containment mounts only at
+0.78–0.80. Separating those windows prevents the gate opening, camera push and
+interface reveal from collapsing into one hurried transition.
+
 Beyond the gate, projects arrive as an accessible hand of miniature dinosaur
 containment cells. They are explicitly **not cards**: the button itself paints
 no rectangle, and each object is assembled from a thick overhead lintel, two
@@ -89,14 +95,23 @@ the centre and toward the camera, its barred gate swings inward, the other cells
 darken and recede, and a full containment dossier expands through the opening.
 `Return to paddocks` restores the complete hand. On narrow screens a separate
 41vw edge-focus range keeps even the first and last enclosure centred during
-entry. Each chamber accepts either an image or a muted looping video through
-`projectMedia.ts`; missing media remains an honest locked feed rather than a
-fabricated screenshot.
+entry. The cell approach and barred-gate swing now run for roughly 0.9 seconds;
+the dossier follows after a 240 ms pause and settles over another 0.9 seconds,
+so entry reads as approach → unlock → inspect rather than a UI swap.
+
+The entered dossier is intentionally compact (58svh desktop, 68svh mobile),
+media-led, and guaranteed inside the sticky viewport. It receives focus without
+moving the page, shows the description, full feature list, stack and links, and
+keeps long copy internally scrollable. Four purpose-made 1200×675 landscape
+covers feed the cells and dossier; `Open full capture` preserves the original
+1200×2037 record. Images render uncropped and unfiltered in detail. A future
+video entry receives muted inline autoplay plus native controls in detail.
+Missing media remains an honest locked feed rather than a fabricated screenshot.
 
 The gate model credit is a compact `i` control at the frame edge, synchronized
 to the gate shot rather than merely present in its DOM. It fades from 0 to full
 strength over scroll progress 0.01–0.08, remains available through the roar,
-door swing and most of the dolly, then fades out over 0.60–0.68 before the
+door swing and most of the dolly, then fades out over 0.70–0.80 before the
 containment interface arrives. At zero strength it becomes `inert`, is removed
 from pointer and keyboard interaction, and closes an expanded disclosure. The
 expanded control carries title, creator, source, licence, and an adaptation
@@ -116,22 +131,24 @@ readers.
   a real temporal beat rather than an always-visible transform.
 - At 1440×900 all eight structural cells render in the closed row with no page
   overflow. Entering edge paddock 08 centres it at x=706.1 against a 720 px
-  viewport centre, swings its gate to `rotateY(-72deg)`, and expands an 896 px
-  dossier below it.
+  viewport centre and swings its gate to `rotateY(-72deg)`. The final media-led
+  dossier measures 960×512 px and remains entirely inside the frame.
 - At 390×844 all eight cells render with `scrollWidth === innerWidth === 390`.
   Entering edge paddock 08 centres it at x=181.8 against a 195 px viewport
-  centre; the dossier remains inside 9.4–380.6 px, and the selected cell no
-  longer covers the heading.
+  centre. The compact dossier remains inside 6.4–383.6 px and 167.3–727.3 px;
+  its landscape media displays at 342.7×192.8 px with `object-fit: contain`, no
+  filter, no overflow, and focus moved into the dossier.
 - With `prefers-reduced-motion: reduce`, all eight cells are immediately static,
   the roar is absent, and the gate-only credit control is inert because the gate
   shot is skipped; the persistent repository attribution remains available.
 - Browser measurement confirms the credit `i` at opacity 0/inert at progress 0,
-  opacity 0.402 and interactive at 0.04, opacity 1 at 0.12–0.50, opacity 0.493
-  at 0.64, and opacity 0/inert/closed at 0.68 when the project scene mounts.
-- TypeScript, ESLint, data validation, production build, and 90 tests pass.
-  Coverage is 90.51% statements, 79.09% branches, 93.02% functions, and 92.66%
+  opacity 0.402 and interactive at 0.04, opacity 1 through the gate action, then
+  opacity 0.642 at 0.74, and opacity 0/inert/closed at 0.80 as the project scene
+  mounts.
+- TypeScript, ESLint, data validation, production build, and 91 tests pass.
+  Coverage is 90.69% statements, 80% branches, 93.18% functions, and 92.78%
   lines. The lazy gate chunk, including Three.js and the containment hand, is
-  629.61 KB / 158.46 KB gzip.
+  630.86 KB / 158.81 KB gzip.
 
 ---
 
