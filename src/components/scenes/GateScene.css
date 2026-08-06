@@ -156,6 +156,7 @@
 }
 
 .gate__credit-panel {
+  display: block;
   position: absolute;
   top: calc(100% + 0.6rem);
   right: 0;
@@ -168,9 +169,13 @@
   backdrop-filter: blur(12px);
   opacity: 0;
   visibility: hidden;
-  transform: translate3d(0, -0.18rem, 0) scale(0.985);
-  transform-origin: 100% 0;
+  transform: translate3d(0.25rem, -0.7rem, 0) scale(0.82);
+  transform-origin: calc(100% - 0.925rem) -1.525rem;
   pointer-events: none;
+  transition:
+    opacity 130ms ease-in,
+    transform 180ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 0s linear 180ms;
 }
 
 .gate__credit[open] .gate__credit-panel {
@@ -178,18 +183,10 @@
   visibility: visible;
   transform: translate3d(0, 0, 0) scale(1);
   pointer-events: auto;
-  animation: gate-credit-pop 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes gate-credit-pop {
-  from {
-    opacity: 0;
-    transform: translate3d(0, -0.18rem, 0) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
+  transition:
+    opacity 150ms ease-out,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
 }
 
 .gate__credit-panel p {
@@ -197,7 +194,20 @@
   font-size: 0.56rem;
   letter-spacing: 0.05em;
   line-height: 1.55;
+  opacity: 0;
+  transform: translate3d(0, -0.28rem, 0) scale(0.98);
+  transition: opacity 90ms ease-in, transform 120ms ease-in;
 }
+
+.gate__credit[open] .gate__credit-panel p {
+  opacity: 1;
+  transform: none;
+  transition: opacity 150ms ease-out, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gate__credit[open] .gate__credit-panel p:nth-child(2) { transition-delay: 35ms; }
+.gate__credit[open] .gate__credit-panel p:nth-child(3) { transition-delay: 70ms; }
+.gate__credit[open] .gate__credit-panel p:nth-child(4) { transition-delay: 105ms; }
 
 .gate__credit-panel .gate__credit-heading {
   margin-top: 0;
@@ -305,7 +315,9 @@
   }
 
   .gate__picture,
-  .gate__credit {
+  .gate__credit,
+  .gate__credit-panel,
+  .gate__credit-panel p {
     transition: none;
   }
 

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import TimeCircuits from '../TimeCircuits'
 import { readoutFromStop } from '../../data/timeline'
 import FluxCapacitor from '../FluxCapacitor'
@@ -22,10 +22,14 @@ export default function TimeCircuitsScene() {
   const present = timeline[0]
   const [activeId, setActiveId] = useState<string | null>(present?.entry.id ?? null)
   const [hoverboardReady, setHoverboardReady] = useState(false)
+  const hoverboardCreditRef = useRef<HTMLDetailsElement>(null)
   const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px -12%', true)
   // PRESENT TIME is the visitor's own clock, in their own timezone.
   const now = useClock()
-  const revealHoverboardCredit = useCallback(() => setHoverboardReady(true), [])
+  const syncHoverboardCredit = useCallback((visible: boolean) => {
+    if (!visible && hoverboardCreditRef.current) hoverboardCreditRef.current.open = false
+    setHoverboardReady(visible)
+  }, [])
 
   if (!present) return null
 
@@ -43,9 +47,10 @@ export default function TimeCircuitsScene() {
       </h2>
       {hasEntered ? (
         <>
-          <Hoverboard3D onReady={revealHoverboardCredit} />
+          <Hoverboard3D onVisibilityChange={syncHoverboardCredit} />
 
           <details
+            ref={hoverboardCreditRef}
             className={`circuits-scene__credit${hoverboardReady ? ' is-visible' : ''}`}
             inert={!hoverboardReady}
             aria-hidden={!hoverboardReady}

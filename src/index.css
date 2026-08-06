@@ -44,6 +44,14 @@ body {
   min-height: 100%;
 }
 
+/* Reserves each cinematic chapter before its code is requested. The first
+   viewport therefore pays only for the business card; Three.js and the 3D
+   assets arrive as the visitor approaches their scenes. */
+.deferred-scene,
+.deferred-scene__fallback {
+  min-height: 100svh;
+}
+
 /* Each scene owns a screen. The card scene is positioned so the scroll cue can
    anchor to its bottom edge. */
 .scene--card {

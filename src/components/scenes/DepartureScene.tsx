@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import { useEffect, useRef, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
 import { useScrollProgress } from '../../hooks/useScrollProgress'
 import './DepartureScene.css'
 
@@ -92,6 +92,85 @@ function track(direction: -1 | 1): EmberStyle[] {
 
 const TRACKS = { left: track(-1), right: track(1) }
 
+/* Pointer momentum depends on a real layout box and animation clock; jsdom has
+   neither. The rendered interactive wrapper remains covered by scene tests. */
+/* v8 ignore start */
+function usePlateImpulse() {
+  const plateRef = useRef<HTMLSpanElement>(null)
+  const motion = useRef({
+    x: 0, y: 0, pitch: 0, yaw: 0, roll: 0,
+    vx: 0, vy: 0, vpitch: 0, vyaw: 0, vroll: 0,
+  })
+  const animation = useRef({ frame: 0, previous: 0 })
+
+  useEffect(() => {
+    const animationState = animation.current
+    return () => cancelAnimationFrame(animationState.frame)
+  }, [])
+
+  const tick = (now: number) => {
+    const plate = plateRef.current
+    if (!plate) {
+      animation.current.frame = 0
+      return
+    }
+    const delta = Math.min(0.05, Math.max(0.001, (now - animation.current.previous) / 1000))
+    animation.current.previous = now
+    const state = motion.current
+    const damping = Math.exp(-2.65 * delta)
+
+    state.vx = (state.vx - state.x * 5.2 * delta) * damping
+    state.vy = (state.vy - state.y * 5.2 * delta) * damping
+    state.vpitch = (state.vpitch - state.pitch * 6.1 * delta) * damping
+    state.vyaw = (state.vyaw - state.yaw * 6.1 * delta) * damping
+    state.vroll = (state.vroll - state.roll * 6.1 * delta) * damping
+    state.x += state.vx * delta
+    state.y += state.vy * delta
+    state.pitch += state.vpitch * delta
+    state.yaw += state.vyaw * delta
+    state.roll += state.vroll * delta
+
+    plate.style.setProperty('--plate-kick-x', `${state.x.toFixed(3)}px`)
+    plate.style.setProperty('--plate-kick-y', `${state.y.toFixed(3)}px`)
+    plate.style.setProperty('--plate-kick-pitch', `${state.pitch.toFixed(3)}deg`)
+    plate.style.setProperty('--plate-kick-yaw', `${state.yaw.toFixed(3)}deg`)
+    plate.style.setProperty('--plate-kick-roll', `${state.roll.toFixed(3)}deg`)
+
+    const energy = Math.abs(state.x) + Math.abs(state.y) + Math.abs(state.pitch)
+      + Math.abs(state.yaw) + Math.abs(state.roll) + Math.abs(state.vx) + Math.abs(state.vy)
+      + Math.abs(state.vpitch) + Math.abs(state.vyaw) + Math.abs(state.vroll)
+    if (energy < 0.08) {
+      animation.current.frame = 0
+      return
+    }
+    animation.current.frame = requestAnimationFrame(tick)
+  }
+
+  const pokePlate = (event: ReactPointerEvent<HTMLSpanElement>) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / Math.max(1, rect.width) - 0.5) * 2
+    const y = ((event.clientY - rect.top) / Math.max(1, rect.height) - 0.5) * 2
+    const state = motion.current
+
+    // Force travels away from the clicked side. Each click accumulates with
+    // existing momentum, so it can become amusingly unstable before the
+    // damped springs pull it back into the original swirl.
+    state.vx += -x * 92
+    state.vy += -y * 58
+    state.vpitch += y * 170
+    state.vyaw += -x * 230
+    state.vroll += -x * 145 + (Math.random() - 0.5) * 24
+    if (animation.current.frame === 0) {
+      animation.current.previous = performance.now()
+      animation.current.frame = requestAnimationFrame(tick)
+    }
+  }
+
+  return { plateRef, pokePlate }
+}
+/* v8 ignore stop */
+
 function Track({ side }: { side: 'left' | 'right' }) {
   return (
     <div className={`departure__track departure__track--${side}`}>
@@ -123,6 +202,7 @@ function Track({ side }: { side: 'left' | 'right' }) {
 
 export default function DepartureScene() {
   const ref = useScrollProgress<HTMLElement>('--progress', 'pin')
+  const { plateRef, pokePlate } = usePlateImpulse()
 
   return (
     <section ref={ref} className="scene scene--departure" aria-hidden="true">
@@ -190,15 +270,17 @@ export default function DepartureScene() {
               printing means the plate is legible at every angle while still
               turning like a solid object.
             */}
-            <span className="departure__plate-float">
-              <span className="departure__plate-spin">
-                <span className="departure__plate-face">
-                  <span className="departure__plate-state">California</span>
-                  <span className="departure__plate-text">OUTATIME</span>
-                </span>
-                <span className="departure__plate-face departure__plate-face--back">
-                  <span className="departure__plate-state">California</span>
-                  <span className="departure__plate-text">OUTATIME</span>
+            <span ref={plateRef} className="departure__plate-interaction" onPointerDown={pokePlate}>
+              <span className="departure__plate-float">
+                <span className="departure__plate-spin">
+                  <span className="departure__plate-face">
+                    <span className="departure__plate-state">California</span>
+                    <span className="departure__plate-text">OUTATIME</span>
+                  </span>
+                  <span className="departure__plate-face departure__plate-face--back">
+                    <span className="departure__plate-state">California</span>
+                    <span className="departure__plate-text">OUTATIME</span>
+                  </span>
                 </span>
               </span>
             </span>

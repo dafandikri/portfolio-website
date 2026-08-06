@@ -112,7 +112,11 @@ describe('ParkScene', () => {
         mode="detail"
       />,
     )
-    expect(screen.getByLabelText('Detailed project preview')).toHaveAttribute('controls')
+    const detailVideo = screen.getByLabelText('Detailed project preview')
+    expect(detailVideo).toHaveAttribute('controls')
+    expect(detailVideo).toHaveAttribute('controlslist', 'nofullscreen noremoteplayback')
+    expect(detailVideo).toHaveAttribute('disablepictureinpicture')
+    expect(detailVideo).toHaveAttribute('disableremoteplayback')
   })
 
   it('renders a null-media placeholder directly', () => {

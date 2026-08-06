@@ -554,6 +554,20 @@
   will-change: transform, opacity;
 }
 
+.departure__plate-interaction {
+  display: inline-block;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transform:
+    translate3d(var(--plate-kick-x, 0px), var(--plate-kick-y, 0px), 0)
+    rotateX(var(--plate-kick-pitch, 0deg))
+    rotateY(var(--plate-kick-yaw, 0deg))
+    rotateZ(var(--plate-kick-roll, 0deg));
+  will-change: transform;
+}
+
 /*
  * Scroll drives where the plate is; a separate, always-running rotation keeps
  * it turning. Splitting them is what makes it read as an object that happens to
@@ -700,6 +714,10 @@
   }
   .departure__plate-float {
     animation: none;
+    transform: none;
+  }
+  .departure__plate-interaction {
+    cursor: default;
     transform: none;
   }
   .departure__track,

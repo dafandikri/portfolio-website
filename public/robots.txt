@@ -1,8 +1,5 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://dafandikri.dev/sitemap.xml
-
-# Allow all search engines to crawl the entire site
-# This is a portfolio website meant to be fully indexed
+Sitemap: https://www.dafandikri.dev/sitemap.xml
+Host: www.dafandikri.dev

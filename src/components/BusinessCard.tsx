@@ -2,6 +2,7 @@ import { card } from '../data/card'
 import type { CardField } from '../data/schema'
 import { useCardTilt } from '../hooks/useCardTilt'
 import cardHandoffHand from '../assets/img/card-handoff-hand.webp'
+import walnutDesk from '../assets/img/american-psycho-walnut-desk.webp'
 import BloodDrop from './BloodDrop'
 import './BusinessCard.css'
 
@@ -38,6 +39,14 @@ export default function BusinessCard() {
 
   return (
     <div className="stage">
+      <img
+        className="stage__backdrop"
+        src={walnutDesk}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchPriority="high"
+      />
       <div className="card-delivery">
         <div className="card-drop" ref={tiltRef}>
           {/*

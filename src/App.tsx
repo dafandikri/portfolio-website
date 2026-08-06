@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, type ReactNode } from 'react'
 import CardScene from './components/scenes/CardScene'
+import { useInView } from './hooks/useInView'
 
 /**
  * A sequence of cult-film set pieces, each carrying real content.
@@ -13,17 +14,33 @@ const DepartureScene = lazy(() => import('./components/scenes/DepartureScene'))
 const TimeCircuitsScene = lazy(() => import('./components/scenes/TimeCircuitsScene'))
 const GateScene = lazy(() => import('./components/scenes/GateScene'))
 
+/**
+ * Keep a full-height place in the document, but do not even request a scene's
+ * JavaScript until the visitor gets within one viewport of it. This matters
+ * most for the two Three.js scenes: code splitting alone still downloads a
+ * lazy component immediately when React tries to render it.
+ */
+function DeferredScene({ name, children }: { name: string; children: ReactNode }) {
+  const [sceneRef, shouldLoad] = useInView<HTMLDivElement>('100% 0px', true)
+
+  return (
+    <div ref={sceneRef} className="deferred-scene" data-deferred-scene={name}>
+      {shouldLoad ? (
+        <Suspense fallback={<div className="deferred-scene__fallback" aria-hidden="true" />}>
+          {children}
+        </Suspense>
+      ) : null}
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <main>
       <CardScene />
-      {/* No spinner: the fallback reserves the scroll height the scenes will
-          occupy, so nothing jumps when they arrive. */}
-      <Suspense fallback={<div style={{ minHeight: '100svh' }} aria-hidden="true" />}>
-        <DepartureScene />
-        <TimeCircuitsScene />
-        <GateScene />
-      </Suspense>
+      <DeferredScene name="departure"><DepartureScene /></DeferredScene>
+      <DeferredScene name="experience"><TimeCircuitsScene /></DeferredScene>
+      <DeferredScene name="projects"><GateScene /></DeferredScene>
     </main>
   )
 }

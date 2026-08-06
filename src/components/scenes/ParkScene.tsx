@@ -68,6 +68,9 @@ export function ProjectMediaView({
         muted
         playsInline
         controls={mode === 'detail'}
+        controlsList={mode === 'detail' ? 'nofullscreen noremoteplayback' : undefined}
+        disablePictureInPicture={mode === 'detail'}
+        disableRemotePlayback={mode === 'detail'}
         preload={mode === 'detail' ? 'auto' : 'none'}
         onLoadedMetadata={(event) => {
           if (mode === 'detail' && startAt > 0) event.currentTarget.currentTime = startAt
