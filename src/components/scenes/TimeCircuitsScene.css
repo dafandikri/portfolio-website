@@ -5,6 +5,8 @@
 
 .scene--circuits {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 100svh;
   /* Content is centred in the scene rather than stacked from the top, so the
      deck is never pushed below the fold by the panel above it. */
@@ -15,6 +17,30 @@
   background: radial-gradient(ellipse 80% 60% at 50% 30%, #14100c 0%, #050403 70%);
   color: rgba(255, 255, 255, 0.86);
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 9vw, 6rem);
+}
+
+/* The jungle exists underneath the final part of the dashboard scene before
+   the gate begins. Its mask reveals more of the exact same full-screen plate
+   toward the seam, so scrolling feels like the dashboard darkness resolving
+   into trees instead of one background being swapped for another. */
+.circuits-scene__jungle-handoff {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(5,4,3,0.08), rgba(2,7,5,0.38)),
+    url('../../assets/img/jurassic-park-jungle-night.webp') center / cover no-repeat,
+    #020705;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 38%, rgba(0,0,0,0.12) 55%, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 38%, rgba(0,0,0,0.12) 55%, #000 100%);
+}
+
+.circuits-scene__top,
+.scene--circuits .deck,
+.circuits-scene__placeholder {
+  position: relative;
+  z-index: 2;
 }
 
 .circuits-scene__placeholder {

@@ -147,21 +147,22 @@
 
 .park__grid {
   display: grid;
-  flex: 0 1 min(69svh, 39rem);
+  flex: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
   gap: clamp(0.72rem, 1.7vw, 1.15rem) clamp(0.9rem, 2vw, 1.4rem);
-  min-height: min(62svh, 25rem);
+  min-height: 0;
   margin: 0;
   padding: 0.45rem 0.8rem 0.7rem;
   list-style: none;
   perspective: 1200px;
   transition: opacity 260ms ease, transform 320ms ease;
-  width: min(100%, 64rem);
+  width: min(100%, 58rem);
 }
 
 .park__containment {
   position: relative;
+  aspect-ratio: 1.48;
   min-width: 0;
   min-height: 0;
   opacity: 0;
@@ -179,7 +180,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 10.5rem;
+  min-height: 0;
   padding: 0;
   overflow: visible;
   border: 0;
@@ -253,9 +254,10 @@
   position: absolute;
   top: clamp(1.12rem, 2.45vh, 1.48rem);
   right: 1.18rem;
-  bottom: clamp(2rem, 4.7vh, 2.55rem);
+  bottom: auto;
   left: 1.05rem;
   z-index: 2;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 0.26rem solid #33200f;
   background: #050402;
@@ -784,7 +786,7 @@
     padding: 0.4rem 0.65rem 0.8rem;
   }
 
-  .park__containment-unit { height: 13.75rem; }
+  .park__containment { aspect-ratio: 1.42; }
   .park__archive { width: min(100%,30rem); padding-bottom: 1rem; }
   .park__archive ul { position: static; grid-template-columns: 1fr 1fr; margin-top: 0.35rem; }
 
@@ -805,10 +807,8 @@
 }
 
 @media (max-height: 720px) and (min-width: 761px) {
-  .park__grid { flex-basis: 66svh; gap: 0.65rem 1rem; }
-  .park__containment-unit { min-height: 9rem; }
+  .park__grid { width: min(100%,52rem); gap: 0.65rem 1rem; }
   .park__sill { height: 2rem; }
-  .park__cell { bottom: 1.9rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

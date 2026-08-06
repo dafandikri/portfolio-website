@@ -379,6 +379,8 @@ export default function GateScene() {
       }
 
       section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
+      section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.12).toFixed(3))
+      section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -1.2).toFixed(3)}%`)
       const mountProjects = motion.projectStrength > 0.001
       const activateProjects = motion.projectStrength >= 0.98
       if (mountProjects !== projectMountedState) {
