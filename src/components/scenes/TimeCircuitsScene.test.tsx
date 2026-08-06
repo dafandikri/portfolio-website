@@ -22,10 +22,15 @@ describe('TimeCircuitsScene', () => {
 
     act(() => observers[0]?.trigger(scene, true, 1))
     expect(container.querySelectorAll('.deck__card')).toHaveLength(timeline.length)
-    expect(container.querySelector('.circuits-scene__hoverboard3d canvas')).toHaveAttribute('data-renderer', 'three')
+    const hoverboardCanvas = container.querySelector('.circuits-scene__hoverboard3d canvas')
+    expect(hoverboardCanvas).toHaveAttribute('data-renderer', 'three')
+    expect(hoverboardCanvas).toHaveAttribute('role', 'button')
+    expect(hoverboardCanvas).toHaveAttribute('aria-label', 'Nudge the hoverboard flight path')
+    expect(hoverboardCanvas).toHaveAttribute('tabindex', '0')
     const credit = container.querySelector('.circuits-scene__credit') as HTMLElement
     expect(credit).toHaveAttribute('aria-hidden', 'true')
-    expect(credit.querySelector('summary')).toHaveAttribute('aria-label', 'Hoverboard model credit')
+    expect(credit.querySelector('button')).toHaveAttribute('aria-label', 'Hoverboard model credit')
+    expect(credit.querySelector('button')).toHaveAttribute('aria-expanded', 'false')
     expect(credit).toHaveTextContent('Onamani')
     expect(credit.querySelector('a[rel~="license"]')).not.toBeNull()
   })

@@ -55,6 +55,15 @@
   width: var(--card-w);
   aspect-ratio: var(--card-ratio);
   transform-style: preserve-3d;
+  opacity: 0;
+  transform: translate3d(-0.28rem, -118vh, 0) rotate(-1.1deg);
+}
+
+/* The opening clock starts only after both photographic layers have loaded.
+   A local server and Vercel can have very different asset latency; allowing CSS
+   to run while the hand is still downloading made production appear to use a
+   different withdrawal path even though it had the same keyframes. */
+.stage--ready .card-delivery {
   animation: card-delivery-arrive 1250ms linear both;
 }
 
@@ -138,8 +147,14 @@
   width: 46%;
   pointer-events: none;
   transform-origin: 50% 12%;
-  animation: card-hand-deliver var(--hand-delivery-duration) linear both;
+  opacity: 0;
+  transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
   will-change: transform;
+}
+
+.stage--ready .card-handoff-hand {
+  opacity: 1;
+  animation: card-hand-deliver var(--hand-delivery-duration) linear both;
 }
 
 .card-handoff-hand::before,
@@ -159,7 +174,6 @@
   opacity: 0.36;
   filter: brightness(0) blur(11px);
   transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
-  animation: card-hand-cast-shadow var(--hand-delivery-duration) linear both;
 }
 
 /* The tighter lower-half shadow is where the fingertips nearly touch the card.
@@ -170,7 +184,6 @@
   clip-path: inset(48% -8% -10% -8%);
   filter: brightness(0) blur(3.5px);
   transform: translate3d(0.12rem, 0.28rem, 0) scale(0.995);
-  animation: card-hand-contact-shadow var(--hand-delivery-duration) linear both;
 }
 
 /* Movement and blur live on separate layers. That lets the hand follow one
@@ -183,8 +196,27 @@
   width: 100%;
   height: auto;
   user-select: none;
-  animation: card-hand-motion-blur var(--hand-delivery-duration) linear both;
   will-change: filter, transform;
+}
+
+.stage--ready .card-handoff-hand::before {
+  animation: card-hand-cast-shadow var(--hand-delivery-duration) linear both;
+}
+
+.stage--ready .card-handoff-hand::after {
+  animation: card-hand-contact-shadow var(--hand-delivery-duration) linear both;
+}
+
+.stage--ready .card-handoff-hand__image {
+  animation: card-hand-motion-blur var(--hand-delivery-duration) linear both;
+}
+
+/* Blood is printed inside the card, but its beat also belongs to the opening
+   clock. Pausing rather than removing its animation preserves the exact delay
+   and keyframe phase when the loaded scene is released. */
+.stage:not(.stage--ready) .blood__drip,
+.stage:not(.stage--ready) .blood__pool {
+  animation-play-state: paused;
 }
 
 @keyframes card-hand-deliver {
@@ -550,6 +582,9 @@ a.card__meta:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .card-delivery {
+    transform: none;
+  }
+  .stage--ready .card-delivery {
     animation: card-settle 400ms ease-out both;
   }
   .card-handoff-hand {

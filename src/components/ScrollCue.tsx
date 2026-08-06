@@ -8,9 +8,9 @@ import './ScrollCue.css'
  * never gets seen. It appears only after the blood has settled, so it does not
  * step on the punchline.
  */
-export default function ScrollCue() {
+export default function ScrollCue({ ready = true }: { ready?: boolean }) {
   return (
-    <div className="scroll-cue" aria-hidden="true">
+    <div className={`scroll-cue${ready ? ' is-ready' : ''}`} aria-hidden="true">
       <span className="scroll-cue__label">Scroll</span>
       <span className="scroll-cue__rule" />
     </div>

@@ -32,6 +32,7 @@ import { hingedDoor, splitGateGeometry } from './gateGeometry'
 import { gateMotion } from './gateMotion'
 import { GATE_TORCHES, torchFlicker } from './gateTorches'
 import ParkScene from './ParkScene'
+import InfoPopover from '../InfoPopover'
 import './GateScene.css'
 
 /**
@@ -57,11 +58,11 @@ export default function GateScene() {
   const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px 10%', true)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sectionRef = useRef<HTMLElement | null>(null)
-  const creditRef = useRef<HTMLDetailsElement>(null)
   const [failed, setFailed] = useState(false)
   const [modelReady, setModelReady] = useState(false)
   const [projectsMounted, setProjectsMounted] = useState(false)
   const [projectsActive, setProjectsActive] = useState(false)
+  const [creditVisible, setCreditVisible] = useState(false)
 
   /*
    * jsdom has no WebGL context, so this integration path is verified in a real
@@ -156,6 +157,7 @@ export default function GateScene() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let projectMountedState = reduced
     let projectActiveState = reduced
+    let creditVisibleState = false
     if (reduced) {
       setProjectsMounted(true)
       setProjectsActive(true)
@@ -375,12 +377,10 @@ export default function GateScene() {
       section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.28).toFixed(3))
       section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -3.4).toFixed(3)}%`)
       section.style.setProperty('--credit-strength', motion.creditStrength.toFixed(3))
-      const credit = creditRef.current
-      if (credit) {
-        const creditActive = motion.creditStrength > 0.05
-        credit.inert = !creditActive
-        credit.setAttribute('aria-hidden', String(!creditActive))
-        if (!creditActive) credit.open = false
+      const creditActive = motion.creditStrength > 0.05
+      if (creditActive !== creditVisibleState) {
+        creditVisibleState = creditActive
+        setCreditVisible(creditActive)
       }
 
       section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
@@ -501,35 +501,37 @@ export default function GateScene() {
           </div>
         )}
 
-        <details ref={creditRef} className="gate__credit" inert aria-hidden="true">
-          <summary aria-label="Gate model credit">i</summary>
-          <div className="gate__credit-panel">
-            <p className="gate__credit-heading">Gate model attribution</p>
-            <p>
-              Gate asset:{' '}
-              <a
-                href="https://sketchfab.com/3d-models/jurassic-park-gate-f85e89d2c0ef44beb3fe7fd7e72afdc7"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                &ldquo;Jurassic Park Gate&rdquo;
-              </a>{' '}
-              by Mathzilla5335.
-            </p>
-            <p>
-              Licensed under{' '}
-              <a
-                href="https://creativecommons.org/licenses/by/4.0/"
-                target="_blank"
-                rel="noreferrer noopener license"
-              >
-                CC BY 4.0
-              </a>
-              .
-            </p>
-            <p>Adapted for web: PBR maps resized, doors animated, and lighting rebuilt.</p>
-          </div>
-        </details>
+        <InfoPopover
+          className="gate__credit"
+          panelClassName="gate__credit-panel"
+          label="Gate model credit"
+          visible={creditVisible}
+        >
+          <p className="gate__credit-heading">Gate model attribution</p>
+          <p>
+            Gate asset:{' '}
+            <a
+              href="https://sketchfab.com/3d-models/jurassic-park-gate-f85e89d2c0ef44beb3fe7fd7e72afdc7"
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              &ldquo;Jurassic Park Gate&rdquo;
+            </a>{' '}
+            by Mathzilla5335.
+          </p>
+          <p>
+            Licensed under{' '}
+            <a
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noreferrer noopener license"
+            >
+              CC BY 4.0
+            </a>
+            .
+          </p>
+          <p>Adapted for web: PBR maps resized, doors animated, and lighting rebuilt.</p>
+        </InfoPopover>
       </div>
     </section>
   )

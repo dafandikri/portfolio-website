@@ -73,6 +73,11 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
     const rig = new Group()
     scene.add(rig)
 
+    // Keep a forgiving invisible hit volume with the small prop. Rings and
+    // wind streaks stay outside this group so they can never steal a click.
+    const interactionGroup = new Group()
+    rig.add(interactionGroup)
+
     const hoverEffects = new Group()
     hoverEffects.visible = false
     rig.add(hoverEffects)
@@ -158,8 +163,8 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
     let boardOnScreen = false
     let modelRoot: Group | null = null
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const startedAt = performance.now()
-    let previousFrameAt = startedAt
+    let previousFrameAt = performance.now()
+    let motionElapsed = 0
     const projectedPosition = new Vector3()
     const interactionOffset = new Vector3()
     const interactionVelocity = new Vector3()
@@ -189,6 +194,7 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
       if (reducedMotion) return
       const hit = intersectionAt(event)
       if (!hit) return
+      event.preventDefault()
 
       rig.getWorldPosition(projectedPosition)
       projectedPosition.project(camera)
@@ -207,9 +213,21 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
       canvas.style.cursor = 'grabbing'
     }
 
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (reducedMotion || !loaded || (event.key !== 'Enter' && event.key !== ' ')) return
+      event.preventDefault()
+      interactionVelocity.x += 1.25
+      interactionVelocity.y += 0.42
+      interactionVelocity.z += 0.9
+      angularVelocity.x += 0.75
+      angularVelocity.y -= 2.2
+      angularVelocity.z += 1.8
+    }
+
     canvas.addEventListener('pointermove', handlePointerMove)
     canvas.addEventListener('pointerleave', handlePointerLeave)
     canvas.addEventListener('pointerdown', handlePointerDown)
+    canvas.addEventListener('keydown', handleKeyDown)
 
     const announceBoardVisibility = () => {
       if (!loaded) return
@@ -226,10 +244,11 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
 
     const draw = (now: number) => {
       if (!visible || disposed) return
-      const time = (now - startedAt) / 1000
       const delta = Math.min(0.05, Math.max(0.001, (now - previousFrameAt) / 1000))
       previousFrameAt = now
       if (loaded && !reducedMotion) {
+        motionElapsed += delta
+        const time = motionElapsed
         // Translation is real camera-space travel; scale changes come from
         // perspective as the mesh moves in Z, not from resizing an image.
         const cycleDuration = 11.5
@@ -331,11 +350,22 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
       object.scale.setScalar(scale)
       const centeredBounds = new Box3().setFromObject(object)
       object.position.sub(centeredBounds.getCenter(new Vector3()))
-      rig.add(object)
+      const hitTarget = new Mesh(
+        new BoxGeometry(1.45, 0.55, 0.82),
+        new MeshBasicMaterial({
+          transparent: true,
+          opacity: 0,
+          depthWrite: false,
+          colorWrite: false,
+        }),
+      )
+      interactionGroup.add(object, hitTarget)
       hoverEffects.visible = true
-      modelRoot = object
+      modelRoot = interactionGroup
 
       loaded = true
+      motionElapsed = 0
+      previousFrameAt = performance.now()
       if (reducedMotion) {
         rig.position.set(1.25, -0.15, -0.45)
         rig.rotation.set(-0.22, -0.55, -0.08)
@@ -352,7 +382,10 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
           const nextVisible = Boolean(entry?.isIntersecting)
           if (nextVisible === visible) return
           visible = nextVisible
-          if (visible) frame = window.requestAnimationFrame(draw)
+          if (visible) {
+            previousFrameAt = performance.now()
+            frame = window.requestAnimationFrame(draw)
+          }
           else window.cancelAnimationFrame(frame)
         })
     visibilityObserver?.observe(root)
@@ -363,6 +396,7 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
       canvas.removeEventListener('pointermove', handlePointerMove)
       canvas.removeEventListener('pointerleave', handlePointerLeave)
       canvas.removeEventListener('pointerdown', handlePointerDown)
+      canvas.removeEventListener('keydown', handleKeyDown)
       visibilityObserver?.disconnect()
       resizeObserver?.disconnect()
       if (!resizeObserver) window.removeEventListener('resize', resize)
@@ -385,8 +419,14 @@ export default function Hoverboard3D({ onVisibilityChange }: Hoverboard3DProps) 
   /* v8 ignore stop */
 
   return (
-    <div ref={rootRef} className="circuits-scene__hoverboard3d" aria-hidden="true">
-      <canvas ref={canvasRef} data-renderer="three" />
+    <div ref={rootRef} className="circuits-scene__hoverboard3d">
+      <canvas
+        ref={canvasRef}
+        data-renderer="three"
+        role="button"
+        tabIndex={0}
+        aria-label="Nudge the hoverboard flight path"
+      />
     </div>
   )
 }

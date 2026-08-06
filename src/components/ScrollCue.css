@@ -8,7 +8,12 @@
   align-items: center;
   gap: 0.55rem;
   pointer-events: none;
-  /* Held back until the blood has finished landing at ~3.1s. */
+  opacity: 0;
+}
+
+/* Held back until the blood has finished landing at ~3.1s, measured from the
+   same loaded-asset start signal as the card, hand and blood. */
+.scroll-cue.is-ready {
   animation: cue-in 700ms ease-out 4200ms both;
 }
 
@@ -25,8 +30,11 @@
   background: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0));
   /* A slow travel down the rule, rather than a bouncing arrow. The card is
      letterpress; a bouncing chevron would be from a different website. */
-  animation: cue-travel 2.6s ease-in-out 4900ms infinite;
   transform-origin: top;
+}
+
+.scroll-cue.is-ready .scroll-cue__rule {
+  animation: cue-travel 2.6s ease-in-out 4900ms infinite;
 }
 
 @keyframes cue-in {
@@ -53,10 +61,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scroll-cue {
+  .scroll-cue.is-ready {
     animation: cue-in 400ms ease-out 1200ms both;
   }
-  .scroll-cue__rule {
+  .scroll-cue.is-ready .scroll-cue__rule {
     animation: none;
   }
 }

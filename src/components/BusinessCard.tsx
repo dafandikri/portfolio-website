@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { card } from '../data/card'
 import type { CardField } from '../data/schema'
 import { useCardTilt } from '../hooks/useCardTilt'
@@ -31,14 +32,42 @@ function Field({ field, className }: { field: CardField; className: string }) {
   )
 }
 
-export default function BusinessCard() {
+interface BusinessCardProps {
+  onReady?: () => void
+}
+
+const BACKDROP_READY = 1
+const HAND_READY = 2
+const ALL_OPENING_ASSETS_READY = BACKDROP_READY | HAND_READY
+
+export default function BusinessCard({ onReady }: BusinessCardProps) {
+  const [readyAssets, setReadyAssets] = useState(0)
+  const readyAssetsRef = useRef(0)
+  const openingReady = readyAssets === ALL_OPENING_ASSETS_READY
+
   // On the wrapper, not the card: the cast shadow lives here (it must not
   // rotate) and the rotation lives on the child, so the custom properties both
   // read have to be written above the pair of them.
-  const tiltRef = useCardTilt<HTMLDivElement>()
+  const tiltRef = useCardTilt<HTMLDivElement>(openingReady)
+
+  const markAssetReady = (bit: number) => {
+    const previous = readyAssetsRef.current
+    const next = previous | bit
+    if (next === previous) return
+    readyAssetsRef.current = next
+    setReadyAssets(next)
+    if (next === ALL_OPENING_ASSETS_READY) onReady?.()
+  }
+
+  const markLoaded = (bit: number) => () => markAssetReady(bit)
+
+  const markFailed = (bit: number) => () => {
+    // A failed decorative image must not leave the whole interface frozen.
+    markAssetReady(bit)
+  }
 
   return (
-    <div className="stage">
+    <div className={`stage${openingReady ? ' stage--ready' : ''}`} aria-busy={!openingReady}>
       <img
         className="stage__backdrop"
         src={walnutDesk}
@@ -46,6 +75,8 @@ export default function BusinessCard() {
         aria-hidden="true"
         decoding="async"
         fetchPriority="high"
+        onLoad={markLoaded(BACKDROP_READY)}
+        onError={markFailed(BACKDROP_READY)}
       />
       <div className="card-delivery">
         <div className="card-drop" ref={tiltRef}>
@@ -98,6 +129,10 @@ export default function BusinessCard() {
             src={cardHandoffHand}
             alt=""
             draggable="false"
+            decoding="async"
+            fetchPriority="high"
+            onLoad={markLoaded(HAND_READY)}
+            onError={markFailed(HAND_READY)}
           />
         </span>
       </div>

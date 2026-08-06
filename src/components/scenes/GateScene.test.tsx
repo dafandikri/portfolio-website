@@ -24,10 +24,11 @@ describe('GateScene', () => {
     const { container } = render(<GateScene />)
 
     const credit = container.querySelector('.gate__credit') as HTMLElement
-    const trigger = credit.querySelector('summary')
+    const trigger = credit.querySelector('button')
     const panel = credit.querySelector('.gate__credit-panel')
 
     expect(trigger).toHaveAttribute('aria-label', 'Gate model credit')
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
     expect(panel).not.toBeNull()
     expect(trigger?.nextElementSibling).toBe(panel)
     expect(within(credit).getByText('Gate model attribution')).toBeInTheDocument()

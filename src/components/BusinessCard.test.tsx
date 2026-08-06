@@ -1,10 +1,17 @@
 import { describe, it, expect, afterEach, vi } from 'vitest'
-import { act, render, screen, cleanup } from '@testing-library/react'
+import { act, render, screen, cleanup, fireEvent } from '@testing-library/react'
 import BusinessCard from './BusinessCard'
 import { card } from '../data/card'
 import { stubIntersectionObserver, stubMatchMedia } from '../test/setup'
 
 const nextFrame = () => new Promise((resolve) => requestAnimationFrame(() => resolve(null)))
+
+function loadOpeningAssets(container: HTMLElement) {
+  const images = container.querySelectorAll<HTMLImageElement>(
+    '.stage__backdrop, .card-handoff-hand__image',
+  )
+  act(() => images.forEach((image) => fireEvent.load(image)))
+}
 
 afterEach(() => {
   cleanup()
@@ -88,6 +95,22 @@ describe('BusinessCard', () => {
     expect(hand?.querySelector('.card-handoff-hand__image')).not.toBeNull()
   })
 
+  it('starts every opening beat only after its photographic layers are ready', () => {
+    const onReady = vi.fn()
+    const { container } = render(<BusinessCard onReady={onReady} />)
+    const stage = container.querySelector('.stage')!
+
+    expect(stage).toHaveAttribute('aria-busy', 'true')
+    expect(stage).not.toHaveClass('stage--ready')
+    expect(onReady).not.toHaveBeenCalled()
+
+    loadOpeningAssets(container)
+
+    expect(stage).toHaveAttribute('aria-busy', 'false')
+    expect(stage).toHaveClass('stage--ready')
+    expect(onReady).toHaveBeenCalledTimes(1)
+  })
+
   it('lands the blood under the name, inside the card face', () => {
     const { container } = render(<BusinessCard />)
     const blood = container.querySelector('.blood')!
@@ -106,6 +129,7 @@ describe('BusinessCard', () => {
     const { container } = render(<BusinessCard />)
     const wrapper = container.querySelector<HTMLElement>('.card-drop')
     expect(wrapper).not.toBeNull()
+    loadOpeningAssets(container)
 
     await nextFrame()
     await nextFrame()
@@ -136,6 +160,7 @@ describe('BusinessCard', () => {
 
     const { container } = render(<BusinessCard />)
     const wrapper = container.querySelector<HTMLElement>('.card-drop')!
+    loadOpeningAssets(container)
     expect(callbacks.size).toBe(1)
 
     act(() => observers[0]?.trigger(wrapper, false, 0))

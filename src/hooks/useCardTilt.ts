@@ -96,12 +96,12 @@ export function specularFromTilt({ rx, ry }: Tilt): { mx: number; my: number } {
  * Under prefers-reduced-motion the hook attaches no listener and starts no
  * loop, so the card simply sits still.
  */
-export function useCardTilt<T extends HTMLElement>() {
+export function useCardTilt<T extends HTMLElement>(enabled = true) {
   const ref = useRef<T>(null)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !enabled) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     let frame = 0
@@ -166,7 +166,7 @@ export function useCardTilt<T extends HTMLElement>() {
       el.removeEventListener('pointerup', onPointerRest)
       el.removeEventListener('pointercancel', onPointerRest)
     }
-  }, [])
+  }, [enabled])
 
   return ref
 }
