@@ -14,6 +14,10 @@ export function smoothstep(from: number, to: number, value: number): number {
 }
 
 export interface GateMotion {
+  /** Jungle emerging only after the visitor enters the gate scene. */
+  environmentStrength: number
+  /** Physical gate resolving inside the established jungle world. */
+  modelStrength: number
   /** Additional rotation applied to each door, in radians. */
   doorAngle: number
   /** Camera progress after the doors are safely out of its path. */
@@ -36,6 +40,8 @@ export interface GateMotion {
 export function gateMotion(progress: number, reducedMotion = false): GateMotion {
   if (reducedMotion) {
     return {
+      environmentStrength: 1,
+      modelStrength: 0,
       doorAngle: GATE_OPEN_ANGLE,
       dollyProgress: 0,
       roarStrength: 0,
@@ -45,17 +51,19 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
   }
 
   const p = clamp01(progress)
-  const roarIn = smoothstep(0.06, 0.12, p)
-  const roarOut = 1 - smoothstep(0.3, 0.39, p)
-  const creditIn = smoothstep(0.01, 0.08, p)
-  const creditOut = 1 - smoothstep(0.7, 0.8, p)
+  const roarIn = smoothstep(0.13, 0.19, p)
+  const roarOut = 1 - smoothstep(0.34, 0.43, p)
+  const creditIn = smoothstep(0.09, 0.17, p)
+  const creditOut = 1 - smoothstep(0.74, 0.84, p)
 
   return {
+    environmentStrength: smoothstep(0.01, 0.15, p),
+    modelStrength: smoothstep(0.07, 0.21, p),
     // The doors finish before the camera moves. The earlier windows overlapped,
     // which made the push feel hurried and allowed the viewer to read it as a
     // transition cut rather than physically travelling through the opening.
-    doorAngle: smoothstep(0.16, 0.46, p) * GATE_OPEN_ANGLE,
-    dollyProgress: smoothstep(0.48, 0.78, p),
+    doorAngle: smoothstep(0.23, 0.5, p) * GATE_OPEN_ANGLE,
+    dollyProgress: smoothstep(0.52, 0.82, p),
     roarStrength: roarIn * roarOut,
     // Attribution belongs to the gate shot, not the project interface. It
     // arrives gently after the scene enters and is gone when the dolly ends.
@@ -68,7 +76,7 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
     // Reveal the paddocks while the camera is still passing beneath the gate.
     // Both scenes share the same jungle plate, so this reads as one location
     // coming into focus instead of a cut to a new screen.
-    projectStrength: smoothstep(0.7, 0.92, p),
+    projectStrength: smoothstep(0.76, 0.95, p),
   }
 }
 

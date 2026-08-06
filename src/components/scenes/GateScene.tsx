@@ -59,6 +59,7 @@ export default function GateScene() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const creditRef = useRef<HTMLDetailsElement>(null)
   const [failed, setFailed] = useState(false)
+  const [modelReady, setModelReady] = useState(false)
   const [projectsMounted, setProjectsMounted] = useState(false)
   const [projectsActive, setProjectsActive] = useState(false)
 
@@ -340,6 +341,7 @@ export default function GateScene() {
 
         scene.add(model)
         ready = true
+        setModelReady(true)
       },
       undefined,
       () => {
@@ -361,7 +363,6 @@ export default function GateScene() {
 
     const tick = (time = 0) => {
       frame = requestAnimationFrame(tick)
-      if (!ready) return
 
       const rect = section.getBoundingClientRect()
       const travel = rect.height - window.innerHeight
@@ -369,6 +370,10 @@ export default function GateScene() {
       const progress = Math.min(1, Math.max(0, raw))
       const motion = gateMotion(progress, reduced)
 
+      section.style.setProperty('--environment-strength', motion.environmentStrength.toFixed(3))
+      section.style.setProperty('--gate-model-strength', motion.modelStrength.toFixed(3))
+      section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.28).toFixed(3))
+      section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -3.4).toFixed(3)}%`)
       section.style.setProperty('--credit-strength', motion.creditStrength.toFixed(3))
       const credit = creditRef.current
       if (credit) {
@@ -379,8 +384,6 @@ export default function GateScene() {
       }
 
       section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
-      section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.12).toFixed(3))
-      section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -1.2).toFixed(3)}%`)
       const mountProjects = motion.projectStrength > 0.001
       const activateProjects = motion.projectStrength >= 0.98
       if (mountProjects !== projectMountedState) {
@@ -391,6 +394,8 @@ export default function GateScene() {
         projectActiveState = activateProjects
         setProjectsActive(activateProjects)
       }
+
+      if (!ready) return
 
       if (leftHinge && rightHinge) {
         // Both leaves swing away from the camera and into the park.
@@ -463,7 +468,12 @@ export default function GateScene() {
             night rather than a hole in the page. */}
         <div className="gate__picture" aria-hidden="true">
           <div className="gate__backdrop" />
-          {hasEntered && !failed && <canvas ref={canvasRef} className="gate__canvas" />}
+          {hasEntered && !failed && (
+            <canvas
+              ref={canvasRef}
+              className={`gate__canvas${modelReady ? ' is-ready' : ''}`}
+            />
+          )}
         </div>
 
         {/* The nearby animal remains off-screen. Only the pressure of its roar

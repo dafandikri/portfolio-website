@@ -16,7 +16,6 @@ describe('TimeCircuitsScene', () => {
     const scene = container.querySelector('.scene--circuits')!
 
     expect(screen.getByRole('heading', { level: 2, name: 'Experience' })).toBeInTheDocument()
-    expect(container.querySelector('.circuits-scene__jungle-handoff')).not.toBeNull()
     // The deck is the below-fold cost; none of it should exist yet.
     expect(container.querySelectorAll('.deck__card')).toHaveLength(0)
     expect(observers[0]?.rootMargin).toBe('0px 0px -12%')

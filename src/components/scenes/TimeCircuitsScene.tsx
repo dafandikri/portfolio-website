@@ -38,8 +38,6 @@ export default function TimeCircuitsScene() {
       <h2 id="experience-heading" className="visually-hidden">
         Experience
       </h2>
-      <div className="circuits-scene__jungle-handoff" aria-hidden="true" />
-
       {hasEntered ? (
         <>
           {/* Dashboard: the capacitor sits to the left of the circuits, the

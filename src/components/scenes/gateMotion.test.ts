@@ -7,33 +7,41 @@ import {
 } from './gateMotion'
 
 describe('gateMotion', () => {
-  it('roars before the doors move and waits for them before the camera dollies', () => {
-    expect(gateMotion(0.1).roarStrength).toBeGreaterThan(0)
+  it('reveals the world, resolves the gate, then roars before the doors and dolly', () => {
+    expect(gateMotion(0).environmentStrength).toBe(0)
+    expect(gateMotion(0.1).environmentStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.1).modelStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.1).roarStrength).toBe(0)
     expect(gateMotion(0.1).doorAngle).toBe(0)
+
+    expect(gateMotion(0.17).roarStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.17).doorAngle).toBe(0)
 
     expect(gateMotion(0.3).doorAngle).toBeGreaterThan(0)
     expect(gateMotion(0.3).dollyProgress).toBe(0)
 
-    expect(gateMotion(0.46).doorAngle).toBeCloseTo(GATE_OPEN_ANGLE)
-    expect(gateMotion(0.46).dollyProgress).toBe(0)
+    expect(gateMotion(0.5).doorAngle).toBeCloseTo(GATE_OPEN_ANGLE)
+    expect(gateMotion(0.5).dollyProgress).toBe(0)
     expect(gateMotion(0.6).dollyProgress).toBeGreaterThan(0)
-    expect(gateMotion(0.78).dollyProgress).toBe(1)
-    expect(gateMotion(0.69).projectStrength).toBe(0)
+    expect(gateMotion(0.82).dollyProgress).toBe(1)
+    expect(gateMotion(0.75).projectStrength).toBe(0)
     expect(gateMotion(0.8).projectStrength).toBeGreaterThan(0)
     expect(gateMotion(0.8).projectStrength).toBeLessThan(1)
-    expect(gateMotion(0.92).projectStrength).toBe(1)
+    expect(gateMotion(0.95).projectStrength).toBe(1)
 
     expect(gateMotion(0).creditStrength).toBe(0)
-    expect(gateMotion(0.12).creditStrength).toBe(1)
+    expect(gateMotion(0.2).creditStrength).toBe(1)
     expect(gateMotion(0.76).creditStrength).toBeGreaterThan(0)
     expect(gateMotion(0.76).creditStrength).toBeLessThan(1)
-    expect(gateMotion(0.8).creditStrength).toBe(0)
+    expect(gateMotion(0.84).creditStrength).toBe(0)
   })
 
   it('clamps progress and gives reduced-motion visitors a static open gate', () => {
     expect(gateMotion(-2)).toEqual(gateMotion(0))
     expect(gateMotion(3)).toEqual(gateMotion(1))
     expect(gateMotion(0.2, true)).toEqual({
+      environmentStrength: 1,
+      modelStrength: 0,
       doorAngle: GATE_OPEN_ANGLE,
       dollyProgress: 0,
       roarStrength: 0,
