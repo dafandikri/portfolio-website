@@ -10,8 +10,8 @@ import './DepartureScene.css'
  * of sliding past. Progress is scrubbed by scroll, so it runs forward on the way
  * down and backward on the way up rather than firing once and being spent.
  *
- * It opens on the card's own white and burns down to black, so the two scenes
- * share an edge rather than being cut together.
+ * It opens on the walnut desk's darkness and reveals 1985 through it, so the
+ * two scenes share a shadowed edge rather than flashing to an unrelated white.
  *
  * Purely choreographic, so hidden from assistive technology entirely.
  */

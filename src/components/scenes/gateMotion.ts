@@ -51,10 +51,10 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
   }
 
   const p = clamp01(progress)
-  const roarIn = smoothstep(0.13, 0.19, p)
-  const roarOut = 1 - smoothstep(0.34, 0.43, p)
+  const roarIn = smoothstep(0.12, 0.21, p)
+  const roarOut = 1 - smoothstep(0.36, 0.46, p)
   const creditIn = smoothstep(0.09, 0.17, p)
-  const creditOut = 1 - smoothstep(0.74, 0.84, p)
+  const creditOut = 1 - smoothstep(0.8, 0.9, p)
 
   return {
     environmentStrength: smoothstep(0.01, 0.15, p),
@@ -62,8 +62,8 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
     // The doors finish before the camera moves. The earlier windows overlapped,
     // which made the push feel hurried and allowed the viewer to read it as a
     // transition cut rather than physically travelling through the opening.
-    doorAngle: smoothstep(0.23, 0.5, p) * GATE_OPEN_ANGLE,
-    dollyProgress: smoothstep(0.52, 0.82, p),
+    doorAngle: smoothstep(0.24, 0.58, p) * GATE_OPEN_ANGLE,
+    dollyProgress: smoothstep(0.62, 0.89, p),
     roarStrength: roarIn * roarOut,
     // Attribution belongs to the gate shot, not the project interface. It
     // arrives gently after the scene enters and is gone when the dolly ends.
@@ -76,7 +76,7 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
     // Reveal the paddocks while the camera is still passing beneath the gate.
     // Both scenes share the same jungle plate, so this reads as one location
     // coming into focus instead of a cut to a new screen.
-    projectStrength: smoothstep(0.76, 0.95, p),
+    projectStrength: smoothstep(0.84, 0.99, p),
   }
 }
 

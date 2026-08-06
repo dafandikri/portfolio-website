@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { projectCardTitle, projectMedia } from './projectMedia'
 
 describe('project media registry', () => {
-  it('uses a product video for SIRA and full walkthrough GIFs for the other featured work', () => {
+  it('uses lightweight video previews and full walkthrough videos for every featured project', () => {
     const sira = projectMedia('sira_project')
     const boulder = projectMedia('boulder_project')
     const portfolio = projectMedia('portfolio_project')
@@ -10,12 +10,22 @@ describe('project media registry', () => {
 
     expect(sira?.kind).toBe('video')
     expect(sira?.src).toBe('/sira-promo-2k-60fps.mp4')
-    expect(boulder?.src).toContain('14.13.53.gif')
-    expect(portfolio?.src).toContain('14.00.45.gif')
-    expect(interbio?.src).toContain('15.08.58.gif')
-    expect(boulder).not.toHaveProperty('previewSrc')
-    expect(portfolio).not.toHaveProperty('previewSrc')
-    expect(interbio).not.toHaveProperty('previewSrc')
+    expect(sira).toHaveProperty('previewSrc', '/sira-preview.mp4')
+    expect(boulder).toMatchObject({
+      kind: 'video',
+      src: '/boulder-coach-walkthrough.mp4',
+      previewSrc: '/boulder-coach-preview.mp4',
+    })
+    expect(portfolio).toMatchObject({
+      kind: 'video',
+      src: '/portfolio-walkthrough.mp4',
+      previewSrc: '/portfolio-preview.mp4',
+    })
+    expect(interbio).toMatchObject({
+      kind: 'video',
+      src: '/interbio-walkthrough.mp4',
+      previewSrc: '/interbio-preview.mp4',
+    })
     expect(projectMedia('')).toBeNull()
     expect(projectMedia('not-added')).toBeNull()
   })

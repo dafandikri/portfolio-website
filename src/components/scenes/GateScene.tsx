@@ -396,6 +396,11 @@ export default function GateScene() {
       }
 
       if (!ready) return
+      // Once the paddocks fully cover the shot, keep the last gate frame rather
+      // than spending GPU time rendering a 3D scene behind an opaque interface.
+      // The cheap scroll probe remains alive so reversing the page immediately
+      // resumes the gate at the correct position.
+      if (motion.projectStrength >= 0.999) return
 
       if (leftHinge && rightHinge) {
         // Both leaves swing away from the camera and into the park.

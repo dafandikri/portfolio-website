@@ -1,10 +1,15 @@
 import { act, cleanup, render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { projectsData } from '../../data/projects'
-import ParkScene, { ProjectMediaView } from './ParkScene'
+import ParkScene, { PADDOCK_OPEN_MS, ProjectMediaView } from './ParkScene'
+
+beforeEach(() => {
+  vi.useFakeTimers()
+})
 
 afterEach(() => {
   cleanup()
+  vi.useRealTimers()
   vi.unstubAllGlobals()
 })
 
@@ -26,17 +31,22 @@ describe('ParkScene', () => {
     archived.forEach((project) => expect(screen.getByText(project.title)).toBeInTheDocument())
   })
 
-  it('opens a paddock and mounts its complete walkthrough from the beginning', () => {
+  it('opens the physical paddock before mounting its complete walkthrough', () => {
     render(<ParkScene />)
     const boulder = featured.find((project) => project.title === 'Boulder Coach')!
 
     act(() => screen.getByRole('button', { name: /Boulder Coach/i }).click())
 
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('button', { name: /Boulder Coach/i })).toHaveAttribute('aria-busy', 'true')
+
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
+
     const dialog = screen.getByRole('dialog')
     expect(within(dialog).getByRole('heading', { level: 3, name: boulder.title })).toBeInTheDocument()
-    expect(within(dialog).getByAltText('Boulder Coach complete product walkthrough')).toHaveAttribute(
+    expect(within(dialog).getByLabelText('Boulder Coach complete product walkthrough')).toHaveAttribute(
       'src',
-      expect.stringContaining('14.13.53.gif'),
+      '/boulder-coach-walkthrough.mp4',
     )
     expect(within(dialog).getByText(boulder.description)).toBeInTheDocument()
   })
@@ -46,6 +56,7 @@ describe('ParkScene', () => {
     const boulder = featured.find((project) => project.title === 'Boulder Coach')!
 
     act(() => screen.getByRole('button', { name: /Boulder Coach/i }).click())
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
 
     const dialog = screen.getByRole('dialog')
     expect(dialog).toHaveFocus()
@@ -60,6 +71,7 @@ describe('ParkScene', () => {
     render(<ParkScene />)
 
     act(() => screen.getByRole('button', { name: /SIRA/i }).click())
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
     act(() => screen.getByRole('button', { name: 'Return to paddocks' }).click())
 
     expect(screen.queryByRole('dialog')).toBeNull()

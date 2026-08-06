@@ -5,6 +5,8 @@
 
 .scene--circuits {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-height: 100svh;
   /* Content is centred in the scene rather than stacked from the top, so the
      deck is never pushed below the fold by the panel above it. */
@@ -12,9 +14,33 @@
   flex-direction: column;
   justify-content: center;
   gap: clamp(1rem, 3vw, 2rem);
-  background: radial-gradient(ellipse 80% 60% at 50% 30%, #14100c 0%, #050403 70%);
+  background: #030405;
+  box-shadow: 0 -7rem 7rem 2rem #030405;
   color: rgba(255, 255, 255, 0.86);
   padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 9vw, 6rem);
+}
+
+.scene--circuits::before,
+.scene--circuits::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scene--circuits::before {
+  background: radial-gradient(ellipse 72% 42% at 50% 16%, rgba(19, 29, 34, 0.24), transparent 74%);
+}
+
+.scene--circuits::after {
+  opacity: 0.2;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    rgba(151, 192, 205, 0.05) 3px 4px
+  );
+  mix-blend-mode: screen;
 }
 
 .circuits-scene__top,

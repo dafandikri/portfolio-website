@@ -7,7 +7,7 @@
  * should keep moving even when the page is still — fire does not hold a pose.
  *
  * Scroll progress → beat:
- *   0.00 – 0.36   the card's white washes down to black
+ *   0.00 – 0.36   the walnut-dark opening gives way to Hill Valley
  *   0.16 – 0.54   the tracks ignite, sweeping from the camera to the horizon
  *   0.52 – 0.68   one hard flash where they meet
  *   0.55 – 0.70   the tracks burn out behind it
@@ -33,9 +33,14 @@
   overflow: clip;
   display: grid;
   place-items: center;
-  /* Everything on the road is measured from this one point, so the two tracks
-     cannot help but meet at it. */
-  --vanish-y: 50%;
+  background:
+    radial-gradient(ellipse 66% 56% at 50% 49%, rgba(3, 9, 16, 0.08), rgba(1, 3, 7, 0.68) 100%),
+    linear-gradient(to bottom, rgba(1, 5, 11, 0.28), rgba(2, 4, 7, 0.52)),
+    url('../../assets/img/hill-valley-main-street-night.webp') center / cover no-repeat,
+    #03070c;
+  /* The generated street's kerbs and lamp rows converge just below centre.
+     Every flame, its flash, and the arriving plate share this exact point. */
+  --vanish-y: 61.5%;
 }
 
 .departure__defs {
@@ -61,7 +66,7 @@
 }
 
 /* --------------------------------------------------------------------------
- * The wash — the card's white burning down to black
+ * The wash — the walnut-dark card scene yielding to Hill Valley
  * ------------------------------------------------------------------------ */
 
 .departure__wash {
@@ -73,17 +78,15 @@
 }
 
 /*
- * A translucent tint, never an opaque fill. The mid keyframe used to be solid
- * #b8641f, which painted the entire viewport orange and hid the whole scene
- * behind it — a full-bleed overlay has to stay transparent enough to see
- * through at every step.
+ * Keep the shared edge dark. A white opening belonged to the old blank card
+ * background and now reads as a flash cut between the walnut desk and 1985.
  */
 @keyframes wash-out {
   0% {
-    background: rgba(255, 255, 255, 1);
+    background: rgba(4, 2, 1, 0.96);
   }
   14% {
-    background: rgba(255, 234, 202, 0.6);
+    background: rgba(7, 5, 4, 0.72);
   }
   22% {
     background: rgba(184, 100, 31, 0.14);
@@ -107,6 +110,7 @@
 .departure__road {
   position: absolute;
   inset: 0;
+  z-index: 1;
 }
 
 .departure__track {
@@ -541,6 +545,7 @@
   position: relative;
   z-index: 5;
   perspective: 30rem;
+  transform: translateY(11.5vh);
 }
 
 .departure__plate {

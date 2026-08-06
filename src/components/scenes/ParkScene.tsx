@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { projectsData } from '../../data/projects'
 import type { Project } from '../../data/schema'
+import { useInView } from '../../hooks/useInView'
 import { projectCardTitle, projectMedia, type ProjectMedia } from './projectMedia'
 import './ParkScene.css'
 
@@ -9,10 +10,28 @@ type ContainmentStyle = CSSProperties & Record<`--${string}`, string>
 export function ProjectMediaView({
   media,
   mode = 'preview',
+  active = true,
+  startAt = 0,
 }: {
   media: ProjectMedia | null
   mode?: 'preview' | 'detail'
+  active?: boolean
+  startAt?: number
 }) {
+  const [videoRef, inView] = useInView<HTMLVideoElement>('240px')
+
+  useEffect(() => {
+    if (media?.kind !== 'video') return
+    const video = videoRef.current
+    if (!video) return
+
+    const shouldPlay = mode === 'detail' || (active && inView)
+    if (shouldPlay || (!video.currentSrc && !video.getAttribute('src'))) return
+    video.pause()
+    video.removeAttribute('src')
+    video.load()
+  }, [active, inView, media, mode, videoRef])
+
   if (!media) {
     return (
       <span className="park__media-placeholder" aria-label="Project media not added yet">
@@ -34,10 +53,14 @@ export function ProjectMediaView({
   }
 
   if (media.kind === 'video') {
+    const shouldLoad = mode === 'detail' || (active && inView)
+    const source = mode === 'preview' ? media.previewSrc ?? media.src : media.src
+
     return (
       <video
+        ref={videoRef}
         className={`park__media-file park__media-file--${mode}`}
-        src={media.src}
+        src={shouldLoad ? source : undefined}
         poster={media.poster}
         aria-label={media.label}
         autoPlay
@@ -45,7 +68,10 @@ export function ProjectMediaView({
         muted
         playsInline
         controls={mode === 'detail'}
-        preload="metadata"
+        preload={mode === 'detail' ? 'auto' : 'none'}
+        onLoadedMetadata={(event) => {
+          if (mode === 'detail' && startAt > 0) event.currentTarget.currentTime = startAt
+        }}
       />
     )
   }
@@ -86,6 +112,7 @@ function ProjectLinks({ project }: { project: Project }) {
 
 const featuredProjects = projectsData.filter((project) => project.featured)
 const archivedProjects = projectsData.filter((project) => !project.featured)
+export const PADDOCK_OPEN_MS = 1080
 
 /**
  * Four full containment paddocks replace the old overlapping card hand.
@@ -94,21 +121,75 @@ const archivedProjects = projectsData.filter((project) => !project.featured)
  * island rather than reading as windows inside a computer interface.
  */
 export default function ParkScene() {
+  const [openingIndex, setOpeningIndex] = useState<number | null>(null)
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const [detailStartAt, setDetailStartAt] = useState(0)
   const detailRef = useRef<HTMLElement>(null)
+  const openingTimerRef = useRef<number | null>(null)
+  const openingVideoRef = useRef<HTMLVideoElement | null>(null)
   const openProject = openIndex === null ? null : featuredProjects[openIndex]!
   const openMedia = openProject ? projectMedia(openProject.image) : null
+
+  const clearOpeningTimer = () => {
+    if (openingTimerRef.current === null) return
+    window.clearTimeout(openingTimerRef.current)
+    openingTimerRef.current = null
+  }
+
+  const closePaddock = () => {
+    clearOpeningTimer()
+    setOpeningIndex(null)
+    setOpenIndex(null)
+  }
+
+  const inspectPaddock = (index: number, button: HTMLButtonElement) => {
+    if (openingIndex !== null || openIndex !== null) return
+
+    const selectedMedia = projectMedia(featuredProjects[index]!.image)
+    if (selectedMedia?.kind === 'video') {
+      // Begin filling the HTTP cache while the physical gate opens. On a cold
+      // visit this turns the transition time into useful loading time instead
+      // of showing a frozen first frame after the dossier appears.
+      void fetch(selectedMedia.src, { cache: 'force-cache' }).catch(() => undefined)
+    }
+
+    openingVideoRef.current = button.querySelector('video')
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reducedMotion) {
+      setDetailStartAt(openingVideoRef.current?.currentTime ?? 0)
+      setOpenIndex(index)
+      return
+    }
+
+    setOpeningIndex(index)
+    openingTimerRef.current = window.setTimeout(() => {
+      setDetailStartAt(openingVideoRef.current?.currentTime ?? 0)
+      setOpenIndex(index)
+      setOpeningIndex(null)
+      openingTimerRef.current = null
+    }, PADDOCK_OPEN_MS)
+  }
 
   useEffect(() => {
     if (openIndex === null) return
 
     detailRef.current?.focus({ preventScroll: true })
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpenIndex(null)
+      if (event.key !== 'Escape') return
+      if (openingTimerRef.current !== null) {
+        window.clearTimeout(openingTimerRef.current)
+        openingTimerRef.current = null
+      }
+      setOpeningIndex(null)
+      setOpenIndex(null)
     }
     window.addEventListener('keydown', closeOnEscape)
     return () => window.removeEventListener('keydown', closeOnEscape)
   }, [openIndex])
+
+  useEffect(() => () => {
+    if (openingTimerRef.current !== null) window.clearTimeout(openingTimerRef.current)
+  }, [])
 
   return (
     <section
@@ -125,21 +206,23 @@ export default function ParkScene() {
       <ul className="park__grid" aria-label="Featured project paddocks">
         {featuredProjects.map((project, index) => {
           const isOpen = openIndex === index
+          const isOpening = openingIndex === index
           const media = projectMedia(project.image)
           const style: ContainmentStyle = { '--deploy-delay': `${index * 90}ms` }
 
           return (
             <li
               key={project.title}
-              className={`park__containment${isOpen ? ' is-open' : ''}`}
+              className={`park__containment${isOpen ? ' is-open' : ''}${isOpening ? ' is-opening' : ''}`}
               style={style}
             >
               <button
                 type="button"
                 className="park__containment-unit"
                 aria-label={`${project.title}, paddock ${String(index + 1).padStart(2, '0')}`}
-                aria-expanded={isOpen}
-                onClick={() => setOpenIndex(index)}
+                aria-expanded={isOpen || isOpening}
+                aria-busy={isOpening}
+                onClick={(event) => inspectPaddock(index, event.currentTarget)}
               >
                 <span className="park__lintel">
                   <span className="park__hazard" aria-hidden="true" />
@@ -148,7 +231,7 @@ export default function ParkScene() {
 
                 <span className="park__cell">
                   <span className="park__media">
-                    <ProjectMediaView media={media} />
+                    <ProjectMediaView media={media} active={openIndex === null} />
                     <span className="park__scan" aria-hidden="true" />
                     <span className="park__feed" aria-hidden="true">Surveillance feed</span>
                   </span>
@@ -162,7 +245,7 @@ export default function ParkScene() {
                 <span className="park__control-box">
                   <span className="park__status">
                     <span className="park__lamp" aria-hidden="true" />
-                    {isOpen ? 'Access' : 'Secure'}
+                    {isOpening ? 'Opening' : isOpen ? 'Access' : 'Secure'}
                   </span>
                   <span className="park__keypad" aria-hidden="true">
                     {Array.from({ length: 6 }, (_, key) => <i key={key} />)}
@@ -205,7 +288,7 @@ export default function ParkScene() {
           aria-labelledby="project-detail-title"
           tabIndex={-1}
         >
-          <button type="button" className="park__detail-close" onClick={() => setOpenIndex(null)}>
+          <button type="button" className="park__detail-close" onClick={closePaddock}>
             Return to paddocks
           </button>
 
@@ -214,7 +297,7 @@ export default function ParkScene() {
               Paddock {String(openIndex + 1).padStart(2, '0')} // Full surveillance record
             </p>
             <div className="park__detail-viewport">
-              <ProjectMediaView media={openMedia} mode="detail" />
+              <ProjectMediaView media={openMedia} mode="detail" startAt={detailStartAt} />
               <span className="park__detail-scan" aria-hidden="true" />
             </div>
             {openMedia?.kind === 'image' && (

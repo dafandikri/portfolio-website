@@ -1,6 +1,7 @@
 import { card } from '../data/card'
 import type { CardField } from '../data/schema'
 import { useCardTilt } from '../hooks/useCardTilt'
+import cardHandoffHand from '../assets/img/card-handoff-hand.webp'
 import BloodDrop from './BloodDrop'
 import './BusinessCard.css'
 
@@ -37,49 +38,58 @@ export default function BusinessCard() {
 
   return (
     <div className="stage">
-      <div className="card-drop" ref={tiltRef}>
-        {/*
-          Cast shadow planes. They share the card's rotation so their
-          projections skew with it — a box-shadow could not, being painted from
-          an axis-aligned border box.
-        */}
-        <div className="card-shadow" aria-hidden="true" />
-        <div className="card-shadow card-shadow--contact" aria-hidden="true" />
+      <div className="card-delivery">
+        <div className="card-drop" ref={tiltRef}>
+          {/*
+            Cast shadow planes. They share the card's rotation so their
+            projections skew with it — a box-shadow could not, being painted from
+            an axis-aligned border box.
+          */}
+          <div className="card-shadow" aria-hidden="true" />
+          <div className="card-shadow card-shadow--contact" aria-hidden="true" />
 
-        <article className="card">
-          {/* Paper fibre and moving light. Decorative, so hidden from AT. */}
-          <div className="card__grain" aria-hidden="true" />
-          <div className="card__specular" aria-hidden="true" />
+          <article className="card">
+            {/* Paper fibre and moving light. Decorative, so hidden from AT. */}
+            <div className="card__grain" aria-hidden="true" />
+            <div className="card__specular" aria-hidden="true" />
 
-          <div className="card__face">
-            <header className="card__head">
-              <div className="card__contact">
-                <Field field={card.phone} className="card__meta card__reveal card__reveal--1" />
-                <Field field={card.email} className="card__meta card__reveal card__reveal--2" />
-              </div>
-              <div className="card__affiliation card__reveal card__reveal--3">
-                <p className="card__meta card__affiliation-name">{card.affiliation.name}</p>
-                <p className="card__meta card__affiliation-detail">{card.affiliation.detail}</p>
-              </div>
-            </header>
-
-            <div className="card__identity">
-              <BloodDrop />
-              <h1 className="card__name card__reveal card__reveal--4">{card.name}</h1>
-              <p className="card__role card__reveal card__reveal--5">{card.role}</p>
-            </div>
-
-            <footer className="card__footer card__reveal card__reveal--6">
-              {card.footer.map((column) => (
-                <div className="card__footer-col" key={column[0]?.label}>
-                  {column.map((field) => (
-                    <Field key={field.label} field={field} className="card__meta" />
-                  ))}
+            <div className="card__face">
+              <header className="card__head">
+                <div className="card__contact">
+                  <Field field={card.phone} className="card__meta card__reveal card__reveal--1" />
+                  <Field field={card.email} className="card__meta card__reveal card__reveal--2" />
                 </div>
-              ))}
-            </footer>
-          </div>
-        </article>
+                <div className="card__affiliation card__reveal card__reveal--3">
+                  <p className="card__meta card__affiliation-name">{card.affiliation.name}</p>
+                  <p className="card__meta card__affiliation-detail">{card.affiliation.detail}</p>
+                </div>
+              </header>
+
+              <div className="card__identity">
+                <BloodDrop />
+                <h1 className="card__name card__reveal card__reveal--4">{card.name}</h1>
+                <p className="card__role card__reveal card__reveal--5">{card.role}</p>
+              </div>
+
+              <footer className="card__footer card__reveal card__reveal--6">
+                {card.footer.map((column) => (
+                  <div className="card__footer-col" key={column[0]?.label}>
+                    {column.map((field) => (
+                      <Field key={field.label} field={field} className="card__meta" />
+                    ))}
+                  </div>
+                ))}
+              </footer>
+            </div>
+          </article>
+        </div>
+        <img
+          className="card-handoff-hand"
+          src={cardHandoffHand}
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
       </div>
     </div>
   )
