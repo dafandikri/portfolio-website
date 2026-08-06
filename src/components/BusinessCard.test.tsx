@@ -80,6 +80,14 @@ describe('BusinessCard', () => {
     }
   })
 
+  it('separates the hand path from its velocity-driven motion blur', () => {
+    const { container } = render(<BusinessCard />)
+    const hand = container.querySelector('.card-handoff-hand')
+
+    expect(hand).toHaveAttribute('aria-hidden', 'true')
+    expect(hand?.querySelector('.card-handoff-hand__image')).not.toBeNull()
+  })
+
   it('lands the blood under the name, inside the card face', () => {
     const { container } = render(<BusinessCard />)
     const blood = container.querySelector('.blood')!

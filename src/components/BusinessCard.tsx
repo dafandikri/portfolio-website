@@ -83,13 +83,14 @@ export default function BusinessCard() {
             </div>
           </article>
         </div>
-        <img
-          className="card-handoff-hand"
-          src={cardHandoffHand}
-          alt=""
-          aria-hidden="true"
-          draggable="false"
-        />
+        <span className="card-handoff-hand" aria-hidden="true">
+          <img
+            className="card-handoff-hand__image"
+            src={cardHandoffHand}
+            alt=""
+            draggable="false"
+          />
+        </span>
       </div>
     </div>
   )

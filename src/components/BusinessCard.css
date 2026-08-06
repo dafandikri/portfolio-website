@@ -116,37 +116,57 @@
   left: 50%;
   z-index: 5;
   width: 46%;
-  height: auto;
   pointer-events: none;
-  user-select: none;
   transform-origin: 50% 12%;
-  filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42));
   animation: card-hand-deliver 950ms linear both;
-  will-change: transform, opacity, filter;
+  will-change: transform;
+}
+
+/* Movement and blur live on separate layers. That lets the hand follow one
+   uninterrupted human ease while the photographic blur rises and falls with
+   velocity instead of forcing the path through a series of robotic stops. */
+.card-handoff-hand__image {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  animation: card-hand-motion-blur 950ms linear both;
+  will-change: filter, transform;
 }
 
 @keyframes card-hand-deliver {
   0% {
-    opacity: 1;
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
-    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
   }
-  70% {
-    opacity: 1;
+  68% {
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
-    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  90% {
-    opacity: 1;
-    transform: translate3d(calc(-50% + 0.14rem), -74%, 4rem) rotate(0.9deg) scale(0.988);
-    filter: drop-shadow(0.3rem 0.55rem 0.5rem rgba(0, 0, 0, 0.34)) blur(1.25px);
-    animation-timing-function: ease-out;
+    animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
   }
   100% {
-    opacity: 0;
-    transform: translate3d(calc(-50% + 0.24rem), -145%, 5rem) rotate(1.4deg) scale(0.975);
-    filter: drop-shadow(0.2rem 0.4rem 0.42rem rgba(0, 0, 0, 0.22)) blur(3px);
+    transform: translate3d(calc(-50% + 0.28rem), -150%, 5rem) rotate(1.35deg) scale(0.978);
+  }
+}
+
+@keyframes card-hand-motion-blur {
+  0%, 68% {
+    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
+    transform: scaleY(1);
+  }
+  78% {
+    filter: drop-shadow(0.32rem 0.62rem 0.54rem rgba(0, 0, 0, 0.38)) blur(0.65px);
+    transform: scaleY(1.004);
+  }
+  84% {
+    filter: drop-shadow(0.26rem 0.5rem 0.48rem rgba(0, 0, 0, 0.3)) blur(2.2px);
+    transform: scaleY(1.018);
+  }
+  93% {
+    filter: drop-shadow(0.24rem 0.46rem 0.45rem rgba(0, 0, 0, 0.27)) blur(0.8px);
+    transform: scaleY(1.006);
+  }
+  100% {
+    filter: drop-shadow(0.22rem 0.42rem 0.42rem rgba(0, 0, 0, 0.24)) blur(0);
+    transform: scaleY(1);
   }
 }
 
