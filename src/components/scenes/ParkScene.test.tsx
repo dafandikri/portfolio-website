@@ -1,156 +1,97 @@
-import { act, cleanup, render, screen } from '@testing-library/react'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { projectsData } from '../../data/projects'
 import ParkScene, { ProjectMediaView } from './ParkScene'
-import { projectMedia } from './projectMedia'
 
 afterEach(() => {
   cleanup()
   vi.unstubAllGlobals()
 })
 
-function projectButton(index: number) {
-  const project = projectsData[index]!
-  return screen.getByRole('button', {
-    name: `${project.title}, paddock ${String(index + 1).padStart(2, '0')}`,
-  })
-}
+const featured = projectsData.filter((project) => project.featured)
+const archived = projectsData.filter((project) => !project.featured)
 
 describe('ParkScene', () => {
-  it('deploys one accessible closed containment cell per project', () => {
+  it('shows four complete containment paddocks and a quieter earlier-work archive', () => {
     const { container } = render(<ParkScene />)
 
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
-    expect(screen.getByText('Paddocks')).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__containment')).toHaveLength(projectsData.length)
-    expect(container.querySelectorAll('.park__hazard')).toHaveLength(projectsData.length)
-    expect(container.querySelectorAll('.park__fence')).toHaveLength(projectsData.length)
-    expect(container.querySelectorAll('.park__fence i')).toHaveLength(projectsData.length * 7)
-    expect(container.querySelectorAll('.park__pylons')).toHaveLength(projectsData.length)
-    expect(container.querySelectorAll('.park__pylons i')).toHaveLength(projectsData.length * 2)
-    expect(screen.getAllByText('Secure')).toHaveLength(projectsData.length)
-
-    projectsData.forEach((_, index) => expect(projectButton(index)).toBeVisible())
-    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('heading', { level: 3 })).toBeNull()
+    expect(container.querySelectorAll('.park__containment')).toHaveLength(featured.length)
+    expect(container.querySelectorAll('.park__hazard')).toHaveLength(featured.length)
+    expect(container.querySelectorAll('.park__fence')).toHaveLength(featured.length)
+    expect(container.querySelectorAll('.park__fence i')).toHaveLength(featured.length * 9)
+    expect(container.querySelectorAll('.park__pylons i')).toHaveLength(featured.length * 2)
+    expect(screen.getAllByText('Secure')).toHaveLength(featured.length)
+    expect(screen.getByText('Archive enclosures', { exact: false })).toBeInTheDocument()
+    archived.forEach((project) => expect(screen.getByText(project.title)).toBeInTheDocument())
   })
 
-  it('enters a cell and opens its project dossier', () => {
-    const { container } = render(<ParkScene />)
-    const index = 1
-    const project = projectsData[index]!
+  it('opens a paddock and mounts its complete walkthrough from the beginning', () => {
+    render(<ParkScene />)
+    const boulder = featured.find((project) => project.title === 'Boulder Coach')!
 
-    act(() => projectButton(index).click())
+    act(() => screen.getByRole('button', { name: /Boulder Coach/i }).click())
 
-    expect(projectButton(0)).toHaveAttribute('aria-expanded', 'false')
-    expect(projectButton(index)).toHaveAttribute('aria-expanded', 'true')
-    expect(screen.getByRole('heading', { level: 3, name: project.title })).toBeInTheDocument()
-    expect(screen.getByText(project.description)).toBeInTheDocument()
-    expect(container.querySelectorAll('.park__chip')).toHaveLength(project.techStack.length)
-    expect(container.querySelectorAll('.park__features li')).toHaveLength(project.features.length)
-    expect(screen.getByRole('article')).toHaveFocus()
-    expect(screen.getByRole('button', { name: 'Return to paddocks' })).toBeInTheDocument()
-    const media = projectMedia(project.image)
-    expect(screen.getByRole('link', { name: 'Open full capture' })).toHaveAttribute(
-      'href',
-      media?.kind === 'image' ? (media.fullSrc ?? media.src) : undefined,
+    const dialog = screen.getByRole('dialog')
+    expect(within(dialog).getByRole('heading', { level: 3, name: boulder.title })).toBeInTheDocument()
+    expect(within(dialog).getByAltText('Boulder Coach complete product walkthrough')).toHaveAttribute(
+      'src',
+      expect.stringContaining('14.13.53.gif'),
     )
+    expect(within(dialog).getByText(boulder.description)).toBeInTheDocument()
   })
 
-  it('returns from the dossier to the complete paddock hand', () => {
+  it('opens a focused dossier with outcomes, technology and honest destinations', () => {
+    const { container } = render(<ParkScene />)
+    const boulder = featured.find((project) => project.title === 'Boulder Coach')!
+
+    act(() => screen.getByRole('button', { name: /Boulder Coach/i }).click())
+
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveFocus()
+    expect(within(dialog).getByRole('heading', { level: 3, name: boulder.title })).toBeInTheDocument()
+    expect(container.querySelectorAll('.park__features li')).toHaveLength(boulder.features.length)
+    expect(container.querySelectorAll('.park__chip')).toHaveLength(boulder.techStack.length)
+    expect(within(dialog).getByRole('link', { name: boulder.liveLabel })).toHaveAttribute('target', '_blank')
+    expect(within(dialog).getByRole('link', { name: 'Source' })).toHaveAttribute('href', boulder.repoLink)
+  })
+
+  it('closes the dossier and returns to all paddocks', () => {
     render(<ParkScene />)
 
-    act(() => projectButton(0).click())
+    act(() => screen.getByRole('button', { name: /SIRA/i }).click())
     act(() => screen.getByRole('button', { name: 'Return to paddocks' }).click())
 
-    projectsData.forEach((_, index) =>
-      expect(projectButton(index)).toHaveAttribute('aria-expanded', 'false'),
-    )
-    expect(screen.queryByRole('heading', { level: 3 })).toBeNull()
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('list', { name: 'Featured project paddocks' })).toBeVisible()
   })
 
-  it('renders existing stills and honest placeholders for projects without media', () => {
-    const { container } = render(<ParkScene />)
-    const mediaCount = projectsData.filter(({ image }) => image.length > 0).length
-
-    expect(container.querySelectorAll('.park__media-file')).toHaveLength(mediaCount)
-    expect(screen.getAllByLabelText('Project media not added yet')).toHaveLength(
-      projectsData.length - mediaCount,
-    )
-  })
-
-  it('prints links only where the selected project has real destinations', () => {
-    render(<ParkScene />)
-    const withoutLinksIndex = projectsData.findIndex(
-      (project) => project.liveLink === '#' && project.repoLink === '#',
-    )
-    const withRepoIndex = projectsData.findIndex((project) => project.repoLink !== '#')
-
-    if (withoutLinksIndex >= 0) {
-      act(() => projectButton(withoutLinksIndex).click())
-      expect(screen.queryByRole('link', { name: 'Visit' })).toBeNull()
-      expect(screen.queryByRole('link', { name: 'Source' })).toBeNull()
-    }
-
-    if (withRepoIndex >= 0) {
-      act(() => projectButton(withRepoIndex).click())
-      const source = screen.getByRole('link', { name: 'Source' })
-      expect(source).toHaveAttribute('href', projectsData[withRepoIndex]!.repoLink)
-      expect(source).toHaveAttribute('target', '_blank')
-      expect(source.getAttribute('rel')).toContain('noopener')
-    }
-  })
-
-  it('keeps routed visits in-page and opens external visits in a new tab', () => {
-    render(<ParkScene />)
-    const externalIndex = projectsData.findIndex((project) => project.liveLink.startsWith('http'))
-    const routedIndex = projectsData.findIndex(
-      (project) => project.liveLink !== '#' && !project.liveLink.startsWith('http'),
-    )
-
-    if (externalIndex >= 0) {
-      act(() => projectButton(externalIndex).click())
-      expect(screen.getByRole('link', { name: 'Visit' })).toHaveAttribute('target', '_blank')
-    }
-
-    if (routedIndex >= 0) {
-      act(() => projectButton(routedIndex).click())
-      expect(screen.getByRole('link', { name: 'Visit' })).not.toHaveAttribute('target')
-    }
-  })
-
-  it('supports a muted looping video without changing project records', () => {
-    render(
+  it('supports a muted looping video and adds controls in the dossier', () => {
+    const { rerender } = render(
       <ProjectMediaView
         media={{ kind: 'video', src: '/test-project.webm', label: 'Test project preview' }}
+        mode="preview"
       />,
     )
 
-    const video = screen.getByLabelText('Test project preview') as HTMLVideoElement
-    expect(video).toHaveAttribute('src', '/test-project.webm')
-    expect(video).toHaveAttribute('autoplay')
-    expect(video).toHaveAttribute('loop')
-    expect(video).toHaveAttribute('playsinline')
-    expect(video).not.toHaveAttribute('controls')
-    expect(video.muted).toBe(true)
-  })
+    const showcaseVideo = screen.getByLabelText('Test project preview') as HTMLVideoElement
+    expect(showcaseVideo).toHaveAttribute('autoplay')
+    expect(showcaseVideo).toHaveAttribute('loop')
+    expect(showcaseVideo).toHaveAttribute('playsinline')
+    expect(showcaseVideo).not.toHaveAttribute('controls')
+    expect(showcaseVideo.muted).toBe(true)
 
-  it('gives video controls in the entered dossier view', () => {
-    render(
+    rerender(
       <ProjectMediaView
         media={{ kind: 'video', src: '/test-project.webm', label: 'Detailed project preview' }}
         mode="detail"
       />,
     )
-
-    const video = screen.getByLabelText('Detailed project preview')
-    expect(video).toHaveAttribute('controls')
-    expect(video).toHaveAttribute('preload', 'metadata')
-    expect(video).toHaveClass('park__media-file--detail')
+    expect(screen.getByLabelText('Detailed project preview')).toHaveAttribute('controls')
   })
 
   it('renders a null-media placeholder directly', () => {
     render(<ProjectMediaView media={null} />)
-    expect(screen.getByLabelText('Project media not added yet')).toHaveTextContent('Media locked')
+    expect(screen.getByLabelText('Project media not added yet')).toHaveTextContent('Feed unavailable')
   })
 })

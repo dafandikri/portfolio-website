@@ -11,11 +11,14 @@ import {
 const validProject = {
   title: 'Mock Project',
   year: '2025',
+  featured: true,
+  context: 'Independent build',
   description: 'A mock project used for testing.',
   image: '',
   features: ['mock feature one'],
   techStack: ['react'],
   liveLink: '#',
+  liveLabel: 'Unavailable',
   repoLink: '#',
 }
 

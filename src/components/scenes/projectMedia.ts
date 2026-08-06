@@ -1,45 +1,35 @@
-import boulderProject from '../../assets/img/boulder_project.webp'
-import boulderProjectLandscape from '../../assets/img/boulder_project_landscape.webp'
-import interbioProject from '../../assets/img/interbio_project.webp'
-import interbioProjectLandscape from '../../assets/img/interbio_project_landscape.webp'
-import portfolioProject from '../../assets/img/portfolio_project.webp'
-import portfolioProjectLandscape from '../../assets/img/portfolio_project_landscape.webp'
-import siraProject from '../../assets/img/sira_project.webp'
 import siraProjectLandscape from '../../assets/img/sira_project_landscape.webp'
 
 export type ProjectMedia =
-  | { kind: 'image'; src: string; fullSrc?: string; alt: string }
+  | { kind: 'image'; src: string; alt: string }
   | { kind: 'video'; src: string; poster?: string; label: string }
 
 /**
  * Media stays separate from portfolio copy so replacing a still with an MP4 or
- * WebM never changes the project schema. The enclosure uses a purpose-made 16:9
- * crop while `fullSrc` preserves the original tall project record.
+ * WebM never changes the project schema. Walkthroughs play directly inside the
+ * closed paddocks, then mount at their full aspect ratio in the selected record.
  */
 const PROJECT_MEDIA: Readonly<Record<string, ProjectMedia>> = {
   sira_project: {
-    kind: 'image',
-    src: siraProjectLandscape,
-    fullSrc: siraProject,
-    alt: 'SIRA invoice risk dashboard',
+    kind: 'video',
+    src: '/sira-promo-2k-60fps.mp4',
+    poster: siraProjectLandscape,
+    label: 'SIRA product walkthrough',
   },
   boulder_project: {
     kind: 'image',
-    src: boulderProjectLandscape,
-    fullSrc: boulderProject,
-    alt: 'Boulder Coach training dashboard',
+    src: '/Cap%202026-08-06%20at%2014.13.53.gif',
+    alt: 'Boulder Coach complete product walkthrough',
   },
   portfolio_project: {
     kind: 'image',
-    src: portfolioProjectLandscape,
-    fullSrc: portfolioProject,
-    alt: 'Portfolio website interface',
+    src: '/Cap%202026-08-06%20at%2014.00.45.gif',
+    alt: 'Personal portfolio website complete walkthrough',
   },
   interbio_project: {
     kind: 'image',
-    src: interbioProjectLandscape,
-    fullSrc: interbioProject,
-    alt: 'Interbio website redesign',
+    src: '/Cap%202026-08-06%20at%2015.08.58.gif',
+    alt: 'Archived 2024 Interbio website redesign walkthrough',
   },
 }
 

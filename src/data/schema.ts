@@ -12,6 +12,8 @@ import { z } from 'zod'
 export const projectSchema = z.object({
   title: z.string().min(1),
   year: z.string().min(1),
+  featured: z.boolean(),
+  context: z.string().min(1),
   description: z.string().min(1),
   // Empty string is allowed and means "no screenshot yet" (renders a placeholder).
   image: z.string(),
@@ -19,6 +21,7 @@ export const projectSchema = z.object({
   techStack: z.array(z.string().min(1)).min(1),
   // Links may be a full URL, a relative route ("/blog/..."), or "#" (none yet).
   liveLink: z.string().min(1),
+  liveLabel: z.string().min(1),
   repoLink: z.string().min(1),
 })
 export type Project = z.infer<typeof projectSchema>
