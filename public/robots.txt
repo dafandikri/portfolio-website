@@ -1,5 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.dafandikri.dev/sitemap.xml
-Host: www.dafandikri.dev
+Sitemap: https://dafandikri.dev/sitemap.xml
+Host: dafandikri.dev
