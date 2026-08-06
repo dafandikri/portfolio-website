@@ -59,7 +59,8 @@ export default function GateScene() {
   const sectionRef = useRef<HTMLElement | null>(null)
   const creditRef = useRef<HTMLDetailsElement>(null)
   const [failed, setFailed] = useState(false)
-  const [projectsVisible, setProjectsVisible] = useState(false)
+  const [projectsMounted, setProjectsMounted] = useState(false)
+  const [projectsActive, setProjectsActive] = useState(false)
 
   /*
    * jsdom has no WebGL context, so this integration path is verified in a real
@@ -82,7 +83,8 @@ export default function GateScene() {
       // No WebGL: the scene degrades to its poster background rather than a
       // blank hole in the page.
       setFailed(true)
-      setProjectsVisible(true)
+      setProjectsMounted(true)
+      setProjectsActive(true)
       return
     }
 
@@ -151,8 +153,12 @@ export default function GateScene() {
     }> = []
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let projectState = reduced
-    if (reduced) setProjectsVisible(true)
+    let projectMountedState = reduced
+    let projectActiveState = reduced
+    if (reduced) {
+      setProjectsMounted(true)
+      setProjectsActive(true)
+    }
 
     new ColladaLoader().load(
       '/gate/gate.dae',
@@ -168,7 +174,8 @@ export default function GateScene() {
         const sourceMesh = model.getObjectByProperty('isMesh', true) as Mesh | undefined
         if (!sourceMesh || !sourceMesh.parent) {
           setFailed(true)
-          setProjectsVisible(true)
+          setProjectsMounted(true)
+          setProjectsActive(true)
           return
         }
 
@@ -338,7 +345,8 @@ export default function GateScene() {
       () => {
         if (!disposed) {
           setFailed(true)
-          setProjectsVisible(true)
+          setProjectsMounted(true)
+          setProjectsActive(true)
         }
       },
     )
@@ -371,10 +379,15 @@ export default function GateScene() {
       }
 
       section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
-      const showProjects = motion.projectStrength >= 0.999
-      if (showProjects !== projectState) {
-        projectState = showProjects
-        setProjectsVisible(showProjects)
+      const mountProjects = motion.projectStrength > 0.001
+      const activateProjects = motion.projectStrength >= 0.98
+      if (mountProjects !== projectMountedState) {
+        projectMountedState = mountProjects
+        setProjectsMounted(mountProjects)
+      }
+      if (activateProjects !== projectActiveState) {
+        projectActiveState = activateProjects
+        setProjectsActive(activateProjects)
       }
 
       if (leftHinge && rightHinge) {
@@ -443,7 +456,7 @@ export default function GateScene() {
       }}
       className="scene scene--gate"
     >
-      <div className={`gate__stage${projectsVisible ? ' is-projects' : ''}`}>
+      <div className={`gate__stage${projectsActive ? ' is-projects' : ''}`}>
         {/* Painted behind the canvas, so a device without WebGL still gets a lit
             night rather than a hole in the page. */}
         <div className="gate__picture" aria-hidden="true">
@@ -451,8 +464,9 @@ export default function GateScene() {
           {hasEntered && !failed && <canvas ref={canvasRef} className="gate__canvas" />}
         </div>
 
-        {/* The animal remains off-screen. Only the pressure of its roar enters
-            the frame before the doors begin to move. */}
+        {/* The nearby animal remains off-screen. Only the pressure of its roar
+            enters before the doors move; the jungle plate holds a different,
+            distant silhouette deeper inside the reserve. */}
         <div className="gate__roar" aria-hidden="true">
           <span className="gate__echo gate__echo--1" />
           <span className="gate__echo gate__echo--2" />
@@ -460,7 +474,15 @@ export default function GateScene() {
           <span className="gate__roar-dust" />
         </div>
 
-        {projectsVisible && <ParkScene />}
+        {projectsMounted && (
+          <div
+            className={`gate__projects${projectsActive ? ' is-active' : ''}`}
+            aria-hidden={!projectsActive}
+            inert={!projectsActive}
+          >
+            <ParkScene />
+          </div>
+        )}
 
         <details ref={creditRef} className="gate__credit" inert aria-hidden="true">
           <summary aria-label="Gate model credit">i</summary>

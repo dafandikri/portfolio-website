@@ -61,11 +61,14 @@ export function gateMotion(progress: number, reducedMotion = false): GateMotion 
     // arrives gently after the scene enters and is gone when the dolly ends.
     creditStrength: creditIn * creditOut,
     /*
-     * The handoff completes on the same scroll frame as the dolly. Once this
-     * reaches one, the project cards run on their own CSS clock; the visitor
-     * can stop the wheel and watch the deal finish.
+     * The handoff overlaps the end of the dolly. Once this reaches one, the
+     * project paddocks run on their own CSS clock; the visitor can stop the
+     * wheel and inspect them.
      */
-    projectStrength: smoothstep(0.78, 0.8, p),
+    // Reveal the paddocks while the camera is still passing beneath the gate.
+    // Both scenes share the same jungle plate, so this reads as one location
+    // coming into focus instead of a cut to a new screen.
+    projectStrength: smoothstep(0.7, 0.92, p),
   }
 }
 

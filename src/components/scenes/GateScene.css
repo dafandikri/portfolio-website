@@ -9,7 +9,7 @@
 .scene--gate {
   position: relative;
   height: 280svh;
-  background: #050301;
+  background: #020705;
 }
 
 .gate__stage {
@@ -31,21 +31,36 @@
   will-change: transform, opacity, filter;
 }
 
-/* The gate remains physically behind the project hand after the dolly rather
-   than cutting to a new page. It falls out of focus as the cards take over. */
+/* The gate remains physically behind the paddocks after the dolly rather than
+   cutting to a new page. It falls out of focus as the enclosures take over. */
 .gate__stage.is-projects .gate__picture {
-  opacity: 0.34;
-  filter: brightness(0.48) saturate(0.72) blur(1.5px);
+  opacity: 0.5;
+  filter: brightness(0.62) saturate(0.72) blur(1px);
 }
 
-/* Night behind the model, and the whole picture where WebGL is unavailable. */
+/* The same night jungle continues behind the paddocks. Keeping the image,
+   scale and focal point identical is what makes the handoff a physical walk
+   through the gate rather than a cut to a separate interface. */
 .gate__backdrop {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 52% 46% at 50% 62%, rgba(255, 186, 84, 0.22) 0%, rgba(5, 3, 1, 0) 68%),
-    linear-gradient(to bottom, #0b0805 0%, #070502 58%, #040301 100%);
+    radial-gradient(ellipse 38% 42% at 50% 70%, rgba(146, 68, 25, 0.12), transparent 74%),
+    linear-gradient(to bottom, rgba(0, 7, 8, 0.16), rgba(1, 8, 7, 0.42)),
+    url('../../assets/img/jurassic-park-jungle-night.webp') center / cover no-repeat,
+    #020807;
 }
+
+.gate__projects {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  opacity: var(--project-strength, 0);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.gate__projects.is-active { pointer-events: auto; }
 
 .gate__canvas {
   position: relative;

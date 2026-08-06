@@ -20,10 +20,10 @@
   overflow: hidden;
   color: #fff0d6;
   background:
-    linear-gradient(to bottom, rgba(17, 36, 17, 0.2), rgba(13, 28, 13, 0.38) 58%, rgba(7, 17, 8, 0.72)),
-    url('../../assets/img/jurassic-park-jungle.webp') center / cover no-repeat,
-    #20371e;
-  animation: park-stage-in 540ms ease-out both;
+    linear-gradient(to bottom, rgba(0, 7, 8, 0.16), rgba(1, 8, 7, 0.42)),
+    url('../../assets/img/jurassic-park-jungle-night.webp') center / cover no-repeat,
+    #020807;
+  animation: park-stage-in 760ms ease-out both;
 }
 
 .park::before {
@@ -33,27 +33,27 @@
   pointer-events: none;
   z-index: 1;
   background:
-    radial-gradient(ellipse 46% 32% at 50% 44%, rgba(255, 220, 140, 0.16), transparent 72%),
-    linear-gradient(90deg, rgba(4, 17, 7, 0.42), transparent 18% 82%, rgba(4, 17, 7, 0.42)),
-    linear-gradient(to bottom, rgba(255, 231, 170, 0.05), transparent 25%, rgba(3, 11, 5, 0.28));
-  box-shadow: inset 0 0 7rem rgba(5, 15, 6, 0.3);
+    radial-gradient(ellipse 42% 34% at 50% 58%, rgba(107, 142, 137, 0.08), transparent 72%),
+    linear-gradient(90deg, rgba(0, 5, 4, 0.58), transparent 18% 82%, rgba(0, 5, 4, 0.58)),
+    linear-gradient(to bottom, rgba(0, 4, 4, 0.12), transparent 30%, rgba(0, 5, 4, 0.5));
+  box-shadow: inset 0 0 8rem rgba(0, 5, 4, 0.55);
 }
 
 .park::after {
   content: '';
   position: absolute;
-  right: -3rem;
-  bottom: -5rem;
-  left: -3rem;
+  right: -5rem;
+  bottom: -2rem;
+  left: -5rem;
   z-index: 1;
-  height: 10rem;
+  height: 7rem;
   pointer-events: none;
-  opacity: 0.8;
+  opacity: 0.55;
   background:
-    radial-gradient(ellipse 1.4rem 5rem at 3% 100%, #173c20 42%, transparent 45%) 0 0 / 8rem 100%,
-    radial-gradient(ellipse 1rem 4rem at 8% 100%, #2d5d2e 38%, transparent 42%) 1.5rem 1rem / 9rem 100%,
-    linear-gradient(to top, rgba(7, 27, 10, 0.92), transparent 65%);
-  filter: blur(0.2px) drop-shadow(0 -0.4rem 0.7rem rgba(4, 13, 5, 0.35));
+    radial-gradient(ellipse 48% 55% at 28% 100%, rgba(71, 102, 94, 0.18), transparent 72%),
+    radial-gradient(ellipse 45% 52% at 72% 100%, rgba(71, 102, 94, 0.16), transparent 72%),
+    linear-gradient(to top, rgba(0, 9, 7, 0.88), transparent 72%);
+  filter: blur(0.45rem);
 }
 
 @keyframes park-stage-in { from { opacity: 0; } to { opacity: 1; } }
@@ -74,12 +74,13 @@
   text-align: center;
   pointer-events: none;
   border: 2px solid #2b1609;
-  border-radius: 48% 42% 46% 40% / 16% 20% 18% 15%;
+  border-radius: 0.08rem;
+  clip-path: polygon(1.5% 6%, 98.5% 0, 100% 88%, 97% 100%, 2% 94%, 0 12%);
   background:
     radial-gradient(circle at 2.3rem 50%, #1b0e06 0 0.14rem, #9a6b32 0.16rem 0.22rem, transparent 0.24rem),
     radial-gradient(circle at calc(100% - 2.3rem) 50%, #1b0e06 0 0.14rem, #9a6b32 0.16rem 0.22rem, transparent 0.24rem),
     repeating-linear-gradient(176deg, transparent 0 0.62rem, rgba(25, 12, 5, 0.18) 0.66rem 0.71rem),
-    linear-gradient(105deg, #3b1d0b, #71411b 28%, #4a250e 66%, #2a1609);
+    linear-gradient(105deg, #211006, #4b2811 28%, #301708 66%, #160b05);
   box-shadow:
     0 0.5rem 0 #251307,
     0 0.85rem 1.2rem rgba(6, 15, 6, 0.62),
@@ -94,18 +95,18 @@
   content: '';
   position: absolute;
   top: 50%;
-  z-index: -1;
-  width: clamp(2.6rem, 6vw, 4.5rem);
-  height: 1.25rem;
-  border: 2px solid #281408;
+  z-index: 2;
+  width: 0.45rem;
+  height: 0.45rem;
+  border: 1px solid #220a06;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 35% 35%, #a36b30, #4a250e 58%, #211006 72%);
+  background: #a32316;
   transform: translateY(-50%);
-  box-shadow: 0 0.45rem 0.75rem rgba(6, 14, 6, 0.55);
+  box-shadow: 0 0 0.4rem rgba(227, 44, 24, 0.72), 0 0 1rem rgba(150, 18, 12, 0.42);
 }
 
-.park__header::before { right: calc(100% - 1.3rem); transform: translateY(-50%) rotate(-3deg); }
-.park__header::after { left: calc(100% - 1.3rem); transform: translateY(-50%) rotate(3deg); }
+.park__header::before { left: 1.25rem; }
+.park__header::after { right: 1.25rem; }
 
 .park.is-inspecting .park__header,
 .park.is-inspecting .park__grid,
@@ -156,6 +157,7 @@
   list-style: none;
   perspective: 1200px;
   transition: opacity 260ms ease, transform 320ms ease;
+  width: min(100%, 64rem);
 }
 
 .park__containment {
@@ -165,24 +167,6 @@
   opacity: 0;
   animation: containment-deploy 760ms cubic-bezier(0.16,1.16,0.3,1) var(--deploy-delay) forwards;
 }
-
-.park__containment::before,
-.park__containment::after {
-  content: '';
-  position: absolute;
-  z-index: 11;
-  width: 3.2rem;
-  height: 3.2rem;
-  pointer-events: none;
-  opacity: 0.84;
-  background:
-    radial-gradient(ellipse 23% 55% at 50% 100%, #2f7037 45%, transparent 48%) 0 0 / 1.25rem 2.6rem,
-    radial-gradient(ellipse 27% 60% at 50% 100%, #174d28 45%, transparent 49%) 0.8rem 0.4rem / 1.45rem 2.8rem;
-  filter: drop-shadow(0.16rem 0.2rem 0.12rem rgba(4, 16, 6, 0.55));
-}
-
-.park__containment::before { bottom: -0.1rem; left: -0.7rem; transform: rotate(-18deg); }
-.park__containment::after { right: -0.7rem; bottom: -0.15rem; transform: scaleX(-1) rotate(-15deg); }
 
 @keyframes containment-deploy {
   0% { opacity: 0; filter: blur(0.45rem) brightness(1.4); transform: translateY(2.4rem) scale(0.9); }
@@ -302,9 +286,10 @@
 }
 
 .park__media-file--preview {
-  object-fit: cover;
-  object-position: 50% 12%;
-  filter: saturate(0.78) contrast(1.11) brightness(0.72) sepia(0.07);
+  object-fit: contain;
+  object-position: 50% 50%;
+  background: #020605;
+  filter: saturate(0.82) contrast(1.09) brightness(0.76);
   transition: filter 300ms ease, transform 650ms cubic-bezier(0.16,1,0.3,1);
 }
 
@@ -799,7 +784,7 @@
     padding: 0.4rem 0.65rem 0.8rem;
   }
 
-  .park__containment-unit { height: 12.5rem; }
+  .park__containment-unit { height: 13.75rem; }
   .park__archive { width: min(100%,30rem); padding-bottom: 1rem; }
   .park__archive ul { position: static; grid-template-columns: 1fr 1fr; margin-top: 0.35rem; }
 

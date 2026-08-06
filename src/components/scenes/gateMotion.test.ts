@@ -18,8 +18,10 @@ describe('gateMotion', () => {
     expect(gateMotion(0.46).dollyProgress).toBe(0)
     expect(gateMotion(0.6).dollyProgress).toBeGreaterThan(0)
     expect(gateMotion(0.78).dollyProgress).toBe(1)
-    expect(gateMotion(0.77).projectStrength).toBe(0)
-    expect(gateMotion(0.8).projectStrength).toBe(1)
+    expect(gateMotion(0.69).projectStrength).toBe(0)
+    expect(gateMotion(0.8).projectStrength).toBeGreaterThan(0)
+    expect(gateMotion(0.8).projectStrength).toBeLessThan(1)
+    expect(gateMotion(0.92).projectStrength).toBe(1)
 
     expect(gateMotion(0).creditStrength).toBe(0)
     expect(gateMotion(0.12).creditStrength).toBe(1)

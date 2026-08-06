@@ -9,7 +9,7 @@ afterEach(() => {
 })
 
 describe('GateScene', () => {
-  it('keeps the dinosaur off-screen and carries the roar as pressure waves', () => {
+  it('avoids a CSS dinosaur mascot and carries the nearby roar as pressure waves', () => {
     stubIntersectionObserver()
     const { container } = render(<GateScene />)
 

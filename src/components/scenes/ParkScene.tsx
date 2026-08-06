@@ -116,7 +116,7 @@ export default function ParkScene() {
       aria-labelledby="projects-heading"
     >
       <header className="park__header">
-        <p className="park__kicker">Isla Nublar · Restricted Habitat</p>
+        <p className="park__kicker">Isla Nublar · Night Containment Zone</p>
         <h2 id="projects-heading" className="park__heading" aria-label="Projects">
           Project Paddocks
         </h2>
