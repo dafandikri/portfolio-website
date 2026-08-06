@@ -50,121 +50,120 @@
   z-index: 2;
 }
 
-/* A lone 2015 relic keeps the black dashboard void from feeling empty. It
-   drifts behind the experience UI, grows as it crosses the viewer, then banks
-   away into the distance before taking another lap. */
-.circuits-scene__hoverboard {
-  position: absolute;
-  top: 28%;
-  left: 0;
-  z-index: 2;
-  width: clamp(8rem, 18vw, 14rem);
-  pointer-events: none;
-  transform-origin: 50% 50%;
-  transform-style: preserve-3d;
-  perspective: 900px;
-  animation: hoverboard-flight 17s linear infinite;
-  will-change: transform, opacity;
-}
-
-.circuits-scene__hoverboard-rig {
-  position: relative;
-  display: block;
-  width: 100%;
-  transform-style: preserve-3d;
-  transform-origin: 50% 54%;
-  animation: hoverboard-attitude 5.2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
-  will-change: transform;
-}
-
-.circuits-scene__hoverboard img,
-.circuits-scene__hoverboard-depth {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: 100%;
-  aspect-ratio: 3 / 2;
-  height: auto;
-}
-
-.circuits-scene__hoverboard img {
-  filter: drop-shadow(0 0.9rem 1.1rem rgba(0, 0, 0, 0.72));
-  transform: translateZ(0.7rem);
-  user-select: none;
-}
-
-/* A dark copy just behind the photographed plane gives the otherwise flat
-   cutout a visible underside when pitch and yaw expose its edge. */
-.circuits-scene__hoverboard-depth {
+/* The OBJ renders across the whole scene so its translation, pitch, yaw and
+   depth are camera-space motion rather than transforms on a flat cutout. */
+.circuits-scene__hoverboard3d {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: url('../../assets/img/time-circuits-hoverboard.webp') center / contain no-repeat;
-  filter: brightness(0.18) saturate(0.7) blur(0.35px);
-  opacity: 0.78;
-  transform: translate3d(0.2rem, 0.42rem, -0.7rem) scale(0.988);
+  z-index: 2;
+  pointer-events: none;
 }
 
-.circuits-scene__hover-glow {
+.circuits-scene__hoverboard3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The information control enters only after the OBJ and all four maps have
+   rendered once, keeping its arrival synchronized with the model itself. */
+.circuits-scene__credit {
   position: absolute;
-  right: 10%;
-  bottom: 2%;
-  left: 12%;
-  z-index: 1;
-  height: 16%;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  z-index: 5;
+  width: 1.85rem;
+  height: 1.85rem;
+  color: rgba(255, 240, 250, 0.8);
+  font-family: var(--font-tech);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-0.35rem) scale(0.92);
+  transform-origin: 100% 0;
+  transition: opacity 150ms ease-out, transform 170ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.circuits-scene__credit.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.circuits-scene__credit summary {
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 1px solid rgba(255, 105, 180, 0.52);
   border-radius: 50%;
-  background: rgba(94, 232, 255, 0.52);
-  filter: blur(0.8rem);
-  animation: hoverboard-glow 1.4s ease-in-out infinite alternate;
-  transform: translateZ(-1.1rem);
+  background: rgba(8, 6, 12, 0.78);
+  box-shadow: 0 0 1.3rem rgba(255, 45, 145, 0.2);
+  color: #ffd7ec;
+  font-family: Georgia, serif;
+  font-size: 0.86rem;
+  font-style: italic;
+  cursor: pointer;
+  list-style: none;
+  backdrop-filter: blur(8px);
 }
 
-@keyframes hoverboard-flight {
-  0% {
-    opacity: 0;
-    transform: translate3d(-17rem, 12vh, 0) rotate(-13deg) scale(0.34);
-  }
-  7% { opacity: 0.76; }
-  25% {
-    opacity: 0.78;
-    transform: translate3d(22vw, -5vh, 0) rotate(-4deg) scale(0.82);
-  }
-  52% {
-    opacity: 0.65;
-    transform: translate3d(53vw, 9vh, 0) rotate(7deg) scale(0.62);
-  }
-  76% {
-    opacity: 0.5;
-    transform: translate3d(78vw, -10vh, 0) rotate(-7deg) scale(0.4);
-  }
-  94% {
-    opacity: 0.28;
-    transform: translate3d(101vw, -19vh, 0) rotate(11deg) scale(0.22);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(calc(100vw + 18rem), -21vh, 0) rotate(15deg) scale(0.16);
-  }
+.circuits-scene__credit summary::-webkit-details-marker { display: none; }
+.circuits-scene__credit summary:hover,
+.circuits-scene__credit summary:focus-visible {
+  border-color: #ff62b3;
+  color: #ffffff;
+  outline: none;
 }
 
-@keyframes hoverboard-attitude {
-  0%, 100% {
-    transform: translate3d(0, 0, 0) rotateX(7deg) rotateY(-13deg) rotateZ(-2deg);
-  }
-  22% {
-    transform: translate3d(0, -0.48rem, 0) rotateX(-8deg) rotateY(7deg) rotateZ(1deg);
-  }
-  48% {
-    transform: translate3d(0, -0.78rem, 0) rotateX(11deg) rotateY(16deg) rotateZ(3deg);
-  }
-  73% {
-    transform: translate3d(0, -0.35rem, 0) rotateX(-5deg) rotateY(-15deg) rotateZ(-1.5deg);
-  }
+.circuits-scene__credit-panel {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  width: min(21rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 92, 178, 0.26);
+  border-radius: 0.45rem;
+  background: rgba(6, 5, 10, 0.92);
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.66), 0 0 2rem rgba(78, 220, 255, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-0.18rem) scale(0.985);
+  transform-origin: 100% 0;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
 }
 
-@keyframes hoverboard-glow {
-  from { opacity: 0.32; transform: translateZ(-1.1rem) scaleX(0.84); }
-  to { opacity: 0.72; transform: translateZ(-1.1rem) scaleX(1.08); }
+.circuits-scene__credit[open] .circuits-scene__credit-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  animation: circuits-credit-pop 140ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes circuits-credit-pop {
+  from { opacity: 0; transform: translateY(-0.18rem) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+.circuits-scene__credit-panel p {
+  margin: 0.48rem 0 0;
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  line-height: 1.55;
+}
+
+.circuits-scene__credit-panel .circuits-scene__credit-heading {
+  margin-top: 0;
+  color: #ff73ba;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.circuits-scene__credit a {
+  color: #63e9ff;
+  text-underline-offset: 0.16em;
 }
 
 .circuits-scene__placeholder {
@@ -188,26 +187,6 @@
      never sits on a hard seam while stuck. */
 }
 
-@media (max-width: 42rem) {
-  .circuits-scene__hoverboard {
-    top: 36%;
-    width: clamp(7rem, 34vw, 10rem);
-    animation-duration: 13s;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .circuits-scene__hoverboard {
-    top: 34%;
-    right: -1rem;
-    left: auto;
-    opacity: 0.28;
-    transform: rotate(-8deg) scale(0.72);
-    animation: none;
-  }
-
-  .circuits-scene__hoverboard-rig,
-  .circuits-scene__hover-glow {
-    animation: none;
-  }
+  .circuits-scene__credit { transition: none; }
 }

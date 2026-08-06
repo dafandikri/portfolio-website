@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import TimeCircuits from '../TimeCircuits'
 import { readoutFromStop } from '../../data/timeline'
 import FluxCapacitor from '../FluxCapacitor'
@@ -6,7 +6,7 @@ import ExperienceDeck from '../ExperienceDeck'
 import { useInView } from '../../hooks/useInView'
 import { useClock } from '../../hooks/useClock'
 import { timeline } from '../../data/timeline'
-import hoverboard from '../../assets/img/time-circuits-hoverboard.webp'
+import Hoverboard3D from '../Hoverboard3D'
 import './TimeCircuitsScene.css'
 
 /**
@@ -21,9 +21,11 @@ import './TimeCircuitsScene.css'
 export default function TimeCircuitsScene() {
   const present = timeline[0]
   const [activeId, setActiveId] = useState<string | null>(present?.entry.id ?? null)
+  const [hoverboardReady, setHoverboardReady] = useState(false)
   const [sceneRef, hasEntered] = useInView<HTMLElement>('0px 0px -12%', true)
   // PRESENT TIME is the visitor's own clock, in their own timezone.
   const now = useClock()
+  const revealHoverboardCredit = useCallback(() => setHoverboardReady(true), [])
 
   if (!present) return null
 
@@ -41,13 +43,41 @@ export default function TimeCircuitsScene() {
       </h2>
       {hasEntered ? (
         <>
-          <div className="circuits-scene__hoverboard" aria-hidden="true">
-            <span className="circuits-scene__hoverboard-rig">
-              <span className="circuits-scene__hover-glow" />
-              <span className="circuits-scene__hoverboard-depth" />
-              <img src={hoverboard} alt="" decoding="async" draggable="false" />
-            </span>
-          </div>
+          <Hoverboard3D onReady={revealHoverboardCredit} />
+
+          <details
+            className={`circuits-scene__credit${hoverboardReady ? ' is-visible' : ''}`}
+            inert={!hoverboardReady}
+            aria-hidden={!hoverboardReady}
+          >
+            <summary aria-label="Hoverboard model credit">i</summary>
+            <div className="circuits-scene__credit-panel">
+              <p className="circuits-scene__credit-heading">Hoverboard model attribution</p>
+              <p>
+                Model:{' '}
+                <a
+                  href="https://sketchfab.com/3d-models/hoverboard-back-to-the-future-b35e4131eb3f4727a2a89c55c5a5bc82"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                >
+                  &ldquo;Hoverboard - Back to the Future&rdquo;
+                </a>{' '}
+                by Onamani.
+              </p>
+              <p>
+                Licensed under{' '}
+                <a
+                  href="https://creativecommons.org/licenses/by/4.0/"
+                  target="_blank"
+                  rel="noreferrer noopener license"
+                >
+                  CC BY 4.0
+                </a>
+                .
+              </p>
+              <p>Adapted for web: maps optimized, PBR material rebuilt, and flight animated.</p>
+            </div>
+          </details>
 
           {/* Dashboard: the capacitor sits to the left of the circuits, the
               way it does behind the seats, rather than floating alone. */}

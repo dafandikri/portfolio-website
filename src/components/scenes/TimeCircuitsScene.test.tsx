@@ -22,10 +22,12 @@ describe('TimeCircuitsScene', () => {
 
     act(() => observers[0]?.trigger(scene, true, 1))
     expect(container.querySelectorAll('.deck__card')).toHaveLength(timeline.length)
-    expect(container.querySelector('.circuits-scene__hoverboard img')).toHaveAttribute(
-      'src',
-      expect.stringContaining('time-circuits-hoverboard'),
-    )
+    expect(container.querySelector('.circuits-scene__hoverboard3d canvas')).toHaveAttribute('data-renderer', 'three')
+    const credit = container.querySelector('.circuits-scene__credit') as HTMLElement
+    expect(credit).toHaveAttribute('aria-hidden', 'true')
+    expect(credit.querySelector('summary')).toHaveAttribute('aria-label', 'Hoverboard model credit')
+    expect(credit).toHaveTextContent('Onamani')
+    expect(credit.querySelector('a[rel~="license"]')).not.toBeNull()
   })
 
   it('deals one card per role, each reachable as a button', () => {

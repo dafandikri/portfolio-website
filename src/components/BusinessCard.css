@@ -108,6 +108,7 @@
  * fingers lift and withdraw on a slightly curved path while the card stays.
  */
 .card-handoff-hand {
+  --hand-delivery-duration: 1100ms;
   position: absolute;
   /* The source is intentionally only three fingers. Keep its straight crop
      above the viewport so it reads as a hand entering frame, never as an image
@@ -118,7 +119,7 @@
   width: 46%;
   pointer-events: none;
   transform-origin: 50% 12%;
-  animation: card-hand-deliver 950ms linear both;
+  animation: card-hand-deliver var(--hand-delivery-duration) linear both;
   will-change: transform;
 }
 
@@ -139,7 +140,7 @@
   opacity: 0.36;
   filter: brightness(0) blur(11px);
   transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
-  animation: card-hand-cast-shadow 950ms linear both;
+  animation: card-hand-cast-shadow var(--hand-delivery-duration) linear both;
 }
 
 /* The tighter lower-half shadow is where the fingertips nearly touch the card.
@@ -150,7 +151,7 @@
   clip-path: inset(48% -8% -10% -8%);
   filter: brightness(0) blur(3.5px);
   transform: translate3d(0.12rem, 0.28rem, 0) scale(0.995);
-  animation: card-hand-contact-shadow 950ms linear both;
+  animation: card-hand-contact-shadow var(--hand-delivery-duration) linear both;
 }
 
 /* Movement and blur live on separate layers. That lets the hand follow one
@@ -163,7 +164,7 @@
   width: 100%;
   height: auto;
   user-select: none;
-  animation: card-hand-motion-blur 950ms linear both;
+  animation: card-hand-motion-blur var(--hand-delivery-duration) linear both;
   will-change: filter, transform;
 }
 
@@ -171,29 +172,29 @@
   0% {
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
   }
-  68% {
+  60% {
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
     animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
   }
   100% {
-    transform: translate3d(calc(-50% + 0.28rem), -150%, 5rem) rotate(1.35deg) scale(0.978);
+    transform: translate3d(calc(-50% + 0.3rem), -125%, 5rem) rotate(1.35deg) scale(0.978);
   }
 }
 
 @keyframes card-hand-motion-blur {
-  0%, 68% {
+  0%, 60% {
     filter: blur(0);
     transform: scaleY(1);
   }
-  78% {
+  72% {
     filter: blur(0.65px);
     transform: scaleY(1.004);
   }
-  84% {
+  79% {
     filter: blur(2.2px);
     transform: scaleY(1.018);
   }
-  93% {
+  91% {
     filter: blur(0.8px);
     transform: scaleY(1.006);
   }
@@ -204,26 +205,27 @@
 }
 
 @keyframes card-hand-cast-shadow {
-  0%, 68% {
+  0%, 60% {
     opacity: 0.36;
     filter: brightness(0) blur(11px);
     transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
   }
-  84% {
-    opacity: 0.2;
+  79% {
+    opacity: 0.3;
     filter: brightness(0) blur(15px);
     transform: translate3d(0.52rem, 1rem, 0) scale(1.015);
   }
   100% {
-    opacity: 0.05;
+    opacity: 0.16;
     filter: brightness(0) blur(19px);
     transform: translate3d(0.68rem, 1.22rem, 0) scale(1.04);
   }
 }
 
 @keyframes card-hand-contact-shadow {
-  0%, 68% { opacity: 0.24; }
-  78%, 100% { opacity: 0; }
+  0%, 60% { opacity: 0.24; }
+  82% { opacity: 0.16; }
+  100% { opacity: 0.08; }
 }
 
 .card {

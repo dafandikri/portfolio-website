@@ -2,7 +2,15 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+# A branch with an open PR used to enqueue both a push run and a PR run for
+# every commit. Hosted runners then spent 15 minutes trying to acquire the
+# duplicate job. Keep one newest quality run per source branch instead.
+concurrency:
+  group: ci-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   quality:
