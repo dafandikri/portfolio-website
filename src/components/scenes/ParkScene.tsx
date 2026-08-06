@@ -112,7 +112,7 @@ function ProjectLinks({ project }: { project: Project }) {
 
 const featuredProjects = projectsData.filter((project) => project.featured)
 const archivedProjects = projectsData.filter((project) => !project.featured)
-export const PADDOCK_OPEN_MS = 520
+export const PADDOCK_OPEN_MS = 120
 
 /**
  * Four full containment paddocks replace the old overlapping card hand.

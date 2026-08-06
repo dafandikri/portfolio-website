@@ -6,6 +6,7 @@ import ExperienceDeck from '../ExperienceDeck'
 import { useInView } from '../../hooks/useInView'
 import { useClock } from '../../hooks/useClock'
 import { timeline } from '../../data/timeline'
+import hoverboard from '../../assets/img/time-circuits-hoverboard.webp'
 import './TimeCircuitsScene.css'
 
 /**
@@ -40,6 +41,14 @@ export default function TimeCircuitsScene() {
       </h2>
       {hasEntered ? (
         <>
+          <div className="circuits-scene__hoverboard" aria-hidden="true">
+            <span className="circuits-scene__hoverboard-rig">
+              <span className="circuits-scene__hover-glow" />
+              <span className="circuits-scene__hoverboard-depth" />
+              <img src={hoverboard} alt="" decoding="async" draggable="false" />
+            </span>
+          </div>
+
           {/* Dashboard: the capacitor sits to the left of the circuits, the
               way it does behind the seats, rather than floating alone. */}
           <div className="circuits-scene__top">

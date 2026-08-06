@@ -22,6 +22,10 @@ describe('TimeCircuitsScene', () => {
 
     act(() => observers[0]?.trigger(scene, true, 1))
     expect(container.querySelectorAll('.deck__card')).toHaveLength(timeline.length)
+    expect(container.querySelector('.circuits-scene__hoverboard img')).toHaveAttribute(
+      'src',
+      expect.stringContaining('time-circuits-hoverboard'),
+    )
   })
 
   it('deals one card per role, each reachable as a button', () => {

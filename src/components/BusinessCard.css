@@ -122,10 +122,43 @@
   will-change: transform;
 }
 
+.card-handoff-hand::before,
+.card-handoff-hand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: url('../assets/img/card-handoff-hand.webp') center / 100% 100% no-repeat;
+  transform-origin: 50% 12%;
+}
+
+/* Wide cast shadow: this reaches across both the card stock and walnut desk,
+   then grows softer as the hand gains height during the withdrawal. */
+.card-handoff-hand::before {
+  opacity: 0.36;
+  filter: brightness(0) blur(11px);
+  transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
+  animation: card-hand-cast-shadow 950ms linear both;
+}
+
+/* The tighter lower-half shadow is where the fingertips nearly touch the card.
+   It releases quickly; keeping it after the fingers lift would make the hand
+   look pasted onto the paper. */
+.card-handoff-hand::after {
+  opacity: 0.24;
+  clip-path: inset(48% -8% -10% -8%);
+  filter: brightness(0) blur(3.5px);
+  transform: translate3d(0.12rem, 0.28rem, 0) scale(0.995);
+  animation: card-hand-contact-shadow 950ms linear both;
+}
+
 /* Movement and blur live on separate layers. That lets the hand follow one
    uninterrupted human ease while the photographic blur rises and falls with
    velocity instead of forcing the path through a series of robotic stops. */
 .card-handoff-hand__image {
+  position: relative;
+  z-index: 2;
   display: block;
   width: 100%;
   height: auto;
@@ -149,25 +182,48 @@
 
 @keyframes card-hand-motion-blur {
   0%, 68% {
-    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
+    filter: blur(0);
     transform: scaleY(1);
   }
   78% {
-    filter: drop-shadow(0.32rem 0.62rem 0.54rem rgba(0, 0, 0, 0.38)) blur(0.65px);
+    filter: blur(0.65px);
     transform: scaleY(1.004);
   }
   84% {
-    filter: drop-shadow(0.26rem 0.5rem 0.48rem rgba(0, 0, 0, 0.3)) blur(2.2px);
+    filter: blur(2.2px);
     transform: scaleY(1.018);
   }
   93% {
-    filter: drop-shadow(0.24rem 0.46rem 0.45rem rgba(0, 0, 0, 0.27)) blur(0.8px);
+    filter: blur(0.8px);
     transform: scaleY(1.006);
   }
   100% {
-    filter: drop-shadow(0.22rem 0.42rem 0.42rem rgba(0, 0, 0, 0.24)) blur(0);
+    filter: blur(0);
     transform: scaleY(1);
   }
+}
+
+@keyframes card-hand-cast-shadow {
+  0%, 68% {
+    opacity: 0.36;
+    filter: brightness(0) blur(11px);
+    transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
+  }
+  84% {
+    opacity: 0.2;
+    filter: brightness(0) blur(15px);
+    transform: translate3d(0.52rem, 1rem, 0) scale(1.015);
+  }
+  100% {
+    opacity: 0.05;
+    filter: brightness(0) blur(19px);
+    transform: translate3d(0.68rem, 1.22rem, 0) scale(1.04);
+  }
+}
+
+@keyframes card-hand-contact-shadow {
+  0%, 68% { opacity: 0.24; }
+  78%, 100% { opacity: 0; }
 }
 
 .card {
