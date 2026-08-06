@@ -503,25 +503,32 @@ export default function GateScene() {
 
         <details ref={creditRef} className="gate__credit" inert aria-hidden="true">
           <summary aria-label="Gate model credit">i</summary>
-          <p>
-            Gate asset:{' '}
-            <a
-              href="https://sketchfab.com/3d-models/jurassic-park-gate-f85e89d2c0ef44beb3fe7fd7e72afdc7"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              &ldquo;Jurassic Park Gate&rdquo;
-            </a>{' '}
-            by Mathzilla5335 ·{' '}
-            <a
-              href="https://creativecommons.org/licenses/by/4.0/"
-              target="_blank"
-              rel="noreferrer noopener license"
-            >
-              CC BY 4.0
-            </a>
-          </p>
-          <p>Adapted for web: PBR maps resized, doors animated, and lighting rebuilt.</p>
+          <div className="gate__credit-panel">
+            <p className="gate__credit-heading">Gate model attribution</p>
+            <p>
+              Gate asset:{' '}
+              <a
+                href="https://sketchfab.com/3d-models/jurassic-park-gate-f85e89d2c0ef44beb3fe7fd7e72afdc7"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                &ldquo;Jurassic Park Gate&rdquo;
+              </a>{' '}
+              by Mathzilla5335.
+            </p>
+            <p>
+              Licensed under{' '}
+              <a
+                href="https://creativecommons.org/licenses/by/4.0/"
+                target="_blank"
+                rel="noreferrer noopener license"
+              >
+                CC BY 4.0
+              </a>
+              .
+            </p>
+            <p>Adapted for web: PBR maps resized, doors animated, and lighting rebuilt.</p>
+          </div>
         </details>
       </div>
     </section>

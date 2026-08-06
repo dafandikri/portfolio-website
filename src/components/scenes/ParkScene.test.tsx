@@ -78,6 +78,19 @@ describe('ParkScene', () => {
     expect(screen.getByRole('list', { name: 'Featured project paddocks' })).toBeVisible()
   })
 
+  it('closes the dossier when the space outside its container is pressed', () => {
+    render(<ParkScene />)
+
+    act(() => screen.getByRole('button', { name: /SIRA/i }).click())
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    act(() => screen.getByRole('button', { name: 'Close project details' }).click())
+
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('list', { name: 'Featured project paddocks' })).toBeVisible()
+  })
+
   it('supports a muted looping video and adds controls in the dossier', () => {
     const { rerender } = render(
       <ProjectMediaView

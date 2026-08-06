@@ -112,7 +112,7 @@ function ProjectLinks({ project }: { project: Project }) {
 
 const featuredProjects = projectsData.filter((project) => project.featured)
 const archivedProjects = projectsData.filter((project) => !project.featured)
-export const PADDOCK_OPEN_MS = 1080
+export const PADDOCK_OPEN_MS = 520
 
 /**
  * Four full containment paddocks replace the old overlapping card hand.
@@ -280,48 +280,56 @@ export default function ParkScene() {
       </details>
 
       {openProject && openIndex !== null && (
-        <article
-          ref={detailRef}
-          className="park__detail"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="project-detail-title"
-          tabIndex={-1}
-        >
-          <button type="button" className="park__detail-close" onClick={closePaddock}>
-            Return to paddocks
-          </button>
+        <>
+          <button
+            type="button"
+            className="park__detail-backdrop"
+            aria-label="Close project details"
+            onClick={closePaddock}
+          />
+          <article
+            ref={detailRef}
+            className="park__detail"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-detail-title"
+            tabIndex={-1}
+          >
+            <button type="button" className="park__detail-close" onClick={closePaddock}>
+              Return to paddocks
+            </button>
 
-          <div className="park__detail-media">
-            <p className="park__detail-feed-label">
-              Paddock {String(openIndex + 1).padStart(2, '0')} // Full surveillance record
-            </p>
-            <div className="park__detail-viewport">
-              <ProjectMediaView media={openMedia} mode="detail" startAt={detailStartAt} />
-              <span className="park__detail-scan" aria-hidden="true" />
+            <div className="park__detail-media">
+              <p className="park__detail-feed-label">
+                Paddock {String(openIndex + 1).padStart(2, '0')} // Full surveillance record
+              </p>
+              <div className="park__detail-viewport">
+                <ProjectMediaView media={openMedia} mode="detail" startAt={detailStartAt} />
+                <span className="park__detail-scan" aria-hidden="true" />
+              </div>
+              {openMedia?.kind === 'image' && (
+                <a className="park__media-expand" href={openMedia.src} target="_blank" rel="noreferrer noopener">
+                  Open walkthrough in a new tab
+                </a>
+              )}
             </div>
-            {openMedia?.kind === 'image' && (
-              <a className="park__media-expand" href={openMedia.src} target="_blank" rel="noreferrer noopener">
-                Open walkthrough in a new tab
-              </a>
-            )}
-          </div>
 
-          <div className="park__detail-copy">
-            <p className="park__detail-index">Containment file // Access granted · {openProject.year}</p>
-            <h3 id="project-detail-title" className="park__detail-title">{openProject.title}</h3>
-            <p className="park__detail-context">{openProject.context}</p>
-            <p className="park__detail-text">{openProject.description}</p>
-            <p className="park__detail-section-label">Field notes</p>
-            <ul className="park__features" aria-label="Project features">
-              {openProject.features.map((feature) => <li key={feature}>{feature}</li>)}
-            </ul>
-            <ul className="park__chips" aria-label="Technology stack">
-              {openProject.techStack.map((tech) => <li key={tech} className="park__chip">{tech}</li>)}
-            </ul>
-            <ProjectLinks project={openProject} />
-          </div>
-        </article>
+            <div className="park__detail-copy">
+              <p className="park__detail-index">Containment file // Access granted · {openProject.year}</p>
+              <h3 id="project-detail-title" className="park__detail-title">{openProject.title}</h3>
+              <p className="park__detail-context">{openProject.context}</p>
+              <p className="park__detail-text">{openProject.description}</p>
+              <p className="park__detail-section-label">Field notes</p>
+              <ul className="park__features" aria-label="Project features">
+                {openProject.features.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <ul className="park__chips" aria-label="Technology stack">
+                {openProject.techStack.map((tech) => <li key={tech} className="park__chip">{tech}</li>)}
+              </ul>
+              <ProjectLinks project={openProject} />
+            </div>
+          </article>
+        </>
       )}
     </section>
   )

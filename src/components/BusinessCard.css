@@ -36,7 +36,7 @@
   width: var(--card-w);
   aspect-ratio: var(--card-ratio);
   transform-style: preserve-3d;
-  animation: card-delivery-arrive 2500ms linear both;
+  animation: card-delivery-arrive 1250ms linear both;
 }
 
 .card-drop {
@@ -92,7 +92,7 @@
     opacity: 1;
     animation-timing-function: cubic-bezier(0.2, 0.76, 0.18, 1);
   }
-  62% {
+  58% {
     transform: translate3d(0, 0, 0) rotate(0deg);
     opacity: 1;
   }
@@ -121,31 +121,32 @@
   user-select: none;
   transform-origin: 50% 12%;
   filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42));
-  animation: card-hand-deliver 2500ms linear both;
-  will-change: transform, opacity;
+  animation: card-hand-deliver 950ms linear both;
+  will-change: transform, opacity, filter;
 }
 
 @keyframes card-hand-deliver {
   0% {
     opacity: 1;
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
+    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
   }
-  62% {
+  70% {
     opacity: 1;
     transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0.35rem 0.7rem 0.58rem rgba(0, 0, 0, 0.42)) blur(0);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
-  69% {
+  90% {
     opacity: 1;
-    transform: translate3d(calc(-50% + 0.04rem), -4%, 2rem) rotate(0.1deg) scale(0.996);
-  }
-  82% {
-    opacity: 1;
-    transform: translate3d(calc(-50% + 0.12rem), -48%, 3.5rem) rotate(0.8deg) scale(0.99);
+    transform: translate3d(calc(-50% + 0.14rem), -74%, 4rem) rotate(0.9deg) scale(0.988);
+    filter: drop-shadow(0.3rem 0.55rem 0.5rem rgba(0, 0, 0, 0.34)) blur(1.25px);
+    animation-timing-function: ease-out;
   }
   100% {
     opacity: 0;
-    transform: translate3d(calc(-50% + 0.24rem), -138%, 5rem) rotate(1.5deg) scale(0.975);
+    transform: translate3d(calc(-50% + 0.24rem), -145%, 5rem) rotate(1.4deg) scale(0.975);
+    filter: drop-shadow(0.2rem 0.4rem 0.42rem rgba(0, 0, 0, 0.22)) blur(3px);
   }
 }
 
