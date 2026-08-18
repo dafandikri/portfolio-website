@@ -1,0 +1,102 @@
+/*
+ * Kato's sprite is three poses in one strip: idle, wings-spread, wings-up.
+ * background-size: 300% 100% makes each pose exactly one third of the box, so
+ * background-position-x steps of 0% / 50% / 100% select pose 1 / 2 / 3.
+ *
+ * Two elements, and the split between them is load-bearing.
+ *
+ * Two animations on one element cannot animate the same property — whichever
+ * is declared last silently wins. So the hop lives on the wrapper (translate)
+ * while arrival (transform) and breathing (translate) live on the bird.
+ * Different elements compose; the same element would collide and the bob would
+ * disappear the moment hopping began.
+ *
+ * The wrapper is also exactly one paddock wide, which is what makes the hop
+ * distance expressible without measuring anything.
+ */
+.kato {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  z-index: 9;
+  width: 100%;
+  height: clamp(2.6rem, 5.2vh, 3.4rem);
+  pointer-events: none;
+  animation: kato-hop 15s ease-in-out 2600ms infinite;
+}
+
+.kato__bird {
+  position: absolute;
+  bottom: -0.12rem;
+  /* Right of centre, not centred: it keeps him clear of the header plaque at
+     the widths where the plaque is wide and the paddocks are narrow. */
+  left: 62%;
+  width: clamp(2.4rem, 4.6vh, 3.1rem);
+  height: 100%;
+  background: url('../assets/img/kato-poses.webp') 0% 100% / 300% 100% no-repeat;
+  transform-origin: 50% 100%;
+  animation:
+    kato-arrive 1100ms cubic-bezier(0.22, 1.1, 0.36, 1) both,
+    kato-breathe 4s ease-in-out 1100ms infinite;
+}
+
+/*
+ * Flies in from off-stage right with wings spread (pose 2), then settles into
+ * the idle pose (pose 1) as he lands. This is the only rule that animates
+ * background-position-x, so nothing competes with it.
+ */
+@keyframes kato-arrive {
+  0%   { opacity: 0; background-position-x: 50%; transform: translate(19rem, -7rem) rotate(-9deg) scale(0.82); }
+  55%  { opacity: 1; background-position-x: 50%; transform: translate(4.5rem, -2.6rem) rotate(-5deg) scale(0.94); }
+  85%  { background-position-x: 50%; transform: translate(0, -0.5rem) rotate(0deg) scale(1); }
+  86%  { background-position-x: 0%; }
+  100% { opacity: 1; background-position-x: 0%; transform: none; }
+}
+
+@keyframes kato-breathe {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -0.16rem; }
+}
+
+/*
+ * Hop to the neighbouring lintel and back. The wrapper is exactly one paddock
+ * wide, so -100% minus one column gap lands precisely on the paddock to the
+ * left. The arc in the middle of each leg is what reads as a hop rather than a
+ * slide.
+ */
+@keyframes kato-hop {
+  0%, 12%   { translate: 0 0; }
+  20%       { translate: calc(-50% - clamp(0.45rem, 1vw, 0.7rem)) -1.5rem; }
+  26%, 62%  { translate: calc(-100% - clamp(0.9rem, 2vw, 1.4rem)) 0; }
+  70%       { translate: calc(-50% - clamp(0.45rem, 1vw, 0.7rem)) -1.5rem; }
+  76%, 100% { translate: 0 0; }
+}
+
+/*
+ * Hovering or focusing the paddock puts him in the wings-up pose (pose 3).
+ * `!important` is deliberate and is the correct tool here: an important
+ * declaration outranks an animation in the cascade, which is exactly the
+ * override needed to beat kato-arrive's filled final value.
+ */
+.park__containment-unit:hover ~ .kato .kato__bird,
+.park__containment-unit:focus-visible ~ .kato .kato__bird {
+  background-position-x: 100% !important;
+}
+
+/* He vanishes with the rest of the interface while a dossier is open. */
+.park.is-inspecting .kato { opacity: 0; visibility: hidden; }
+
+@media (max-width: 760px) {
+  /* One column here, so there is no neighbouring lintel to hop to. */
+  .kato { height: 2.5rem; animation: none; }
+  .kato__bird { left: 66%; width: 2.3rem; }
+}
+
+/*
+ * Reduced motion: perched and still. No flight, no hop, no bob — matching how
+ * ParkScene.css already suppresses the containment-deploy animation.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .kato { animation: none; }
+  .kato__bird { animation: none; background-position-x: 0%; }
+}
