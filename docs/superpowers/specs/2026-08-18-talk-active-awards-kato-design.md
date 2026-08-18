@@ -150,15 +150,25 @@ The four mascot SVGs in the Talk-Active repo are roughly 1 MB each: they are
 base64-encoded PNGs inside an SVG wrapper, not vector art. Shipping them would
 undo the PageSpeed results the README documents.
 
-Instead, four poses are cropped from `kato-macaw-pose-sheet.svg` into a single
-WebP sprite strip of roughly 25–40 KB, stepped with `background-position`.
+Instead, three poses are cropped from `kato-macaw-pose-sheet.svg` into a single
+570×200 WebP sprite strip of about 24 KB, stepped with `background-position`.
+Each pose is re-canvassed bottom-aligned, because the poses do not share a
+baseline in the source sheet and Kato would otherwise appear to sink when his
+pose changes.
 
 | Pose | Purpose |
 |------|---------|
 | idle | perched default |
-| wings-spread | flight in, and the apex of a hop |
+| wings-spread | flight in |
 | wings-up | hover on the Talk-Active paddock |
-| head-tilt | occasional idle variation |
+
+A fourth pose was intended — the microphone, which would be the ideal hover
+reaction for a public-speaking app. It is not included. In the source sheet
+that pose's artwork overlaps the thumbs-up pose beside it, and the overlapping
+wingtip is topologically connected to the bird, so neither a tighter crop nor a
+connected-component pass separates them; it needs manual masking in a vector
+editor. Three poses cover every behaviour below. Adding the mic later means
+extending the strip and changing `background-size` from `300%` to `400%`.
 
 #### Motion
 
@@ -169,6 +179,10 @@ WebP sprite strip of roughly 25–40 KB, stepped with `background-position`.
 - **Hop.** Roughly every 15s he hops to the neighbouring paddock's lintel and
   back. The distance needs no measurement: his wrapper is 100% of the paddock's
   width, so `translateX(calc(-100% - <grid-gap>))` lands exactly on paddock 02.
+  The hop keeps the idle pose and reads as a hop through its vertical arc; the
+  motion is carried on the wrapper while arrival and breathing are carried on
+  the bird, because two animations on one element cannot animate the same
+  property — the last one declared silently wins.
 - **Hover.** Hovering the Talk-Active paddock puts him in wings-up, via a
   descendant selector on the existing `:hover`. No JavaScript.
 
