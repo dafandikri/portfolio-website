@@ -17,9 +17,12 @@ const featured = projectsData.filter((project) => project.featured)
 const archived = projectsData.filter((project) => !project.featured)
 
 describe('ParkScene', () => {
-  it('shows four complete containment paddocks and a quieter earlier-work archive', () => {
+  it('shows five complete containment paddocks and a quieter earlier-work archive', () => {
     const { container } = render(<ParkScene />)
 
+    // Pinned rather than implied: the rest of this test derives its counts from
+    // featured.length, which would keep passing if a project silently vanished.
+    expect(featured).toHaveLength(5)
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
     expect(container.querySelectorAll('.park__containment')).toHaveLength(featured.length)
     expect(container.querySelectorAll('.park__hazard')).toHaveLength(featured.length)
