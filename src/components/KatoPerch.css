@@ -25,9 +25,32 @@
   animation: kato-hop 15s ease-in-out 2600ms infinite;
 }
 
+/*
+ * Contact, not shadow.
+ *
+ * A cast shadow was the first attempt and it was the wrong tool: a soft ellipse
+ * on dark timber is invisible, so he still read as a sticker floating over the
+ * lintel. What sells weight here is overlap — his feet sitting slightly into
+ * the lintel's top edge, the way a bird's toes wrap a branch. The shadow stays
+ * only as a tight darkening right where the feet meet the wood.
+ */
+.kato::after {
+  content: '';
+  position: absolute;
+  bottom: -0.1rem;
+  /* Same left edge and width as .kato__bird, so it lines up with the sprite
+     without a translate to go out of sync with. The gradient does the
+     narrowing: a shadow is cast by his feet, not by his wingspan. */
+  left: 62%;
+  width: clamp(2.4rem, 4.6vh, 3.1rem);
+  height: 0.34rem;
+  background: radial-gradient(ellipse 26% 44% at 50% 50%, rgba(0, 0, 0, 0.78), transparent 74%);
+}
+
 .kato__bird {
   position: absolute;
-  bottom: -0.12rem;
+  /* Sunk slightly past the wrapper's edge so his feet overlap the lintel. */
+  bottom: -0.34rem;
   /* Right of centre, not centred: it keeps him clear of the header plaque at
      the widths where the plaque is wide and the paddocks are narrow. */
   left: 62%;

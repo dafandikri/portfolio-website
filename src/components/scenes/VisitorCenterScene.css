@@ -36,18 +36,55 @@
 }
 
 /*
- * The atrium arch. A suggestion of the two-storey hall the banner hangs in,
- * drawn as light rather than as architecture: an arched pool of exhibit
- * lighting on the far wall, and the floor catching it.
+ * The hall itself.
+ *
+ * The paddocks next door get their authority from material — a photographic
+ * plate, timber, welded bar. This scene has none of that and must not fake it
+ * with drawn architecture, which at this scale reads as clip art. It builds the
+ * room the way a room is actually read: a wall the light falls on, a horizon,
+ * and a floor beneath the exhibit.
  */
 .rotunda__atrium {
   position: absolute;
   inset: 0;
   pointer-events: none;
+}
+
+/* The arch of the far wall, lit from the skylight it sits under. */
+.rotunda__atrium::before {
+  content: '';
+  position: absolute;
+  top: -6%;
+  left: 50%;
+  width: min(58rem, 88%);
+  height: 82%;
+  translate: -50% 0;
+  border-radius: 50% 50% 0 0 / 58% 58% 0 0;
   background:
-    radial-gradient(ellipse 34% 46% at 50% 8%, rgba(206, 190, 150, 0.13), transparent 68%),
-    radial-gradient(ellipse 62% 26% at 50% 100%, rgba(140, 168, 150, 0.07), transparent 72%);
-  mask-image: linear-gradient(to bottom, #000 0 62%, transparent 96%);
+    radial-gradient(ellipse 60% 42% at 50% 0%, rgba(214, 199, 160, 0.15), transparent 72%),
+    linear-gradient(to bottom, rgba(120, 132, 118, 0.09), transparent 62%);
+  /* No rim highlight: a lit edge turns the arch into a drawn shape. Fading it
+     out at the boundary keeps it reading as light on a far wall. */
+  mask-image: radial-gradient(ellipse 74% 74% at 50% 8%, #000 38%, transparent 82%);
+}
+
+/*
+ * The floor. Without a ground plane every object in the scene hangs in the
+ * dark; with one, the case is standing in a building.
+ */
+.rotunda__atrium::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  /* Kept below the label column: a horizon running through the text muddied
+     both. The case still overlaps it, which is what standing on a floor is. */
+  height: 18%;
+  border-top: 1px solid rgba(226, 214, 182, 0.07);
+  background:
+    radial-gradient(ellipse 42% 90% at 50% 0%, rgba(240, 181, 31, 0.10), transparent 70%),
+    linear-gradient(to bottom, rgba(96, 112, 100, 0.13), rgba(4, 10, 8, 0.6) 70%);
 }
 
 .rotunda__header,
@@ -143,7 +180,10 @@
   background:
     radial-gradient(ellipse 78% 46% at 50% 108%, rgba(240, 181, 31, 0.16), transparent 72%),
     linear-gradient(168deg, rgba(38, 52, 44, 0.9), rgba(8, 16, 13, 0.95));
-  box-shadow: inset 0 1px rgba(255, 236, 190, 0.16), 0 0.6rem 1.5rem rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 1px rgba(255, 236, 190, 0.16),
+    0 0.6rem 1.5rem rgba(0, 0, 0, 0.5),
+    0 1.6rem 2.2rem -1rem rgba(0, 0, 0, 0.75);
 }
 
 /*
