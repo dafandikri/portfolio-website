@@ -164,7 +164,7 @@
   margin: 0;
   /* Top padding is the mascot's airspace: he perches above the top row's
      lintel, outside the containment unit, and must never reach the header. */
-  padding: 2.6rem 0.8rem 0.7rem;
+  padding: 4rem 0.8rem 0.7rem;
   list-style: none;
   perspective: 1200px;
   transition: opacity 260ms ease, transform 320ms ease;
@@ -863,7 +863,7 @@
 
 @media (max-height: 720px) and (min-width: 761px) {
   /* Three columns need more room than two did, and less airspace will do. */
-  .park__grid { width: min(100%,60rem); gap: 0.55rem 0.85rem; padding-top: 2.1rem; }
+  .park__grid { width: min(100%,60rem); gap: 0.55rem 0.85rem; padding-top: 3.3rem; }
   .park__sill { height: 2rem; }
 }
 
