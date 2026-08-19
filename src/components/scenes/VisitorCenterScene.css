@@ -1,0 +1,280 @@
+/*
+ * The Visitor Center rotunda.
+ *
+ * The Park scene is moonlit jungle. This is interior: the same island, a
+ * different quality of light. Rather than repeat the paddocks' timber-and-steel
+ * enclosures, an award is mounted the way the park mounts a specimen — under
+ * glass, on a lit plinth, with a written label beside it.
+ *
+ * One typographic exception is deliberate. Everything in this act is set in
+ * Orbitron, the machined voice InGen manufactures things in. The banner is not:
+ * it is the only object in the park that was painted by hand, so it takes the
+ * serif. Machined lettering on painted canvas would be the wrong material.
+ */
+
+.rotunda {
+  --bone: #e8dcc4;
+  --canvas: #cdbd8c;
+  --timber: #8a4b22;
+  --amber: #f0b51f;
+  --interior: #06100d;
+
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.55rem, 1.5vh, 1rem);
+  padding: clamp(1rem, 2.4vw, 2rem) clamp(0.7rem, 2.6vw, 2rem);
+  overflow: hidden;
+  color: var(--bone);
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 116%, rgba(240, 181, 31, 0.10), transparent 70%),
+    linear-gradient(to bottom, #040b09 0%, var(--interior) 46%, #030807 100%);
+}
+
+/*
+ * The atrium arch. A suggestion of the two-storey hall the banner hangs in,
+ * drawn as light rather than as architecture: an arched pool of exhibit
+ * lighting on the far wall, and the floor catching it.
+ */
+.rotunda__atrium {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 46% at 50% 8%, rgba(206, 190, 150, 0.13), transparent 68%),
+    radial-gradient(ellipse 62% 26% at 50% 100%, rgba(140, 168, 150, 0.07), transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 0 62%, transparent 96%);
+}
+
+.rotunda__header,
+.rotunda__banner,
+.rotunda__cases { position: relative; z-index: 2; }
+
+.rotunda__kicker,
+.rotunda__section-label,
+.rotunda__event {
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(0.42rem, 0.78vw, 0.55rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(232, 220, 196, 0.7);
+}
+
+.rotunda__header { text-align: center; }
+
+.rotunda__heading {
+  margin: 0.1em 0 0;
+  font-family: var(--font-tech);
+  font-size: clamp(1.4rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone);
+}
+
+/*
+ * The banner. Painted canvas, so: the serif, generous tracking, and a slight
+ * sag at the bottom edge rather than a straight cut.
+ */
+.rotunda__banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 44rem);
+  margin: 0;
+  padding: clamp(0.5rem, 1.6vh, 0.95rem) clamp(1rem, 4vw, 2.6rem) clamp(0.9rem, 2.4vh, 1.5rem);
+  text-align: center;
+  color: #23160b;
+  background:
+    linear-gradient(101deg, rgba(120, 92, 46, 0.16) 0 18%, transparent 18% 82%, rgba(120, 92, 46, 0.16) 82%),
+    linear-gradient(175deg, #efe4bd, var(--canvas) 62%, #b3a173);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.55), inset 0 -2px rgba(97, 82, 48, 0.35);
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 50% 100%, 0 84%);
+  transform-origin: 50% 0;
+  animation: rotunda-unfurl 900ms cubic-bezier(0.2, 1.08, 0.34, 1) both;
+}
+
+.rotunda__banner-text {
+  font-family: var(--font-sc);
+  font-size: clamp(0.95rem, 2.9vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+}
+
+@keyframes rotunda-unfurl {
+  from { opacity: 0; transform: scaleY(0.03) rotate(-1.2deg); }
+  to   { opacity: 1; transform: none; }
+}
+
+.rotunda__cases {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+  gap: clamp(0.7rem, 1.8vw, 1.2rem);
+  width: min(100%, 62rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* A case is a lit plinth under glass, plus the label written beside it. */
+.rotunda__case {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(0.6rem, 1.5vw, 1rem);
+  align-items: stretch;
+}
+
+.rotunda__vitrine {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: clamp(0.5rem, 1.4vh, 0.9rem);
+  overflow: hidden;
+  padding: clamp(0.7rem, 1.7vw, 1.1rem);
+  border: 1px solid rgba(232, 220, 196, 0.22);
+  background:
+    radial-gradient(ellipse 78% 46% at 50% 108%, rgba(240, 181, 31, 0.16), transparent 72%),
+    linear-gradient(168deg, rgba(38, 52, 44, 0.9), rgba(8, 16, 13, 0.95));
+  box-shadow: inset 0 1px rgba(255, 236, 190, 0.16), 0 0.6rem 1.5rem rgba(0, 0, 0, 0.5);
+}
+
+/*
+ * The specimen: the competition's own mark, lit from below the way the park
+ * lights the things it puts under glass. This is what the case is for — an
+ * empty box with a caption at the bottom read as a layout fault, not a plinth.
+ */
+.rotunda__specimen {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(4.5rem, 14vh, 8rem);
+}
+
+.rotunda__specimen::after {
+  content: '';
+  position: absolute;
+  right: 12%;
+  bottom: -0.4rem;
+  left: 12%;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(240, 181, 31, 0.3), transparent 70%);
+}
+
+.rotunda__mount {
+  display: grid;
+  align-content: end;
+  gap: 0.16rem;
+  width: 100%;
+}
+
+/* The raking highlight across the glass front. */
+.rotunda__glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(104deg, transparent 0 38%, rgba(226, 240, 232, 0.07) 44% 52%, transparent 58%);
+}
+
+.rotunda__logo {
+  width: clamp(3rem, 7vw, 4.6rem);
+  height: clamp(3rem, 7vw, 4.6rem);
+  object-fit: contain;
+  filter: drop-shadow(0 0.35rem 0.7rem rgba(0, 0, 0, 0.55));
+}
+
+.rotunda__award {
+  margin: 0.06em 0 0.2em;
+  font-family: var(--font-tech);
+  font-size: clamp(1.05rem, 2.6vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.rotunda__host,
+.rotunda__date,
+.rotunda__story,
+.rotunda__members,
+.rotunda__highlights {
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(0.6rem, 1.02vw, 0.72rem);
+  line-height: 1.62;
+  color: rgba(232, 220, 196, 0.78);
+}
+
+.rotunda__date { color: rgba(232, 220, 196, 0.5); }
+
+.rotunda__label {
+  display: grid;
+  gap: 0.45rem;
+  align-content: start;
+  padding: clamp(0.7rem, 1.7vw, 1.1rem);
+  border-left: 2px solid rgba(240, 181, 31, 0.32);
+  background: linear-gradient(120deg, rgba(20, 30, 25, 0.6), transparent 70%);
+}
+
+.rotunda__story { color: rgba(232, 220, 196, 0.9); }
+
+.rotunda__highlights { padding-left: 0.95rem; }
+.rotunda__highlights li { margin-bottom: 0.22rem; }
+.rotunda__highlights li::marker { color: rgba(240, 181, 31, 0.55); }
+
+.rotunda__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem clamp(0.9rem, 2.4vw, 1.8rem);
+  margin-top: 0.15rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(232, 220, 196, 0.14);
+}
+
+.rotunda__project,
+.rotunda__team { display: grid; gap: 0.12rem; margin: 0; }
+
+.rotunda__link {
+  font-family: var(--font-tech);
+  font-size: clamp(0.66rem, 1.1vw, 0.8rem);
+  color: var(--amber);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.rotunda__link:hover,
+.rotunda__link:focus-visible { color: #ffd465; }
+
+.rotunda__link:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .rotunda {
+    justify-content: flex-start;
+    padding-top: max(2.4rem, env(safe-area-inset-top));
+    overflow-y: auto;
+  }
+
+  .rotunda__cases { overflow: visible; }
+
+  /* Plinth above label rather than beside it; two columns of this at 390px
+     would leave neither the award nor its story legible. */
+  .rotunda__case { grid-template-columns: minmax(0, 1fr); }
+  .rotunda__label { border-left: 0; border-top: 2px solid rgba(240, 181, 31, 0.32); }
+  .rotunda__rig { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotunda__banner { animation: none; }
+}
