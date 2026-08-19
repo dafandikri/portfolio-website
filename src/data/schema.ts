@@ -127,3 +127,38 @@ export const cardSchema = z.object({
   footer: z.array(z.array(cardFieldSchema).min(1)).min(1),
 })
 export type Card = z.infer<typeof cardSchema>
+
+// ---------------------------------------------------------------------------
+// Awards
+// ---------------------------------------------------------------------------
+
+/**
+ * A competition result.
+ *
+ * Awards are held apart from projects on purpose. A project's copy describes
+ * the product; anything it went on to win is recorded here and points back at
+ * it by title. The reference runs one way only, so a reader who wants to know
+ * what a product does never has to read around a placing to find out.
+ */
+export const awardSchema = z.object({
+  title: z.string().min(1),
+  event: z.string().min(1),
+  host: z.string().min(1),
+  date: z.string().min(1),
+  team: z.string().min(1),
+  members: z.array(z.string().min(1)).min(1),
+  /**
+   * Title of the project this was won with, matching a `projectSchema` title
+   * exactly. `null` for an award that belongs to no project on the site.
+   * The match itself is enforced in ./index.ts — Zod validates each collection
+   * in isolation and cannot see across them.
+   */
+  projectTitle: z.string().min(1).nullable(),
+  story: z.string().min(1),
+  highlights: z.array(z.string().min(1)).min(1),
+  /** asset key resolved via getIcon(). */
+  logo: z.string().min(1),
+})
+export type Award = z.infer<typeof awardSchema>
+
+export const awardsSchema = z.array(awardSchema)
