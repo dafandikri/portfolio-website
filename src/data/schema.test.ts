@@ -6,6 +6,7 @@ import {
   experiencesSchema,
   techStackSchema,
   skillsSchema,
+  awardSchema,
 } from './schema'
 
 const validProject = {
@@ -30,6 +31,19 @@ const validEntry = {
   date: 'January 2025 - Present',
   description: 'A mock experience entry used for testing.',
   achievements: ['did a mock thing'],
+  logo: 'github',
+}
+
+const validAward = {
+  title: 'Mock Award',
+  event: 'Mock Competition 2025',
+  host: 'Test University',
+  date: '1 January 2025',
+  team: 'Team Mock',
+  members: ['Mock Person'],
+  projectTitle: 'Mock Project',
+  story: 'A mock award used for testing.',
+  highlights: ['won a mock thing'],
   logo: 'github',
 }
 
@@ -103,5 +117,27 @@ describe('techStackSchema / skillsSchema', () => {
   it('accepts a non-empty skills list and rejects an empty one', () => {
     expect(skillsSchema.safeParse([item]).success).toBe(true)
     expect(skillsSchema.safeParse([]).success).toBe(false)
+  })
+})
+
+describe('awardSchema', () => {
+  it('accepts a valid award', () => {
+    expect(awardSchema.safeParse(validAward).success).toBe(true)
+  })
+
+  it('accepts an award not tied to any project', () => {
+    expect(awardSchema.safeParse({ ...validAward, projectTitle: null }).success).toBe(true)
+  })
+
+  it('rejects an award with no members', () => {
+    expect(awardSchema.safeParse({ ...validAward, members: [] }).success).toBe(false)
+  })
+
+  it('rejects an award with no highlights', () => {
+    expect(awardSchema.safeParse({ ...validAward, highlights: [] }).success).toBe(false)
+  })
+
+  it('rejects an award with an empty title', () => {
+    expect(awardSchema.safeParse({ ...validAward, title: '' }).success).toBe(false)
   })
 })

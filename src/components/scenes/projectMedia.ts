@@ -2,6 +2,7 @@ import siraProjectLandscape from '../../assets/img/sira_project_landscape.webp'
 import boulderProjectLandscape from '../../assets/img/boulder_project_landscape.webp'
 import portfolioProjectLandscape from '../../assets/img/portfolio_project_landscape.webp'
 import interbioProjectLandscape from '../../assets/img/interbio_project_landscape.webp'
+import talkactiveProjectLandscape from '../../assets/img/talkactive_project_landscape.webp'
 
 export type ProjectMedia =
   | { kind: 'image'; src: string; alt: string }
@@ -26,6 +27,13 @@ const PROJECT_MEDIA: Readonly<Record<string, ProjectMedia>> = {
     previewSrc: '/boulder-coach-preview.mp4',
     poster: boulderProjectLandscape,
     label: 'Boulder Coach complete product walkthrough',
+  },
+  // A still, not a clip: the walkthrough has not been recorded yet. Swapping
+  // this one entry to `kind: 'video'` later changes nothing else.
+  talkactive_project: {
+    kind: 'image',
+    src: talkactiveProjectLandscape,
+    alt: 'Talk-Active rehearsal workspace showing a current project, its evaluator rubric and the next practice session',
   },
   portfolio_project: {
     kind: 'video',

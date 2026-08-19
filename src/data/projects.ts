@@ -50,6 +50,25 @@ export const projectsData: Project[] = [
     repoLink: 'https://github.com/dafandikri/boulder-coach',
   },
   {
+    title: 'Talk-Active',
+    year: '2026',
+    featured: true,
+    context: 'Team product · Live',
+    description:
+      "A rehearsal workspace for students preparing a rubric-graded pitch, scholarship interview, thesis defence or competition Q&A. Rather than scoring delivery, it maps a spoken attempt against the evaluator's actual rubric, refuses any verdict it cannot support with a quote from the transcript, and turns the weakest claim into the next question the student has to answer.",
+    image: 'talkactive_project',
+    features: [
+      'Semantic analysis through the Vercel AI Gateway, with every model-proposed verdict rejected server-side unless its supporting quote is found verbatim in the transcript',
+      'Visible degradation — a timeout, malformed response or exhausted budget falls back to deterministic cue matching, and the interface names which engine produced each verdict',
+      'Rubric → attempt → evidence → grounded judge question → saved session loop, persisted so projects, drafts and history survive a reload',
+      'Optional camera-and-microphone replay behind explicit opt-in plus browser dictation; guest workspace data never leaves localStorage',
+    ],
+    techStack: ['nextjs', 'typescript', 'react', 'postgresql', 'playwright'],
+    liveLink: 'https://talk-active-id.vercel.app',
+    liveLabel: 'Open live app',
+    repoLink: 'https://github.com/dafandikri/talk-active',
+  },
+  {
     title: 'Portfolio Website',
     year: '2025–2026',
     featured: true,

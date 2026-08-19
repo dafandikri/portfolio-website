@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { projectsData } from '../../data/projects'
 import type { Project } from '../../data/schema'
 import { useInView } from '../../hooks/useInView'
+import KatoPerch from '../KatoPerch'
 import { projectCardTitle, projectMedia, type ProjectMedia } from './projectMedia'
 import './ParkScene.css'
 
@@ -265,6 +266,9 @@ export default function ParkScene() {
 
                 <span className="park__pylons" aria-hidden="true"><i /><i /></span>
               </button>
+              {/* Rendered after the button on purpose: the hover rule that
+                  changes his pose uses a general sibling combinator. */}
+              {project.title === 'Talk-Active' && <KatoPerch />}
             </li>
           )
         })}

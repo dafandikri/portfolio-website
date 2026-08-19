@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { projectCardTitle, projectMedia } from './projectMedia'
 
 describe('project media registry', () => {
-  it('uses lightweight video previews and full walkthrough videos for every featured project', () => {
+  it('uses lightweight video previews and full walkthrough videos for every project that has a recording', () => {
     const sira = projectMedia('sira_project')
     const boulder = projectMedia('boulder_project')
     const portfolio = projectMedia('portfolio_project')
@@ -34,5 +34,17 @@ describe('project media registry', () => {
     expect(projectCardTitle('SIRA — Smart Invoice Reminder AI')).toBe('SIRA')
     expect(projectCardTitle('GeoBikunAlert')).toBe('GeoBikun')
     expect(projectCardTitle('Unmapped Project')).toBe('Unmapped Project')
+  })
+})
+
+describe('Talk-Active media', () => {
+  it('resolves media for the Talk-Active paddock', () => {
+    const media = projectMedia('talkactive_project')
+    expect(media).not.toBeNull()
+    expect(media?.kind).toBe('image')
+  })
+
+  it('gives Talk-Active a paddock plaque title', () => {
+    expect(projectCardTitle('Talk-Active')).toBe('Talk-Active')
   })
 })

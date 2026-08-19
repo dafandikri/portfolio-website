@@ -17,9 +17,12 @@ const featured = projectsData.filter((project) => project.featured)
 const archived = projectsData.filter((project) => !project.featured)
 
 describe('ParkScene', () => {
-  it('shows four complete containment paddocks and a quieter earlier-work archive', () => {
+  it('shows five complete containment paddocks and a quieter earlier-work archive', () => {
     const { container } = render(<ParkScene />)
 
+    // Pinned rather than implied: the rest of this test derives its counts from
+    // featured.length, which would keep passing if a project silently vanished.
+    expect(featured).toHaveLength(5)
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
     expect(container.querySelectorAll('.park__containment')).toHaveLength(featured.length)
     expect(container.querySelectorAll('.park__hazard')).toHaveLength(featured.length)
@@ -122,5 +125,33 @@ describe('ParkScene', () => {
   it('renders a null-media placeholder directly', () => {
     render(<ProjectMediaView media={null} />)
     expect(screen.getByLabelText('Project media not added yet')).toHaveTextContent('Feed unavailable')
+  })
+})
+
+describe('Kato', () => {
+  it('perches on the Talk-Active paddock and no other', () => {
+    const { container } = render(<ParkScene />)
+
+    const perches = container.querySelectorAll('.kato')
+    expect(perches).toHaveLength(1)
+
+    const host = perches[0]!.closest('.park__containment')
+    expect(within(host as HTMLElement).getByText('Talk-Active')).toBeInTheDocument()
+  })
+
+  it('stays out of the accessibility tree', () => {
+    const { container } = render(<ParkScene />)
+
+    expect(container.querySelector('.kato')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('sits after the paddock button, which the pose-swap selector depends on', () => {
+    const { container } = render(<ParkScene />)
+
+    const host = container.querySelector('.kato')!.closest('.park__containment')!
+    const children = Array.from(host.children).map((child) => child.className)
+    expect(children.indexOf('kato')).toBeGreaterThan(
+      children.findIndex((name) => name.includes('park__containment-unit')),
+    )
   })
 })
