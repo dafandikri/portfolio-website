@@ -1,6 +1,17 @@
-import { awards, projects } from '../../data'
-import { getIcon } from '../../assets/index.js'
+import { awardsData } from '../../data/awards'
+import { projectsData } from '../../data/projects'
+import ristekLogo from '../../assets/img/favicon/ristek.png'
 import './VisitorCenterScene.css'
+
+/**
+ * Award marks, imported directly rather than through the shared asset barrel.
+ * `getIcon` reaches the whole registry, which pulled every icon on the site
+ * into this scene's chunk and made an awards page heavier than the 3D gate.
+ * One award needs one logo.
+ */
+const AWARD_LOGOS: Readonly<Record<string, string>> = {
+  ristek: ristekLogo,
+}
 
 /**
  * Past the gate, past the paddocks, into the Visitor Center.
@@ -28,8 +39,8 @@ export default function VisitorCenterScene() {
       </p>
 
       <ul className="rotunda__cases" aria-label="Awards">
-        {awards.map((award) => {
-          const project = projects.find((candidate) => candidate.title === award.projectTitle)
+        {awardsData.map((award) => {
+          const project = projectsData.find((candidate) => candidate.title === award.projectTitle)
 
           return (
             <li key={`${award.event}-${award.title}`} className="rotunda__case">
@@ -38,7 +49,7 @@ export default function VisitorCenterScene() {
                     viewport, and a second deferral leaves the case empty at
                     first paint — which is exactly when it is being looked at. */}
                 <div className="rotunda__specimen">
-                  <img className="rotunda__logo" src={getIcon(award.logo)} alt="" />
+                  <img className="rotunda__logo" src={AWARD_LOGOS[award.logo]} alt="" />
                 </div>
                 <div className="rotunda__mount">
                   <p className="rotunda__event">{award.event}</p>
