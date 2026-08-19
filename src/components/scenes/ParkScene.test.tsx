@@ -127,3 +127,31 @@ describe('ParkScene', () => {
     expect(screen.getByLabelText('Project media not added yet')).toHaveTextContent('Feed unavailable')
   })
 })
+
+describe('Kato', () => {
+  it('perches on the Talk-Active paddock and no other', () => {
+    const { container } = render(<ParkScene />)
+
+    const perches = container.querySelectorAll('.kato')
+    expect(perches).toHaveLength(1)
+
+    const host = perches[0]!.closest('.park__containment')
+    expect(within(host as HTMLElement).getByText('Talk-Active')).toBeInTheDocument()
+  })
+
+  it('stays out of the accessibility tree', () => {
+    const { container } = render(<ParkScene />)
+
+    expect(container.querySelector('.kato')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('sits after the paddock button, which the pose-swap selector depends on', () => {
+    const { container } = render(<ParkScene />)
+
+    const host = container.querySelector('.kato')!.closest('.park__containment')!
+    const children = Array.from(host.children).map((child) => child.className)
+    expect(children.indexOf('kato')).toBeGreaterThan(
+      children.findIndex((name) => name.includes('park__containment-unit')),
+    )
+  })
+})

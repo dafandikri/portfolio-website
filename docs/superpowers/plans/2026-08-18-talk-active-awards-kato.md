@@ -558,7 +558,15 @@ Confirm, on the projects scene:
 - Kato flies in from the right and lands on the Talk-Active lintel.
 - He never overlaps the header plaque at 1440, 1024, 800×720 or 390 wide.
 - Hovering the Talk-Active paddock switches him to wings-up.
-- Clicking anywhere on that paddock — **including directly on Kato** — opens the dossier. If clicking Kato does nothing, `pointer-events: none` is not applying; fix it rather than moving him.
+- Clicking the paddock opens its dossier, and Kato hides while it is open.
+- `document.elementFromPoint` at Kato's centre returns something **other** than
+  `.kato` — the grid, in practice. That is the real assertion: he must not be an
+  invisible click target hanging in the air.
+
+  Note there is nothing beneath him to "click through" to. He sits at
+  `bottom: 100%`, above the paddock and outside its box, so his airspace is not
+  over the button. Expecting a click on Kato to open the dossier would be
+  expecting the wrong geometry.
 - With OS "reduce motion" enabled he is perched and still.
 
 - [ ] **Step 12: Commit**
