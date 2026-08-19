@@ -133,7 +133,7 @@
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.55), inset 0 -2px rgba(97, 82, 48, 0.35);
   clip-path: polygon(0 0, 100% 0, 100% 84%, 50% 100%, 0 84%);
   transform-origin: 50% 0;
-  animation: rotunda-unfurl 900ms cubic-bezier(0.2, 1.08, 0.34, 1) both;
+  animation: rotunda-unfurl 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .rotunda__banner-text {
@@ -159,6 +159,8 @@
   list-style: none;
   min-height: 0;
   overflow-y: auto;
+  scrollbar-color: rgba(226, 164, 23, 0.4) transparent;
+  scrollbar-width: thin;
 }
 
 /* A case is a lit plinth under glass, plus the label written beside it. */
@@ -254,14 +256,14 @@
   color: rgba(232, 220, 196, 0.78);
 }
 
-.rotunda__date { color: rgba(232, 220, 196, 0.5); }
+.rotunda__date { color: rgba(232, 220, 196, 0.64); }
 
 .rotunda__label {
   display: grid;
   gap: 0.45rem;
   align-content: start;
   padding: clamp(0.7rem, 1.7vw, 1.1rem);
-  border-left: 2px solid rgba(240, 181, 31, 0.32);
+  border-left: 1px solid rgba(240, 181, 31, 0.4);
   background: linear-gradient(120deg, rgba(20, 30, 25, 0.6), transparent 70%);
 }
 
@@ -311,7 +313,7 @@
   /* Plinth above label rather than beside it; two columns of this at 390px
      would leave neither the award nor its story legible. */
   .rotunda__case { grid-template-columns: minmax(0, 1fr); }
-  .rotunda__label { border-left: 0; border-top: 2px solid rgba(240, 181, 31, 0.32); }
+  .rotunda__label { border-left: 0; border-top: 1px solid rgba(240, 181, 31, 0.4); }
   .rotunda__rig { width: 100%; }
 }
 
