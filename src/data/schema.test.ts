@@ -140,4 +140,31 @@ describe('awardSchema', () => {
   it('rejects an award with an empty title', () => {
     expect(awardSchema.safeParse({ ...validAward, title: '' }).success).toBe(false)
   })
+
+  it('validates optional award photographs and personal lessons', () => {
+    const enrichedAward = {
+      ...validAward,
+      photo: {
+        asset: 'team-photo',
+        alt: 'The team holding its award',
+        caption: 'Final pitching',
+        width: 720,
+        height: 960,
+      },
+      lesson: {
+        title: 'What changed next',
+        body: 'A specific lesson from the final pitch.',
+      },
+    }
+
+    expect(awardSchema.safeParse(enrichedAward).success).toBe(true)
+    expect(awardSchema.safeParse({
+      ...enrichedAward,
+      photo: { ...enrichedAward.photo, width: 0 },
+    }).success).toBe(false)
+    expect(awardSchema.safeParse({
+      ...enrichedAward,
+      lesson: { ...enrichedAward.lesson, body: '' },
+    }).success).toBe(false)
+  })
 })

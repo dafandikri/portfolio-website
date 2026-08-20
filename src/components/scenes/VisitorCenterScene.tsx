@@ -1,98 +1,157 @@
 import { awardsData } from '../../data/awards'
 import { projectsData } from '../../data/projects'
 import ristekLogo from '../../assets/img/favicon/ristek.png'
+import teamFamPhoto from '../../assets/img/awards/team-fam-best-presentation.webp'
 import './VisitorCenterScene.css'
 
-/**
- * Award marks, imported directly rather than through the shared asset barrel.
- * `getIcon` reaches the whole registry, which pulled every icon on the site
- * into this scene's chunk and made an awards page heavier than the 3D gate.
- * One award needs one logo.
- */
 const AWARD_LOGOS: Readonly<Record<string, string>> = {
   ristek: ristekLogo,
 }
 
-/**
- * Past the gate, past the paddocks, into the Visitor Center.
- *
- * Awards get their own scene rather than a ribbon on a paddock. A result is a
- * different kind of fact from a product description, and this site's idiom is
- * that a different kind of content gets its own set piece.
- *
- * It continues the same film rather than introducing another: same island,
- * next room. That is why it keeps the paddocks' machined typeface — with one
- * exception noted in the stylesheet.
- */
-export default function VisitorCenterScene() {
+const AWARD_PHOTOS: Readonly<Record<string, string>> = {
+  'team-fam-best-presentation': teamFamPhoto,
+}
+
+const SCRATCHES = [1, 2, 3] as const
+
+function ScarField({ direction }: { direction: 'rise' | 'fall' }) {
   return (
-    <section className="rotunda" aria-labelledby="awards-heading">
-      <div className="rotunda__atrium" aria-hidden="true" />
+    <span className={`x-transition__scar-field x-transition__scar-field--${direction}`}>
+      {SCRATCHES.map((scar) => (
+        <span
+          key={scar}
+          className={`x-transition__scar x-transition__scar--${scar}`}
+          data-gouge={scar}
+        />
+      ))}
+    </span>
+  )
+}
 
-      <header className="rotunda__header">
-        <p className="rotunda__kicker">Isla Nublar · Visitor Center</p>
-        <h2 id="awards-heading" className="rotunda__heading">Awards</h2>
-      </header>
+/**
+ * Printed directly over the live paddock DOM. Keeping the wash, dots and
+ * gouges inside the project frame is what makes that scene become the comic
+ * page instead of cutting to a look-alike background.
+ */
+export function PaddockSurfaceTransition() {
+  return (
+    <div className="x-transition__surface" aria-hidden="true">
+      <span className="x-transition__paper-wash" />
+      <span className="x-transition__halftone" data-halftone="paddock" />
+      <ScarField direction="rise" />
+      <ScarField direction="fall" />
+    </div>
+  )
+}
 
-      <p className="rotunda__banner">
-        <span className="rotunda__banner-text">When Dinosaurs Ruled The Hackathon</span>
-      </p>
+/**
+ * The printed achievement spread revealed behind the scratched paddock.
+ *
+ * GateScene owns the shared scroll clock so this layer can sit behind the live
+ * project frame throughout the strike instead of entering as a second scene.
+ */
+export default function VisitorCenterScene({ interactive = true }: { interactive?: boolean }) {
+  return (
+    <section
+      className="scene scene--archive"
+      aria-labelledby="awards-heading"
+      aria-hidden={!interactive}
+    >
+      <div className="x-archive">
+        <div
+          className="x-archive__shell"
+          data-reveal-layer="award"
+          inert={!interactive}
+        >
+          <header className="x-archive__header">
+            <div>
+              <p className="x-archive__kicker">Field file · Class X</p>
+              <h2 id="awards-heading" className="x-archive__heading" aria-label="Awards">
+                Awards <span aria-hidden="true">/ 01</span>
+              </h2>
+            </div>
+            <p className="x-archive__deck">
+              The product was ready. The business case wasn&rsquo;t.
+            </p>
+          </header>
 
-      <ul className="rotunda__cases" aria-label="Awards">
-        {awardsData.map((award) => {
-          const project = projectsData.find((candidate) => candidate.title === award.projectTitle)
+          <ul className="x-archive__records" aria-label="Awards">
+            {awardsData.map((award, index) => {
+              const project = projectsData.find((candidate) => candidate.title === award.projectTitle)
+              const lessonId = `award-lesson-${index}`
 
-          return (
-            <li key={`${award.event}-${award.title}`} className="rotunda__case">
-              <div className="rotunda__vitrine">
-                {/* Not lazy: this scene is already gated on approaching the
-                    viewport, and a second deferral leaves the case empty at
-                    first paint — which is exactly when it is being looked at. */}
-                <div className="rotunda__specimen">
-                  <img className="rotunda__logo" src={AWARD_LOGOS[award.logo]} alt="" />
-                </div>
-                <div className="rotunda__mount">
-                  <p className="rotunda__event">{award.event}</p>
-                  <h3 className="rotunda__award">{award.title}</h3>
-                  <p className="rotunda__host">{award.host}</p>
-                  <p className="rotunda__date">Finals · {award.date}</p>
-                </div>
-                <span className="rotunda__glass" aria-hidden="true" />
-              </div>
-
-              <div className="rotunda__label">
-                <p className="rotunda__story">{award.story}</p>
-
-                <p className="rotunda__section-label">Field record</p>
-                <ul className="rotunda__highlights">
-                  {award.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
-                </ul>
-
-                <div className="rotunda__footer">
-                  {project ? (
-                    <p className="rotunda__project">
-                      <span className="rotunda__section-label">Specimen on file</span>
-                      <a
-                        className="rotunda__link"
-                        href={project.liveLink}
-                        target="_blank"
-                        rel="noreferrer noopener"
-                      >
-                        {project.title}
-                      </a>
-                    </p>
+              return (
+                <li key={`${award.event}-${award.title}`} className="x-archive__record">
+                  {award.photo ? (
+                    <figure className="x-archive__evidence">
+                      <img
+                        src={AWARD_PHOTOS[award.photo.asset]}
+                        alt={award.photo.alt}
+                        width={award.photo.width}
+                        height={award.photo.height}
+                        decoding="async"
+                      />
+                      <figcaption>{award.photo.caption}</figcaption>
+                    </figure>
                   ) : null}
 
-                  <p className="rotunda__team">
-                    <span className="rotunda__section-label">{award.team}</span>
-                    <span className="rotunda__members">{award.members.join(' · ')}</span>
-                  </p>
-                </div>
-              </div>
-            </li>
-          )
-        })}
-      </ul>
+                  <article className="x-archive__brief">
+                    <div className="x-archive__identity">
+                      <img src={AWARD_LOGOS[award.logo]} alt="" />
+                      <div>
+                        <p className="x-archive__event">{award.event} · Final pitch</p>
+                        <h3>{award.title}</h3>
+                        <p className="x-archive__meta">{award.host} · {award.date}</p>
+                      </div>
+                    </div>
+
+                    <p className="x-archive__story">{award.story}</p>
+
+                    {award.lesson ? (
+                      <aside className="x-archive__lesson" aria-labelledby={lessonId}>
+                        <p>Pitch lesson</p>
+                        <h4 id={lessonId}>{award.lesson.title}</h4>
+                        <p>{award.lesson.body}</p>
+                      </aside>
+                    ) : null}
+
+                    <ul className="x-archive__facts" aria-label="Pitch facts">
+                      {award.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
+                    </ul>
+
+                    <footer className="x-archive__footer">
+                      {project ? (
+                        <a
+                          className="x-archive__link"
+                          href={project.liveLink}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          aria-label={`View ${project.title} (opens in a new tab)`}
+                        >
+                          View {project.title}
+                        </a>
+                      ) : null}
+
+                      <details className="x-archive__credits">
+                        <summary>{award.team} · {award.members.length} members</summary>
+                        <p>{award.members.join(' · ')}</p>
+                      </details>
+                    </footer>
+                  </article>
+                </li>
+              )
+            })}
+          </ul>
+
+          {/* Credits the motif the visitor just watched tear the paddock open.
+              DESIGN.md rules out character artwork between Projects and Awards,
+              so the nod is typographic and stays out of the headline block. */}
+          <aside className="x-archive__marginalia">
+            <p className="x-archive__marginalia-label">Margin note</p>
+            <p>Six cuts, two passes. Wolverine&rsquo;s work, hence Class X.</p>
+          </aside>
+        </div>
+      </div>
     </section>
   )
 }

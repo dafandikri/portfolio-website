@@ -156,6 +156,19 @@ export const awardSchema = z.object({
   projectTitle: z.string().min(1).nullable(),
   story: z.string().min(1),
   highlights: z.array(z.string().min(1)).min(1),
+  /** A real field photograph mounted with the award, when one exists. */
+  photo: z.object({
+    asset: z.string().min(1),
+    alt: z.string().min(1),
+    caption: z.string().min(1),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+  }).optional(),
+  /** A first-person lesson kept distinct from the factual award record. */
+  lesson: z.object({
+    title: z.string().min(1),
+    body: z.string().min(1),
+  }).optional(),
   /** asset key resolved via getIcon(). */
   logo: z.string().min(1),
 })

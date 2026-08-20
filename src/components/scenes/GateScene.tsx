@@ -29,9 +29,12 @@ import {
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'
 import { useInView } from '../../hooks/useInView'
 import { hingedDoor, splitGateGeometry } from './gateGeometry'
-import { gateMotion } from './gateMotion'
+import { gateMotion, gateSequenceProgress, projectAwardsProgress } from './gateMotion'
 import { GATE_TORCHES, torchFlicker } from './gateTorches'
 import ParkScene from './ParkScene'
+import VisitorCenterScene, {
+  PaddockSurfaceTransition,
+} from './VisitorCenterScene'
 import InfoPopover from '../InfoPopover'
 import './GateScene.css'
 
@@ -62,6 +65,7 @@ export default function GateScene() {
   const [modelReady, setModelReady] = useState(false)
   const [projectsMounted, setProjectsMounted] = useState(false)
   const [projectsActive, setProjectsActive] = useState(false)
+  const [archiveActive, setArchiveActive] = useState(false)
   const [creditVisible, setCreditVisible] = useState(false)
 
   /*
@@ -77,17 +81,91 @@ export default function GateScene() {
 
     let disposed = false
     let frame = 0
+    let scrollProbeFrame = 0
+    let stageVisible = true
+    let visibilityObserver: IntersectionObserver | null = null
     let renderer: WebGLRenderer | null = null
+    const staticLayout = window.matchMedia(
+      '(max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce)',
+    ).matches
+    let projectMountedState = staticLayout
+    let projectActiveState = staticLayout
+    let archiveActiveState = staticLayout
+    let creditVisibleState = false
+
+    if (staticLayout) {
+      setProjectsMounted(true)
+      setProjectsActive(true)
+      setArchiveActive(true)
+    }
+
+    const scrollProgress = () => {
+      const rect = section.getBoundingClientRect()
+      const travel = rect.height - window.innerHeight
+      return travel <= 0 ? 0 : Math.min(1, Math.max(0, -rect.top / travel))
+    }
+
+    const writeScrollState = (progress: number) => {
+      const chapter = projectAwardsProgress(progress)
+      const motion = gateMotion(gateSequenceProgress(chapter.gate), staticLayout)
+
+      section.style.setProperty('--archive-progress', chapter.archive.toFixed(4))
+      section.style.setProperty('--environment-strength', motion.environmentStrength.toFixed(3))
+      section.style.setProperty('--gate-model-strength', motion.modelStrength.toFixed(3))
+      section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.28).toFixed(3))
+      section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -3.4).toFixed(3)}%`)
+      section.style.setProperty('--credit-strength', motion.creditStrength.toFixed(3))
+      section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
+      section.style.setProperty('--roar-strength', motion.roarStrength.toFixed(3))
+
+      const creditActive = motion.creditStrength > 0.05
+      if (creditActive !== creditVisibleState) {
+        creditVisibleState = creditActive
+        setCreditVisible(creditActive)
+      }
+
+      const mountProjects = motion.projectStrength > 0.001
+      const activateProjects = motion.projectStrength >= 0.98
+        && (staticLayout || chapter.archive < 0.02)
+      const activateArchive = staticLayout || chapter.archive >= 0.9
+      if (mountProjects !== projectMountedState) {
+        projectMountedState = mountProjects
+        setProjectsMounted(mountProjects)
+      }
+      if (activateProjects !== projectActiveState) {
+        projectActiveState = activateProjects
+        setProjectsActive(activateProjects)
+      }
+      if (activateArchive !== archiveActiveState) {
+        archiveActiveState = activateArchive
+        setArchiveActive(activateArchive)
+      }
+
+      return motion
+    }
 
     try {
       renderer = new WebGLRenderer({ canvas, antialias: true, alpha: true })
     } catch {
-      // No WebGL: the scene degrades to its poster background rather than a
-      // blank hole in the page.
+      // No WebGL: keep the same scroll choreography over the poster plate. The
+      // old fallback jumped straight to Projects and never advanced into
+      // Awards, which made a graphics failure a content failure too.
       setFailed(true)
-      setProjectsMounted(true)
-      setProjectsActive(true)
-      return
+      const update = () => {
+        frame = 0
+        writeScrollState(scrollProgress())
+      }
+      const schedule = () => {
+        if (frame === 0) frame = requestAnimationFrame(update)
+      }
+      update()
+      window.addEventListener('scroll', schedule, { passive: true })
+      window.addEventListener('resize', schedule)
+      return () => {
+        cancelAnimationFrame(frame)
+        window.removeEventListener('scroll', schedule)
+        window.removeEventListener('resize', schedule)
+      }
     }
 
     const gl = renderer
@@ -153,15 +231,6 @@ export default function GateScene() {
       scale: number
       intensity: number
     }> = []
-
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    let projectMountedState = reduced
-    let projectActiveState = reduced
-    let creditVisibleState = false
-    if (reduced) {
-      setProjectsMounted(true)
-      setProjectsActive(true)
-    }
 
     new ColladaLoader().load(
       '/gate/gate.dae',
@@ -366,34 +435,7 @@ export default function GateScene() {
     const tick = (time = 0) => {
       frame = requestAnimationFrame(tick)
 
-      const rect = section.getBoundingClientRect()
-      const travel = rect.height - window.innerHeight
-      const raw = travel <= 0 ? 0 : -rect.top / travel
-      const progress = Math.min(1, Math.max(0, raw))
-      const motion = gateMotion(progress, reduced)
-
-      section.style.setProperty('--environment-strength', motion.environmentStrength.toFixed(3))
-      section.style.setProperty('--gate-model-strength', motion.modelStrength.toFixed(3))
-      section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.28).toFixed(3))
-      section.style.setProperty('--gate-dolly-y', `${(motion.dollyProgress * -3.4).toFixed(3)}%`)
-      section.style.setProperty('--credit-strength', motion.creditStrength.toFixed(3))
-      const creditActive = motion.creditStrength > 0.05
-      if (creditActive !== creditVisibleState) {
-        creditVisibleState = creditActive
-        setCreditVisible(creditActive)
-      }
-
-      section.style.setProperty('--project-strength', motion.projectStrength.toFixed(3))
-      const mountProjects = motion.projectStrength > 0.001
-      const activateProjects = motion.projectStrength >= 0.98
-      if (mountProjects !== projectMountedState) {
-        projectMountedState = mountProjects
-        setProjectsMounted(mountProjects)
-      }
-      if (activateProjects !== projectActiveState) {
-        projectActiveState = activateProjects
-        setProjectsActive(activateProjects)
-      }
+      const motion = writeScrollState(scrollProgress())
 
       if (!ready) return
       // Once the paddocks fully cover the shot, keep the last gate frame rather
@@ -414,7 +456,7 @@ export default function GateScene() {
       section.style.setProperty('--roar-y', `${(Math.abs(jolt) * -2).toFixed(2)}px`)
 
       for (const torch of torchEffects) {
-        const flicker = reduced ? 0.9 : torchFlicker(time, torch.phase)
+        const flicker = staticLayout ? 0.9 : torchFlicker(time, torch.phase)
         torch.light.intensity = torch.intensity * flicker
         torch.flame.scale.set(
           0.86 + flicker * 0.14,
@@ -435,14 +477,57 @@ export default function GateScene() {
       gl.render(scene, camera)
     }
 
+    /* `hasEntered` is intentionally sticky so the expensive model is not torn
+       down while reverse-scrolling. A second live observer parks the remaining
+       lightweight scroll probe once the entire gate chapter is off-screen. */
+    const resumeOnScroll = () => {
+      if (disposed) return
+
+      /* The WebGL loop may be parked with a stale non-zero frame id after a
+         large browser jump or bfcache restore. Keep the DOM choreography on a
+         separate coalesced probe so Projects always sheds the paper treatment
+         immediately when the visitor reverses toward it. */
+      if (scrollProbeFrame === 0) {
+        scrollProbeFrame = requestAnimationFrame(() => {
+          scrollProbeFrame = 0
+          writeScrollState(scrollProgress())
+        })
+      }
+
+      if (frame !== 0) return
+      const rect = section.getBoundingClientRect()
+      if (rect.bottom < -100 || rect.top > window.innerHeight + 100) return
+      stageVisible = true
+      frame = requestAnimationFrame(tick)
+    }
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      visibilityObserver = new IntersectionObserver(([entry]) => {
+        const nextVisible = entry?.isIntersecting ?? true
+        if (nextVisible === stageVisible) return
+        stageVisible = nextVisible
+        if (!stageVisible) {
+          cancelAnimationFrame(frame)
+          frame = 0
+        } else if (frame === 0) {
+          frame = requestAnimationFrame(tick)
+        }
+      }, { rootMargin: '100px 0px' })
+      visibilityObserver.observe(section)
+    }
+
     resize()
-    tick()
+    frame = requestAnimationFrame(tick)
     window.addEventListener('resize', resize)
+    window.addEventListener('scroll', resumeOnScroll, { passive: true })
 
     return () => {
       disposed = true
       cancelAnimationFrame(frame)
+      cancelAnimationFrame(scrollProbeFrame)
+      visibilityObserver?.disconnect()
       window.removeEventListener('resize', resize)
+      window.removeEventListener('scroll', resumeOnScroll)
       for (const texture of textureSet) texture.dispose()
       const materials = new Set<Material>()
       const geometries = new Set<BufferGeometry>()
@@ -468,7 +553,7 @@ export default function GateScene() {
       }}
       className="scene scene--gate"
     >
-      <div className={`gate__stage${projectsActive ? ' is-projects' : ''}`}>
+      <div className={`gate__stage${projectsActive ? ' is-projects' : ''}${archiveActive ? ' is-awards' : ''}`}>
         {/* Painted behind the canvas, so a device without WebGL still gets a lit
             night rather than a hole in the page. */}
         <div className="gate__picture" aria-hidden="true">
@@ -497,9 +582,14 @@ export default function GateScene() {
             aria-hidden={!projectsActive}
             inert={!projectsActive}
           >
-            <ParkScene />
+            <div className="gate__project-frame">
+              <ParkScene />
+              <PaddockSurfaceTransition />
+            </div>
           </div>
         )}
+
+        <VisitorCenterScene interactive={archiveActive} />
 
         <InfoPopover
           className="gate__credit"

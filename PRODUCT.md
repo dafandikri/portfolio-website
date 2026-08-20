@@ -121,6 +121,9 @@ Real, present in the repository:
 - One award: Best Presentation, RISTEK Hackathon 2026, Fakultas Ilmu Komputer
   Universitas Indonesia, won with Talk-Active by the five-person Team FAM
   (`src/data/awards.ts`).
+- The award record includes the real post-finals team photograph and an owner-
+  supplied reflection that the pitch underdeveloped its business model and
+  TAM/SAM/SOM because the team focused too narrowly on the product.
 - Walkthrough recordings for four featured projects in `public/`, and product
   stills in `src/assets/img/`. Talk-Active currently has a still; its recording
   is planned and not yet captured.

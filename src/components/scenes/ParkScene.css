@@ -333,6 +333,38 @@
   background: #020201;
 }
 
+.park__media-play {
+  position: absolute;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 11rem;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(240, 181, 31, 0.62);
+  background: rgba(7, 18, 10, 0.9);
+  box-shadow: 0 0.7rem 1.8rem rgba(0, 0, 0, 0.62);
+  color: #ffe29a;
+  font-family: var(--font-tech);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.park__media-play:hover,
+.park__media-play:focus-visible {
+  border-color: #ffe29a;
+  outline: 2px solid #f0b51f;
+  outline-offset: 3px;
+}
+
+.park__media-play:disabled {
+  color: rgba(255, 226, 154, 0.58);
+  cursor: not-allowed;
+}
+
 .park__media-placeholder {
   display: grid;
   width: 100%;
@@ -524,7 +556,7 @@
 }
 
 .park__plaque-copy strong {
-  font-size: clamp(0.5rem, 0.88vw, 0.68rem);
+  font-size: clamp(0.6rem, 0.88vw, 0.74rem);
   letter-spacing: 0.05em;
   color: rgba(255, 238, 194, 0.96);
   text-shadow: 0 1px 0 rgba(3, 12, 5, 0.9);
@@ -532,7 +564,7 @@
 
 .park__plaque-copy small {
   margin-top: 0.18rem;
-  font-size: clamp(0.33rem, 0.52vw, 0.42rem);
+  font-size: clamp(0.48rem, 0.58vw, 0.56rem);
   letter-spacing: 0.04em;
   color: rgba(192, 213, 156, 0.7);
 }
@@ -540,7 +572,7 @@
 .park__year {
   flex: none;
   font-family: var(--font-tech);
-  font-size: clamp(0.33rem, 0.5vw, 0.42rem);
+  font-size: clamp(0.48rem, 0.56vw, 0.54rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(239, 190, 73, 0.84);
@@ -556,17 +588,19 @@
 
 .park__archive summary {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 0.7rem;
   width: fit-content;
   margin-inline: auto;
-  padding: 0.28rem 0.65rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.85rem;
   border: 2px solid #2a1609;
   border-radius: 0.25rem;
   background:
     repeating-linear-gradient(176deg,transparent 0 0.42rem,rgba(25,11,4,0.17) 0.45rem 0.48rem),
     linear-gradient(90deg,rgba(74,39,16,0.96),rgba(105,65,29,0.96),rgba(58,30,13,0.96));
-  font-size: 0.4rem;
+  font-size: 0.62rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: rgba(255, 236, 192, 0.75);
@@ -598,8 +632,8 @@
 
 .park__archive li { padding: 0.5rem; border-left: 2px solid rgba(226,164,23,0.25); }
 .park__archive li strong,.park__archive li small { display: block; font-family: var(--font-tech); }
-.park__archive li strong { font-size: 0.47rem; color: rgba(255,240,214,0.7); }
-.park__archive li small { margin-top: 0.22rem; font-size: 0.36rem; color: rgba(255,240,214,0.36); }
+.park__archive li strong { font-size: 0.68rem; color: rgba(255,240,214,0.78); }
+.park__archive li small { margin-top: 0.22rem; font-size: 0.58rem; color: rgba(255,240,214,0.58); }
 
 /* Entered containment dossier ---------------------------------------- */
 
@@ -630,11 +664,12 @@
   z-index: 50;
   display: grid;
   grid-template-columns: minmax(18rem,1.15fr) minmax(0,0.85fr);
+  grid-template-rows: auto minmax(0,1fr);
   gap: clamp(0.75rem,1.8vw,1.35rem);
   width: min(calc(100% - 2rem),70rem);
   height: min(76svh,40rem);
   min-height: 25rem;
-  padding: clamp(1.5rem,2.5vw,2rem) clamp(0.7rem,1.8vw,1.25rem) 1rem;
+  padding: clamp(0.75rem,1.4vw,1rem) clamp(0.7rem,1.8vw,1.25rem) 1rem;
   overflow: hidden;
   border: 0.45rem solid #40230f;
   border-radius: 0.45rem;
@@ -663,14 +698,16 @@
 }
 
 .park__detail-close {
-  position: absolute;
-  top: 0.65rem;
-  right: 0.75rem;
-  padding: 0.34rem 0.5rem;
+  position: relative;
+  grid-row: 1;
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.75rem;
   border: 1px solid rgba(226,164,23,0.38);
   background: rgba(76, 30, 16, 0.78);
   font-family: var(--font-tech);
-  font-size: 0.43rem;
+  font-size: 0.6rem;
   letter-spacing: 0.13em;
   text-transform: uppercase;
   color: #f0b51f;
@@ -684,6 +721,8 @@
 .park__detail-copy { min-width: 0; min-height: 0; }
 
 .park__detail-media {
+  grid-row: 2;
+  grid-column: 1;
   display: flex;
   flex-direction: column;
   align-self: center;
@@ -718,9 +757,12 @@
 
 .park__media-expand,
 .park__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
   border-bottom: 1px solid rgba(226,164,23,0.44);
   font-family: var(--font-tech);
-  font-size: 0.43rem;
+  font-size: 0.62rem;
   font-weight: 700;
   letter-spacing: 0.13em;
   text-decoration: none;
@@ -732,6 +774,8 @@
 .park__media-expand:hover,.park__media-expand:focus-visible,.park__link:hover,.park__link:focus-visible { border-color:#ffe29a;color:#ffe29a;outline:none; }
 
 .park__detail-copy {
+  grid-row: 2;
+  grid-column: 2;
   align-self: stretch;
   overflow: auto;
   padding: 0.35rem 0.6rem 0.5rem 0.05rem;
@@ -760,7 +804,7 @@
 .park__detail-text {
   margin: 0;
   font-family: var(--font-tech);
-  font-size: clamp(0.56rem,0.9vw,0.68rem);
+  font-size: clamp(0.72rem,0.9vw,0.82rem);
   line-height: 1.62;
   color: rgba(255,240,214,0.66);
 }
@@ -848,17 +892,57 @@
   .park__detail {
     position: fixed;
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0,1fr);
+    grid-template-rows: auto auto minmax(0,1fr);
     gap: 0.65rem;
     width: calc(100% - 0.7rem);
     height: calc(100svh - 0.7rem);
     min-height: 0;
-    padding: 1.55rem 0.55rem 0.55rem;
+    padding:
+      max(0.75rem, env(safe-area-inset-top))
+      max(0.55rem, env(safe-area-inset-right))
+      max(0.55rem, env(safe-area-inset-bottom))
+      max(0.55rem, env(safe-area-inset-left));
   }
 
-  .park__detail-media { padding: 0.32rem; }
-  .park__detail-copy { padding: 0.15rem 0.35rem 0.5rem; }
-  .park__detail-close { top: 0.45rem; right: 0.45rem; }
+  .park__detail-close { grid-row: 1; grid-column: 1; }
+  .park__detail-media { grid-row: 2; grid-column: 1; padding: 0.32rem; }
+  .park__detail-copy { grid-row: 3; grid-column: 1; padding: 0.15rem 0.35rem 0.5rem; }
+}
+
+/* A stacked 16:9 feed leaves no room for the dossier in short landscape.
+   Reuse the desktop split, but remove its 25rem floor so the dialog always
+   fits inside the visible viewport. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .park__detail-backdrop {
+    position: fixed;
+    width: 100vw;
+    height: 100svh;
+  }
+
+  .park__detail {
+    position: fixed;
+    grid-template-columns: minmax(0, 1.1fr) minmax(10rem, 0.9fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 0.45rem 0.65rem;
+    width: calc(100% - 0.7rem);
+    height: calc(100svh - 0.7rem);
+    min-height: 0;
+    padding:
+      max(0.5rem, env(safe-area-inset-top))
+      max(0.55rem, env(safe-area-inset-right))
+      max(0.5rem, env(safe-area-inset-bottom))
+      max(0.55rem, env(safe-area-inset-left));
+  }
+
+  .park__detail-close { grid-row: 1; grid-column: 1 / -1; }
+  .park__detail-media {
+    grid-row: 2;
+    grid-column: 1;
+    align-self: stretch;
+    overflow: hidden;
+  }
+  .park__detail-viewport { flex: 1 1 auto; aspect-ratio: auto; }
+  .park__detail-copy { grid-row: 2; grid-column: 2; }
 }
 
 @media (max-height: 720px) and (min-width: 761px) {

@@ -55,6 +55,7 @@ export function useScrollProgress<T extends HTMLElement>(
    * `pass` measures the element's whole travel through the viewport instead.
    */
   mode: 'pin' | 'pass' = 'pin',
+  onProgress?: (progress: number) => void,
 ) {
   const ref = useRef<T>(null)
 
@@ -64,6 +65,7 @@ export function useScrollProgress<T extends HTMLElement>(
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       // Park it at the end state: the scene reads as arrived, never mid-flight.
       el.style.setProperty(property, '1')
+      onProgress?.(1)
       return
     }
 
@@ -76,6 +78,7 @@ export function useScrollProgress<T extends HTMLElement>(
 
     const write = () => {
       el.style.setProperty(property, current.toFixed(4))
+      onProgress?.(current)
     }
 
     const animate = (now: number) => {
@@ -145,7 +148,7 @@ export function useScrollProgress<T extends HTMLElement>(
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [property, mode])
+  }, [property, mode, onProgress])
 
   return ref
 }

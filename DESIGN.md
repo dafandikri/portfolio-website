@@ -1,6 +1,6 @@
 ---
 name: Erdafa Andikri — Portfolio
-description: A scroll through four film sets, each one built rather than drawn.
+description: A scroll through five film sets, each one built rather than drawn.
 colors:
   stock: "#ffffff"
   stock-shade: "#fbfaf9"
@@ -10,12 +10,14 @@ colors:
   hazard: "#dca719"
   bone: "#e8dcc4"
   bone-park: "#fff0d6"
-  canvas: "#cdbd8c"
   timber: "#8a4b22"
   timber-lit: "#805026"
   timber-deep: "#32190a"
   timber-shadow: "#271308"
-  interior: "#06100d"
+  archive: "#050a11"
+  archive-blue: "#1666a8"
+  archive-yellow: "#ffd21f"
+  archive-steel: "#94a3b8"
   jungle-night: "#020807"
   circuit-red: "#ff2d1c"
   circuit-amber: "#ffb01f"
@@ -51,21 +53,33 @@ typography:
     fontWeight: 400
     lineHeight: 1.2
     letterSpacing: "0.25em"
+  archive-display:
+    fontFamily: "Arial Black, Helvetica Neue, Arial, sans-serif"
+    fontSize: "clamp(2rem, 4.4vw, 3.6rem)"
+    fontWeight: 900
+    lineHeight: 0.95
+    letterSpacing: "-0.035em"
+  archive-body:
+    fontFamily: "Helvetica Neue, Arial, sans-serif"
+    fontSize: "1rem"
+    fontWeight: 400
+    lineHeight: 1.55
+    letterSpacing: "normal"
 components:
   paddock-plaque:
     backgroundColor: "{colors.timber-deep}"
     textColor: "{colors.bone-park}"
     typography: "{typography.label}"
     padding: "0.42rem 1rem 0.52rem"
-  vitrine:
-    backgroundColor: "{colors.interior}"
-    textColor: "{colors.bone}"
-    padding: "clamp(0.7rem, 1.7vw, 1.1rem)"
-  banner:
-    backgroundColor: "{colors.canvas}"
-    textColor: "#23160b"
-    typography: "{typography.display}"
-    padding: "clamp(0.5rem, 1.6vh, 0.95rem) clamp(1rem, 4vw, 2.6rem) clamp(0.9rem, 2.4vh, 1.5rem)"
+  achievement-record:
+    backgroundColor: "{colors.archive}"
+    textColor: "#f4f7fb"
+    typography: "{typography.archive-body}"
+    padding: "clamp(1rem, 4vw, 3rem)"
+  archive-transition:
+    backgroundColor: "{colors.archive}"
+    textColor: "{colors.archive-yellow}"
+    typography: "{typography.archive-body}"
   link:
     textColor: "{colors.amber}"
     typography: "{typography.body}"
@@ -81,7 +95,7 @@ components:
 
 This site is a film built the way films were built before post-production: with
 physical sets, real models, and tricks done in camera. It is not a portfolio
-that references cinema — it is a walk through four standing sets, each fully
+that references cinema — it is a walk through five standing sets, each fully
 dressed, each belonging to a different picture.
 
 The standard the codebase already holds itself to is stated in `GateScene.tsx`:
@@ -103,12 +117,13 @@ flat-shaded, and nothing is a rectangle with a radius standing in for an object.
 - Depth is material. A shadow says what a thing is made of, not how high it floats.
 - Each scene is its own world with its own light, palette and voice.
 - Structure is diegetic: labels are plaques, lists are archives, awards are specimens.
-- Motion is mechanical and rare. Things deploy, unfurl and settle; they do not float.
+- Motion is mechanical and rare. Things deploy, cut, hinge and settle; they do not float.
 
 ## Colors
 
-There is no single site palette. Each set is lit for its own film, and the only
-value that crosses a set boundary is the amber of the Jurassic act.
+There is no single site palette. Each set is lit for its own film. The final
+achievement archive deliberately breaks from the Jurassic act: wet timber
+gives way to cold steel, deep navy and a restrained comic yellow.
 
 ### Primary
 
@@ -119,6 +134,9 @@ value that crosses a set boundary is the amber of the Jurassic act.
 - **Hazard Yellow** (`{colors.hazard}`): reserved for the diagonal warning tape
   on paddock lintels. It is a sibling of the amber, not a substitute; it marks
   danger, not interactivity.
+- **Archive Yellow** (`#ffd21f`): the achievement archive's live/action colour.
+  It marks the award, links and the six physical cuts; it is never used
+  as a generic decorative wash.
 
 ### Secondary
 
@@ -136,24 +154,24 @@ value that crosses a set boundary is the amber of the Jurassic act.
 - **Bone** (`{colors.bone}`) and **Park Bone** (`{colors.bone-park}`): warm
   off-whites for text on dark sets. Text on a coloured ground is tinted from
   that ground's hue; grey text is not used anywhere on this site.
-- **Canvas** (`{colors.canvas}`): unbleached painted-banner cloth.
 - **Timber** family (`{colors.timber}`, `{colors.timber-lit}`,
   `{colors.timber-deep}`, `{colors.timber-shadow}`): the four tones any piece of
   park lumber needs — face, lit edge, shaded face, and the thickness beneath it.
-- **Interior** (`{colors.interior}`) and **Jungle Night**
-  (`{colors.jungle-night}`): the two grounds of the Jurassic act. Interior is
-  the Visitor Center; Jungle Night is outside, under leaves.
+- **Jungle Night** (`{colors.jungle-night}`): the paddock ground, outside under
+  leaves.
+- **Archive Navy / Steel** (`#050a11`, `#0b1e35`, `#94a3b8`): the final scene's
+  fabricated chamber. These cool values make the set change legible without a
+  white flash or a generic section divider.
 
 ### Named Rules
 
 **The One Set Rule.** A colour belongs to the set it was lit for. Borrowing the
-time-circuit green for a success state, or the containment amber for the card
-scene, collapses two places into one and destroys the walk between them. The
-only sanctioned crossing is amber between the paddocks and the Visitor Center,
-because they are the same building's exterior and interior.
+time-circuit green for a success state, or the archive yellow for the paddocks,
+collapses two places into one and destroys the walk between them.
 
-**The Powered-On Rule.** Amber marks what is live: a lamp, a link, a focus ring,
-an award. If an element is not interactive and not a status, it does not get amber.
+**The Powered-On Rule.** Amber marks what is live in the paddocks; archive
+yellow does the same job in the achievement record. If an element is not
+interactive, a status or part of the X-tear mechanism, it gets neither.
 
 ## Typography
 
@@ -161,18 +179,17 @@ an award. If an element is not interactive and not a status, it does not get amb
 **Body Font:** Cormorant Garamond (with Georgia, Times New Roman, serif)
 **Label/Technical Font:** Orbitron (with Eurostile, Helvetica Neue, sans-serif)
 
-**Character:** Two voices that must never blend. Cormorant is letterpress — it
-belongs to 1987 Manhattan and to anything printed or painted by hand. Orbitron
-is machined — it belongs to instruments, dashboards and anything InGen
-manufactured. A surface is set in one or the other depending on how the object
-in front of you was made, not on where it sits in the hierarchy.
+**Character:** Set-specific voices that do not blend. Cormorant is letterpress;
+Orbitron is machined. The achievement archive uses a dense grotesk stack
+(`Arial Black` for display, `Helvetica Neue` for body) so it reads as a comic
+field dossier rather than another Jurassic control surface.
 
 ### Hierarchy
 
 - **Display** (Cormorant SC, 500, `clamp(1.5rem, 4vw, 2.6rem)`, tracking 0.1em):
   the business card's name, and painted signage. Real small-caps glyphs only.
-- **Headline** (Orbitron, 700, `clamp(1.4rem, 4vw, 2.8rem)`, tracking 0.1em,
-  uppercase): scene titles — `PROJECT PADDOCKS`, `AWARDS`.
+- **Headline** (Orbitron in the paddocks; Arial Black in the archive): scene
+  titles. Archive headlines stay below `3.6rem` and body copy remains `1rem`.
 - **Title** (Orbitron, 700, `clamp(1.05rem, 2.6vw, 1.7rem)`, uppercase): the
   name of a single object — a project dossier, an award.
 - **Body** (Cormorant Garamond on the card; Orbitron at
@@ -189,36 +206,48 @@ reason directly: the card's Garamond belongs to 1987 Manhattan, and borrowing it
 for a DeLorean dashboard would make both scenes read as the same place. Before
 using a face in a new scene, ask which set fabricated the object.
 
-**The Painted Exception.** The one sanctioned crossing is the Visitor Center
-banner, which is set in Cormorant SC inside an otherwise Orbitron act. It earns
-this because it is the only object in the park painted by hand rather than
-manufactured. Machined lettering on painted canvas would be the wrong material.
-
 **The Real Glyph Rule.** Small caps come from Cormorant SC's own glyphs, never
 from `font-variant-caps` on a family that lacks them — synthesised small caps
 thin the strokes visibly at these sizes.
 
 ## Layout
 
-Each scene is a **fixed-height stage**: `position: absolute; inset: 0`, filling
-one viewport with no internal scroll, composed with flexbox and centred. The
-page is a sequence of these stages; scrolling moves between sets rather than
-through content.
+Each scene owns a **full-viewport stage**, but the duration belongs to the shot.
+Static chapters fill one viewport. Choreographed chapters use a tall relative
+runway holding a `position: sticky` viewport-height stage, so scroll advances a
+camera move without making the set itself drift. Projects and Awards now share
+one 580svh runway and one stage: the first 260svh preserves the gate shot and
+its deliberate paddock inspection hold, while the remaining 220svh is the
+comic transition. The live paddock DOM holds untouched, then two sequential
+fields of three scroll-scrubbed gouges form an X. An opacity-only paper wash
+follows the first pass and the Ben-Day layer follows the second, turning that
+exact frame into print without character art covering the work. The
+camera then pushes the scratched paddock away to reveal the settled newsprint
+spread behind it. This is one continuous, reversible event—not a chain of
+entrance animations or a duplicated jungle plate.
+
+`DeferredScene` is the containing block and stacking boundary for every chapter.
+It reserves at least one viewport and carries a set-matched fallback colour, so
+an absolutely positioned stage or a slow lazy chunk can never expose the card
+scene's white body background between dark sets.
 
 Scenes are code-split and gated on approach. `App.tsx` wraps each in a
 `DeferredScene` that reserves full height and only requests the scene's
-JavaScript when the visitor is within one viewport of it, which is what keeps
-the landing instant while Three.js lives two scenes down.
+JavaScript when the visitor is within one viewport of it. Awards deliberately
+lives inside the deferred Gate chapter because both layers must share one
+camera and one live project frame; it does not get a second sibling wrapper.
 
 Grids are asymmetric where the content is asymmetric. The paddock grid runs six
 tracks with each unit spanning two, so five enclosures sit three-over-two with
 the bottom row centred — a centring that two or three tracks cannot express
 without a wrapper element.
 
-Below **760px** every stage releases: grids collapse to one column, stages gain
-`overflow-y: auto`, and fixed compositions become scrolling ones. A secondary
-breakpoint at `max-height: 720px` tightens vertical rhythm for short laptop
-displays.
+Below **860px**, at `max-height: 720px`, and under
+`prefers-reduced-motion`, the shared Projects/Awards stage releases. The
+paddocks occupy one viewport, Awards follows in natural document flow, the
+generated strike is removed, and a small static six-gouge X keeps the visual
+language without a scrub trap. The archive grid becomes one column and all
+content renders in its finished, interactive state.
 
 Content columns import their data from the raw data modules
 (`../../data/projects`), never the validating barrel (`../../data`) — the barrel
@@ -273,10 +302,12 @@ lamps, control boxes.
 
 ### Scene stage
 
-- **Shape:** full-viewport, `position: absolute; inset: 0`, `overflow: hidden`.
+- **Shape:** a full-viewport relative stage, or a sticky stage inside a taller
+  shot runway; the deferred wrapper is always its positioning context.
 - **Background:** a photographic plate or a layered gradient ground, plus a
   vignette pseudo-element and a floor or horizon band.
-- **Behaviour:** mounts through `DeferredScene`; animates in once, then rests.
+- **Behaviour:** mounts through `DeferredScene`; camera beats are scroll-scrubbed
+  and reversible, while ordinary content settles once and then rests.
 
 ### Containment paddock (signature)
 
@@ -289,20 +320,37 @@ lamps, control boxes.
   with a smooth ease-out; focus draws a 2px amber outline offset outside the
   frame. Opening runs a 120ms gate cycle before the dossier mounts.
 
-### Vitrine (signature)
+### Achievement record (signature)
 
-- **Shape:** rectangular case, 1px bone border at 22% opacity, no radius.
-- **Structure:** specimen area above with a lit pool beneath the object, plinth
-  label below, raking highlight across the glass front.
-- **Colour:** `{colors.interior}` ground, `{colors.amber}` under-light,
-  `{colors.bone}` text.
+- **Shape:** one clipped evidence print beside one field note on a warm,
+  full-viewport newsprint spread. It is an authored comic page, not a dashboard
+  card grid.
+- **Structure:** real team photograph, award identity, a short story that names
+  the competition before the placing, compact business lesson,
+  progressive-disclosure team credits and a closing margin note.
+- **Voice:** first person, plain and specific. Name the thing, give the number,
+  admit the miss. No superlatives the record does not already earn.
+- **Margin note:** the one place the X-Men motif is named in words. It credits
+  the six-gouge tear typographically, because character artwork is ruled out
+  between Projects and Awards (see the X tear below).
+- **Colour:** warm paper and near-black ink sit inside an archive-navy stage;
+  comic yellow remains reserved for status and action. Halftone belongs only to
+  the paper edge and transition impact—not faces or running copy. Body copy
+  stays at 16px.
 
-### Banner (signature)
+### Paddock-to-comic X tear (signature)
 
-- **Shape:** chevron-hemmed cloth, no radius.
-- **Type:** Display face only — this is the Painted Exception.
-- **Motion:** unfurls once on scene entry from `scaleY(0.03)` with exponential
-  ease-out; already visible when motion is reduced.
+- **Shape:** the live paddock frame itself, an opacity-only paper wash and
+  Ben-Day field and two fields of three physical gouges. The opposing fields
+  meet as an X; no separate cover or character artwork sits between Projects
+  and Awards.
+- **Motion:** the first three-cut field opens, paper follows the damage, then the
+  opposing field completes the X before halftone settles. That complete mark
+  holds on the paperized paddock, then the same frame scales toward camera and
+  fades to the Awards paper behind it. The motion is reversible, scroll-driven
+  and uses only transforms and opacity.
+- **Fallback:** mobile, short viewports and reduced-motion render the finished
+  archive in natural flow with a small static six-gouge X.
 
 ### Links
 

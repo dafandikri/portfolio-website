@@ -1,322 +1,638 @@
 /*
- * The Visitor Center rotunda.
+ * The achievement archive.
  *
- * The Park scene is moonlit jungle. This is interior: the same island, a
- * different quality of light. Rather than repeat the paddocks' timber-and-steel
- * enclosures, an award is mounted the way the park mounts a specimen — under
- * glass, on a lit plinth, with a written label beside it.
- *
- * One typographic exception is deliberate. Everything in this act is set in
- * Orbitron, the machined voice InGen manufactures things in. The banner is not:
- * it is the only object in the park that was painted by hand, so it takes the
- * serif. Machined lettering on painted canvas would be the wrong material.
+ * Projects end in a wet, timber Jurassic paddock. A printed steel comic panel
+ * rises next. Two sequential fields of three physical gouges cross into an X;
+ * the camera then pushes through the mark into a quiet field record. It is one
+ * authored event, not six unrelated animations.
  */
 
-.rotunda {
-  --bone: #e8dcc4;
-  --canvas: #cdbd8c;
-  --timber: #8a4b22;
-  --amber: #f0b51f;
-  --interior: #06100d;
+.scene--archive {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  height: 100svh;
+  overflow: clip;
+  background: #050a11;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  animation: archive-underlay-enter 1s linear both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+  will-change: opacity;
+}
+
+.x-archive {
+  --archive-ink: #07111e;
+  --archive-muted: #39475b;
+  --archive-blue: #0b2c53;
+  --archive-blue-lit: #1666a8;
+  --archive-yellow: #ffd21f;
+  --archive-steel: #94a3b8;
+  --archive-paper: #efe4c6;
+  --archive-paper-lit: #faf3df;
+  --archive-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+  --archive-body: 'Helvetica Neue', Arial, sans-serif;
 
   position: absolute;
   inset: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(0.55rem, 1.5vh, 1rem);
-  padding: clamp(1rem, 2.4vw, 2rem) clamp(0.7rem, 2.6vw, 2rem);
-  overflow: hidden;
-  color: var(--bone);
+  min-height: 100svh;
+  overflow: clip;
+  perspective: 90rem;
+  perspective-origin: 50% 28%;
+  color: var(--archive-ink);
   background:
-    radial-gradient(ellipse 70% 50% at 50% 116%, rgba(240, 181, 31, 0.10), transparent 70%),
-    linear-gradient(to bottom, #040b09 0%, var(--interior) 46%, #030807 100%);
+    radial-gradient(circle at 84% 6%, rgba(22, 102, 168, 0.3), transparent 31rem),
+    linear-gradient(135deg, transparent 0 48%, rgba(255, 210, 31, 0.045) 48% 50%, transparent 50%),
+    linear-gradient(145deg, #0b1e35 0%, #071321 44%, #040a12 100%);
 }
 
-/*
- * The hall itself.
- *
- * The paddocks next door get their authority from material — a photographic
- * plate, timber, welded bar. This scene has none of that and must not fake it
- * with drawn architecture, which at this scale reads as clip art. It builds the
- * room the way a room is actually read: a wall the light falls on, a horizon,
- * and a floor beneath the exhibit.
- */
-.rotunda__atrium {
+.x-archive::before {
+  content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
+  background:
+    radial-gradient(circle, rgba(174, 196, 218, 0.22) 0 0.075rem, transparent 0.085rem) 0 0 / 0.52rem 0.52rem,
+    linear-gradient(118deg, transparent 0 67%, rgba(255, 210, 31, 0.06) 67% 67.3%, transparent 67.3%);
+  mask-image: radial-gradient(ellipse 46% 54% at 88% 13%, #000 0 28%, transparent 78%);
 }
 
-/* The arch of the far wall, lit from the skylight it sits under. */
-.rotunda__atrium::before {
+.x-archive__shell {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(1.25rem, 3vh, 2rem);
+  width: min(100%, 76rem);
+  min-height: 100svh;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+  overflow: hidden;
+  color: var(--archive-ink);
+  background:
+    linear-gradient(101deg, rgba(87, 61, 19, 0.07) 0 0.1%, transparent 0.18% 99.82%, rgba(87, 61, 19, 0.08) 99.9%),
+    linear-gradient(170deg, var(--archive-paper-lit), var(--archive-paper) 72%, #d8cba8);
+  box-shadow:
+    0.8rem 0.8rem 0 #02050a,
+    0 2rem 6rem rgba(0, 0, 0, 0.72),
+    inset 0 1px rgba(255, 255, 255, 0.72),
+    inset 0 -2px rgba(84, 61, 26, 0.28);
+  visibility: hidden;
+  opacity: 0;
+  transform: translate3d(0, 1.8rem, -10rem) scale(0.84);
+  transform-origin: 50% 50%;
+  transform-style: preserve-3d;
+  animation: archive-camera-enter 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+  will-change: transform, opacity;
+}
+
+.x-archive__shell:not([inert]) { pointer-events: auto; }
+
+.x-archive__shell::before {
   content: '';
   position: absolute;
-  top: -6%;
-  left: 50%;
-  width: min(58rem, 88%);
-  height: 82%;
-  translate: -50% 0;
-  border-radius: 50% 50% 0 0 / 58% 58% 0 0;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse 60% 42% at 50% 0%, rgba(214, 199, 160, 0.15), transparent 72%),
-    linear-gradient(to bottom, rgba(120, 132, 118, 0.09), transparent 62%);
-  /* No rim highlight: a lit edge turns the arch into a drawn shape. Fading it
-     out at the boundary keeps it reading as light on a far wall. */
-  mask-image: radial-gradient(ellipse 74% 74% at 50% 8%, #000 38%, transparent 82%);
+    radial-gradient(circle, rgba(7, 17, 30, 0.18) 0 0.065rem, transparent 0.075rem) 0 0 / 0.5rem 0.5rem,
+    linear-gradient(116deg, transparent 0 73%, rgba(11, 44, 83, 0.08) 73% 73.4%, transparent 73.4%);
+  mask-image:
+    radial-gradient(ellipse 30% 36% at 96% 0, #000 0 24%, transparent 82%),
+    radial-gradient(ellipse 24% 32% at 0 100%, #000 0 18%, transparent 80%);
 }
 
-/*
- * The floor. Without a ground plane every object in the scene hangs in the
- * dark; with one, the case is standing in a building.
- */
-.rotunda__atrium::after {
+.x-archive__header {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid rgba(7, 17, 30, 0.62);
+  padding-bottom: clamp(0.85rem, 2vh, 1.25rem);
+}
+
+.x-archive__header::after {
   content: '';
   position: absolute;
   right: 0;
-  bottom: 0;
-  left: 0;
-  /* Kept below the label column: a horizon running through the text muddied
-     both. The case still overlaps it, which is what standing on a floor is. */
-  height: 18%;
-  border-top: 1px solid rgba(226, 214, 182, 0.07);
-  background:
-    radial-gradient(ellipse 42% 90% at 50% 0%, rgba(240, 181, 31, 0.10), transparent 70%),
-    linear-gradient(to bottom, rgba(96, 112, 100, 0.13), rgba(4, 10, 8, 0.6) 70%);
+  bottom: -1px;
+  width: clamp(4rem, 11vw, 8rem);
+  height: 0.2rem;
+  background: var(--archive-yellow);
+  clip-path: polygon(0.75rem 0, 100% 0, 100% 100%, 0 100%);
 }
 
-.rotunda__header,
-.rotunda__banner,
-.rotunda__cases { position: relative; z-index: 2; }
-
-.rotunda__kicker,
-.rotunda__section-label,
-.rotunda__event {
+.x-archive__kicker,
+.x-archive__event,
+.x-archive__lesson > p:first-child {
   margin: 0;
-  font-family: var(--font-tech);
-  font-size: clamp(0.42rem, 0.78vw, 0.55rem);
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(232, 220, 196, 0.7);
-}
-
-.rotunda__header { text-align: center; }
-
-.rotunda__heading {
-  margin: 0.1em 0 0;
-  font-family: var(--font-tech);
-  font-size: clamp(1.4rem, 4vw, 2.5rem);
+  font-family: var(--archive-body);
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
+  line-height: 1.4;
   text-transform: uppercase;
-  color: var(--bone);
+  color: var(--archive-blue);
 }
 
-/*
- * The banner. Painted canvas, so: the serif, generous tracking, and a slight
- * sag at the bottom edge rather than a straight cut.
- */
-.rotunda__banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: min(100%, 44rem);
+.x-archive__heading {
+  margin: 0.1rem 0 0;
+  font-family: var(--archive-display);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+}
+
+.x-archive__heading span {
+  color: var(--archive-blue);
+}
+
+.x-archive__deck {
+  max-width: 27rem;
   margin: 0;
-  padding: clamp(0.5rem, 1.6vh, 0.95rem) clamp(1rem, 4vw, 2.6rem) clamp(0.9rem, 2.4vh, 1.5rem);
-  text-align: center;
-  color: #23160b;
-  background:
-    linear-gradient(101deg, rgba(120, 92, 46, 0.16) 0 18%, transparent 18% 82%, rgba(120, 92, 46, 0.16) 82%),
-    linear-gradient(175deg, #efe4bd, var(--canvas) 62%, #b3a173);
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.55), inset 0 -2px rgba(97, 82, 48, 0.35);
-  clip-path: polygon(0 0, 100% 0, 100% 84%, 50% 100%, 0 84%);
-  transform-origin: 50% 0;
-  animation: rotunda-unfurl 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.rotunda__banner-text {
-  font-family: var(--font-sc);
-  font-size: clamp(0.95rem, 2.9vw, 1.85rem);
+  font-family: var(--archive-body);
+  font-size: clamp(1rem, 1.25vw, 1.1rem);
   font-weight: 600;
-  letter-spacing: 0.1em;
-  line-height: 1.1;
+  line-height: 1.45;
+  color: #203047;
 }
 
-@keyframes rotunda-unfurl {
-  from { opacity: 0; transform: scaleY(0.03) rotate(-1.2deg); }
-  to   { opacity: 1; transform: none; }
-}
-
-.rotunda__cases {
+.x-archive__records {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
-  gap: clamp(0.7rem, 1.8vw, 1.2rem);
-  width: min(100%, 62rem);
+  min-height: 0;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.x-archive__record {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(18rem, 1.08fr) minmax(20rem, 0.92fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
   min-height: 0;
-  overflow-y: auto;
-  scrollbar-color: rgba(226, 164, 23, 0.4) transparent;
-  scrollbar-width: thin;
 }
 
-/* A case is a lit plinth under glass, plus the label written beside it. */
-.rotunda__case {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(0.6rem, 1.5vw, 1rem);
-  align-items: stretch;
-}
-
-.rotunda__vitrine {
+.x-archive__evidence {
   position: relative;
-  display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
-  gap: clamp(0.5rem, 1.4vh, 0.9rem);
+  aspect-ratio: 6 / 5;
+  min-height: 0;
+  margin: 0;
   overflow: hidden;
-  padding: clamp(0.7rem, 1.7vw, 1.1rem);
-  border: 1px solid rgba(232, 220, 196, 0.22);
-  background:
-    radial-gradient(ellipse 78% 46% at 50% 108%, rgba(240, 181, 31, 0.16), transparent 72%),
-    linear-gradient(168deg, rgba(38, 52, 44, 0.9), rgba(8, 16, 13, 0.95));
+  border: 0.34rem solid var(--archive-ink);
+  clip-path: polygon(0 0, 94% 0, 100% 10%, 100% 100%, 6% 100%, 0 90%);
+  background: var(--archive-ink);
   box-shadow:
-    inset 0 1px rgba(255, 236, 190, 0.16),
-    0 0.6rem 1.5rem rgba(0, 0, 0, 0.5),
-    0 1.6rem 2.2rem -1rem rgba(0, 0, 0, 0.75);
+    0.7rem 0.7rem 0 #02050a,
+    0 1.7rem 3rem rgba(0, 0, 0, 0.42);
 }
 
-/*
- * The specimen: the competition's own mark, lit from below the way the park
- * lights the things it puts under glass. This is what the case is for — an
- * empty box with a caption at the bottom read as a layout fault, not a plinth.
- */
-.rotunda__specimen {
-  position: relative;
-  display: grid;
-  place-items: center;
-  min-height: clamp(4.5rem, 14vh, 8rem);
-}
-
-.rotunda__specimen::after {
+.x-archive__evidence::before {
   content: '';
   position: absolute;
-  right: 12%;
-  bottom: -0.4rem;
-  left: 12%;
-  height: 0.55rem;
-  border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 50%, rgba(240, 181, 31, 0.3), transparent 70%);
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border: 0.32rem solid transparent;
+  border-top-color: rgba(255, 210, 31, 0.74);
+  border-left-color: rgba(22, 102, 168, 0.68);
 }
 
-.rotunda__mount {
-  display: grid;
-  align-content: end;
-  gap: 0.16rem;
-  width: 100%;
-}
-
-/* The raking highlight across the glass front. */
-.rotunda__glass {
+.x-archive__evidence::after {
+  content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(104deg, transparent 0 38%, rgba(226, 240, 232, 0.07) 44% 52%, transparent 58%);
+  background:
+    linear-gradient(to top, rgba(3, 8, 15, 0.94), transparent 34%),
+    linear-gradient(108deg, transparent 0 57%, rgba(255, 255, 255, 0.08) 63%, transparent 69%);
 }
 
-.rotunda__logo {
-  width: clamp(3rem, 7vw, 4.6rem);
-  height: clamp(3rem, 7vw, 4.6rem);
-  object-fit: contain;
-  filter: drop-shadow(0 0.35rem 0.7rem rgba(0, 0, 0, 0.55));
+.x-archive__evidence img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 74%;
 }
 
-.rotunda__award {
-  margin: 0.06em 0 0.2em;
-  font-family: var(--font-tech);
-  font-size: clamp(1.05rem, 2.6vw, 1.7rem);
+.x-archive__evidence figcaption {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.85rem;
+  left: 1rem;
+  z-index: 2;
+  font-family: var(--archive-body);
+  font-size: 0.75rem;
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.11em;
+  line-height: 1.4;
   text-transform: uppercase;
-  color: var(--amber);
+  color: #f8fafc;
 }
 
-.rotunda__host,
-.rotunda__date,
-.rotunda__story,
-.rotunda__members,
-.rotunda__highlights {
-  margin: 0;
-  font-family: var(--font-tech);
-  font-size: clamp(0.6rem, 1.02vw, 0.72rem);
-  line-height: 1.62;
-  color: rgba(232, 220, 196, 0.78);
-}
-
-.rotunda__date { color: rgba(232, 220, 196, 0.64); }
-
-.rotunda__label {
+.x-archive__brief {
+  position: relative;
   display: grid;
-  gap: 0.45rem;
-  align-content: start;
-  padding: clamp(0.7rem, 1.7vw, 1.1rem);
-  border-left: 1px solid rgba(240, 181, 31, 0.4);
-  background: linear-gradient(120deg, rgba(20, 30, 25, 0.6), transparent 70%);
+  gap: clamp(0.8rem, 1.7vh, 1.1rem);
+  min-width: 0;
+  padding: clamp(1rem, 2.4vw, 1.5rem);
+  border: 1px solid rgba(7, 17, 30, 0.56);
+  clip-path: polygon(0 0, calc(100% - 1.1rem) 0, 100% 1.1rem, 100% 100%, 1.1rem 100%, 0 calc(100% - 1.1rem));
+  background:
+    linear-gradient(148deg, rgba(255, 255, 255, 0.34), transparent 42%),
+    rgba(250, 243, 223, 0.7);
+  box-shadow: inset 0.22rem 0 0 var(--archive-yellow);
 }
 
-.rotunda__story { color: rgba(232, 220, 196, 0.9); }
+.x-archive__identity {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
 
-.rotunda__highlights { padding-left: 0.95rem; }
-.rotunda__highlights li { margin-bottom: 0.22rem; }
-.rotunda__highlights li::marker { color: rgba(240, 181, 31, 0.55); }
+.x-archive__identity img {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  object-fit: contain;
+}
 
-.rotunda__footer {
+.x-archive__identity h3 {
+  margin: 0.08rem 0 0.18rem;
+  font-family: var(--archive-display);
+  font-size: clamp(1.4rem, 2.35vw, 2rem);
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--archive-ink);
+}
+
+.x-archive__meta,
+.x-archive__story,
+.x-archive__lesson p,
+.x-archive__facts,
+.x-archive__credits p {
+  margin: 0;
+  font-family: var(--archive-body);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.x-archive__meta { color: var(--archive-muted); }
+.x-archive__story {
+  color: #142238;
+  font-weight: 700;
+}
+
+.x-archive__lesson {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(11, 44, 83, 0.5);
+  background:
+    radial-gradient(circle, rgba(11, 44, 83, 0.12) 0 0.055rem, transparent 0.07rem) 100% 0 / 0.46rem 0.46rem,
+    rgba(202, 217, 226, 0.38);
+}
+
+.x-archive__lesson h4 {
+  margin: 0;
+  font-family: var(--archive-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.x-archive__lesson p:last-child { color: #1d2d43; }
+
+.x-archive__facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.3rem clamp(0.9rem, 2.4vw, 1.8rem);
-  margin-top: 0.15rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(232, 220, 196, 0.14);
+  gap: 0.5rem 1rem;
+  padding: 0;
+  list-style: none;
+  color: var(--archive-muted);
 }
 
-.rotunda__project,
-.rotunda__team { display: grid; gap: 0.12rem; margin: 0; }
-
-.rotunda__link {
-  font-family: var(--font-tech);
-  font-size: clamp(0.66rem, 1.1vw, 0.8rem);
-  color: var(--amber);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+.x-archive__facts li {
+  position: relative;
+  padding-left: 0.9rem;
 }
 
-.rotunda__link:hover,
-.rotunda__link:focus-visible { color: #ffd465; }
+.x-archive__facts li::before {
+  content: '';
+  position: absolute;
+  top: 0.62em;
+  left: 0;
+  width: 0.42rem;
+  height: 0.12rem;
+  background: var(--archive-yellow);
+  transform: skewX(-24deg);
+}
 
-.rotunda__link:focus-visible {
-  outline: 2px solid var(--amber);
+.x-archive__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  gap: 0.55rem 1rem;
+  padding-top: 0.2rem;
+}
+
+.x-archive__link,
+.x-archive__credits summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--archive-body);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.x-archive__link {
+  padding-inline: 1rem;
+  color: #07111e;
+  background: var(--archive-yellow);
+  text-decoration: none;
+  clip-path: polygon(0.45rem 0, 100% 0, calc(100% - 0.45rem) 100%, 0 100%);
+}
+
+.x-archive__link:hover,
+.x-archive__link:focus-visible { background: #ffe66d; }
+
+.x-archive__link:focus-visible,
+.x-archive__credits summary:focus-visible {
+  outline: 3px solid var(--archive-blue);
   outline-offset: 3px;
 }
 
-@media (max-width: 760px) {
-  .rotunda {
-    justify-content: flex-start;
-    padding-top: max(2.4rem, env(safe-area-inset-top));
-    overflow-y: auto;
-  }
+.x-archive__credits { color: var(--archive-muted); }
+.x-archive__credits summary { cursor: pointer; }
+.x-archive__credits p { max-width: 34rem; padding: 0.25rem 0 0.5rem; color: #24344a; }
 
-  .rotunda__cases { overflow: visible; }
-
-  /* Plinth above label rather than beside it; two columns of this at 390px
-     would leave neither the award nor its story legible. */
-  .rotunda__case { grid-template-columns: minmax(0, 1fr); }
-  .rotunda__label { border-left: 0; border-top: 1px solid rgba(240, 181, 31, 0.4); }
-  .rotunda__rig { width: 100%; }
+/* A quiet printed aside at the foot of the file. It credits the six-gouge
+   motif the visitor just watched tear the paddock open, without competing with
+   the award record above it or crowding the headline block. */
+.x-archive__marginalia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.7rem;
+  border-top: 1px solid rgba(7, 17, 30, 0.28);
+  padding-top: clamp(0.6rem, 1.4vh, 0.9rem);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .rotunda__banner { animation: none; }
+.x-archive__marginalia p {
+  margin: 0;
+  font-family: var(--archive-body);
+}
+
+.x-archive__marginalia-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--archive-blue);
+}
+
+.x-archive__marginalia p:last-child {
+  font-size: 0.9rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--archive-muted);
+}
+
+/* Printed over the actual paddocks. The archive clock deliberately opens on a
+   clean hold: the live Jurassic scene stays untouched until the first blade
+   makes contact. Paper follows that cut; Ben-Day dots arrive only after the
+   second pass begins. */
+.x-transition__surface {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.x-transition__surface {
+  z-index: 60;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.x-transition__paper-wash,
+.x-transition__halftone {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  animation: paddock-paperize 1s linear both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+  will-change: opacity;
+}
+
+.x-transition__paper-wash {
+  z-index: 1;
+  background:
+    linear-gradient(112deg, rgba(255, 243, 213, 0.28), rgba(207, 177, 106, 0.72)),
+    #cfb979;
+  mix-blend-mode: color;
+}
+
+.x-transition__halftone {
+  z-index: 2;
+  background:
+    radial-gradient(circle, rgba(4, 11, 18, 0.68) 0 0.065rem, transparent 0.075rem) 0 0 / 0.45rem 0.45rem,
+    linear-gradient(115deg, transparent 0 62%, rgba(255, 231, 161, 0.14) 62% 62.4%, transparent 62.4%);
+  mix-blend-mode: screen;
+  animation-name: paddock-halftone;
+}
+
+/* Six material gouges belong to the project frame, so they leave with the
+   paperized paddocks during the camera push instead of floating over Awards. */
+.x-transition__scar-field {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  width: 138vw;
+  height: clamp(4.5rem, 8.5vw, 7.2rem);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.x-transition__scar-field--rise {
+  transform: translate(-50%, -50%) rotate(-37deg);
+}
+
+.x-transition__scar-field--fall {
+  transform: translate(-50%, -50%) rotate(37deg);
+}
+
+.x-transition__scar {
+  --scar-offset: 0s;
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: clamp(0.38rem, 0.72vw, 0.58rem);
+  opacity: 0;
+  clip-path: polygon(0 34%, 7% 14%, 18% 41%, 31% 20%, 44% 49%, 58% 16%, 74% 45%, 88% 19%, 100% 40%, 100% 72%, 87% 92%, 73% 67%, 59% 91%, 45% 65%, 32% 88%, 18% 61%, 7% 86%, 0 68%);
+  background: linear-gradient(
+    to bottom,
+    #f0f7fa 0 16%,
+    #7d909e 18% 30%,
+    #010203 34% 64%,
+    #8295a2 68% 82%,
+    #f2f9fc 86% 100%
+  );
+  box-shadow:
+    0 -0.18rem 0.22rem rgba(219, 236, 247, 0.18),
+    0 0.24rem 0.34rem rgba(0, 0, 0, 0.88);
+  transform: scaleX(0);
+  will-change: transform, opacity;
+}
+
+.x-transition__scar--1 { top: 0; --scar-offset: 0s; }
+.x-transition__scar--2 { top: 50%; --scar-offset: 0.012s; }
+.x-transition__scar--3 { top: 100%; --scar-offset: 0.024s; }
+
+.x-transition__scar-field--rise .x-transition__scar {
+  transform-origin: 100% 50%;
+  animation: scar-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s + var(--scar-offset));
+}
+
+.x-transition__scar-field--fall .x-transition__scar {
+  transform-origin: 0 50%;
+  animation: scar-fall 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s + var(--scar-offset));
+}
+
+@keyframes paddock-paperize {
+  0%, 24% { opacity: 0; }
+  34% { opacity: 0.16; }
+  46% { opacity: 0.42; }
+  60%, 100% { opacity: 0.76; }
+}
+
+@keyframes paddock-halftone {
+  0%, 46% { opacity: 0; }
+  54% { opacity: 0.18; }
+  64%, 100% { opacity: 0.62; }
+}
+
+@keyframes scar-rise {
+  0%, 38% { opacity: 0; transform: scaleX(0); }
+  41% { opacity: 1; }
+  57%, 100% { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes scar-fall {
+  0%, 20% { opacity: 0; transform: scaleX(0); }
+  23% { opacity: 1; }
+  39%, 100% { opacity: 1; transform: scaleX(1); }
+}
+
+/* The archive is physically behind the live paddock, but it must not leak its
+   paper or dots through transparent parts of that scene. It appears only when
+   the completed X begins the camera push. */
+@keyframes archive-underlay-enter {
+  0%, 65% { visibility: hidden; opacity: 0; }
+  66% { visibility: visible; opacity: 0; }
+  78%, 100% { visibility: visible; opacity: 1; }
+}
+
+@keyframes archive-camera-enter {
+  0%, 66% {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, 1.8rem, -10rem) scale(0.84);
+  }
+  68% { visibility: visible; opacity: 0; }
+  78% {
+    visibility: visible;
+    opacity: 0.64;
+    transform: translate3d(0, 0.6rem, -3.5rem) scale(0.94);
+  }
+  90%, 100% {
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
+  .scene--archive {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+    animation: none;
+    will-change: auto;
+  }
+
+  .x-archive {
+    position: relative;
+    inset: auto;
+    min-height: 100svh;
+    overflow: visible;
+  }
+
+  .x-transition__surface { display: none; }
+
+  .x-archive__shell {
+    min-height: 100svh;
+    padding: max(2rem, env(safe-area-inset-top)) clamp(1rem, 5vw, 2rem) max(2.5rem, env(safe-area-inset-bottom));
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    animation: none;
+    will-change: auto;
+  }
+
+  .x-archive__header { align-items: start; flex-direction: column; gap: 0.75rem; }
+  .x-archive__record { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .x-archive__brief { padding-left: 0.9rem; }
+
+  /* A small static six-cut X preserves the transition language when a pinned
+     camera move would create a nested-scroll trap. */
+  .x-archive::after {
+    content: '';
+    position: absolute;
+    top: 0.8rem;
+    right: 1rem;
+    width: 4.7rem;
+    height: 2.6rem;
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(165deg, transparent 0 0.26rem, rgba(7, 17, 30, 0.72) 0.28rem 0.36rem, transparent 0.38rem 0.52rem),
+      repeating-linear-gradient(15deg, transparent 0 0.26rem, rgba(11, 44, 83, 0.68) 0.28rem 0.36rem, transparent 0.38rem 0.52rem);
+    opacity: 0.72;
+  }
+}
+
+@media (max-width: 560px) {
+  .x-archive__heading { font-size: 2.1rem; }
+  .x-archive__deck { font-size: 1rem; }
+  .x-archive__evidence { aspect-ratio: 5 / 4; }
+  .x-archive__identity { align-items: flex-start; }
+  .x-archive__identity img { width: 2.5rem; height: 2.5rem; }
+  .x-archive__identity h3 { font-size: 1.55rem; }
+  .x-archive__meta,
+  .x-archive__story,
+  .x-archive__lesson p,
+  .x-archive__facts,
+  .x-archive__credits p { font-size: 1rem; }
+  .x-archive__footer { align-items: stretch; flex-direction: column; }
+  .x-archive__link { justify-content: center; width: 100%; }
 }

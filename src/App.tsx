@@ -13,7 +13,6 @@ import { useInView } from './hooks/useInView'
 const DepartureScene = lazy(() => import('./components/scenes/DepartureScene'))
 const TimeCircuitsScene = lazy(() => import('./components/scenes/TimeCircuitsScene'))
 const GateScene = lazy(() => import('./components/scenes/GateScene'))
-const VisitorCenterScene = lazy(() => import('./components/scenes/VisitorCenterScene'))
 
 /**
  * Keep a full-height place in the document, but do not even request a scene's
@@ -42,7 +41,6 @@ export default function App() {
       <DeferredScene name="departure"><DepartureScene /></DeferredScene>
       <DeferredScene name="experience"><TimeCircuitsScene /></DeferredScene>
       <DeferredScene name="projects"><GateScene /></DeferredScene>
-      <DeferredScene name="awards"><VisitorCenterScene /></DeferredScene>
     </main>
   )
 }

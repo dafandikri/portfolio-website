@@ -20,6 +20,8 @@ export function ProjectMediaView({
   startAt?: number
 }) {
   const [videoRef, inView] = useInView<HTMLVideoElement>('240px')
+  const [videoStatus, setVideoStatus] = useState<'loading' | 'playing' | 'paused' | 'error'>('loading')
+  const autoPlayAttemptedRef = useRef(false)
 
   useEffect(() => {
     if (media?.kind !== 'video') return
@@ -27,11 +29,22 @@ export function ProjectMediaView({
     if (!video) return
 
     const shouldPlay = mode === 'detail' || (active && inView)
-    if (shouldPlay || (!video.currentSrc && !video.getAttribute('src'))) return
+    if (shouldPlay) return
+    // A preview that leaves the viewport is deliberately unloaded. Reset only
+    // that automatic attempt so it can start again on re-entry; detail mode
+    // never reaches this branch, so a visitor's explicit pause is respected.
+    autoPlayAttemptedRef.current = false
+    if (!video.currentSrc && !video.getAttribute('src')) return
     video.pause()
     video.removeAttribute('src')
     video.load()
   }, [active, inView, media, mode, videoRef])
+
+  useEffect(() => {
+    if (media?.kind !== 'video') return
+    autoPlayAttemptedRef.current = false
+    setVideoStatus('loading')
+  }, [media, mode])
 
   if (!media) {
     return (
@@ -55,28 +68,62 @@ export function ProjectMediaView({
 
   if (media.kind === 'video') {
     const shouldLoad = mode === 'detail' || (active && inView)
-    const source = mode === 'preview' ? media.previewSrc ?? media.src : media.src
+    /* The optimized recording has the same duration as the HD source and is
+       small enough to begin inside the dossier instead of leaving its poster
+       on screen while several megabytes arrive. The full recording remains a
+       direct link below the player. */
+    const source = media.previewSrc ?? media.src
 
     return (
-      <video
-        ref={videoRef}
-        className={`park__media-file park__media-file--${mode}`}
-        src={shouldLoad ? source : undefined}
-        poster={media.poster}
-        aria-label={media.label}
-        autoPlay
-        loop
-        muted
-        playsInline
-        controls={mode === 'detail'}
-        controlsList={mode === 'detail' ? 'nofullscreen noremoteplayback' : undefined}
-        disablePictureInPicture={mode === 'detail'}
-        disableRemotePlayback={mode === 'detail'}
-        preload={mode === 'detail' ? 'auto' : 'none'}
-        onLoadedMetadata={(event) => {
-          if (mode === 'detail' && startAt > 0) event.currentTarget.currentTime = startAt
-        }}
-      />
+      <>
+        <video
+          ref={videoRef}
+          className={`park__media-file park__media-file--${mode}`}
+          src={shouldLoad ? source : undefined}
+          poster={media.poster}
+          aria-label={media.label}
+          autoPlay
+          loop
+          muted
+          playsInline
+          controls={mode === 'detail'}
+          controlsList={mode === 'detail' ? 'nofullscreen noremoteplayback' : undefined}
+          disablePictureInPicture={mode === 'detail'}
+          disableRemotePlayback={mode === 'detail'}
+          preload={mode === 'detail' ? 'auto' : 'none'}
+          onLoadedMetadata={(event) => {
+            if (mode === 'detail' && startAt > 0) event.currentTarget.currentTime = startAt
+          }}
+          onCanPlay={(event) => {
+            if (autoPlayAttemptedRef.current) return
+            autoPlayAttemptedRef.current = true
+            void event.currentTarget.play().catch(() => setVideoStatus('paused'))
+          }}
+          onPlaying={() => setVideoStatus('playing')}
+          onPause={() => setVideoStatus('paused')}
+          onError={() => setVideoStatus('error')}
+        />
+
+        {mode === 'detail' && videoStatus !== 'playing' ? (
+          <button
+            type="button"
+            className="park__media-play"
+            aria-label={videoStatus === 'error' ? 'Walkthrough video unavailable' : 'Play project walkthrough'}
+            disabled={videoStatus === 'error'}
+            onClick={() => {
+              const video = videoRef.current
+              if (!video) return
+              void video.play().catch(() => setVideoStatus('error'))
+            }}
+          >
+            {videoStatus === 'loading'
+              ? 'Loading walkthrough…'
+              : videoStatus === 'error'
+                ? 'Video unavailable'
+                : 'Play walkthrough'}
+          </button>
+        ) : null}
+      </>
     )
   }
 
@@ -131,6 +178,8 @@ export default function ParkScene() {
   const detailRef = useRef<HTMLElement>(null)
   const openingTimerRef = useRef<number | null>(null)
   const openingVideoRef = useRef<HTMLVideoElement | null>(null)
+  const openingTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const hadOpenPaddockRef = useRef(false)
   const openProject = openIndex === null ? null : featuredProjects[openIndex]!
   const openMedia = openProject ? projectMedia(openProject.image) : null
 
@@ -154,9 +203,11 @@ export default function ParkScene() {
       // Begin filling the HTTP cache while the physical gate opens. On a cold
       // visit this turns the transition time into useful loading time instead
       // of showing a frozen first frame after the dossier appears.
-      void fetch(selectedMedia.src, { cache: 'force-cache' }).catch(() => undefined)
+      void fetch(selectedMedia.previewSrc ?? selectedMedia.src, { cache: 'force-cache' })
+        .catch(() => undefined)
     }
 
+    openingTriggerRef.current = button
     openingVideoRef.current = button.querySelector('video')
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reducedMotion) {
@@ -178,17 +229,98 @@ export default function ParkScene() {
     if (openIndex === null) return
 
     detailRef.current?.focus({ preventScroll: true })
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      if (openingTimerRef.current !== null) {
-        window.clearTimeout(openingTimerRef.current)
-        openingTimerRef.current = null
+    const containDialogFocus = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (openingTimerRef.current !== null) {
+          window.clearTimeout(openingTimerRef.current)
+          openingTimerRef.current = null
+        }
+        setOpeningIndex(null)
+        setOpenIndex(null)
+        return
       }
-      setOpeningIndex(null)
-      setOpenIndex(null)
+
+      if (event.key !== 'Tab' || !detailRef.current) return
+      const focusable = Array.from(detailRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), video[controls], [tabindex]:not([tabindex="-1"])',
+      )).filter((element) => !element.hasAttribute('inert'))
+      if (focusable.length === 0) {
+        event.preventDefault()
+        detailRef.current.focus({ preventScroll: true })
+        return
+      }
+
+      const first = focusable[0]!
+      const last = focusable[focusable.length - 1]!
+      if (event.shiftKey && (document.activeElement === first || document.activeElement === detailRef.current)) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
     }
-    window.addEventListener('keydown', closeOnEscape)
-    return () => window.removeEventListener('keydown', closeOnEscape)
+    window.addEventListener('keydown', containDialogFocus)
+    return () => window.removeEventListener('keydown', containDialogFocus)
+  }, [openIndex])
+
+  useEffect(() => {
+    if (openIndex === null) return
+
+    const body = document.body
+    const scrollX = window.scrollX
+    const scrollY = window.scrollY
+    const lockedProperties = [
+      'position',
+      'top',
+      'right',
+      'left',
+      'width',
+      'overflow',
+      'overscroll-behavior',
+      'padding-right',
+    ] as const
+    const previousBodyStyles = lockedProperties.map((property) => ({
+      property,
+      value: body.style.getPropertyValue(property),
+      priority: body.style.getPropertyPriority(property),
+    }))
+
+    /* Freezing the body keeps the dossier anchored to the selected paddock.
+       Overflow alone is not enough on touch browsers, where the page can still
+       rubber-band into the overlapping Awards runway behind the modal. */
+    body.style.setProperty('position', 'fixed')
+    body.style.setProperty('top', `${-scrollY}px`)
+    body.style.setProperty('left', `${-scrollX}px`)
+    body.style.setProperty('right', '0')
+    body.style.setProperty('width', '100%')
+    body.style.setProperty('overflow', 'hidden')
+    body.style.setProperty('overscroll-behavior', 'none')
+
+    const viewportWidth = document.documentElement.clientWidth
+    const scrollbarWidth = viewportWidth > 0 ? Math.max(0, window.innerWidth - viewportWidth) : 0
+    if (scrollbarWidth > 0) {
+      const bodyPadding = Number.parseFloat(window.getComputedStyle(body).paddingRight) || 0
+      body.style.setProperty('padding-right', `${bodyPadding + scrollbarWidth}px`)
+    }
+
+    return () => {
+      previousBodyStyles.forEach(({ property, value, priority }) => {
+        if (value) body.style.setProperty(property, value, priority)
+        else body.style.removeProperty(property)
+      })
+      window.scrollTo(scrollX, scrollY)
+    }
+  }, [openIndex])
+
+  useEffect(() => {
+    if (openIndex !== null) {
+      hadOpenPaddockRef.current = true
+      return
+    }
+    if (!hadOpenPaddockRef.current) return
+    hadOpenPaddockRef.current = false
+    openingTriggerRef.current?.focus({ preventScroll: true })
   }, [openIndex])
 
   useEffect(() => () => {
@@ -292,6 +424,7 @@ export default function ParkScene() {
             type="button"
             className="park__detail-backdrop"
             aria-label="Close project details"
+            tabIndex={-1}
             onClick={closePaddock}
           />
           <article
@@ -314,11 +447,11 @@ export default function ParkScene() {
                 <ProjectMediaView media={openMedia} mode="detail" startAt={detailStartAt} />
                 <span className="park__detail-scan" aria-hidden="true" />
               </div>
-              {openMedia?.kind === 'image' && (
+              {openMedia ? (
                 <a className="park__media-expand" href={openMedia.src} target="_blank" rel="noreferrer noopener">
-                  Open walkthrough in a new tab
+                  {openMedia.kind === 'video' ? 'Open HD walkthrough' : 'Open walkthrough in a new tab'}
                 </a>
-              )}
+              ) : null}
             </div>
 
             <div className="park__detail-copy">

@@ -8,7 +8,10 @@
 
 .scene--gate {
   position: relative;
-  height: 360svh;
+  /* One shared camera runway: the established 360svh gate chapter plus the
+     former 220svh Awards chapter. Sharing the sticky stage is what lets the
+     scratches tear the live paddocks instead of a duplicate frame. */
+  height: 580svh;
   background: #050403;
 }
 
@@ -57,12 +60,46 @@
   position: absolute;
   inset: 0;
   z-index: 20;
+  overflow: clip;
   opacity: var(--project-strength, 0);
   pointer-events: none;
   will-change: opacity;
 }
 
 .gate__projects.is-active { pointer-events: auto; }
+
+.gate__project-frame {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  transform-origin: 50% 50%;
+  animation: paddock-page-exit 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+  will-change: transform, opacity;
+}
+
+@keyframes paddock-page-exit {
+  0%, 66% {
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  76% {
+    visibility: visible;
+    opacity: 0.78;
+    transform: translate3d(0, 0, 7rem) scale(1.07);
+  }
+  90% {
+    visibility: visible;
+    opacity: 0;
+    transform: translate3d(0, 0, 18rem) scale(1.18);
+  }
+  91%, 100% {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, 0, 18rem) scale(1.18);
+  }
+}
 
 .gate__canvas {
   position: relative;
@@ -108,8 +145,8 @@
   top: max(1rem, env(safe-area-inset-top));
   right: max(1rem, env(safe-area-inset-right));
   z-index: 40;
-  width: 1.85rem;
-  height: 1.85rem;
+  width: 2.75rem;
+  height: 2.75rem;
   font-family: var(--font-tech);
   color: rgba(255, 240, 214, 0.76);
   opacity: var(--credit-strength, 0);
@@ -129,20 +166,17 @@
   z-index: 2;
   display: grid;
   place-items: center;
-  width: 1.85rem;
-  height: 1.85rem;
+  width: 2.75rem;
+  height: 2.75rem;
   padding: 0;
   margin: 0;
-  border: 1px solid rgba(255, 218, 153, 0.38);
+  border: 0;
   border-radius: 50%;
-  background: rgba(8, 6, 4, 0.68);
-  box-shadow:
-    0 0 0.55rem rgba(255, 255, 255, 0.28),
-    0 0 1.35rem rgba(243, 183, 68, 0.3),
-    0 0.35rem 1.1rem rgba(0, 0, 0, 0.48);
+  background: transparent;
+  box-shadow: none;
   color: #ffffff;
   font-family: Georgia, serif;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-style: italic;
   text-shadow:
     0 0 0.28rem rgba(255, 255, 255, 1),
@@ -152,15 +186,43 @@
   backdrop-filter: blur(8px);
 }
 
+.gate__credit > button::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  width: 1.85rem;
+  height: 1.85rem;
+  border: 1px solid rgba(255, 218, 153, 0.38);
+  border-radius: 50%;
+  background: rgba(8, 6, 4, 0.68);
+  box-shadow:
+    0 0 0.5rem rgba(255, 255, 255, 0.24),
+    0 0 1.1rem rgba(243, 183, 68, 0.26),
+    0 0.35rem 1rem rgba(0, 0, 0, 0.44);
+}
+
 .gate__credit > button:hover,
 .gate__credit > button:focus-visible {
-  border-color: rgba(255, 218, 153, 0.72);
   color: #ffffff;
-  box-shadow:
-    0 0 0.75rem rgba(255, 255, 255, 0.48),
-    0 0 1.65rem rgba(243, 183, 68, 0.52),
-    0 0.35rem 1.1rem rgba(0, 0, 0, 0.48);
   outline: none;
+}
+
+.gate__credit > button:hover::before,
+.gate__credit > button:focus-visible::before {
+  border-color: rgba(255, 218, 153, 0.76);
+  box-shadow:
+    0 0 0.66rem rgba(255, 255, 255, 0.44),
+    0 0 1.35rem rgba(243, 183, 68, 0.48),
+    0 0.35rem 1rem rgba(0, 0, 0, 0.48);
+}
+
+.gate__credit > button:focus-visible::after {
+  content: '';
+  position: absolute;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 2px solid #ffe29a;
+  border-radius: 50%;
 }
 
 .gate__credit-panel {
@@ -178,7 +240,7 @@
   opacity: 0;
   visibility: hidden;
   transform: translate3d(0.25rem, -0.7rem, 0) scale(0.82);
-  transform-origin: calc(100% - 0.925rem) -1.525rem;
+  transform-origin: calc(100% - 1.375rem) -2.425rem;
   pointer-events: none;
   transition:
     opacity 130ms ease-in,
@@ -310,7 +372,63 @@
   }
 }
 
+/* Phones, short windows and reduced-motion users get the same two chapters in
+   ordinary document flow. The project scene remains a full viewport, followed
+   by the complete Awards spread; there is no frozen 480svh scrub runway. */
+@media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
+  .scene--gate {
+    height: auto;
+    min-height: 200svh;
+  }
+
+  .gate__stage {
+    position: relative;
+    top: auto;
+    display: block;
+    place-items: normal;
+    height: auto;
+    min-height: 200svh;
+    overflow: visible;
+  }
+
+  .gate__picture,
+  .gate__roar {
+    height: 100svh;
+  }
+
+  .gate__projects {
+    position: relative;
+    inset: auto;
+    height: 100svh;
+    width: 100%;
+    overflow: hidden;
+    opacity: 1;
+  }
+
+  .gate__project-frame {
+    position: relative;
+    height: 100svh;
+    width: 100%;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    animation: none;
+    will-change: auto;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  /* The finished paddocks are the reduced-motion state. Remove the extra
+     camera runway as well, otherwise visitors scroll through 260svh of a
+     perfectly static frame. */
+  .scene--gate {
+    height: auto;
+  }
+
+  .gate__stage {
+    position: relative;
+  }
+
   .gate__picture {
     transform: none;
   }

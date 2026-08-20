@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   GATE_OPEN_ANGLE,
+  GATE_CHAPTER_SHARE,
+  GATE_SEQUENCE_END,
   classifyGateTriangle,
   gateMotion,
+  gateSequenceProgress,
+  projectAwardsProgress,
   smoothstep,
 } from './gateMotion'
 
@@ -58,6 +62,42 @@ describe('smoothstep', () => {
     expect(smoothstep(0.2, 0.6, 0.8)).toBe(1)
     expect(smoothstep(1, 1, 0.9)).toBe(0)
     expect(smoothstep(1, 1, 1)).toBe(1)
+  })
+})
+
+describe('gateSequenceProgress', () => {
+  it('finishes the shot early enough to leave a stable project hold', () => {
+    expect(gateSequenceProgress(0)).toBe(0)
+    expect(gateSequenceProgress(GATE_SEQUENCE_END / 2)).toBeCloseTo(0.5)
+    expect(gateSequenceProgress(GATE_SEQUENCE_END)).toBe(1)
+    expect(gateSequenceProgress(1)).toBe(1)
+  })
+
+  it('clamps direct jumps and reverse scrolling to the same endpoints', () => {
+    expect(gateSequenceProgress(-1)).toBe(0)
+    expect(gateSequenceProgress(3)).toBe(1)
+
+    const down = [0, 0.2, 0.5, GATE_SEQUENCE_END].map(gateSequenceProgress)
+    const up = [GATE_SEQUENCE_END, 0.5, 0.2, 0].map(gateSequenceProgress)
+    expect(up).toEqual([...down].reverse())
+  })
+})
+
+describe('projectAwardsProgress', () => {
+  it('preserves the old gate runway before starting the archive transition', () => {
+    expect(projectAwardsProgress(0)).toEqual({ gate: 0, archive: 0 })
+    expect(projectAwardsProgress(GATE_CHAPTER_SHARE / 2)).toEqual({ gate: 0.5, archive: 0 })
+    expect(projectAwardsProgress(GATE_CHAPTER_SHARE)).toEqual({ gate: 1, archive: 0 })
+    expect(projectAwardsProgress(1)).toEqual({ gate: 1, archive: 1 })
+  })
+
+  it('clamps jumps and returns the same local clocks in reverse', () => {
+    expect(projectAwardsProgress(-1)).toEqual({ gate: 0, archive: 0 })
+    expect(projectAwardsProgress(3)).toEqual({ gate: 1, archive: 1 })
+
+    const point = GATE_CHAPTER_SHARE + (1 - GATE_CHAPTER_SHARE) * 0.42
+    expect(projectAwardsProgress(point).archive).toBeCloseTo(0.42)
+    expect(projectAwardsProgress(point)).toEqual(projectAwardsProgress(point))
   })
 })
 

@@ -64,11 +64,11 @@
         "canonical": "#8a4b22",
         "tonalRamp": ["#1c0e05", "#32190a", "#47230d", "#5d3217", "#734020", "#805026", "#8a4b22", "#b4703a"]
       },
-      "interior": {
+      "archive": {
         "role": "neutral",
-        "displayName": "Visitor Center Interior",
-        "canonical": "#06100d",
-        "tonalRamp": ["#020604", "#06100d", "#0b1c17", "#122b23", "#1c3f34", "#2a5648", "#3d7263", "#5b9585"]
+        "displayName": "Mutant Archive Navy",
+        "canonical": "#050a11",
+        "tonalRamp": ["#030609", "#050a11", "#071321", "#0b1e35", "#102b49", "#163e68", "#1666a8", "#77b9e8"]
       },
       "jungle-night": {
         "role": "neutral",
@@ -92,7 +92,7 @@
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running prose. Garamond on the card, Orbitron on instrument sets. Measure 65-75ch."
+        "purpose": "Running prose. Garamond on the card, Orbitron on instruments, Helvetica Neue in the achievement archive. Archive body copy never drops below 16px."
       },
       "label": {
         "displayName": "Label — Stencil",
@@ -116,9 +116,9 @@
         "purpose": "The highlight where light strikes a face. Its shaded counterpart is inset 0 -2px rgba(28, 12, 5, 0.58)."
       },
       {
-        "name": "vitrine-case",
-        "value": "inset 0 1px rgba(255, 236, 190, 0.16), 0 0.6rem 1.5rem rgba(0, 0, 0, 0.5), 0 1.6rem 2.2rem -1rem rgba(0, 0, 0, 0.75)",
-        "purpose": "A display case standing on a floor: lit top lip, cast body shadow, and a ground contact shadow beneath it."
+        "name": "archive-paper-depth",
+        "value": "0.8rem 0.8rem 0 #02050a, 0 2rem 6rem rgba(0, 0, 0, 0.72), inset 0 1px rgba(255, 255, 255, 0.72)",
+        "purpose": "The settled newsprint spread: a hard printed edge, deep cast shadow and one lit paper face after the live paddock has been scratched away."
       }
     ],
     "motion": [
@@ -138,9 +138,9 @@
         "purpose": "A paddock arriving, staggered by 90ms per index across the grid."
       },
       {
-        "name": "duration-unfurl",
-        "value": "900ms",
-        "purpose": "The Visitor Center banner dropping from its rigging, once, on scene entry."
+        "name": "duration-archive-release",
+        "value": "0–88% of the archive clock inside the unified 580svh Projects/Awards runway",
+        "purpose": "Two sequential three-cut fields tear an X into the live paddock; paper follows pass one, halftone follows pass two, and that same frame zooms away under reversible scroll control."
       },
       {
         "name": "duration-gate",
@@ -149,7 +149,7 @@
       }
     ],
     "breakpoints": [
-      { "name": "release", "value": "760px" },
+      { "name": "release", "value": "760px; achievement archive 860px" },
       { "name": "short-viewport", "value": "720px height, min-width 761px" }
     ]
   },
@@ -163,26 +163,26 @@
       "css": ".ds-paddock { position: relative; width: 20rem; aspect-ratio: 1.48; font-family: Orbitron, Eurostile, sans-serif; color: #fff0d6; cursor: pointer; transition: transform 260ms cubic-bezier(0.22,1,0.36,1), filter 240ms ease; } .ds-paddock:hover { transform: translateY(-0.28rem) scale(1.018); filter: brightness(1.13); } .ds-paddock-lintel { position: absolute; top: 0; right: 0.12rem; left: 0.12rem; height: 1.5rem; border: 2px solid #281508; border-radius: 0.62rem 0.55rem 0.42rem 0.5rem / 48% 42% 38% 45%; background: linear-gradient(90deg, #47230d, #805026 28%, #5d3217 66%, #32190a); box-shadow: 0 0.38rem 0 #271308, 0 0.62rem 0.8rem rgba(5,14,6,0.68), inset 0 -2px rgba(28,12,5,0.58); } .ds-paddock-hazard { position: absolute; top: 50%; left: 0; width: 30%; height: 0.48rem; transform: translateY(-50%); background: repeating-linear-gradient(-52deg, #17130c 0 0.34rem, #dca719 0.34rem 0.68rem); clip-path: polygon(0 0,100% 0,90% 100%,0 100%); } .ds-paddock-serial { position: absolute; top: 50%; right: 0.55rem; transform: translateY(-50%); font-size: 0.49rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(246,220,160,0.88); } .ds-paddock-cell { position: absolute; top: 1.5rem; right: 0.5rem; bottom: 2.4rem; left: 0.5rem; background: repeating-linear-gradient(90deg, rgba(120,150,120,0.5) 0 2px, transparent 2px 2rem), #04120c; } .ds-paddock-sill { position: absolute; right: 0.12rem; bottom: 0; left: 0.12rem; display: flex; flex-direction: column; padding: 0.35rem 0.6rem; border: 2px solid #22400f; background: linear-gradient(180deg, #3d6b22, #23400f); } .ds-paddock-sill strong { font-size: 0.8rem; } .ds-paddock-sill small { font-size: 0.5rem; opacity: 0.75; }"
     },
     {
-      "name": "Vitrine",
+      "name": "Achievement Record",
       "kind": "card",
-      "refersTo": "vitrine",
-      "description": "A display case for an award: specimen lit from below, plinth label beneath, raking highlight across the glass.",
-      "html": "<div class=\"ds-vitrine\"><div class=\"ds-vitrine-specimen\"></div><div class=\"ds-vitrine-mount\"><p class=\"ds-vitrine-event\">RISTEK Hackathon 2026</p><h3 class=\"ds-vitrine-award\">Best Presentation</h3><p class=\"ds-vitrine-host\">Fakultas Ilmu Komputer, Universitas Indonesia</p></div><span class=\"ds-vitrine-glass\"></span></div>",
-      "css": ".ds-vitrine { position: relative; display: grid; grid-template-rows: minmax(0,1fr) auto; gap: 0.9rem; width: 20rem; padding: 1.1rem; overflow: hidden; border: 1px solid rgba(232,220,196,0.22); font-family: Orbitron, Eurostile, sans-serif; color: #e8dcc4; background: radial-gradient(ellipse 78% 46% at 50% 108%, rgba(240,181,31,0.16), transparent 72%), linear-gradient(168deg, rgba(38,52,44,0.9), rgba(8,16,13,0.95)); box-shadow: inset 0 1px rgba(255,236,190,0.16), 0 0.6rem 1.5rem rgba(0,0,0,0.5), 0 1.6rem 2.2rem -1rem rgba(0,0,0,0.75); } .ds-vitrine-specimen { position: relative; min-height: 6rem; } .ds-vitrine-specimen::after { content: ''; position: absolute; right: 12%; bottom: -0.4rem; left: 12%; height: 0.55rem; border-radius: 50%; background: radial-gradient(ellipse at 50% 50%, rgba(240,181,31,0.3), transparent 70%); } .ds-vitrine-glass { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(104deg, transparent 0 38%, rgba(226,240,232,0.07) 44% 52%, transparent 58%); } .ds-vitrine-event { margin: 0; font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(232,220,196,0.7); } .ds-vitrine-award { margin: 0.06em 0 0.2em; font-size: 1.5rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: #f0b51f; } .ds-vitrine-host { margin: 0; font-size: 0.72rem; line-height: 1.62; color: rgba(232,220,196,0.78); }"
+      "refersTo": "achievement-record",
+      "description": "A full-colour team photograph beside a concise field record on a warm newsprint spread: award, one-sentence story, business lesson and progressive team credits.",
+      "html": "<article class=\"ds-record\"><figure class=\"ds-record-photo\"><img alt=\"Team FAM holding the Best Presentation board\"></figure><div class=\"ds-record-brief\"><p>RISTEK Hackathon 2026</p><h3>Best Presentation</h3><p>The product was ready. The business case wasn't.</p></div></article>",
+      "css": ".ds-record { display: grid; grid-template-columns: 1.08fr .92fr; gap: 2rem; padding: 2rem; font-family: 'Helvetica Neue', Arial, sans-serif; color: #07111e; background: #efe4c6; box-shadow: 1rem 1.2rem 0 #07111e; } .ds-record-photo { aspect-ratio: 6/5; overflow: hidden; clip-path: polygon(0 0,94% 0,100% 10%,100% 100%,6% 100%,0 90%); background: #07101a; box-shadow: .55rem .7rem 0 #07111e; } .ds-record-brief { padding-left: 1.5rem; border-left: .32rem solid #ffd21f; } .ds-record-brief p { font-size: 1rem; line-height: 1.55; }"
     },
     {
-      "name": "Painted Banner",
+      "name": "Paddock-to-Comic X Tear",
       "kind": "custom",
-      "refersTo": "banner",
-      "description": "Hand-painted cloth hung across the rotunda. The one object in the Jurassic act set in the serif rather than the machined face.",
-      "html": "<p class=\"ds-banner\"><span>When Dinosaurs Ruled The Hackathon</span></p>",
-      "css": ".ds-banner { display: flex; align-items: center; justify-content: center; width: 26rem; margin: 0; padding: 0.95rem 2.6rem 1.5rem; text-align: center; color: #23160b; background: linear-gradient(101deg, rgba(120,92,46,0.16) 0 18%, transparent 18% 82%, rgba(120,92,46,0.16) 82%), linear-gradient(175deg, #efe4bd, #cdbd8c 62%, #b3a173); box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.55), inset 0 -2px rgba(97,82,48,0.35); clip-path: polygon(0 0, 100% 0, 100% 84%, 50% 100%, 0 84%); } .ds-banner span { font-family: 'Cormorant SC', 'Cormorant Garamond', Georgia, serif; font-size: 1.85rem; font-weight: 600; letter-spacing: 0.1em; line-height: 1.1; }"
+      "refersTo": "archive-transition",
+      "description": "Two three-cut fields form an X directly on the live paddock. Paper follows the first pass, Ben-Day dots follow the second, and the marked frame then pushes into Awards.",
+      "html": "<div class=\"ds-paddock-frame\"><span class=\"ds-paper-wash\"></span><span class=\"ds-halftone\"></span><span class=\"ds-six-gouges\"></span></div>",
+      "css": ".ds-paddock-frame { position:absolute; inset:0; overflow:hidden; } .ds-paper-wash,.ds-halftone,.ds-six-gouges { position:absolute; inset:0; pointer-events:none; } .ds-paper-wash { background:#cfb979; mix-blend-mode:color; } .ds-halftone { background:radial-gradient(circle,#07111e 0 .065rem,transparent .075rem) 0 0/.45rem .45rem; mix-blend-mode:screen; }"
     },
     {
-      "name": "Amber Link",
+      "name": "Live Link",
       "kind": "custom",
       "refersTo": "link",
-      "description": "The only interactive text treatment on dark sets. Amber marks what is live.",
+      "description": "The active-link treatment follows its set: amber in the paddocks, archive yellow in the achievement record.",
       "html": "<a class=\"ds-link\" href=\"#\">Talk-Active</a>",
       "css": ".ds-link { font-family: Orbitron, Eurostile, sans-serif; font-size: 0.8rem; color: #f0b51f; text-decoration-thickness: 1px; text-underline-offset: 0.2em; } .ds-link:hover { color: #ffd465; } .ds-link:focus-visible { color: #ffd465; outline: 2px solid #f0b51f; outline-offset: 3px; }"
     },
@@ -191,39 +191,34 @@
       "kind": "chip",
       "refersTo": "paddock-plaque",
       "description": "Stencilled marking used for serials, section labels and location tags across every instrument set.",
-      "html": "<p class=\"ds-stencil\">Isla Nublar · Visitor Center</p>",
+      "html": "<p class=\"ds-stencil\">Mutant archive // Field record 01</p>",
       "css": ".ds-stencil { margin: 0; font-family: Orbitron, Eurostile, sans-serif; font-size: 0.55rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(232,220,196,0.7); }"
     }
   ],
   "narrative": {
     "northStar": "The Practical Effect",
-    "overview": "This site is a film built the way films were built before post-production: with physical sets, real models, and tricks done in camera. It is not a portfolio that references cinema — it is a walk through four standing sets, each fully dressed, each belonging to a different picture.\n\nThe standard the codebase already holds itself to is stated in GateScene.tsx: the CSS gate that preceded the current one \"could open, but it was never going to look like the film — it was a drawing of a gate from memory. This is the actual model.\" That sentence is the design system. When something can be built, it is built, not approximated.\n\nDensity is high and the surfaces are dark, wet and worn — closer to the source films' production design than to their merchandise. Every object carries wear: grain, hazard tape, scratched enamel, weld seams, canvas slub. Nothing is flat-shaded, and nothing is a rectangle with a radius standing in for an object.",
+    "overview": "This site is a film built the way films were built before post-production: with physical sets, real models, and tricks done in camera. It is not a portfolio that references cinema — it is a walk through five standing sets, each fully dressed, each belonging to a different picture.\n\nThe standard the codebase already holds itself to is stated in GateScene.tsx: the CSS gate that preceded the current one \"could open, but it was never going to look like the film — it was a drawing of a gate from memory. This is the actual model.\" That sentence is the design system. When something can be built, it is built, not approximated.\n\nDensity is high and the surfaces are fabricated. The final achievement set changes material in camera: two fields of three gouges tear an X into the live Jurassic paddock, paper and halftone follow the damage, and that marked frame pushes away to reveal a warm record holding one real evidence photograph. Nothing is flat-shaded, and nothing is a rectangle with a radius standing in for an object.",
     "keyCharacteristics": [
       "Objects are fabricated, never drawn. If it can be modelled, it is not faked.",
       "Depth is material. A shadow says what a thing is made of, not how high it floats.",
       "Each scene is its own world with its own light, palette and voice.",
       "Structure is diegetic: labels are plaques, lists are archives, awards are specimens.",
-      "Motion is mechanical and rare. Things deploy, unfurl and settle; they do not float."
+      "Motion is mechanical and rare. Things deploy, cut, hinge and settle; they do not float."
     ],
     "rules": [
       {
         "name": "The One Set Rule",
-        "body": "A colour belongs to the set it was lit for. Borrowing the time-circuit green for a success state, or the containment amber for the card scene, collapses two places into one and destroys the walk between them. The only sanctioned crossing is amber between the paddocks and the Visitor Center, because they are the same building's exterior and interior.",
+        "body": "A colour belongs to the set it was lit for. Borrowing the time-circuit green for a success state, or the archive yellow for the paddocks, collapses two places into one and destroys the walk between them.",
         "section": "colors"
       },
       {
         "name": "The Powered-On Rule",
-        "body": "Amber marks what is live: a lamp, a link, a focus ring, an award. If an element is not interactive and not a status, it does not get amber.",
+        "body": "Amber marks what is live in the paddocks; archive yellow does the same job in the final record. If an element is not interactive, a status or part of the X-tear mechanism, it gets neither.",
         "section": "colors"
       },
       {
         "name": "The One Place Rule",
         "body": "Scenes do not share typefaces. tokens.css states the reason directly: the card's Garamond belongs to 1987 Manhattan, and borrowing it for a DeLorean dashboard would make both scenes read as the same place. Before using a face in a new scene, ask which set fabricated the object.",
-        "section": "typography"
-      },
-      {
-        "name": "The Painted Exception",
-        "body": "The one sanctioned crossing is the Visitor Center banner, which is set in Cormorant SC inside an otherwise Orbitron act. It earns this because it is the only object in the park painted by hand rather than manufactured. Machined lettering on painted canvas would be the wrong material.",
         "section": "typography"
       },
       {

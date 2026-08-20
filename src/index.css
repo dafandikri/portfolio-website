@@ -46,10 +46,34 @@ body {
 
 /* Reserves each cinematic chapter before its code is requested. The first
    viewport therefore pays only for the business card; Three.js and the 3D
-   assets arrive as the visitor approaches their scenes. */
-.deferred-scene,
+   assets arrive as the visitor approaches their scenes.
+
+   This wrapper is also the containing block for positioned stages. Without
+   it, a stage can be placed against the page instead of its reserved viewport,
+   leaving a white hole at the end of the scroll. Isolation keeps each stage's
+   z-index inside its own chapter. */
+.deferred-scene {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  background: var(--scene-fallback, #030405);
+}
+
+/* Match every unloaded chapter to the set that is about to arrive. Suspense
+   can then take as long as it needs without flashing the card scene's white
+   body background between two dark scenes. */
+.deferred-scene[data-deferred-scene='departure'],
+.deferred-scene[data-deferred-scene='projects'] {
+  --scene-fallback: #050403;
+}
+
+.deferred-scene[data-deferred-scene='experience'] {
+  --scene-fallback: #030405;
+}
+
 .deferred-scene__fallback {
   min-height: 100svh;
+  background: inherit;
 }
 
 /* Each scene owns a screen. The card scene is positioned so the scroll cue can

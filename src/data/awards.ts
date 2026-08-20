@@ -24,13 +24,23 @@ export const awardsData: Award[] = [
     ],
     projectTitle: 'Talk-Active',
     story:
-      'Team FAM built Talk-Active over the course of the competition and presented it at the finals. The award was for the pitch itself, judged on the same kind of rubric the product exists to rehearse: a tool for defending claims under questioning, defended under questioning.',
+      'RISTEK is the student tech collective at Fasilkom UI, and its hackathon ends with a live pitch to the judges. Five of us went in as Team FAM, shipped Talk-Active, and came out with Best Presentation.',
     highlights: [
-      'Best Presentation at the RISTEK Hackathon 2026 finals, Fasilkom UI',
-      'A five-person team; a 6:35 pitch with a 2:15 live demo driven from a separate operator machine',
-      'Judged against a published finals rubric covering problem, solution, innovation, technical depth, design and Q&A',
-      'Demonstrated live on production, including the degraded offline path',
+      '6:35 pitch · 2:15 live demo',
+      'Production demo · offline fallback included',
     ],
+    photo: {
+      asset: 'team-fam-best-presentation',
+      alt: 'Five members of Team FAM holding the Best Presentation board after the RISTEK Hackathon 2026 finals',
+      caption: 'Talk-Active · Team FAM · 14 August 2026',
+      width: 720,
+      height: 960,
+    },
+    lesson: {
+      title: 'What we missed',
+      body:
+        'We polished the demo and underprepared the business case: TAM, SAM and SOM. Now the product and the argument for it get built together.',
+    },
     logo: 'ristek',
   },
 ]

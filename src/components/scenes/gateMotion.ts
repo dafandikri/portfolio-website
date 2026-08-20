@@ -1,9 +1,40 @@
 /** Scroll choreography for the Jurassic Park gate. */
 
 export const GATE_OPEN_ANGLE = Math.PI * 0.54
+/**
+ * Finish the gate shot before its sticky section releases. The remaining
+ * quarter of the pin is a deliberate inspection hold for the project paddocks
+ * rather than a one-wheel-notch glimpse before the next scene arrives.
+ */
+export const GATE_SEQUENCE_END = 0.74
+
+/**
+ * GateScene now owns the whole Projects -> Awards camera move. Its first
+ * 260svh of scroll keeps the established gate timing; the remaining 220svh
+ * paperizes the live paddock and reveals the award spread.
+ */
+export const GATE_CHAPTER_SHARE = 13 / 24
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))
+}
+
+export function gateSequenceProgress(rawProgress: number): number {
+  return clamp01(rawProgress / GATE_SEQUENCE_END)
+}
+
+export interface ProjectAwardsProgress {
+  gate: number
+  archive: number
+}
+
+/** Split one unified sticky runway into two reversible local clocks. */
+export function projectAwardsProgress(rawProgress: number): ProjectAwardsProgress {
+  const progress = clamp01(rawProgress)
+  return {
+    gate: clamp01(progress / GATE_CHAPTER_SHARE),
+    archive: clamp01((progress - GATE_CHAPTER_SHARE) / (1 - GATE_CHAPTER_SHARE)),
+  }
 }
 
 /** A reversible ease whose endpoints have no velocity jump. */
