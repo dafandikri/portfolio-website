@@ -24,7 +24,7 @@ export const awardsData: Award[] = [
     ],
     projectTitle: 'Talk-Active',
     story:
-      'RISTEK is the student tech collective at Fasilkom UI, and its hackathon ends with a live pitch to the judges. Five of us went in as Team FAM, shipped Talk-Active, and came out with Best Presentation.',
+      'RISTEK is the student tech collective at Fasilkom UI, and its hackathon ends with a live pitch to the judges. Five of us went in as Team FAM against 37 teams, shipped Talk-Active, and came out with Best Presentation.',
     highlights: [
       '6:35 pitch · 2:15 live demo',
       'Production demo · offline fallback included',

@@ -88,6 +88,7 @@ describe('VisitorCenterScene', () => {
     render(<VisitorCenterScene />)
 
     expect(screen.getByText(/student tech collective at Fasilkom UI/)).toBeInTheDocument()
+    expect(screen.getByText(/against 37 teams/)).toBeInTheDocument()
     expect(screen.getByText(/came out with Best Presentation/)).toBeInTheDocument()
   })
 
