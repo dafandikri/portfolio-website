@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { projects, experiences, techStack, skills, parseOrThrow } from './index'
-import { projectSchema, experienceEntrySchema } from './schema'
+import { projects, experiences, techStack, skills, awards, parseOrThrow, assertAwardProjectsExist } from './index'
+import { projectSchema, experienceEntrySchema, awardSchema } from './schema'
 
 describe('parseOrThrow', () => {
   it('returns data on success', () => {
@@ -41,5 +41,40 @@ describe('content data integrity', () => {
     expect(techStack.row1.length).toBeGreaterThan(0)
     expect(techStack.row2.length).toBeGreaterThan(0)
     expect(skills.length).toBeGreaterThan(0)
+  })
+})
+
+describe('awards', () => {
+  it('exposes awards that are all schema-valid', () => {
+    expect(awards.length).toBeGreaterThan(0)
+    for (const award of awards) {
+      expect(awardSchema.safeParse(award).success).toBe(true)
+    }
+  })
+
+  it('points every award at a project that exists', () => {
+    const titles = new Set(projects.map((project) => project.title))
+    for (const award of awards) {
+      if (award.projectTitle === null) continue
+      expect(titles).toContain(award.projectTitle)
+    }
+  })
+
+  it('rejects an award pointing at a project that does not exist', () => {
+    // Zod validates each collection alone, so a dangling cross-reference is
+    // only catchable here. Without this check, renaming a project would ship a
+    // broken link rather than failing the build.
+    expect(() =>
+      assertAwardProjectsExist([{ ...awards[0]!, projectTitle: 'No Such Project' }], projects),
+    ).toThrow(/No Such Project/)
+  })
+
+  it('keeps competition language out of every project description', () => {
+    // The separation this site is built on: a project describes the product,
+    // an award describes the competition. Enforced, not just intended.
+    for (const project of projects) {
+      const copy = `${project.description} ${project.context} ${project.features.join(' ')}`
+      expect(copy).not.toMatch(/hackathon|RISTEK|best presentation/i)
+    }
   })
 })

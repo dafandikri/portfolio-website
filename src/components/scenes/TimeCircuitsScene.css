@@ -1,0 +1,210 @@
+/*
+ * Scene two. Two readouts bracket the roles: circuits stuck to the top, role
+ * name reading out along the bottom, timeline scrolling between them.
+ */
+
+.scene--circuits {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100svh;
+  /* Content is centred in the scene rather than stacked from the top, so the
+     deck is never pushed below the fold by the panel above it. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  background: #030405;
+  box-shadow: 0 -7rem 7rem 2rem #030405;
+  color: rgba(255, 255, 255, 0.86);
+  padding: clamp(1.5rem, 4vw, 3rem) clamp(1.25rem, 5vw, 3rem) clamp(4rem, 9vw, 6rem);
+}
+
+.scene--circuits::before,
+.scene--circuits::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scene--circuits::before {
+  background: radial-gradient(ellipse 72% 42% at 50% 16%, rgba(19, 29, 34, 0.24), transparent 74%);
+}
+
+.scene--circuits::after {
+  opacity: 0.2;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    rgba(151, 192, 205, 0.05) 3px 4px
+  );
+  mix-blend-mode: screen;
+}
+
+.circuits-scene__top,
+.scene--circuits .deck,
+.circuits-scene__placeholder {
+  position: relative;
+  z-index: 2;
+}
+
+/* The OBJ renders across the whole scene so its translation, pitch, yaw and
+   depth are camera-space motion rather than transforms on a flat cutout. */
+.circuits-scene__hoverboard3d {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.circuits-scene__hoverboard3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The information control enters only after the OBJ and all four maps have
+   rendered once, keeping its arrival synchronized with the model itself. */
+.circuits-scene__credit {
+  position: absolute;
+  top: max(1rem, env(safe-area-inset-top));
+  right: max(1rem, env(safe-area-inset-right));
+  z-index: 5;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: rgba(255, 240, 250, 0.8);
+  font-family: var(--font-tech);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-0.35rem) scale(0.92);
+  transform-origin: 100% 0;
+  transition: opacity 150ms ease-out, transform 170ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.circuits-scene__credit.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.circuits-scene__credit > button {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgba(255, 105, 180, 0.52);
+  border-radius: 50%;
+  background: rgba(8, 6, 12, 0.78);
+  box-shadow: 0 0 1.3rem rgba(255, 45, 145, 0.2);
+  color: #ffd7ec;
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  cursor: pointer;
+  appearance: none;
+  backdrop-filter: blur(8px);
+}
+
+.circuits-scene__credit > button:hover,
+.circuits-scene__credit > button:focus-visible {
+  border-color: #ff62b3;
+  color: #ffffff;
+  outline: none;
+}
+
+.circuits-scene__credit-panel {
+  display: block;
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  width: min(21rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 92, 178, 0.26);
+  border-radius: 0.45rem;
+  background: rgba(6, 5, 10, 0.92);
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.66), 0 0 2rem rgba(78, 220, 255, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0.25rem, -0.7rem, 0) scale(0.82);
+  transform-origin: calc(100% - 1.375rem) -2.425rem;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  transition:
+    opacity 130ms ease-in,
+    transform 180ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 0s linear 180ms;
+}
+
+.circuits-scene__credit.is-visible.is-open .circuits-scene__credit-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  pointer-events: auto;
+  transition:
+    opacity 150ms ease-out,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+}
+
+.circuits-scene__credit-panel p {
+  margin: 0.48rem 0 0;
+  font-size: 0.56rem;
+  letter-spacing: 0.05em;
+  line-height: 1.55;
+  opacity: 0;
+  transform: translate3d(0, -0.28rem, 0) scale(0.98);
+  transition: opacity 90ms ease-in, transform 120ms ease-in;
+}
+
+.circuits-scene__credit.is-visible.is-open .circuits-scene__credit-panel p {
+  opacity: 1;
+  transform: none;
+  transition: opacity 150ms ease-out, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.circuits-scene__credit.is-visible.is-open .circuits-scene__credit-panel p:nth-child(2) { transition-delay: 35ms; }
+.circuits-scene__credit.is-visible.is-open .circuits-scene__credit-panel p:nth-child(3) { transition-delay: 70ms; }
+.circuits-scene__credit.is-visible.is-open .circuits-scene__credit-panel p:nth-child(4) { transition-delay: 105ms; }
+
+.circuits-scene__credit-panel .circuits-scene__credit-heading {
+  margin-top: 0;
+  color: #ff73ba;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.circuits-scene__credit a {
+  color: #63e9ff;
+  text-underline-offset: 0.16em;
+}
+
+.circuits-scene__placeholder {
+  min-height: 100svh;
+}
+
+/* Capacitor left, circuits right — the dashboard, not two loose widgets. */
+.circuits-scene__dash {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2.5vw, 1.75rem);
+  width: min(100%, 52rem);
+}
+
+.circuits-scene__top {
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  padding-bottom: clamp(0.75rem, 2vw, 1.5rem);
+  /* The panel is the light source up here; the backdrop bleeds behind it so it
+     never sits on a hard seam while stuck. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .circuits-scene__credit,
+  .circuits-scene__credit-panel,
+  .circuits-scene__credit-panel p { transition: none; }
+}

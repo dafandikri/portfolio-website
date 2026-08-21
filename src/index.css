@@ -1,0 +1,104 @@
+@import './styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/*
+ * The magnetism behind the timeline. `proximity` rather than `mandatory`:
+ * mandatory can trap a visitor between snap points when a section is taller
+ * than the viewport, whereas proximity settles when you are close and otherwise
+ * leaves the scroll alone. Only elements that opt in with scroll-snap-align
+ * actually catch.
+ */
+html {
+  scroll-snap-type: y proximity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+}
+
+body {
+  background: var(--backdrop);
+  color: var(--ink);
+  font-family: var(--font-text);
+  /* The card is no longer the whole page — scenes follow it. */
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100%;
+}
+
+/* Reserves each cinematic chapter before its code is requested. The first
+   viewport therefore pays only for the business card; Three.js and the 3D
+   assets arrive as the visitor approaches their scenes.
+
+   This wrapper is also the containing block for positioned stages. Without
+   it, a stage can be placed against the page instead of its reserved viewport,
+   leaving a white hole at the end of the scroll. Isolation keeps each stage's
+   z-index inside its own chapter. */
+.deferred-scene {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  background: var(--scene-fallback, #030405);
+}
+
+/* Match every unloaded chapter to the set that is about to arrive. Suspense
+   can then take as long as it needs without flashing the card scene's white
+   body background between two dark scenes. */
+.deferred-scene[data-deferred-scene='departure'],
+.deferred-scene[data-deferred-scene='projects'] {
+  --scene-fallback: #050403;
+}
+
+.deferred-scene[data-deferred-scene='experience'] {
+  --scene-fallback: #030405;
+}
+
+.deferred-scene__fallback {
+  min-height: 100svh;
+  background: inherit;
+}
+
+/* Each scene owns a screen. The card scene is positioned so the scroll cue can
+   anchor to its bottom edge. */
+.scene--card {
+  position: relative;
+}
+
+/*
+ * Available to screen readers, invisible on screen. Scenes are visually
+ * self-evident but need real headings to be navigable by landmark.
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+::selection {
+  background: rgba(0, 0, 0, 0.82);
+  color: var(--stock);
+}

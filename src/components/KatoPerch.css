@@ -1,0 +1,51 @@
+/*
+ * Kato, perched on the Talk-Active lintel. He does not move.
+ *
+ * An earlier version had him fly in, breathe and hop between paddocks, which
+ * needed two nested elements: two animations on one element cannot animate the
+ * same property, so the hop lived on a wrapper and the arrival on the bird.
+ * With the motion gone that whole structure was scaffolding for nothing, so he
+ * is one element again.
+ *
+ * The sprite is three poses in one strip: idle, wings-spread, wings-up.
+ * background-size: 300% 100% makes each pose exactly one third of the box, so
+ * background-position-x steps of 0% / 50% / 100% select pose 1 / 2 / 3.
+ * Only idle and wings-up are used now; wings-spread was the flight pose.
+ */
+.kato {
+  position: absolute;
+  /* Above the paddock and outside its box — he is not in containment. */
+  bottom: 100%;
+  /* Right of centre, not centred: it keeps him clear of the header plaque at
+     the widths where the plaque is wide and the paddocks are narrow. */
+  left: 58%;
+  z-index: 9;
+  width: clamp(3.6rem, 7vh, 4.8rem);
+  height: clamp(3.6rem, 7vh, 4.8rem);
+  /* Sunk past the lintel's top edge so his feet overlap the timber. A cast
+     shadow was tried first and is invisible on dark wood; contact is what
+     stops him reading as a sticker. */
+  margin-bottom: -0.4rem;
+  pointer-events: none;
+  background: url('../assets/img/kato-poses.webp') 0% 100% / 300% 100% no-repeat;
+}
+
+/*
+ * Hovering or focusing the paddock puts him in the wings-up pose. This is a
+ * hover state, not motion — he still never moves on his own.
+ */
+.park__containment-unit:hover ~ .kato,
+.park__containment-unit:focus-visible ~ .kato {
+  background-position-x: 100%;
+}
+
+/* He vanishes with the rest of the interface while a dossier is open. */
+.park.is-inspecting .kato { opacity: 0; visibility: hidden; }
+
+@media (max-width: 760px) {
+  .kato {
+    left: 62%;
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+}

@@ -12,6 +12,8 @@ import { z } from 'zod'
 export const projectSchema = z.object({
   title: z.string().min(1),
   year: z.string().min(1),
+  featured: z.boolean(),
+  context: z.string().min(1),
   description: z.string().min(1),
   // Empty string is allowed and means "no screenshot yet" (renders a placeholder).
   image: z.string(),
@@ -19,6 +21,7 @@ export const projectSchema = z.object({
   techStack: z.array(z.string().min(1)).min(1),
   // Links may be a full URL, a relative route ("/blog/..."), or "#" (none yet).
   liveLink: z.string().min(1),
+  liveLabel: z.string().min(1),
   repoLink: z.string().min(1),
 })
 export type Project = z.infer<typeof projectSchema>
@@ -31,7 +34,17 @@ export const projectsSchema = z.array(projectSchema).min(1)
 export const experienceEntrySchema = z.object({
   id: z.string().min(1),
   monthLabel: z.string().min(1),
-  title: z.string().min(1),
+  /**
+   * The job, and who it was for, held apart rather than as one "Role - Org"
+   * string. They are read in different places — the card face shows only the
+   * organisation and the readout below it names the role — so storing the
+   * joined line would mean splitting it back apart at every use.
+   *
+   * `org` is the short display name, not the legal one: it has to fit on a
+   * compact timeline enclosure without wrapping.
+   */
+  role: z.string().min(1),
+  org: z.string().min(1).max(14),
   date: z.string().min(1),
   description: z.string().min(1),
   achievements: z.array(z.string().min(1)).min(1),
@@ -69,3 +82,96 @@ export const skillSchema = namedIconSchema
 export type Skill = z.infer<typeof skillSchema>
 
 export const skillsSchema = z.array(skillSchema).min(1)
+
+// ---------------------------------------------------------------------------
+// Business card (the whole site, as of v2)
+// ---------------------------------------------------------------------------
+
+/**
+ * A field printed on the card. `label` is what the paper says; `href` is where it
+ * goes. `href: null` means the field is ink only and not interactive — the
+ * location in the footer rule is the case that needs it.
+ */
+export const cardFieldSchema = z.object({
+  label: z.string().min(1),
+  href: z.string().min(1).nullable(),
+})
+export type CardField = z.infer<typeof cardFieldSchema>
+
+export const cardSchema = z.object({
+  /** Top left, first line. */
+  phone: cardFieldSchema,
+  /** Top left, second line. */
+  email: cardFieldSchema,
+  /**
+   * Top right. The film's cards carry the firm on one line with its trade set
+   * beneath it — "PIERCE & PIERCE" over "MERGERS AND ACQUISITIONS" — and the
+   * institution/field pair sits in that slot the same way.
+   */
+  affiliation: z.object({
+    name: z.string().min(1),
+    detail: z.string().min(1),
+  }),
+  /** Centre of the card, set widest. */
+  name: z.string().min(1),
+  /** Directly beneath the name; the only line not set in small caps. */
+  role: z.string().min(1),
+  /**
+   * Bottom rule — the modern descendant of "address · fax · telex".
+   *
+   * An array of *columns*, each holding one or more stacked lines. A flat list
+   * could only ever be one row, which left the layout leaning on `:first-child`
+   * and `:last-child` to mean "outer column" — positional CSS that silently
+   * breaks the moment the data is reordered.
+   */
+  footer: z.array(z.array(cardFieldSchema).min(1)).min(1),
+})
+export type Card = z.infer<typeof cardSchema>
+
+// ---------------------------------------------------------------------------
+// Awards
+// ---------------------------------------------------------------------------
+
+/**
+ * A competition result.
+ *
+ * Awards are held apart from projects on purpose. A project's copy describes
+ * the product; anything it went on to win is recorded here and points back at
+ * it by title. The reference runs one way only, so a reader who wants to know
+ * what a product does never has to read around a placing to find out.
+ */
+export const awardSchema = z.object({
+  title: z.string().min(1),
+  event: z.string().min(1),
+  host: z.string().min(1),
+  date: z.string().min(1),
+  team: z.string().min(1),
+  members: z.array(z.string().min(1)).min(1),
+  /**
+   * Title of the project this was won with, matching a `projectSchema` title
+   * exactly. `null` for an award that belongs to no project on the site.
+   * The match itself is enforced in ./index.ts — Zod validates each collection
+   * in isolation and cannot see across them.
+   */
+  projectTitle: z.string().min(1).nullable(),
+  story: z.string().min(1),
+  highlights: z.array(z.string().min(1)).min(1),
+  /** A real field photograph mounted with the award, when one exists. */
+  photo: z.object({
+    asset: z.string().min(1),
+    alt: z.string().min(1),
+    caption: z.string().min(1),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+  }).optional(),
+  /** A first-person lesson kept distinct from the factual award record. */
+  lesson: z.object({
+    title: z.string().min(1),
+    body: z.string().min(1),
+  }).optional(),
+  /** asset key resolved via getIcon(). */
+  logo: z.string().min(1),
+})
+export type Award = z.infer<typeof awardSchema>
+
+export const awardsSchema = z.array(awardSchema)

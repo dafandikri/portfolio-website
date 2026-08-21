@@ -6,8 +6,8 @@ A nostalgic Windows 95-themed portfolio website built with React + Vite, showcas
 
 | Environment | URL | Stack |
 |-------------|-----|-------|
-| Production | [dafandikri.tech](https://dafandikri.tech) | Vercel (CDN, auto-deploy) |
-| Infra Demo | [k8s.dafandikri.tech](https://k8s.dafandikri.tech) | k3s on DigitalOcean Droplet |
+| Production | [dafandikri.dev](https://dafandikri.dev) | Vercel (CDN, auto-deploy) |
+| Infra Demo | [k8s.dafandikri.dev](https://k8s.dafandikri.dev) | k3s on DigitalOcean Droplet |
 
 ## PageSpeed Insights
 
@@ -29,13 +29,19 @@ A nostalgic Windows 95-themed portfolio website built with React + Vite, showcas
 - **Ingress / TLS**: Traefik v3 with Let's Encrypt ACME HTTP-01
 - **CI/CD**: GitHub Actions — build → push → rolling restart
 
+## Asset attributions
+
+Third-party model credits, licences, and adaptation notes are recorded in
+[docs/ATTRIBUTIONS.md](docs/ATTRIBUTIONS.md). The site also exposes a compact
+credit control while the relevant scene is in view.
+
 ## Architecture
 
 ```
 git push to main
     │
     ├── Vercel Git integration (unchanged)
-    │       └── dafandikri.tech  (CDN, production)
+    │       └── dafandikri.dev  (CDN, production)
     │
     └── GitHub Actions
             │
@@ -136,7 +142,7 @@ Push to `main` triggers the GitHub Actions workflow (`.github/workflows/deploy.y
 | `configmap.yaml` | Nginx config (SPA routing, `/healthz` endpoint) |
 | `deployment.yaml` | 2 replicas, rolling update, resource limits, liveness/readiness probes |
 | `service.yaml` | ClusterIP service on port 80 → pod port 8080 |
-| `ingress.yaml` | Traefik ingress for `k8s.dafandikri.tech` with TLS |
+| `ingress.yaml` | Traefik ingress for `k8s.dafandikri.dev` with TLS |
 | `traefik-config.yaml` | HelmChartConfig — Let's Encrypt ACME resolver + HTTP→HTTPS redirect |
 
 ## Future Updates
@@ -185,7 +191,7 @@ Planning to add a CV/Resume section for visitors and potential recruiters to rea
 - **LinkedIn**: [linkedin.com/in/dafandikri](https://linkedin.com/in/dafandikri)
 - **GitHub**: [github.com/dafandikri](https://github.com/dafandikri)
 - **Instagram**: [@dafandikri](https://instagram.com/dafandikri)
-- **Website**: [dafandikri.tech](https://dafandikri.tech)
+- **Website**: [dafandikri.dev](https://dafandikri.dev)
 
 ## License
 

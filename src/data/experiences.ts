@@ -12,10 +12,24 @@ export const experiencesData: Experiences = {
   '2026': {
     entries: [
       {
+        id: '2026-06',
+        monthLabel: 'June 2026',
+        role: 'Solution Engineer Intern',
+        org: 'Interbio',
+        date: 'June 2026 - Present',
+        description:
+          'Analytics infrastructure for the facial-recognition middleware behind e-KTP. Moved dashboards off the live identity database onto a Debezium, Kafka and ClickHouse pipeline, cutting load from ten minutes to near zero.',
+        achievements: [
+          'Migrated dashboard analytics off the live OLTP identity database onto a Change Data Capture pipeline, cutting load from roughly ten minutes to near zero',
+        ],
+        logo: 'interbio',
+      },
+      {
         id: '2026-01',
         monthLabel: 'January 2026',
-        title: 'Backend Developer Intern - Systatum',
-        date: 'January 2026 - Present',
+        role: 'Backend Engineer Intern',
+        org: 'Systatum',
+        date: 'January 2026 - February 2026',
         description:
           'Contributing to backend development using Crystal and Marten Framework, focusing on building scalable and efficient web application.',
         achievements: [
@@ -30,7 +44,8 @@ export const experiencesData: Experiences = {
       {
         id: '2025-07',
         monthLabel: 'July 2025',
-        title: 'Intern - Kementerian Transmigrasi Republik Indonesia',
+        role: 'Software Engineer Intern',
+        org: 'Kementrans',
         date: 'July 2025 - August 2025',
         description:
           'Collaborated with 2 other interns to build an automated training evaluation system using Google tools and scripting, speeding up admin tasks and certificate delivery.',
@@ -46,7 +61,8 @@ export const experiencesData: Experiences = {
       {
         id: '2025-08',
         monthLabel: 'August 2025',
-        title: 'Software Engineer Intern - VICII',
+        role: 'Software Engineer Intern',
+        org: 'VICII',
         date: 'August 2025 - September 2025',
         description: 'Joined VICII as an intern to contribute to web development.',
         achievements: [
@@ -61,7 +77,8 @@ export const experiencesData: Experiences = {
       {
         id: '2024-06',
         monthLabel: 'June 2024',
-        title: 'IT Developer Intern - PT International Biometrics Indonesia',
+        role: 'Software Developer Intern',
+        org: 'Interbio',
         date: 'June 2024 - August 2024',
         description:
           'Redesigned and relaunched interbio.id on WordPress, modernizing UI and streamlining navigation to elevate user engagement and brand credibility.',
@@ -80,7 +97,8 @@ export const experiencesData: Experiences = {
       {
         id: '2023-01',
         monthLabel: '2023',
-        title: 'Mentee at RISTEK OpenClass Data Science - RISTEK Fasilkom UI',
+        role: 'Data Science Mentee',
+        org: 'RISTEK UI',
         date: '2023',
         description:
           'Deepened understanding of Data Management for its applications in AI and Machine Learning Development, taught by an industry expert Data Scientist at Tiket.com.',

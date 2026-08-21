@@ -9,7 +9,7 @@ metadata:
     traefik.ingress.kubernetes.io/router.tls.certresolver: letsencrypt
 spec:
   rules:
-    - host: k8s.dafandikri.tech
+    - host: k8s.dafandikri.dev
       http:
         paths:
           - path: /
@@ -21,4 +21,4 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - k8s.dafandikri.tech
+        - k8s.dafandikri.dev

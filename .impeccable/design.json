@@ -1,0 +1,259 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-20T00:00:00.000Z",
+  "title": "Design System: Erdafa Andikri — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "amber": {
+        "role": "primary",
+        "displayName": "Containment Amber",
+        "canonical": "#f0b51f",
+        "tonalRamp": ["#2a1f04", "#4a3707", "#6b4f0b", "#8d680f", "#b08214", "#d29c19", "#f0b51f", "#ffd465"]
+      },
+      "hazard": {
+        "role": "primary",
+        "displayName": "Hazard Yellow",
+        "canonical": "#dca719",
+        "tonalRamp": ["#261d04", "#443307", "#63490a", "#83600e", "#a37812", "#c39016", "#dca719", "#f3c85c"]
+      },
+      "circuit-red": {
+        "role": "secondary",
+        "displayName": "Destination Red",
+        "canonical": "#ff2d1c",
+        "tonalRamp": ["#2e0603", "#520a06", "#780f09", "#9f150d", "#c61c12", "#ea2417", "#ff2d1c", "#ff7a6e"]
+      },
+      "circuit-amber": {
+        "role": "secondary",
+        "displayName": "Present Time Amber",
+        "canonical": "#ffb01f",
+        "tonalRamp": ["#2e1f03", "#523706", "#784f09", "#9f680d", "#c68211", "#ea9c17", "#ffb01f", "#ffcf6d"]
+      },
+      "circuit-green": {
+        "role": "secondary",
+        "displayName": "Last Departed Green",
+        "canonical": "#35e06a",
+        "tonalRamp": ["#062a13", "#0a4b22", "#0f6d32", "#149043", "#19b355", "#26cd65", "#35e06a", "#7eeda0"]
+      },
+      "stock": {
+        "role": "neutral",
+        "displayName": "Card Stock",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#1a1a1a", "#333333", "#4d4d4d", "#737373", "#a6a6a6", "#d4d4d4", "#fbfaf9", "#ffffff"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#000000",
+        "tonalRamp": ["#000000", "#141414", "#2b2b2b", "#454545", "#636363", "#8a8a8a", "#b8b8b8", "#e8e8e8"]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#e8dcc4",
+        "tonalRamp": ["#2b2519", "#4a4030", "#695c46", "#89795d", "#a89676", "#c8b79f", "#e8dcc4", "#f5efe1"]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Unbleached Canvas",
+        "canonical": "#cdbd8c",
+        "tonalRamp": ["#26210f", "#43391b", "#605227", "#7e6b34", "#9c8543", "#b6a067", "#cdbd8c", "#e3d8b6"]
+      },
+      "timber": {
+        "role": "neutral",
+        "displayName": "Park Timber",
+        "canonical": "#8a4b22",
+        "tonalRamp": ["#1c0e05", "#32190a", "#47230d", "#5d3217", "#734020", "#805026", "#8a4b22", "#b4703a"]
+      },
+      "archive": {
+        "role": "neutral",
+        "displayName": "Mutant Archive Navy",
+        "canonical": "#050a11",
+        "tonalRamp": ["#030609", "#050a11", "#071321", "#0b1e35", "#102b49", "#163e68", "#1666a8", "#77b9e8"]
+      },
+      "jungle-night": {
+        "role": "neutral",
+        "displayName": "Jungle Night",
+        "canonical": "#020807",
+        "tonalRamp": ["#010403", "#020807", "#061310", "#0c211c", "#143329", "#1f4a3c", "#2f6653", "#498a72"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display — Letterpress",
+        "purpose": "The business card's name, and anything painted or printed by hand. Real small-caps glyphs only."
+      },
+      "headline": {
+        "displayName": "Headline — Machined",
+        "purpose": "Scene titles on instrument sets: PROJECT PADDOCKS, AWARDS."
+      },
+      "title": {
+        "displayName": "Title — Machined",
+        "purpose": "The name of one object: a project dossier, an award."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running prose. Garamond on the card, Orbitron on instruments, Helvetica Neue in the achievement archive. Archive body copy never drops below 16px."
+      },
+      "label": {
+        "displayName": "Label — Stencil",
+        "purpose": "Stencilled markings: PADDOCK 03, FIELD RECORD, SPECIMEN ON FILE, serials and location tags."
+      }
+    },
+    "shadows": [
+      {
+        "name": "material-thickness",
+        "value": "0 0.38rem 0 #271308",
+        "purpose": "Hard zero-blur offset in the object's own darkened tone: the edge of the material seen from slightly above. Encodes how thick a thing is, not how high it floats."
+      },
+      {
+        "name": "material-cast",
+        "value": "0 0.62rem 0.8rem rgba(5, 14, 6, 0.68)",
+        "purpose": "The soft shadow a fabricated object throws onto what is behind it."
+      },
+      {
+        "name": "material-lit-edge",
+        "value": "inset 0 1px rgba(255, 218, 145, 0.25)",
+        "purpose": "The highlight where light strikes a face. Its shaded counterpart is inset 0 -2px rgba(28, 12, 5, 0.58)."
+      },
+      {
+        "name": "archive-paper-depth",
+        "value": "0.8rem 0.8rem 0 #02050a, 0 2rem 6rem rgba(0, 0, 0, 0.72), inset 0 1px rgba(255, 255, 255, 0.72)",
+        "purpose": "The settled newsprint spread: a hard printed edge, deep cast shadow and one lit paper face after the live paddock has been scratched away."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-settle",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default exponential ease-out. Objects decelerate into place; they do not bounce."
+      },
+      {
+        "name": "ease-deploy",
+        "value": "cubic-bezier(0.16, 1.16, 0.3, 1)",
+        "purpose": "Deliberate overshoot, used only by the containment deploy. A gate slamming into place is the one moment in this system where the mechanism should be felt. Not a general-purpose curve."
+      },
+      {
+        "name": "duration-deploy",
+        "value": "760ms",
+        "purpose": "A paddock arriving, staggered by 90ms per index across the grid."
+      },
+      {
+        "name": "duration-archive-release",
+        "value": "0–88% of the archive clock inside the unified 580svh Projects/Awards runway",
+        "purpose": "Two sequential three-cut fields tear an X into the live paddock; paper follows pass one, halftone follows pass two, and that same frame zooms away under reversible scroll control."
+      },
+      {
+        "name": "duration-gate",
+        "value": "120ms",
+        "purpose": "The physical gate cycle that runs before a project dossier mounts."
+      }
+    ],
+    "breakpoints": [
+      { "name": "release", "value": "760px; achievement archive 860px" },
+      { "name": "short-viewport", "value": "720px height, min-width 761px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Containment Paddock",
+      "kind": "card",
+      "refersTo": "paddock-plaque",
+      "description": "The signature object: a project shown as a lit enclosure with hazard lintel, welded bars and a carved plaque.",
+      "html": "<div class=\"ds-paddock\"><span class=\"ds-paddock-lintel\"><span class=\"ds-paddock-hazard\"></span><span class=\"ds-paddock-serial\">Paddock 03</span></span><span class=\"ds-paddock-cell\"></span><span class=\"ds-paddock-sill\"><strong>Talk-Active</strong><small>Team product · Live</small></span></div>",
+      "css": ".ds-paddock { position: relative; width: 20rem; aspect-ratio: 1.48; font-family: Orbitron, Eurostile, sans-serif; color: #fff0d6; cursor: pointer; transition: transform 260ms cubic-bezier(0.22,1,0.36,1), filter 240ms ease; } .ds-paddock:hover { transform: translateY(-0.28rem) scale(1.018); filter: brightness(1.13); } .ds-paddock-lintel { position: absolute; top: 0; right: 0.12rem; left: 0.12rem; height: 1.5rem; border: 2px solid #281508; border-radius: 0.62rem 0.55rem 0.42rem 0.5rem / 48% 42% 38% 45%; background: linear-gradient(90deg, #47230d, #805026 28%, #5d3217 66%, #32190a); box-shadow: 0 0.38rem 0 #271308, 0 0.62rem 0.8rem rgba(5,14,6,0.68), inset 0 -2px rgba(28,12,5,0.58); } .ds-paddock-hazard { position: absolute; top: 50%; left: 0; width: 30%; height: 0.48rem; transform: translateY(-50%); background: repeating-linear-gradient(-52deg, #17130c 0 0.34rem, #dca719 0.34rem 0.68rem); clip-path: polygon(0 0,100% 0,90% 100%,0 100%); } .ds-paddock-serial { position: absolute; top: 50%; right: 0.55rem; transform: translateY(-50%); font-size: 0.49rem; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(246,220,160,0.88); } .ds-paddock-cell { position: absolute; top: 1.5rem; right: 0.5rem; bottom: 2.4rem; left: 0.5rem; background: repeating-linear-gradient(90deg, rgba(120,150,120,0.5) 0 2px, transparent 2px 2rem), #04120c; } .ds-paddock-sill { position: absolute; right: 0.12rem; bottom: 0; left: 0.12rem; display: flex; flex-direction: column; padding: 0.35rem 0.6rem; border: 2px solid #22400f; background: linear-gradient(180deg, #3d6b22, #23400f); } .ds-paddock-sill strong { font-size: 0.8rem; } .ds-paddock-sill small { font-size: 0.5rem; opacity: 0.75; }"
+    },
+    {
+      "name": "Achievement Record",
+      "kind": "card",
+      "refersTo": "achievement-record",
+      "description": "A full-colour team photograph beside a concise field record on a warm newsprint spread: award, one-sentence story, business lesson and progressive team credits.",
+      "html": "<article class=\"ds-record\"><figure class=\"ds-record-photo\"><img alt=\"Team FAM holding the Best Presentation board\"></figure><div class=\"ds-record-brief\"><p>RISTEK Hackathon 2026</p><h3>Best Presentation</h3><p>The product was ready. The business case wasn't.</p></div></article>",
+      "css": ".ds-record { display: grid; grid-template-columns: 1.08fr .92fr; gap: 2rem; padding: 2rem; font-family: 'Helvetica Neue', Arial, sans-serif; color: #07111e; background: #efe4c6; box-shadow: 1rem 1.2rem 0 #07111e; } .ds-record-photo { aspect-ratio: 6/5; overflow: hidden; clip-path: polygon(0 0,94% 0,100% 10%,100% 100%,6% 100%,0 90%); background: #07101a; box-shadow: .55rem .7rem 0 #07111e; } .ds-record-brief { padding-left: 1.5rem; border-left: .32rem solid #ffd21f; } .ds-record-brief p { font-size: 1rem; line-height: 1.55; }"
+    },
+    {
+      "name": "Paddock-to-Comic X Tear",
+      "kind": "custom",
+      "refersTo": "archive-transition",
+      "description": "Two three-cut fields form an X directly on the live paddock. Paper follows the first pass, Ben-Day dots follow the second, and the marked frame then pushes into Awards.",
+      "html": "<div class=\"ds-paddock-frame\"><span class=\"ds-paper-wash\"></span><span class=\"ds-halftone\"></span><span class=\"ds-six-gouges\"></span></div>",
+      "css": ".ds-paddock-frame { position:absolute; inset:0; overflow:hidden; } .ds-paper-wash,.ds-halftone,.ds-six-gouges { position:absolute; inset:0; pointer-events:none; } .ds-paper-wash { background:#cfb979; mix-blend-mode:color; } .ds-halftone { background:radial-gradient(circle,#07111e 0 .065rem,transparent .075rem) 0 0/.45rem .45rem; mix-blend-mode:screen; }"
+    },
+    {
+      "name": "Live Link",
+      "kind": "custom",
+      "refersTo": "link",
+      "description": "The active-link treatment follows its set: amber in the paddocks, archive yellow in the achievement record.",
+      "html": "<a class=\"ds-link\" href=\"#\">Talk-Active</a>",
+      "css": ".ds-link { font-family: Orbitron, Eurostile, sans-serif; font-size: 0.8rem; color: #f0b51f; text-decoration-thickness: 1px; text-underline-offset: 0.2em; } .ds-link:hover { color: #ffd465; } .ds-link:focus-visible { color: #ffd465; outline: 2px solid #f0b51f; outline-offset: 3px; }"
+    },
+    {
+      "name": "Stencil Label",
+      "kind": "chip",
+      "refersTo": "paddock-plaque",
+      "description": "Stencilled marking used for serials, section labels and location tags across every instrument set.",
+      "html": "<p class=\"ds-stencil\">Mutant archive // Field record 01</p>",
+      "css": ".ds-stencil { margin: 0; font-family: Orbitron, Eurostile, sans-serif; font-size: 0.55rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(232,220,196,0.7); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Practical Effect",
+    "overview": "This site is a film built the way films were built before post-production: with physical sets, real models, and tricks done in camera. It is not a portfolio that references cinema — it is a walk through five standing sets, each fully dressed, each belonging to a different picture.\n\nThe standard the codebase already holds itself to is stated in GateScene.tsx: the CSS gate that preceded the current one \"could open, but it was never going to look like the film — it was a drawing of a gate from memory. This is the actual model.\" That sentence is the design system. When something can be built, it is built, not approximated.\n\nDensity is high and the surfaces are fabricated. The final achievement set changes material in camera: two fields of three gouges tear an X into the live Jurassic paddock, paper and halftone follow the damage, and that marked frame pushes away to reveal a warm record holding one real evidence photograph. Nothing is flat-shaded, and nothing is a rectangle with a radius standing in for an object.",
+    "keyCharacteristics": [
+      "Objects are fabricated, never drawn. If it can be modelled, it is not faked.",
+      "Depth is material. A shadow says what a thing is made of, not how high it floats.",
+      "Each scene is its own world with its own light, palette and voice.",
+      "Structure is diegetic: labels are plaques, lists are archives, awards are specimens.",
+      "Motion is mechanical and rare. Things deploy, cut, hinge and settle; they do not float."
+    ],
+    "rules": [
+      {
+        "name": "The One Set Rule",
+        "body": "A colour belongs to the set it was lit for. Borrowing the time-circuit green for a success state, or the archive yellow for the paddocks, collapses two places into one and destroys the walk between them.",
+        "section": "colors"
+      },
+      {
+        "name": "The Powered-On Rule",
+        "body": "Amber marks what is live in the paddocks; archive yellow does the same job in the final record. If an element is not interactive, a status or part of the X-tear mechanism, it gets neither.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Place Rule",
+        "body": "Scenes do not share typefaces. tokens.css states the reason directly: the card's Garamond belongs to 1987 Manhattan, and borrowing it for a DeLorean dashboard would make both scenes read as the same place. Before using a face in a new scene, ask which set fabricated the object.",
+        "section": "typography"
+      },
+      {
+        "name": "The Real Glyph Rule",
+        "body": "Small caps come from Cormorant SC's own glyphs, never from font-variant-caps on a family that lacks them — synthesised small caps thin the strokes visibly at these sizes.",
+        "section": "typography"
+      },
+      {
+        "name": "The Material Rule",
+        "body": "A shadow says what a thing is made of, not how high it floats. Before adding one, name the physical fact it encodes — thickness, cast, or lit edge. A shadow that encodes none of those is decoration and does not ship.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Three-Shadow Test",
+        "body": "A fabricated object generally needs thickness, cast and lit edge together. One soft shadow alone will read as a UI card, which is the failure mode this system exists to avoid.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do build the object. A real model, a real sprite sheet, a real texture beats a CSS approximation of one, and the codebase has already made that trade once for the gate.",
+      "Do give every fabricated surface thickness, cast and lit edge together.",
+      "Do tint secondary text from its ground's hue and keep body text at or above 4.5:1 contrast.",
+      "Do theme the browser surfaces — scrollbars (scrollbar-color), selection, and focus rings all ship with defaults that belong to no design system.",
+      "Do import scene data from the raw data modules, not the validating barrel.",
+      "Do let each scene keep its own light, palette and typeface.",
+      "Do keep motion mechanical and singular: one authored moment per scene, exponential ease-out, and a prefers-reduced-motion path that renders the finished state."
+    ],
+    "donts": [
+      "Don't reach for the template portfolio, the SaaS dashboard, or generic dark mode. These are the three confirmed anti-references: a hero-plus-feature-cards layout, a sidebar with stat tiles and sparklines, and a near-black page with a single acid accent and glassmorphism. None of them contain a subject.",
+      "Don't borrow a colour or a typeface across scenes. See The One Set Rule and The One Place Rule; the two sanctioned exceptions are named there.",
+      "Don't use grey for secondary text.",
+      "Don't use amber for anything that is neither live nor interactive.",
+      "Don't put a coloured border heavier than 1px on a card, list item or callout.",
+      "Don't add motion to make polish visible. The containment deploy keeps its overshoot because a gate slamming into place should be felt; nothing else on the site earns overshoot.",
+      "Don't lazy-load an asset inside a scene that is already gated on approach — the second deferral leaves the surface empty exactly when it is being looked at."
+    ]
+  }
+}

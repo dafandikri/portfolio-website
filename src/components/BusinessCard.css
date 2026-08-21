@@ -1,0 +1,608 @@
+/*
+ * The card.
+ *
+ * Layer order inside .card, bottom to top: bone stock, paper grain, specular
+ * sweep, then the printed face. All of them sit inside the single element that
+ * carries the 3D rotation, so grain and highlight move *with* the tilt instead
+ * of sliding across a static surface — that coupling is what reads as a
+ * physical object rather than a decorated rectangle.
+ */
+
+.stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  overflow: clip;
+  padding: 1.5rem;
+  /* Perspective lives here, on the tilted element's grandparent. */
+  perspective: 1400px;
+  background: #170904;
+}
+
+.stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 68% at 50% 48%, rgba(82, 38, 13, 0.08), rgba(5, 2, 1, 0.56) 100%),
+    linear-gradient(rgba(12, 5, 2, 0.14), rgba(4, 2, 1, 0.34));
+}
+
+.stage__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+
+/*
+ * Entrance wrapper. Kept separate from .card so the falling transform and the
+ * pointer-driven rotation never fight over the same `transform` property.
+ * preserve-3d passes .stage's perspective down to the card itself.
+ */
+.card-delivery {
+  position: relative;
+  z-index: 2;
+  width: var(--card-w);
+  aspect-ratio: var(--card-ratio);
+  transform-style: preserve-3d;
+  opacity: 0;
+  transform: translate3d(-0.28rem, -118vh, 0) rotate(-1.1deg);
+}
+
+/* The opening clock starts only after both photographic layers have loaded.
+   A local server and Vercel can have very different asset latency; allowing CSS
+   to run while the hand is still downloading made production appear to use a
+   different withdrawal path even though it had the same keyframes. */
+.stage--ready .card-delivery {
+  animation: card-delivery-arrive 1250ms linear both;
+}
+
+.card-drop {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 3px;
+  transform-style: preserve-3d;
+}
+
+/*
+ * The cast shadow, as real geometry rather than as a paint effect.
+ *
+ * box-shadow cannot do this job. It is painted from the border box of whatever
+ * element carries it, and that box is always an axis-aligned rectangle — so a
+ * box-shadow stays a rectangle no matter how the card is rotated, while the
+ * card itself projects to a trapezoid. The eye reads 3D by comparing the two
+ * silhouettes, and rectangle-under-trapezoid reads as a sticker sliding around
+ * beneath a card. Offsetting it does not help; the problem is the shape.
+ *
+ * So the shadow is a plane carrying the *same* rotation as the card, inside
+ * the same perspective, pushed back in Z and down in Y. Sharing the transform
+ * is what makes its projection skew and foreshorten exactly as the card's
+ * does. Two planes at different depths give the soft/tight falloff that the
+ * old stacked box-shadows provided, and because they sit at different Z their
+ * projections diverge as the card turns — that parallax is the depth cue.
+ */
+.card-shadow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.4);
+  transform: translate3d(0, 1.6rem, -90px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  filter: blur(30px);
+  will-change: transform;
+}
+
+/* The near, tighter contact shadow. */
+.card-shadow--contact {
+  background: rgba(0, 0, 0, 0.3);
+  transform: translate3d(0, 0.45rem, -22px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  filter: blur(9px);
+}
+
+/*
+ * The entrance animates transform and opacity only, so it cannot fight the
+ * tilt-driven transforms on the shadow planes above.
+ */
+@keyframes card-delivery-arrive {
+  0% {
+    transform: translate3d(-0.28rem, -118vh, 0) rotate(-1.1deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.76, 0.18, 1);
+  }
+  58% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/*
+ * A physical hand-off rather than a card falling from nowhere. The hand and
+ * card share the same arrival beats; after a short transfer of weight, the
+ * fingers lift and withdraw on a slightly curved path while the card stays.
+ */
+.card-handoff-hand {
+  --hand-delivery-duration: 1100ms;
+  position: absolute;
+  /* The source is intentionally only three fingers. Keep its straight crop
+     above the viewport so it reads as a hand entering frame, never as an image
+     ending over the card. Only the fingertips overlap the card's top strip. */
+  top: calc(-58% - 8svh);
+  left: 50%;
+  z-index: 5;
+  width: 46%;
+  pointer-events: none;
+  transform-origin: 50% 12%;
+  opacity: 0;
+  transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
+  will-change: transform;
+}
+
+.stage--ready .card-handoff-hand {
+  opacity: 1;
+  animation: card-hand-deliver var(--hand-delivery-duration) linear both;
+}
+
+.card-handoff-hand::before,
+.card-handoff-hand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: url('../assets/img/card-handoff-hand.webp') center / 100% 100% no-repeat;
+  transform-origin: 50% 12%;
+}
+
+/* Wide cast shadow: this reaches across both the card stock and walnut desk,
+   then grows softer as the hand gains height during the withdrawal. */
+.card-handoff-hand::before {
+  opacity: 0.36;
+  filter: brightness(0) blur(11px);
+  transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
+}
+
+/* The tighter lower-half shadow is where the fingertips nearly touch the card.
+   It releases quickly; keeping it after the fingers lift would make the hand
+   look pasted onto the paper. */
+.card-handoff-hand::after {
+  opacity: 0.24;
+  clip-path: inset(48% -8% -10% -8%);
+  filter: brightness(0) blur(3.5px);
+  transform: translate3d(0.12rem, 0.28rem, 0) scale(0.995);
+}
+
+/* Movement and blur live on separate layers. That lets the hand follow one
+   uninterrupted human ease while the photographic blur rises and falls with
+   velocity instead of forcing the path through a series of robotic stops. */
+.card-handoff-hand__image {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  will-change: filter, transform;
+}
+
+.stage--ready .card-handoff-hand::before {
+  animation: card-hand-cast-shadow var(--hand-delivery-duration) linear both;
+}
+
+.stage--ready .card-handoff-hand::after {
+  animation: card-hand-contact-shadow var(--hand-delivery-duration) linear both;
+}
+
+.stage--ready .card-handoff-hand__image {
+  animation: card-hand-motion-blur var(--hand-delivery-duration) linear both;
+}
+
+/* Blood is printed inside the card, but its beat also belongs to the opening
+   clock. Pausing rather than removing its animation preserves the exact delay
+   and keyframe phase when the loaded scene is released. */
+.stage:not(.stage--ready) .blood__drip,
+.stage:not(.stage--ready) .blood__pool {
+  animation-play-state: paused;
+}
+
+@keyframes card-hand-deliver {
+  0% {
+    transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
+  }
+  60% {
+    transform: translate3d(-50%, 0, 1.1rem) rotate(-0.35deg) scale(1);
+    animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
+  }
+  100% {
+    transform: translate3d(calc(-50% + 0.3rem), -125%, 5rem) rotate(1.35deg) scale(0.978);
+  }
+}
+
+@keyframes card-hand-motion-blur {
+  0%, 60% {
+    filter: blur(0);
+    transform: scaleY(1);
+  }
+  72% {
+    filter: blur(0.65px);
+    transform: scaleY(1.004);
+  }
+  79% {
+    filter: blur(2.2px);
+    transform: scaleY(1.018);
+  }
+  91% {
+    filter: blur(0.8px);
+    transform: scaleY(1.006);
+  }
+  100% {
+    filter: blur(0);
+    transform: scaleY(1);
+  }
+}
+
+@keyframes card-hand-cast-shadow {
+  0%, 60% {
+    opacity: 0.36;
+    filter: brightness(0) blur(11px);
+    transform: translate3d(0.38rem, 0.78rem, 0) scale(0.99);
+  }
+  79% {
+    opacity: 0.3;
+    filter: brightness(0) blur(15px);
+    transform: translate3d(0.52rem, 1rem, 0) scale(1.015);
+  }
+  100% {
+    opacity: 0.16;
+    filter: brightness(0) blur(19px);
+    transform: translate3d(0.68rem, 1.22rem, 0) scale(1.04);
+  }
+}
+
+@keyframes card-hand-contact-shadow {
+  0%, 60% { opacity: 0.24; }
+  82% { opacity: 0.16; }
+  100% { opacity: 0.08; }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  overflow: hidden;
+  /*
+   * Nearly flat. A pronounced gradient across the face reads as sheen, which
+   * is the opposite of uncoated stock — the little variation left is closer to
+   * uneven pulp than to a lit surface.
+   */
+  background: linear-gradient(158deg, var(--stock-lit) 0%, var(--stock) 52%, var(--stock-shade) 100%);
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  will-change: transform;
+  /* Let the card own drag gestures instead of the browser's scroll/zoom. */
+  touch-action: none;
+  /* The stock's thickness, read as a lit top edge and a shaded bottom one. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+/*
+ * Paper fibre. Two baked feTurbulence tiles — a fine grain for the tooth of the
+ * stock and a coarse, low-frequency mottle for the cloudiness of cotton paper.
+ * These are background *images*, generated once and tiled, not a live CSS
+ * filter: filtering an element this large every frame is expensive on low-end
+ * mobile, and the result would be identical.
+ */
+.card__grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  /*
+   * Much lighter than on the cream stock. Multiply darkens whatever is beneath
+   * it, so the same value that gave cream its tooth would visibly grey a white
+   * card — enough tooth to read as paper, not enough to tint it.
+   */
+  opacity: 0.22;
+  background-image:
+    /* Fine tooth — this is the layer that actually reads as uncoated stock. */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23f)' opacity='0.62'/%3E%3C/svg%3E"),
+    /*
+     * Coarse mottle, kept deliberately faint. Pushed any harder it stops
+     * reading as uneven pulp and starts reading as water staining, because
+     * the blobs grow large enough to look like discrete marks.
+     */
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='420' height='420' filter='url(%23c)' opacity='0.1'/%3E%3C/svg%3E");
+  background-size: 170px 170px, 420px 420px;
+}
+
+/*
+ * Diffuse light on a matte surface. Its centre is driven by --mx/--my, which
+ * the tilt hook derives from the rotation itself, so light and geometry cannot
+ * drift out of sync.
+ *
+ * Matte and gloss differ in the *shape* of the highlight, not its amount: gloss
+ * is a tight bright hotspot with hard falloff, while uncoated paper scatters
+ * light broadly and dimly across the whole face. Hence the very wide radius and
+ * low opacity. Removing it altogether would leave the tilt as pure geometry
+ * with no light response, which reads as cardboard rather than paper.
+ */
+.card__specular {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: soft-light;
+  background: radial-gradient(
+    95% 120% at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(0, 0, 0, 0.035) 100%
+  );
+}
+
+/* ---------------------------------------------------------------------------
+ * The printed face
+ * ------------------------------------------------------------------------- */
+
+.card__face {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.4em 2.6em 2em;
+  /* One base size drives the whole card; every field below is set in em. */
+  font-size: calc(var(--card-w) / 58);
+  color: var(--ink);
+}
+
+.card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5em;
+}
+
+.card__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  align-items: flex-start;
+}
+
+.card__meta {
+  font-family: var(--font-sc);
+  font-weight: 500;
+  font-size: 1em;
+  letter-spacing: 0.13em;
+  line-height: 1.35;
+  margin: 0;
+}
+
+/*
+ * Institution over field, mirroring the film's firm-over-trade block. Each
+ * line holds together on its own — wrapped mid-phrase it reads as an accident
+ * rather than as typesetting.
+ */
+.card__affiliation {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+.card__affiliation-name,
+.card__affiliation-detail {
+  white-space: nowrap;
+}
+
+.card__identity {
+  position: relative;
+  text-align: center;
+  /* Nudge the block off dead centre; optically it reads as centred. */
+  margin-top: -0.6em;
+}
+
+.card__name {
+  font-family: var(--font-sc);
+  font-weight: 600;
+  font-size: 3.9em;
+  letter-spacing: 0.17em;
+  /* Tracking adds space after the final glyph; pull it back so the line
+     stays optically centred. */
+  margin: 0 0 0 0.17em;
+  line-height: 1.05;
+}
+
+.card__role {
+  font-family: var(--font-text);
+  font-style: italic;
+  /* A real 600 cut. Cormorant is a high-contrast display serif, so at 400 its
+     hairlines vanish next to the name's small caps and the line reads grey
+     even when the colour is pure black. */
+  font-weight: 600;
+  font-size: 1.45em;
+  letter-spacing: 0.04em;
+  margin: 0.35em 0 0;
+  color: var(--ink);
+}
+
+.card__footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1em;
+  padding-top: 1.1em;
+}
+
+.card__footer .card__meta {
+  font-size: 0.84em;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+  /*
+   * The middle field carries a full sentence, too long for one line at card
+   * width. `balance` splits it into even lines instead of leaving a long line
+   * over a stub; the short outer fields fit on one line and so never wrap.
+   */
+  text-wrap: balance;
+  text-align: center;
+}
+
+/*
+ * A column of the rule. The left one carries the domain with the résumé stacked
+ * beneath it; the others are a single line each.
+ */
+.card__footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  min-width: 0;
+}
+
+/* The outer columns are short enough to hold one line each, and flex would
+   otherwise squeeze them into breaking too. */
+.card__footer-col:first-child,
+.card__footer-col:last-child {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.card__footer-col:first-child .card__meta {
+  text-align: left;
+}
+
+.card__footer-col:last-child .card__meta {
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------------------
+ * Letterpress
+ *
+ * Two shadows per glyph: a dark one above and a light one below. That is the
+ * inverse of a conventional emboss, and it is what reads as ink pressed *into*
+ * the paper rather than sitting on top of it.
+ * ------------------------------------------------------------------------- */
+
+.card__name,
+.card__role,
+.card__meta {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 250, 0.85),
+    0 -1px 1px rgba(0, 0, 0, 0.16);
+}
+
+a.card__meta {
+  color: inherit;
+  text-decoration: none;
+  transition: color 180ms ease, text-shadow 180ms ease;
+}
+
+/* Hover deepens the impression rather than underlining — an underline would
+   break the print illusion instantly. */
+a.card__meta:hover {
+  text-shadow:
+    0 1px 0 rgba(255, 255, 250, 1),
+    0 -1px 1.5px rgba(0, 0, 0, 0.4);
+}
+
+a.card__meta:focus-visible {
+  outline: 2px solid var(--ink-soft);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+
+/* The ink is already printed on the physical card when it enters. */
+.card__reveal { opacity: 1; }
+
+/* ---------------------------------------------------------------------------
+ * Narrow screens
+ *
+ * The true 3.5:2 ratio stops being legible below roughly 36rem — a real card
+ * holds 6pt type only because print resolution is enormous. The card is given
+ * slightly more height and a larger relative type size rather than shrinking
+ * the text into illegibility.
+ * ------------------------------------------------------------------------- */
+
+@media (max-width: 36rem) {
+  .card-delivery {
+    aspect-ratio: 3.5 / 2.6;
+  }
+  .card-handoff-hand {
+    top: calc(-84% - 12svh);
+    width: 70%;
+  }
+  .card__face {
+    font-size: calc(var(--card-w) / 36);
+    padding: 2em 1.9em 1.7em;
+  }
+  .card__name {
+    font-size: 2.9em;
+    letter-spacing: 0.12em;
+    margin-left: 0.12em;
+  }
+  /* Both head columns run their full width here, so the affiliation gives a
+     little back to keep it clear of the email address. */
+  .card__head {
+    gap: 0.9em;
+  }
+  .card__affiliation .card__meta {
+    font-size: 0.92em;
+    letter-spacing: 0.1em;
+  }
+  .card__footer {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4em 1.1em;
+  }
+  .card__footer .card__meta {
+    font-size: 0.95em;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion — no fall, no drift, no tilt (the hook attaches no listener)
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .card-delivery {
+    transform: none;
+  }
+  .stage--ready .card-delivery {
+    animation: card-settle 400ms ease-out both;
+  }
+  .card-handoff-hand {
+    display: none;
+  }
+  .card__reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  /* The shadow planes need no special case: with no tilt they sit squarely
+     behind the card, which is exactly the resting appearance. */
+  @keyframes card-settle {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

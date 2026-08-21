@@ -1,0 +1,104 @@
+/*
+ * Design tokens for the card.
+ *
+ * A white card on a white page, printed in black. With no colour difference
+ * between stock and ground, the card is held together entirely by its shadow
+ * and by the faint tooth of the paper grain.
+ */
+
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant SC';
+  src: url('/fonts/cormorant-sc-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+/*
+ * A real 600 cut, not a synthesised one. Asking for a weight the family does
+ * not ship makes the browser fake it by drawing the glyphs offset from
+ * themselves, which on a high-contrast serif like Cormorant thickens the
+ * hairlines unevenly and reads as blur rather than as weight.
+ */
+/*
+ * Orbitron carries the Back to the Future scenes. The card's Garamond is
+ * letterpress and belongs to 1987 Manhattan; borrowing it for a DeLorean
+ * dashboard would make both scenes read as the same place. One variable file
+ * covers every weight the scene uses.
+ */
+@font-face {
+  font-family: 'Orbitron';
+  src: url('/fonts/orbitron-var.woff2') format('woff2-variations');
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cormorant Garamond';
+  src: url('/fonts/cormorant-garamond-600-italic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /*
+   * Stock — white. The card no longer separates from the page by colour at
+   * all, only by its shadow and the faint tooth of the grain, which is what
+   * makes it read as a white card resting on white rather than as a hole.
+   */
+  --stock: #ffffff;
+  --stock-lit: #ffffff;
+  --stock-shade: #fbfaf9;
+
+  /* Ink -------------------------------------------------------------------- */
+  --ink: #000000;
+  --ink-soft: #000000;
+
+  /* The white surface the card is lying on --------------------------------- */
+  --backdrop: #ffffff;
+  --backdrop-lit: #ffffff;
+
+  /*
+   * Small caps must come from real SC glyphs. Setting font-variant-caps against
+   * a family without them makes the browser synthesise small caps by scaling
+   * capitals down, which thins the strokes and looks visibly wrong at the sizes
+   * used here. Cormorant SC ships genuine ones.
+   */
+  --font-sc: 'Cormorant SC', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-text: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  /* The dashboard voice: machined, technical, unmistakably not the card. */
+  --font-tech: 'Orbitron', 'Eurostile', 'Helvetica Neue', sans-serif;
+
+  /* Card geometry ---------------------------------------------------------- */
+  --card-w: clamp(19rem, 88vw, 40rem);
+  --card-ratio: 3.5 / 2; /* the real business-card aspect */
+}

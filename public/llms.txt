@@ -1,0 +1,17 @@
+# Erdafa Andikri — Software Engineer
+
+> Official portfolio for Erdafa Andikri, a software engineer based in Jakarta, Indonesia.
+
+## Primary pages
+
+- [Portfolio](https://dafandikri.dev/): Work, experience, technical skills, and contact information.
+- [Résumé](https://dafandikri.dev/cv-erdafa-andikri.pdf): Current résumé in PDF format.
+- [GitHub](https://github.com/dafandikri): Public software projects and source code.
+- [LinkedIn](https://linkedin.com/in/dafandikri): Professional profile.
+
+## Site information
+
+- Canonical domain: `dafandikri.dev`
+- Primary language: English
+- Location: Jakarta, Indonesia
+- Role: Software Engineer

@@ -3,7 +3,7 @@
  * failure independent of the full Vite build. Importing ../src/data triggers
  * every schema parse; an invalid data file throws and exits non-zero.
  */
-import { projects, experiences, techStack, skills } from '../src/data/index.ts'
+import { projects, experiences, techStack, skills, awards, card } from '../src/data/index.ts'
 
 const projectCount = projects.length
 const experienceYears = Object.keys(experiences).length
@@ -13,8 +13,11 @@ const experienceCount = Object.values(experiences).reduce(
 )
 const techCount = techStack.row1.length + techStack.row2.length
 const skillCount = skills.length
+const awardCount = awards.length
 
 console.log(
-  `✓ content valid — ${projectCount} projects, ${experienceCount} experiences ` +
-    `across ${experienceYears} years, ${techCount} tech items, ${skillCount} skills`,
+  `✓ content valid — card for ${card.name} with ${card.footer.length} footer fields, ` +
+    `${projectCount} projects, ${experienceCount} experiences ` +
+    `across ${experienceYears} years, ${techCount} tech items, ${skillCount} skills, ` +
+    `${awardCount} awards`,
 )

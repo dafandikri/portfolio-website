@@ -1,0 +1,168 @@
+/*
+ * The blood.
+ *
+ * Timing is keyed to the card's own choreography: the card settles at 1000ms
+ * and its fields finish revealing around 1860ms, so the drop is held until
+ * 2000ms. Landing it earlier turns the punchline into decoration — the card has
+ * to read as sincere first for the joke to arrive.
+ */
+
+.blood {
+  position: absolute;
+  /*
+   * Off to the right, level with the role line — the empty quarter of the card
+   * beside "Software Engineer". Anchored from the bottom so the pool sits on
+   * that line regardless of how tall the name above it renders.
+   */
+  /*
+   * The container is much taller than the stain — most of its height is the
+   * runway the drop falls down — and the pool sits around 52% of the way down
+   * it. The offset is set so that point lands on the role's line rather than
+   * up in the name.
+   */
+  bottom: -5.3em;
+  left: 77%;
+  width: 15.5em;
+  height: 9.3em;
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  /*
+   * Multiply lets the paper grain read *through* the stain. Painted opaquely it
+   * would sit on the card like a decal, which is the same mistake as a
+   * smooth edge.
+   */
+  mix-blend-mode: multiply;
+}
+
+/* Filter and gradient definitions only — nothing to paint. */
+.blood__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * The falling drop
+ * ------------------------------------------------------------------------- */
+
+.blood__drip {
+  position: absolute;
+  left: 46%;
+  top: 0;
+  width: 0.62em;
+  height: 0.78em;
+  border-radius: 52% 52% 48% 48% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 38% 32%, #9a1206, #6b1a0a 78%);
+  opacity: 0;
+  /*
+   * Gravity: an ease-in curve, so it enters slowly and arrives fast. An
+   * ease-out here would read as the drop being lowered rather than falling.
+   */
+  animation: blood-fall 340ms cubic-bezier(0.55, 0, 1, 0.45) 2000ms both;
+}
+
+@keyframes blood-fall {
+  0% {
+    transform: translate3d(0, -3.4em, 0) scale(0.85, 0.85);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  /* Stretched by acceleration just before impact. */
+  85% {
+    transform: translate3d(0, 2.1em, 0) scale(0.82, 1.5);
+    opacity: 1;
+  }
+  /* Squashes flat on contact and hands off to the pool. */
+  100% {
+    transform: translate3d(0, 2.9em, 0) scale(1.6, 0.3);
+    opacity: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * The pool soaking in
+ * ------------------------------------------------------------------------- */
+
+.blood__pool {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform-origin: 50% 52%;
+  /*
+   * Two stages. `bloom` is the impact spreading outward; `wick` is the much
+   * slower creep afterwards, as the stock keeps drawing the liquid along its
+   * fibres. Paper does not stop absorbing the moment it is wet.
+   */
+  animation:
+    blood-bloom 820ms cubic-bezier(0.18, 0.9, 0.32, 1) 2300ms both,
+    blood-wick 3200ms ease-out 3120ms both;
+}
+
+@keyframes blood-bloom {
+  0% {
+    opacity: 0;
+    transform: scale(0.12);
+  }
+  22% {
+    opacity: 0.92;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blood-wick {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Reduced motion — the stain is character, the motion is only enhancement
+ * ------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .blood__drip {
+    animation: none;
+    opacity: 0;
+  }
+  .blood__pool {
+    animation: blood-appear 500ms ease-out 700ms both;
+    transform: scale(1);
+  }
+  @keyframes blood-appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/*
+ * Narrow screens. The footer wraps to three stacked lines here, which eats
+ * most of the band the stain sits in — at desktop proportions it drips onto
+ * the domain. So it shrinks and tucks up close under the role line.
+ */
+@media (max-width: 36rem) {
+  .blood {
+    width: 8.2em;
+    height: 4.9em;
+    bottom: -2.8em;
+    left: 80%;
+    transform: translate(-50%, 0);
+  }
+  .blood__drip {
+    width: 0.5em;
+    height: 0.62em;
+  }
+}
