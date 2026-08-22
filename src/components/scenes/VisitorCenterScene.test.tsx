@@ -136,4 +136,22 @@ describe('VisitorCenterScene', () => {
     expect(link).toHaveAttribute('rel', 'noreferrer noopener')
     expect(link).toHaveAttribute('target', '_blank')
   })
+
+  it('keeps the file cover as scenery the content does not depend on', () => {
+    const { container } = render(<VisitorCenterScene />)
+
+    const cover = container.querySelector('.x-file__cover')
+    expect(cover).toHaveAttribute('aria-hidden', 'true')
+    // The cover swings over the spread. If the record lived inside it, a
+    // browser without view() timelines would leave the awards shut in the file.
+    expect(cover?.querySelector('.x-archive__record')).toBeNull()
+    expect(container.querySelectorAll('.x-archive__record').length).toBeGreaterThan(0)
+  })
+
+  it('shows no page controls while every award fits one spread', () => {
+    const { container } = render(<VisitorCenterScene />)
+
+    expect(awards.length).toBeLessThanOrEqual(2)
+    expect(container.querySelector('.x-file__turn')).toBeNull()
+  })
 })
