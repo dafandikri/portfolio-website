@@ -1,193 +1,272 @@
 /*
- * End credits.
+ * The slate.
  *
- * Not a sixth set. Sets are places the camera visits; this is the print itself
- * ending, which is why it shares the card's Cormorant rather than fabricating a
- * new voice — the same print made the opening title card. The One Place Rule
- * asks which set built the object, and the answer here is none of them.
+ * Built rather than drawn, the way the gate is a real model and the archive is
+ * a real printed page. The board has thickness, the stick has two halves that
+ * interlock, and the hinge is a pivot the arm actually turns around.
  *
- * The ground is the screen after the picture stops: near-black, warm rather
- * than blue, with the projector still lit at the top edge.
+ * Not a sixth set: a slate belongs to the production, not to any place the
+ * camera visits, which is the same answer the One Place Rule gives for the
+ * opening card. Chalk and stick share that logic.
  */
-.credits {
-  --credit-ink: #f4ece0;
-  --credit-dim: #a89b8a;
-  --credit-ground: #0a0705;
-  /* DESIGN.md names these amber and amber-lit, but no stylesheet ever defined
-     them as custom properties — the scenes all carry the literal. Declaring
-     them here keeps the documented name at the point of use without a var()
-     that resolves to nothing outside this block. */
-  --credit-link: #f0b51f;
-  --credit-link-lit: #ffd465;
+.slate {
+  --slate-body: #1b1d1f;
+  --slate-body-lit: #2a2d30;
+  --slate-edge: #0a0b0c;
+  --slate-chalk: #eef1f2;
+  --slate-chalk-dim: #9aa3a8;
+  --slate-stick: #f2f4f5;
+  --slate-link: #f0b51f;
+  --slate-link-lit: #ffd465;
+  /* Rules are the chalk itself, thinned — a chalk line on slate is the same
+     material as the writing, not a separate grey. */
+  --slate-rule: color-mix(in srgb, var(--slate-chalk) 16%, transparent);
+  --slate-rule-faint: color-mix(in srgb, var(--slate-chalk) 9%, transparent);
+  /* The pin is the one piece of metal on the object. */
+  --slate-pin: #d5dade;
+  --slate-pin-mid: #6d7478;
+  --slate-pin-deep: #33383b;
 
-  position: relative;
-  isolation: isolate;
-  padding: clamp(4rem, 12vh, 7.5rem) 1.5rem clamp(3rem, 8vh, 5rem);
-  background: var(--credit-ground);
-  color: var(--credit-ink);
+  display: grid;
+  place-items: center;
+  padding: clamp(4rem, 14vh, 8rem) 1.25rem clamp(3.5rem, 10vh, 6rem);
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 18%, rgba(240, 181, 31, 0.07), transparent 68%),
+    #08090a;
 }
 
-/* The projector, still running: one warm wash from above, thrown across the
-   top of the screen. It is a light source, not a decorative gradient bar. */
-.credits__reel {
+/* The board. Sits a few degrees off square because nobody ever holds one
+   straight, and carries a real cast shadow rather than a flat halo. */
+.slate__board {
+  position: relative;
+  width: min(100%, 33rem);
+  padding: 0 0 clamp(1.4rem, 3.5vh, 2.2rem);
+  border-radius: 3px;
+  background: linear-gradient(163deg, var(--slate-body-lit), var(--slate-body) 46%, var(--slate-edge));
+  box-shadow:
+    0 1.5rem 3.5rem rgba(0, 0, 0, 0.72),
+    0 0.35rem 0.9rem rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  transform: rotate(-1.1deg);
+}
+
+/* ---- the clapper ---- */
+
+.slate__clap {
+  /* Two sticks and nothing between them: a closed clapper has the arm resting
+     on the jaw, so any gap here reads as a board that never actually shut. */
+  --stick: clamp(1.15rem, 2.7vw, 1.45rem);
+
+  position: relative;
+  height: calc(var(--stick) * 2);
+  margin-bottom: clamp(1.2rem, 3vh, 1.8rem);
+}
+
+.slate__jaw,
+.slate__arm {
   position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--stick);
+  overflow: hidden;
+  background: var(--slate-edge);
+}
+
+.slate__jaw {
+  bottom: 0;
+  border-radius: 0 0 3px 3px;
+}
+
+/* Hinged at the left pin. Open by default so the closing move has somewhere to
+   travel from; the pin is the transform origin, not the element's centre. */
+.slate__arm {
   top: 0;
-  left: 50%;
-  z-index: -1;
-  width: min(52rem, 92vw);
-  height: clamp(9rem, 22vh, 15rem);
-  transform: translateX(-50%);
-  pointer-events: none;
-  background: radial-gradient(
-    ellipse 62% 100% at 50% 0,
-    rgba(240, 181, 31, 0.16),
-    rgba(240, 181, 31, 0.05) 42%,
-    transparent 72%
+  border-radius: 3px 3px 0 0;
+  transform-origin: 0.9rem 100%;
+  transform: rotate(-19deg);
+  z-index: 1;
+}
+
+/* The teeth. One stripe geometry shared by both halves so they interlock when
+   the arm lands instead of sitting as two unrelated patterns. */
+.slate__teeth {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    66deg,
+    var(--slate-stick) 0 1.55rem,
+    var(--slate-edge) 1.55rem 3.1rem
   );
 }
 
-.credits__sheet {
-  width: min(100%, 34rem);
-  margin-inline: auto;
-  text-align: center;
+/* The stripes run as one geometry across both halves, so shutting the arm
+   completes each diagonal instead of butting two offset patterns together. */
+.slate__jaw .slate__teeth {
+  background-position: calc(var(--stick) / -0.9) 0;
 }
 
-.credits__title {
-  margin: 0 0 clamp(2rem, 6vh, 3.25rem);
+.slate__hinge {
+  position: absolute;
+  bottom: calc(var(--stick) - 0.28rem);
+  left: 0.62rem;
+  z-index: 2;
+  width: 0.56rem;
+  height: 0.56rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, var(--slate-pin), var(--slate-pin-mid) 62%, var(--slate-pin-deep));
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- the chalked face ---- */
+
+.slate__face {
+  padding-inline: clamp(1.15rem, 4vw, 2rem);
+}
+
+.slate__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.2rem 0.7rem;
+  padding-bottom: clamp(0.8rem, 2vh, 1.15rem);
+  border-bottom: 1px solid var(--slate-rule);
+}
+
+.slate__production {
+  margin: 0;
+  grid-column: 2;
   font-family: var(--font-sc);
   font-size: clamp(1.5rem, 4vw, 2.6rem);
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   line-height: 1.1;
-  text-wrap: balance;
-  color: var(--credit-ink);
+  color: var(--slate-chalk);
 }
 
-.credits__list {
-  display: grid;
-  gap: clamp(1.4rem, 4vh, 2.1rem);
+.slate__field {
   margin: 0;
-}
-
-/* Role above value, the way a credit reads. Tight inside the pair, generous
-   between pairs, so the block scans as four routes rather than eight lines. */
-.credits__line {
-  display: grid;
-  gap: 0.3rem;
-}
-
-.credits__role {
   font-family: var(--font-sc);
   font-size: 0.75rem;
   font-weight: 400;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: var(--credit-dim);
+  color: var(--slate-chalk-dim);
 }
 
-.credits__value {
+.slate__field--right { justify-self: end; }
+
+.slate__stamp {
   margin: 0;
+  grid-column: 3;
+  justify-self: end;
+  font-family: var(--font-sc);
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: var(--slate-chalk);
+}
+
+.slate__rows {
+  display: grid;
+  gap: 0.15rem;
+  margin: clamp(0.9rem, 2.5vh, 1.35rem) 0 0;
+}
+
+/* Field name against value, ruled like a real slate rather than centred. */
+.slate__row {
+  display: grid;
+  grid-template-columns: minmax(4.6rem, auto) 1fr;
+  align-items: baseline;
+  gap: 0.85rem;
+  padding-block: 0.18rem;
+}
+
+.slate__row + .slate__row {
+  border-top: 1px solid var(--slate-rule-faint);
+}
+
+.slate__value {
+  margin: 0;
+  min-width: 0;
   font-family: var(--font-text);
   font-size: 1rem;
   line-height: 1.4;
 }
 
-.credits__link {
+.slate__link {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.4em;
-  /* Keeps the tap target at 44px without inflating the visual line height. */
-  padding-block: 0.6rem;
-  color: var(--credit-link);
+  gap: 0.45em;
+  min-width: 0;
+  padding-block: 0.62rem;
+  color: var(--slate-chalk);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--slate-chalk) 32%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
+  word-break: break-word;
   transition: color 160ms ease-out, text-decoration-color 160ms ease-out;
 }
 
-.credits__link:hover,
-.credits__link:focus-visible {
-  color: var(--credit-link-lit);
+.slate__link:hover,
+.slate__link:focus-visible {
+  color: var(--slate-link-lit);
+  text-decoration-color: var(--slate-link);
 }
 
-.credits__link:focus-visible {
-  outline: 2px solid var(--credit-link);
+.slate__link:focus-visible {
+  outline: 2px solid var(--slate-link);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-/* Authored SVG rather than a border corner: rotated borders drew a caret, not
-   an arrow, at this size. One stroke weight, matching the 1px rules around it. */
-.credits__away {
+.slate__away {
   width: 0.62em;
   height: 0.62em;
   flex: none;
   opacity: 0.8;
 }
 
-.credits__colophon {
+.slate__tail {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.9rem;
-  margin: clamp(2.5rem, 7vh, 4rem) 0 0;
+  align-items: baseline;
+  gap: 0.85rem;
+  margin: clamp(1rem, 2.6vh, 1.5rem) 0 0;
+  padding-top: clamp(0.7rem, 1.8vh, 1rem);
+  border-top: 1px solid var(--slate-rule);
   font-family: var(--font-text);
   font-size: 1rem;
-  font-style: italic;
-  line-height: 1.5;
-  color: var(--credit-dim);
-}
-
-.credits__rule {
-  width: 3.5rem;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(244, 236, 224, 0.42),
-    transparent
-  );
-}
-
-.credits__year {
-  font-family: var(--font-sc);
-  font-size: 0.75rem;
-  font-style: normal;
-  letter-spacing: 0.3em;
+  color: var(--slate-chalk-dim);
 }
 
 /*
- * The one authored moment: the credits come up as the print ends, rather than
- * being present the instant the archive scrolls past. Opacity and a short lift
- * only — the site reserves overshoot for the gate.
+ * The one authored moment: the stick closes, once, as the board arrives. A
+ * slate is the sound of a take starting, so the move is a snap with a real
+ * stop at the bottom rather than a glide.
  */
 @media (prefers-reduced-motion: no-preference) {
-  .credits__sheet {
-    animation: credits-up linear both;
+  .slate__arm {
+    animation: slate-clap linear both;
     animation-timeline: view();
-    animation-range: entry 8% cover 34%;
+    animation-range: entry 12% cover 34%;
+    will-change: transform;
   }
 }
 
-@keyframes credits-up {
-  from {
-    opacity: 0;
-    transform: translateY(1.4rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes slate-clap {
+  0% { transform: rotate(-19deg); }
+  72% { transform: rotate(-1.5deg); }
+  84% { transform: rotate(1.2deg); }
+  100% { transform: rotate(0deg); }
 }
 
-/* The parts nobody draws. Left at their defaults these belong to the browser
-   rather than to this print. */
-.credits ::selection {
-  background: rgba(240, 181, 31, 0.28);
-  color: var(--credit-ink);
+.slate ::selection {
+  background: rgba(240, 181, 31, 0.3);
+  color: var(--slate-chalk);
 }
 
 @media (max-width: 480px) {
-  .credits__role { letter-spacing: 0.22em; }
-  .credits__link { word-break: break-word; }
+  .slate__board { transform: none; }
+  .slate__row { grid-template-columns: minmax(0, 1fr); gap: 0.1rem; }
+  .slate__field { letter-spacing: 0.22em; }
 }

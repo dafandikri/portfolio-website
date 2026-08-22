@@ -34,7 +34,9 @@
   position: relative;
   min-height: 100svh;
   overflow: visible;
-  perspective: 90rem;
+  /* Tighter than the old 90rem: the board is the whole viewport now, so a
+     distant vanishing point flattened the push into a plain scale. */
+  perspective: 62rem;
   perspective-origin: 50% 28%;
   color: var(--archive-ink);
   background:
@@ -76,6 +78,44 @@
 }
 
 .x-archive__shell:not([inert]) { pointer-events: auto; }
+
+/*
+ * The camera push, restored.
+ *
+ * The spread used to be scaled up by the gate's scroll clock while it was
+ * pinned inside the sticky stage. Moving it into document flow to make a second
+ * award reachable took that reveal away with it, and arriving by ordinary
+ * scroll is not the same shot.
+ *
+ * It is driven by the spread's own view timeline instead: the board comes
+ * toward camera as it enters, settles at full size, and then simply scrolls
+ * like the tall page it is. No pinning, so nothing can trap the scroll again.
+ *
+ * Progressive enhancement on purpose. Where view() timelines are unsupported
+ * the animation has no duration, resolves to its end state, and the spread is
+ * simply present at full size.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .x-archive__shell {
+    transform-origin: 50% 42%;
+    transform-style: preserve-3d;
+    animation: archive-camera-push linear both;
+    animation-timeline: view();
+    animation-range: entry 2% cover 26%;
+    will-change: transform, opacity;
+  }
+}
+
+@keyframes archive-camera-push {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2.2rem, -14rem) scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
 
 .x-archive__shell::before {
   content: '';

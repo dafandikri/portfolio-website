@@ -21,7 +21,7 @@ describe('SiteFooter', () => {
     const { container } = render(<SiteFooter />)
 
     // Recognition over recall: a visitor should not have to open anything.
-    expect(container.querySelectorAll('.credits__line')).toHaveLength(contact.length)
+    expect(container.querySelectorAll('.slate__row')).toHaveLength(contact.length)
     expect(container.querySelector('details')).toBeNull()
     for (const line of contact) {
       expect(screen.getByRole('link', { name: new RegExp(line.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) }))
@@ -29,10 +29,11 @@ describe('SiteFooter', () => {
     }
   })
 
-  it('pairs each route with the credit that says what it is for', () => {
+  it('names each field the way a slate does, against its value', () => {
     const { container } = render(<SiteFooter />)
 
-    const roles = [...container.querySelectorAll('.credits__role')].map((n) => n.textContent)
+    const roles = [...container.querySelectorAll('.slate__row .slate__field')]
+      .map((n) => n.textContent)
     expect(roles).toEqual(contact.map((line) => line.role))
   })
 
@@ -60,6 +61,18 @@ describe('SiteFooter', () => {
 
     const cv = screen.getByRole('link', { name: /Curriculum vitae \(PDF\)/ })
     expect(cv.getAttribute('href')).toMatch(/\.pdf$/)
+  })
+
+  it('builds the slate rather than drawing a label of one', () => {
+    const { container } = render(<SiteFooter />)
+
+    // Two halves of one stick plus the pin they turn on.
+    expect(container.querySelector('.slate__arm')).not.toBeNull()
+    expect(container.querySelector('.slate__jaw')).not.toBeNull()
+    expect(container.querySelector('.slate__hinge')).not.toBeNull()
+    expect(container.querySelectorAll('.slate__teeth')).toHaveLength(2)
+    // The clapper is scenery; it must not reach a screen reader.
+    expect(container.querySelector('.slate__clap')).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('does not publish a phone number', () => {

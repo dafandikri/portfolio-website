@@ -18,6 +18,10 @@ colors:
   archive-blue: "#1666a8"
   archive-yellow: "#ffd21f"
   archive-steel: "#94a3b8"
+  slate-body: "#1b1d1f"
+  slate-chalk: "#eef1f2"
+  slate-stick: "#f2f4f5"
+  slate-pin: "#6d7478"
   jungle-night: "#020807"
   circuit-red: "#ff2d1c"
   circuit-amber: "#ffb01f"
@@ -65,7 +69,7 @@ typography:
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
-  credit-role:
+  slate-field:
     fontFamily: "Cormorant SC, Cormorant Garamond, Georgia, serif"
     fontSize: "0.75rem"
     fontWeight: 400
@@ -340,6 +344,22 @@ lamps, control boxes.
   comic yellow remains reserved for status and action. Halftone belongs only to
   the paper edge and transition impact—not faces or running copy. Body copy
   stays at 16px.
+
+### Slate (closing)
+
+- **Shape:** a built clapperboard, not a credit paragraph. Two halves of one
+  stick whose diagonals run as a single geometry, so shutting the arm completes
+  each stripe rather than butting two offset patterns together; a pin the arm
+  actually turns around; a board with thickness and a real cast shadow.
+- **Why an object:** the site's first principle is to build the real thing. A
+  slate is also structurally a contact block — field names against values — so
+  the form already matches the content instead of decorating it.
+- **Set:** none. A slate belongs to the production, not to a place the camera
+  visits, which is the same answer the One Place Rule gives for the opening
+  card. It shares that card's Cormorant for the same reason.
+- **Motion:** one snap. The arm closes as the board enters view, with a small
+  stop at the bottom rather than a glide, driven by a `view()` timeline. Where
+  that is unsupported the board is simply present, shut.
 
 ### Paddock-to-comic X tear (signature)
 
