@@ -1,13 +1,52 @@
 # Erdafa Andikri — Software Engineer
 
-> Official portfolio for Erdafa Andikri, a software engineer based in Jakarta, Indonesia.
+> Portfolio of Erdafa Andikri, a software engineer in Jakarta, Indonesia,
+> majoring in computer science at Universitas Indonesia. The site is a
+> single scrolled page of film-set scenes, each carrying real project data.
 
 ## Primary pages
 
-- [Portfolio](https://dafandikri.dev/): Work, experience, technical skills, and contact information.
-- [Résumé](https://dafandikri.dev/cv-erdafa-andikri.pdf): Current résumé in PDF format.
-- [GitHub](https://github.com/dafandikri): Public software projects and source code.
-- [LinkedIn](https://linkedin.com/in/dafandikri): Professional profile.
+- [Portfolio](https://dafandikri.dev/): Projects, experience, awards, skills and contact details.
+- [Curriculum vitae](https://dafandikri.dev/cv-erdafa-andikri-portfolio-2026-08-22.pdf): Current CV in PDF format.
+- [linkedin.com/in/dafandikri](https://www.linkedin.com/in/dafandikri/): LinkedIn.
+- [github.com/dafandikri](https://github.com/dafandikri): GitHub.
+
+## Work
+
+5 featured projects and 4 archived, 6 roles across 4 years.
+
+### SIRA — Smart Invoice Reminder AI
+AI-powered invoice collection platform that predicts payment risk and sends tone-adapted reminders so finance teams stop chasing overdue clients manually. Built end-to-end by a 15-engineer team across a full semester, coordinating 214 merge requests through bot-driven automation.
+Built with: python, fastapi, react, postgresql, tailwind, gitlab.
+
+### Boulder Coach
+An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.
+Built with: nextjs, typescript, react, tailwind, playwright, vitest.
+Links: https://boulder-coach-gamma.vercel.app · https://github.com/dafandikri/boulder-coach
+
+### Talk-Active
+A rehearsal workspace for students preparing a rubric-graded pitch, scholarship interview, thesis defence or competition Q&A. Rather than scoring delivery, it maps a spoken attempt against the evaluator's actual rubric, refuses any verdict it cannot support with a quote from the transcript, and turns the weakest claim into the next question the student has to answer.
+Built with: nextjs, typescript, react, postgresql, playwright.
+Links: https://talk-active-id.vercel.app · https://github.com/dafandikri/talk-active
+
+### Portfolio Website
+A cinematic, scene-driven personal website that turns a conventional portfolio into a continuous interactive story. The current edition moves through tactile film references while keeping the underlying experience fast, accessible, and data-driven.
+Built with: react, javascript, vsc, github.
+Links: https://dafandikri.dev · https://github.com/dafandikri/portfolio-website
+
+### Interbio.id Website
+The 2024 redesign and relaunch of interbio.id for PT International Biometrics Indonesia. This case study documents the version I delivered; Interbio has since launched a newer website, so the recorded walkthrough is preserved here as an honest project archive.
+Built with: wordpress, figma, github.
+Links: https://interbio.id
+
+## Awards
+
+- **Best Presentation**, RISTEK Hackathon 2026, Fakultas Ilmu Komputer, Universitas Indonesia, 14 August 2026. Won with Talk-Active as Team FAM (5 members). RISTEK is the student tech collective at Fasilkom UI, and its hackathon ends with a live pitch to the judges. Five of us went in as Team FAM against 37 teams, shipped Talk-Active, and came out with Best Presentation.
+- **Tech Wizard Award**, PPL x Propensi 2026, Fakultas Ilmu Komputer, Universitas Indonesia, 4 June 2026. Won with SIRA — Smart Invoice Reminder AI as Kelompok C2 (9 members). PPL is the software engineering project course at Fasilkom UI: one client, one semester, one system you actually have to hand over. Nine of us built SIRA as Kelompok C2 and took the Tech Wizard Award at the exhibition that closes it.
+
+## Skills
+
+Frontend Development, Backend Development, Database Management, Mobile Development, UI/UX Design, DevOps, Project Management, AI & Machine Learning.
 
 ## Site information
 
@@ -15,3 +54,4 @@
 - Primary language: English
 - Location: Jakarta, Indonesia
 - Role: Software Engineer
+- Generated from source data on build; do not edit by hand.
