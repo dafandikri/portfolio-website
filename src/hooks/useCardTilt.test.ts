@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
-  pointerToTilt,
-  idleTilt,
-  specularFromTilt,
+  pointerToOffset,
+  offsetToTilt,
+  idleOffset,
+  specularFromOffset,
   MAX_TILT_DEG,
   IDLE_TILT_DEG,
   IDLE_PERIOD_MS,
@@ -14,81 +15,119 @@ import {
  * component in BusinessCard.test.tsx.
  */
 const BOX = { left: 0, top: 0, width: 100, height: 100 }
+const tiltAt = (x: number, y: number, box = BOX) => offsetToTilt(pointerToOffset(x, y, box))
 
-describe('pointerToTilt', () => {
-  it('sits flat when the pointer is dead centre', () => {
-    const { rx, ry } = pointerToTilt(50, 50, BOX)
-    expect(rx).toBeCloseTo(0)
-    expect(ry).toBeCloseTo(0)
-  })
-
-  it('leans toward the pointer rather than away from it', () => {
-    // CSS 3D points Y downward, so rotateX(+) brings the *bottom* edge forward
-    // and rotateY(+) pushes the *right* edge back. Leaning into a cursor high
-    // on the card therefore needs a negative rx, and one far right a negative ry.
-    expect(pointerToTilt(50, 0, BOX).rx).toBeLessThan(0)
-    expect(pointerToTilt(50, 100, BOX).rx).toBeGreaterThan(0)
-    expect(pointerToTilt(100, 50, BOX).ry).toBeLessThan(0)
-    expect(pointerToTilt(0, 50, BOX).ry).toBeGreaterThan(0)
-  })
-
-  it('reaches exactly the maximum tilt at a corner', () => {
-    const { rx, ry } = pointerToTilt(100, 0, BOX)
-    expect(rx).toBeCloseTo(-MAX_TILT_DEG)
-    expect(ry).toBeCloseTo(-MAX_TILT_DEG)
-  })
-
-  it('never exceeds the maximum tilt when the pointer runs past the card', () => {
-    const { rx, ry } = pointerToTilt(9999, -9999, BOX)
-    expect(Math.abs(rx)).toBeLessThanOrEqual(MAX_TILT_DEG)
-    expect(Math.abs(ry)).toBeLessThanOrEqual(MAX_TILT_DEG)
+describe('pointerToOffset', () => {
+  it('reads dead centre as no offset', () => {
+    const { cx, cy } = pointerToOffset(50, 50, BOX)
+    expect(cx).toBeCloseTo(0)
+    expect(cy).toBeCloseTo(0)
   })
 
   it('accounts for a card that is not at the viewport origin', () => {
-    const offset = { left: 200, top: 100, width: 100, height: 100 }
-    const { rx, ry } = pointerToTilt(250, 150, offset)
-    expect(rx).toBeCloseTo(0)
-    expect(ry).toBeCloseTo(0)
+    const { cx, cy } = pointerToOffset(250, 150, { left: 200, top: 100, width: 100, height: 100 })
+    expect(cx).toBeCloseTo(0)
+    expect(cy).toBeCloseTo(0)
+  })
+
+  it('clamps a pointer that runs past the card', () => {
+    const { cx, cy } = pointerToOffset(9999, -9999, BOX)
+    expect(cx).toBe(1)
+    expect(cy).toBe(-1)
   })
 
   it('does not divide by zero on a card with no measured size', () => {
-    const { rx, ry } = pointerToTilt(10, 10, { left: 0, top: 0, width: 0, height: 0 })
-    expect(Number.isFinite(rx)).toBe(true)
-    expect(Number.isFinite(ry)).toBe(true)
+    const { cx, cy } = pointerToOffset(10, 10, { left: 0, top: 0, width: 0, height: 0 })
+    expect(Number.isFinite(cx)).toBe(true)
+    expect(Number.isFinite(cy)).toBe(true)
   })
 })
 
-describe('idleTilt', () => {
-  it('stays within the resting amplitude, well short of a pointer tilt', () => {
-    for (let t = 0; t <= IDLE_PERIOD_MS * 2; t += IDLE_PERIOD_MS / 24) {
-      const { rx, ry } = idleTilt(t)
-      expect(Math.abs(rx)).toBeLessThanOrEqual(IDLE_TILT_DEG + 1e-9)
-      expect(Math.abs(ry)).toBeLessThanOrEqual(IDLE_TILT_DEG + 1e-9)
+describe('offsetToTilt', () => {
+  it('sits flat when the pointer is dead centre', () => {
+    expect(tiltAt(50, 50).deg).toBeCloseTo(0)
+  })
+
+  it('rotates about a unit axis, so the angle alone sets the lean', () => {
+    for (const [x, y] of [[100, 0], [0, 100], [50, 0], [72, 91]]) {
+      const { ax, ay } = tiltAt(x!, y!)
+      expect(Math.hypot(ax, ay)).toBeCloseTo(1)
     }
   })
 
-  it('does not repeat after one period, so the drift never looks mechanical', () => {
-    // The two axes use incommensurate periods; a full cycle of rx must not
-    // return ry to where it started.
-    expect(idleTilt(IDLE_PERIOD_MS).ry).not.toBeCloseTo(idleTilt(0).ry, 3)
+  it('keeps the rotation axis square to the pointer direction', () => {
+    // A pure lean has no in-plane roll: the axis must be perpendicular to the
+    // offset. rotateX+rotateY fails exactly here, which is why the card used to
+    // read as spun flat rather than tilted once the pointer neared a corner.
+    for (const [x, y] of [[100, 0], [0, 100], [88, 12], [20, 95]]) {
+      const { cx, cy } = pointerToOffset(x!, y!, BOX)
+      const { ax, ay } = offsetToTilt({ cx, cy })
+      expect(ax * cx + ay * cy).toBeCloseTo(0)
+    }
+  })
+
+  it('leans toward the pointer rather than away from it', () => {
+    // CSS 3D points Y downward. A cursor high on the card must bring the top
+    // edge toward the viewer, which is a negative rotation about +X.
+    const high = tiltAt(50, 0)
+    expect(high.ax * high.deg).toBeLessThan(0)
+    const low = tiltAt(50, 100)
+    expect(low.ax * low.deg).toBeGreaterThan(0)
+    const right = tiltAt(100, 50)
+    expect(right.ay * right.deg).toBeLessThan(0)
+    const left = tiltAt(0, 50)
+    expect(left.ay * left.deg).toBeGreaterThan(0)
+  })
+
+  it('reaches the maximum tilt at an edge', () => {
+    expect(tiltAt(100, 50).deg).toBeCloseTo(MAX_TILT_DEG)
+  })
+
+  it('does not tilt further at a corner, which reaches further than an edge', () => {
+    expect(tiltAt(100, 0).deg).toBeCloseTo(MAX_TILT_DEG)
+  })
+
+  it('never exceeds the maximum tilt when the pointer runs past the card', () => {
+    expect(tiltAt(9999, -9999).deg).toBeLessThanOrEqual(MAX_TILT_DEG)
+  })
+
+  it('holds a defined axis when there is no direction to lean in', () => {
+    const { ax, ay, deg } = offsetToTilt({ cx: 0, cy: 0 })
+    expect(deg).toBe(0)
+    expect(Math.hypot(ax, ay)).toBeCloseTo(1)
   })
 })
 
-describe('specularFromTilt', () => {
-  it('puts the highlight at the centre when the card is flat', () => {
-    expect(specularFromTilt({ rx: 0, ry: 0 })).toEqual({ mx: 0.5, my: 0.5 })
+describe('idleOffset', () => {
+  it('never drifts further than the resting amplitude', () => {
+    for (let ms = 0; ms <= IDLE_PERIOD_MS * 2; ms += IDLE_PERIOD_MS / 24) {
+      expect(offsetToTilt(idleOffset(ms)).deg).toBeLessThanOrEqual(IDLE_TILT_DEG + 1e-9)
+    }
   })
 
-  it('round-trips a pointer position, keeping light and geometry in sync', () => {
-    // A pointer at 25%/75% across the card should place the highlight there too.
-    const tilt = pointerToTilt(25, 75, BOX)
-    const { mx, my } = specularFromTilt(tilt)
-    expect(mx).toBeCloseTo(0.25)
-    expect(my).toBeCloseTo(0.75)
+  it('does not visibly repeat within one period', () => {
+    const a = idleOffset(0)
+    const b = idleOffset(IDLE_PERIOD_MS)
+    // Incommensurate periods: one axis has returned, the other has not.
+    expect(Math.abs(a.cx - b.cx)).toBeGreaterThan(1e-6)
+  })
+})
+
+describe('specularFromOffset', () => {
+  it('puts the highlight under the pointer', () => {
+    const { mx, my } = specularFromOffset(pointerToOffset(100, 0, BOX))
+    expect(mx).toBeCloseTo(1)
+    expect(my).toBeCloseTo(0)
   })
 
-  it('stays inside the card face at maximum tilt', () => {
-    const { mx, my } = specularFromTilt({ rx: MAX_TILT_DEG, ry: -MAX_TILT_DEG })
+  it('centres the highlight on a flat card', () => {
+    const { mx, my } = specularFromOffset({ cx: 0, cy: 0 })
+    expect(mx).toBeCloseTo(0.5)
+    expect(my).toBeCloseTo(0.5)
+  })
+
+  it('stays on the card face however far the pointer runs', () => {
+    const { mx, my } = specularFromOffset({ cx: 40, cy: -40 })
     expect(mx).toBeGreaterThanOrEqual(0)
     expect(mx).toBeLessThanOrEqual(1)
     expect(my).toBeGreaterThanOrEqual(0)

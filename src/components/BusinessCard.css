@@ -106,7 +106,7 @@
   border-radius: inherit;
   pointer-events: none;
   background: rgba(0, 0, 0, 0.4);
-  transform: translate3d(0, 1.6rem, -90px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform: translate3d(0, 1.6rem, -90px) rotate3d(var(--ax, 1), var(--ay, 0), 0, var(--deg, 0deg));
   filter: blur(30px);
   will-change: transform;
 }
@@ -114,7 +114,7 @@
 /* The near, tighter contact shadow. */
 .card-shadow--contact {
   background: rgba(0, 0, 0, 0.3);
-  transform: translate3d(0, 0.45rem, -22px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform: translate3d(0, 0.45rem, -22px) rotate3d(var(--ax, 1), var(--ay, 0), 0, var(--deg, 0deg));
   filter: blur(9px);
 }
 
@@ -299,7 +299,9 @@
    * uneven pulp than to a lit surface.
    */
   background: linear-gradient(158deg, var(--stock-lit) 0%, var(--stock) 52%, var(--stock-shade) 100%);
-  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  /* One axis, one angle. Two composed axis rotations carry an in-plane roll
+     that is invisible at the centre and reads as a spun card at the corners. */
+  transform: rotate3d(var(--ax, 1), var(--ay, 0), 0, var(--deg, 0deg));
   will-change: transform;
   /* Let the card own drag gestures instead of the browser's scroll/zoom. */
   touch-action: none;
