@@ -75,7 +75,9 @@ the work is already inside a piece of it.
 Confirmed capabilities:
 
 - A single scrolled page of full-viewport scenes: a business card, a departure,
-  an experience timeline, a projects enclosure, and an awards hall.
+  an experience timeline, and a projects enclosure. The award spread follows in
+  ordinary document flow rather than on the pinned stage, so it can hold more
+  records than fit one viewport. End credits close the page.
 - Project records with media, feature notes, technology and live/source links.
 - An experience timeline grouped by year, a technology marquee, and a skills set.
 - Award records that reference the project they were won with. The reference is
@@ -118,17 +120,25 @@ Real, present in the repository:
 
 - Nine projects, five featured, four archived (`src/data/projects.ts`).
 - Six roles across four years (`src/data/experiences.ts`).
-- One award: Best Presentation, RISTEK Hackathon 2026, Fakultas Ilmu Komputer
-  Universitas Indonesia, won with Talk-Active by the five-person Team FAM
-  (`src/data/awards.ts`).
-- The award record includes the real post-finals team photograph and an owner-
-  supplied reflection that the pitch underdeveloped its business model and
-  TAM/SAM/SOM because the team focused too narrowly on the product.
+- Two awards (`src/data/awards.ts`), each with a real photograph and an
+  owner-supplied reflection kept distinct from the factual record:
+  - Best Presentation, RISTEK Hackathon 2026, Fakultas Ilmu Komputer
+    Universitas Indonesia, won with Talk-Active by the five-person Team FAM
+    against 37 teams. The reflection is that the pitch underdeveloped its
+    business model and TAM/SAM/SOM because the team focused too narrowly on
+    the product.
+  - Tech Wizard Award, PPL x Propensi 2026, the same faculty, won with SIRA by
+    the nine-person Kelompok C2 on the Pemrograman Perangkat Lunak course. A
+    team this size is recorded as a head count rather than a printed roster.
 - Walkthrough recordings for four featured projects in `public/`, and product
   stills in `src/assets/img/`. Talk-Active currently has a still; its recording
   is planned and not yet captured.
 - Published PageSpeed results and CI/deployment screenshots in `readme/`.
-- A CV at `public/cv-erdafa-andikri.pdf`.
+- A CV at `public/cv-erdafa-andikri-portfolio-2026-08-22.pdf`. The filename is
+  published verbatim, so it deliberately names no employer.
+- Four contact routes in `src/data/contact.ts` — email, LinkedIn, GitHub and the
+  CV — presented together as the end credits. There is no phone number: one was
+  on the card and was removed as the wrong way for a stranger to make contact.
 
 Absences future work must not fabricate: there are no testimonials, no client
 quotes, no user counts, no revenue figures, and no press. Metrics that do appear
