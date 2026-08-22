@@ -8,10 +8,28 @@ import './ScrollCue.css'
  * never gets seen. It appears only after the blood has settled, so it does not
  * step on the punchline.
  */
-export default function ScrollCue({ ready = true }: { ready?: boolean }) {
+interface ScrollCueProps {
+  ready?: boolean
+  /**
+   * Scene-local skin. The behaviour is shared, the look is not: each set owns
+   * its own palette and typeface, so the paddocks cannot wear the card's
+   * letterpress cue.
+   */
+  className?: string
+  label?: string
+}
+
+export default function ScrollCue({
+  ready = true,
+  className = '',
+  label = 'Scroll',
+}: ScrollCueProps) {
   return (
-    <div className={`scroll-cue${ready ? ' is-ready' : ''}`} aria-hidden="true">
-      <span className="scroll-cue__label">Scroll</span>
+    <div
+      className={`scroll-cue${ready ? ' is-ready' : ''}${className ? ` ${className}` : ''}`}
+      aria-hidden="true"
+    >
+      <span className="scroll-cue__label">{label}</span>
       <span className="scroll-cue__rule" />
     </div>
   )

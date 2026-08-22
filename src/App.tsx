@@ -1,6 +1,7 @@
 import { lazy, Suspense, type ReactNode } from 'react'
 import CardScene from './components/scenes/CardScene'
 import { useInView } from './hooks/useInView'
+import SiteFooter from './components/SiteFooter'
 
 /**
  * A sequence of cult-film set pieces, each carrying real content.
@@ -36,11 +37,18 @@ function DeferredScene({ name, children }: { name: string; children: ReactNode }
 
 export default function App() {
   return (
-    <main>
+    <>
+      <main>
       <CardScene />
       <DeferredScene name="departure"><DepartureScene /></DeferredScene>
       <DeferredScene name="experience"><TimeCircuitsScene /></DeferredScene>
       <DeferredScene name="projects"><GateScene /></DeferredScene>
-    </main>
+      </main>
+
+      {/* Outside <main>: the credits are about the site, not part of its
+          content. Imported eagerly rather than deferred — it is a few hundred
+          bytes, and it holds every route out of the page. */}
+      <SiteFooter />
+    </>
   )
 }

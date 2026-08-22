@@ -7,19 +7,16 @@
  * authored event, not six unrelated animations.
  */
 
+/* In document flow, after the gate runway. This was an absolutely positioned
+   underlay inside the sticky stage, revealed by the same scroll clock that drove
+   the tear. That worked while the spread was exactly one viewport tall and
+   clipped everything past it the moment a second award existed. */
 .scene--archive {
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 15;
-  height: 100svh;
-  overflow: clip;
+  min-height: 100svh;
+  overflow: visible;
   background: #050a11;
-  pointer-events: none;
-  visibility: hidden;
-  opacity: 0;
-  animation: archive-underlay-enter 1s linear both paused;
-  animation-delay: calc(var(--archive-progress, 0) * -1s);
-  will-change: opacity;
 }
 
 .x-archive {
@@ -34,10 +31,9 @@
   --archive-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
   --archive-body: 'Helvetica Neue', Arial, sans-serif;
 
-  position: absolute;
-  inset: 0;
+  position: relative;
   min-height: 100svh;
-  overflow: clip;
+  overflow: visible;
   perspective: 90rem;
   perspective-origin: 50% 28%;
   color: var(--archive-ink);
@@ -62,13 +58,12 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
   gap: clamp(1.25rem, 3vh, 2rem);
   width: min(100%, 76rem);
   min-height: 100svh;
   margin-inline: auto;
   padding: clamp(1.5rem, 4vw, 3rem);
-  overflow: hidden;
   color: var(--archive-ink);
   background:
     linear-gradient(101deg, rgba(87, 61, 19, 0.07) 0 0.1%, transparent 0.18% 99.82%, rgba(87, 61, 19, 0.08) 99.9%),
@@ -78,14 +73,6 @@
     0 2rem 6rem rgba(0, 0, 0, 0.72),
     inset 0 1px rgba(255, 255, 255, 0.72),
     inset 0 -2px rgba(84, 61, 26, 0.28);
-  visibility: hidden;
-  opacity: 0;
-  transform: translate3d(0, 1.8rem, -10rem) scale(0.84);
-  transform-origin: 50% 50%;
-  transform-style: preserve-3d;
-  animation: archive-camera-enter 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
-  animation-delay: calc(var(--archive-progress, 0) * -1s);
-  will-change: transform, opacity;
 }
 
 .x-archive__shell:not([inert]) { pointer-events: auto; }
@@ -510,66 +497,11 @@
   39%, 100% { opacity: 1; transform: scaleX(1); }
 }
 
-/* The archive is physically behind the live paddock, but it must not leak its
-   paper or dots through transparent parts of that scene. It appears only when
-   the completed X begins the camera push. */
-@keyframes archive-underlay-enter {
-  0%, 65% { visibility: hidden; opacity: 0; }
-  66% { visibility: visible; opacity: 0; }
-  78%, 100% { visibility: visible; opacity: 1; }
-}
-
-@keyframes archive-camera-enter {
-  0%, 66% {
-    visibility: hidden;
-    opacity: 0;
-    transform: translate3d(0, 1.8rem, -10rem) scale(0.84);
-  }
-  68% { visibility: visible; opacity: 0; }
-  78% {
-    visibility: visible;
-    opacity: 0.64;
-    transform: translate3d(0, 0.6rem, -3.5rem) scale(0.94);
-  }
-  90%, 100% {
-    visibility: visible;
-    opacity: 1;
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-}
-
 @media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
-  .scene--archive {
-    position: relative;
-    inset: auto;
-    z-index: auto;
-    height: auto;
-    min-height: 100svh;
-    overflow: visible;
-    pointer-events: auto;
-    visibility: visible;
-    opacity: 1;
-    animation: none;
-    will-change: auto;
-  }
-
-  .x-archive {
-    position: relative;
-    inset: auto;
-    min-height: 100svh;
-    overflow: visible;
-  }
-
   .x-transition__surface { display: none; }
 
   .x-archive__shell {
-    min-height: 100svh;
     padding: max(2rem, env(safe-area-inset-top)) clamp(1rem, 5vw, 2rem) max(2.5rem, env(safe-area-inset-bottom));
-    visibility: visible;
-    opacity: 1;
-    transform: none;
-    animation: none;
-    will-change: auto;
   }
 
   .x-archive__header { align-items: start; flex-direction: column; gap: 0.75rem; }

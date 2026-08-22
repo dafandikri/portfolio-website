@@ -1,9 +1,10 @@
-import { projectsSchema, experiencesSchema, techStackSchema, skillsSchema, awardsSchema } from './schema'
+import { projectsSchema, experiencesSchema, techStackSchema, skillsSchema, awardsSchema, contactsSchema } from './schema'
 import type { Award, Project } from './schema'
 import { projectsData } from './projects'
 import { experiencesData } from './experiences'
 import { techStackData, skillsData } from './skills'
 import { awardsData } from './awards'
+import { contact as contactData } from './contact'
 
 export type {
   Project,
@@ -58,6 +59,7 @@ export function assertAwardProjectsExist(
 }
 
 export const awards = parseOrThrow('awards', awardsSchema.safeParse(awardsData))
+export const contacts = parseOrThrow('contacts', contactsSchema.safeParse(contactData))
 assertAwardProjectsExist(awards, projects)
 
 // The card validates itself at its own module, so that rendering it does not

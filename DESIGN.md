@@ -65,6 +65,12 @@ typography:
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
+  credit-role:
+    fontFamily: "Cormorant SC, Cormorant Garamond, Georgia, serif"
+    fontSize: "0.75rem"
+    fontWeight: 400
+    lineHeight: 1.2
+    letterSpacing: "0.3em"
 components:
   paddock-plaque:
     backgroundColor: "{colors.timber-deep}"

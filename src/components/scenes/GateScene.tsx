@@ -36,6 +36,7 @@ import VisitorCenterScene, {
   PaddockSurfaceTransition,
 } from './VisitorCenterScene'
 import InfoPopover from '../InfoPopover'
+import ScrollCue from '../ScrollCue'
 import './GateScene.css'
 
 /**
@@ -66,6 +67,7 @@ export default function GateScene() {
   const [projectsMounted, setProjectsMounted] = useState(false)
   const [projectsActive, setProjectsActive] = useState(false)
   const [archiveActive, setArchiveActive] = useState(false)
+  const [holdCueVisible, setHoldCueVisible] = useState(false)
   const [creditVisible, setCreditVisible] = useState(false)
 
   /*
@@ -545,7 +547,44 @@ export default function GateScene() {
   }, [hasEntered])
   /* v8 ignore stop */
 
+  /*
+   * The paddocks sit on a pinned stage: the page keeps scrolling but the scene
+   * stays put, so there is no motion to tell the visitor the wheel still does
+   * anything. The cue answers that, and only that — it appears while the
+   * paddocks are the live scene, leaves the instant the visitor scrolls, and
+   * comes back only if they go quiet again while still held here.
+   */
+  useEffect(() => {
+    if (!projectsActive || archiveActive) {
+      setHoldCueVisible(false)
+      return
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setHoldCueVisible(true)
+      return
+    }
+
+    let idleTimer = 0
+    const settle = () => {
+      window.clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(() => setHoldCueVisible(true), 2600)
+    }
+    const onScroll = () => {
+      setHoldCueVisible(false)
+      settle()
+    }
+
+    settle()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.clearTimeout(idleTimer)
+      window.removeEventListener('scroll', onScroll)
+      setHoldCueVisible(false)
+    }
+  }, [projectsActive, archiveActive])
+
   return (
+    <>
     <section
       ref={(node) => {
         sceneRef.current = node
@@ -586,10 +625,12 @@ export default function GateScene() {
               <ParkScene />
               <PaddockSurfaceTransition />
             </div>
+            <ScrollCue
+              className={`gate__scroll-cue${holdCueVisible ? ' is-holding' : ''}`}
+              label="Keep scrolling"
+            />
           </div>
         )}
-
-        <VisitorCenterScene interactive={archiveActive} />
 
         <InfoPopover
           className="gate__credit"
@@ -624,5 +665,16 @@ export default function GateScene() {
         </InfoPopover>
       </div>
     </section>
+
+    {/*
+     * The award spread lives after the runway, in ordinary document flow.
+     * It used to sit inside the sticky 100svh stage as an absolutely
+     * positioned layer, which was correct while it held exactly one award and
+     * silently clipped the second: the stage clips, and nothing inside it
+     * scrolls. In flow it is as tall as its contents and the page's own
+     * scrollbar reaches all of it, however many awards there are.
+     */}
+    <VisitorCenterScene />
+    </>
   )
 }
