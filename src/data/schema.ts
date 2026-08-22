@@ -192,3 +192,20 @@ export const awardSchema = z.object({
 export type Award = z.infer<typeof awardSchema>
 
 export const awardsSchema = z.array(awardSchema)
+
+// Contact
+
+/**
+ * One line of the end-credit block. `role` is the credit itself — what this
+ * route is for — so it is content rather than a decorative label above a value.
+ */
+export const contactSchema = z.object({
+  role: z.string().min(1),
+  label: z.string().min(1),
+  href: z.string().min(1),
+  /** Opens a new tab, and says so to a screen reader. */
+  external: z.boolean(),
+})
+export type Contact = z.infer<typeof contactSchema>
+
+export const contactsSchema = z.array(contactSchema).min(1)

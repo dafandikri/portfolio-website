@@ -1,0 +1,193 @@
+/*
+ * End credits.
+ *
+ * Not a sixth set. Sets are places the camera visits; this is the print itself
+ * ending, which is why it shares the card's Cormorant rather than fabricating a
+ * new voice — the same print made the opening title card. The One Place Rule
+ * asks which set built the object, and the answer here is none of them.
+ *
+ * The ground is the screen after the picture stops: near-black, warm rather
+ * than blue, with the projector still lit at the top edge.
+ */
+.credits {
+  --credit-ink: #f4ece0;
+  --credit-dim: #a89b8a;
+  --credit-ground: #0a0705;
+  /* DESIGN.md names these amber and amber-lit, but no stylesheet ever defined
+     them as custom properties — the scenes all carry the literal. Declaring
+     them here keeps the documented name at the point of use without a var()
+     that resolves to nothing outside this block. */
+  --credit-link: #f0b51f;
+  --credit-link-lit: #ffd465;
+
+  position: relative;
+  isolation: isolate;
+  padding: clamp(4rem, 12vh, 7.5rem) 1.5rem clamp(3rem, 8vh, 5rem);
+  background: var(--credit-ground);
+  color: var(--credit-ink);
+}
+
+/* The projector, still running: one warm wash from above, thrown across the
+   top of the screen. It is a light source, not a decorative gradient bar. */
+.credits__reel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: -1;
+  width: min(52rem, 92vw);
+  height: clamp(9rem, 22vh, 15rem);
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 62% 100% at 50% 0,
+    rgba(240, 181, 31, 0.16),
+    rgba(240, 181, 31, 0.05) 42%,
+    transparent 72%
+  );
+}
+
+.credits__sheet {
+  width: min(100%, 34rem);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.credits__title {
+  margin: 0 0 clamp(2rem, 6vh, 3.25rem);
+  font-family: var(--font-sc);
+  font-size: clamp(1.5rem, 4vw, 2.6rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.1;
+  text-wrap: balance;
+  color: var(--credit-ink);
+}
+
+.credits__list {
+  display: grid;
+  gap: clamp(1.4rem, 4vh, 2.1rem);
+  margin: 0;
+}
+
+/* Role above value, the way a credit reads. Tight inside the pair, generous
+   between pairs, so the block scans as four routes rather than eight lines. */
+.credits__line {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.credits__role {
+  font-family: var(--font-sc);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--credit-dim);
+}
+
+.credits__value {
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.credits__link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4em;
+  /* Keeps the tap target at 44px without inflating the visual line height. */
+  padding-block: 0.6rem;
+  color: var(--credit-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 160ms ease-out, text-decoration-color 160ms ease-out;
+}
+
+.credits__link:hover,
+.credits__link:focus-visible {
+  color: var(--credit-link-lit);
+}
+
+.credits__link:focus-visible {
+  outline: 2px solid var(--credit-link);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Authored SVG rather than a border corner: rotated borders drew a caret, not
+   an arrow, at this size. One stroke weight, matching the 1px rules around it. */
+.credits__away {
+  width: 0.62em;
+  height: 0.62em;
+  flex: none;
+  opacity: 0.8;
+}
+
+.credits__colophon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  margin: clamp(2.5rem, 7vh, 4rem) 0 0;
+  font-family: var(--font-text);
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--credit-dim);
+}
+
+.credits__rule {
+  width: 3.5rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(244, 236, 224, 0.42),
+    transparent
+  );
+}
+
+.credits__year {
+  font-family: var(--font-sc);
+  font-size: 0.75rem;
+  font-style: normal;
+  letter-spacing: 0.3em;
+}
+
+/*
+ * The one authored moment: the credits come up as the print ends, rather than
+ * being present the instant the archive scrolls past. Opacity and a short lift
+ * only — the site reserves overshoot for the gate.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .credits__sheet {
+    animation: credits-up linear both;
+    animation-timeline: view();
+    animation-range: entry 8% cover 34%;
+  }
+}
+
+@keyframes credits-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* The parts nobody draws. Left at their defaults these belong to the browser
+   rather than to this print. */
+.credits ::selection {
+  background: rgba(240, 181, 31, 0.28);
+  color: var(--credit-ink);
+}
+
+@media (max-width: 480px) {
+  .credits__role { letter-spacing: 0.22em; }
+  .credits__link { word-break: break-word; }
+}

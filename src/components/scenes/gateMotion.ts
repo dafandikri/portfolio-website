@@ -6,14 +6,17 @@ export const GATE_OPEN_ANGLE = Math.PI * 0.54
  * quarter of the pin is a deliberate inspection hold for the project paddocks
  * rather than a one-wheel-notch glimpse before the next scene arrives.
  */
-export const GATE_SEQUENCE_END = 0.74
+export const GATE_SEQUENCE_END = 0.587
 
 /**
- * GateScene now owns the whole Projects -> Awards camera move. Its first
- * 260svh of scroll keeps the established gate timing; the remaining 220svh
- * paperizes the live paddock and reveals the award spread.
+ * How much of the runway belongs to the gate chapter (the gate shot plus the
+ * paddock inspection hold). The remainder paperizes the live paddock, cuts the
+ * X across it and pushes it away from camera.
+ *
+ * Over a 660svh runway this is ~396svh of gate chapter — ~233svh of gate shot
+ * and ~164svh of inspection hold — leaving ~264svh for the tear and the push.
  */
-export const GATE_CHAPTER_SHARE = 13 / 24
+export const GATE_CHAPTER_SHARE = 0.6
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))

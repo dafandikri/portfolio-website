@@ -37,3 +37,16 @@ describe('GateScene', () => {
     expect(credit.querySelector('a[rel~="license"]')).not.toBeNull()
   })
 })
+
+describe('awards release', () => {
+  it('does not trap the award spread inside the pinned 100svh stage', () => {
+    const { container } = render(<GateScene />)
+
+    const stage = container.querySelector('.gate__stage')
+    const archive = container.querySelector('.scene--archive')
+    expect(archive).not.toBeNull()
+    // Pinned inside the stage, the spread is clipped to one viewport and a
+    // second award becomes unreachable: nothing in that subtree can scroll.
+    expect(stage?.contains(archive as Node)).toBe(false)
+  })
+})
