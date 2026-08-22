@@ -1,16 +1,19 @@
 import { useEffect, useRef } from 'react'
 
 /** Maximum rotation the card reaches when the pointer is at a corner. */
-export const MAX_TILT_DEG = 11
+export const MAX_TILT_DEG = 15
 /** Amplitude of the resting drift, so the card never looks dead. */
 export const IDLE_TILT_DEG = 2
 export const IDLE_PERIOD_MS = 8000
 
 /**
  * Fraction of the remaining distance covered each frame. Lower is heavier — the
- * card is meant to feel like a stiff piece of stock, not a rubber band.
+ * card is meant to feel like a stiff piece of stock, not a rubber band. At 0.09
+ * it took roughly half a second to catch up, which read as the card floating
+ * after the cursor rather than being held under it; this tracks closely enough
+ * to feel connected while still carrying weight.
  */
-const FOLLOW = 0.09
+const FOLLOW = 0.16
 
 export interface Tilt {
   rx: number

@@ -1,15 +1,19 @@
 import { awardsData } from '../../data/awards'
 import { projectsData } from '../../data/projects'
 import ristekLogo from '../../assets/img/favicon/ristek.png'
+import siraLogo from '../../assets/img/favicon/sira.png'
 import teamFamPhoto from '../../assets/img/awards/team-fam-best-presentation.webp'
+import teamSiraPhoto from '../../assets/img/awards/team-sira-tech-wizard.webp'
 import './VisitorCenterScene.css'
 
 const AWARD_LOGOS: Readonly<Record<string, string>> = {
   ristek: ristekLogo,
+  sira: siraLogo,
 }
 
 const AWARD_PHOTOS: Readonly<Record<string, string>> = {
   'team-fam-best-presentation': teamFamPhoto,
+  'team-sira-tech-wizard': teamSiraPhoto,
 }
 
 const SCRATCHES = [1, 2, 3] as const
@@ -67,7 +71,8 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
             <div>
               <p className="x-archive__kicker">Field file · Class X</p>
               <h2 id="awards-heading" className="x-archive__heading" aria-label="Awards">
-                Awards <span aria-hidden="true">/ 01</span>
+                Awards{' '}
+                <span aria-hidden="true">/ {String(awardsData.length).padStart(2, '0')}</span>
               </h2>
             </div>
             <p className="x-archive__deck">
@@ -99,7 +104,7 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
                     <div className="x-archive__identity">
                       <img src={AWARD_LOGOS[award.logo]} alt="" />
                       <div>
-                        <p className="x-archive__event">{award.event} · Final pitch</p>
+                        <p className="x-archive__event">{award.event} · {award.stage}</p>
                         <h3>{award.title}</h3>
                         <p className="x-archive__meta">{award.host} · {award.date}</p>
                       </div>
@@ -132,24 +137,22 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
                         </a>
                       ) : null}
 
-                      <details className="x-archive__credits">
-                        <summary>{award.team} · {award.members.length} members</summary>
-                        <p>{award.members.join(' · ')}</p>
-                      </details>
+                      {award.members ? (
+                        <details className="x-archive__credits">
+                          <summary>{award.team} · {award.members.length} members</summary>
+                          <p>{award.members.join(' · ')}</p>
+                        </details>
+                      ) : (
+                        <p className="x-archive__credits x-archive__credits--count">
+                          {award.team} · {award.teamSize} members
+                        </p>
+                      )}
                     </footer>
                   </article>
                 </li>
               )
             })}
           </ul>
-
-          {/* Credits the motif the visitor just watched tear the paddock open.
-              DESIGN.md rules out character artwork between Projects and Awards,
-              so the nod is typographic and stays out of the headline block. */}
-          <aside className="x-archive__marginalia">
-            <p className="x-archive__marginalia-label">Margin note</p>
-            <p>Six cuts, two passes. Wolverine&rsquo;s work, hence Class X.</p>
-          </aside>
         </div>
       </div>
     </section>

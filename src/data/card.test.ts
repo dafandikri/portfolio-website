@@ -12,8 +12,8 @@ describe('card content', () => {
     expect(() => cardSchema.parse(card)).not.toThrow()
   })
 
-  it('offers a dialable phone number and a sendable address', () => {
-    expect(card.phone.href).toMatch(/^tel:\+?[\d]+$/)
+  it('offers a reachable LinkedIn profile and a sendable address', () => {
+    expect(card.linkedin.href).toMatch(/^https:\/\/www\.linkedin\.com\/in\/[\w-]+\/?$/)
     expect(card.email.href).toMatch(/^mailto:.+@.+\..+$/)
   })
 
@@ -40,6 +40,6 @@ describe('card content', () => {
 
   it('publishes the résumé from the card, since it is the whole landing scene', () => {
     const hrefs = card.footer.flat().map((field) => field.href)
-    expect(hrefs).toContain('/cv-erdafa-andikri.pdf')
+    expect(hrefs).toContain('/cv-erdafa-andikri-portfolio-2026-08-22.pdf')
   })
 })

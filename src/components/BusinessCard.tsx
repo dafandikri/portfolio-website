@@ -96,7 +96,7 @@ export default function BusinessCard({ onReady }: BusinessCardProps) {
             <div className="card__face">
               <header className="card__head">
                 <div className="card__contact">
-                  <Field field={card.phone} className="card__meta card__reveal card__reveal--1" />
+                  <Field field={card.linkedin} className="card__meta card__reveal card__reveal--1" />
                   <Field field={card.email} className="card__meta card__reveal card__reveal--2" />
                 </div>
                 <div className="card__affiliation card__reveal card__reveal--3">

@@ -100,7 +100,7 @@ export type CardField = z.infer<typeof cardFieldSchema>
 
 export const cardSchema = z.object({
   /** Top left, first line. */
-  phone: cardFieldSchema,
+  linkedin: cardFieldSchema,
   /** Top left, second line. */
   email: cardFieldSchema,
   /**
@@ -146,7 +146,21 @@ export const awardSchema = z.object({
   host: z.string().min(1),
   date: z.string().min(1),
   team: z.string().min(1),
-  members: z.array(z.string().min(1)).min(1),
+  /**
+   * What was actually judged. Hardcoding "Final pitch" in the view was wrong
+   * the moment a second award arrived: the PPL award went to the delivered
+   * system at an exhibition, and its own lesson says so explicitly.
+   */
+  stage: z.string().min(1),
+  /**
+   * Named credits, when the roster is small enough to print. A large team is
+   * recorded as `teamSize` instead: listing nine names in a card that shows
+   * one line of credits buries the award under its own footnote, and a
+   * half-named roster is worse than an honest count.
+   */
+  members: z.array(z.string().min(1)).min(1).optional(),
+  /** Head count, for a team too large to name. */
+  teamSize: z.number().int().positive().optional(),
   /**
    * Title of the project this was won with, matching a `projectSchema` title
    * exactly. `null` for an award that belongs to no project on the site.
@@ -171,7 +185,10 @@ export const awardSchema = z.object({
   }).optional(),
   /** asset key resolved via getIcon(). */
   logo: z.string().min(1),
-})
+}).refine(
+  (award) => award.members !== undefined || award.teamSize !== undefined,
+  { message: 'an award needs either named members or a teamSize', path: ['members'] },
+)
 export type Award = z.infer<typeof awardSchema>
 
 export const awardsSchema = z.array(awardSchema)

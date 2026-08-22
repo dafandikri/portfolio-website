@@ -28,7 +28,7 @@ describe('BusinessCard', () => {
     expect(screen.getByText(card.role)).toBeInTheDocument()
     expect(screen.getByText(card.affiliation.name)).toBeInTheDocument()
     expect(screen.getByText(card.affiliation.detail)).toBeInTheDocument()
-    expect(screen.getByText(card.phone.label)).toBeInTheDocument()
+    expect(screen.getByText(card.linkedin.label)).toBeInTheDocument()
     expect(screen.getByText(card.email.label)).toBeInTheDocument()
     // Flattened: the footer is columns of stacked lines, and every line prints.
     for (const field of card.footer.flat()) {
@@ -36,18 +36,18 @@ describe('BusinessCard', () => {
     }
   })
 
-  it('makes the phone dialable and the email sendable', () => {
+  it('makes the LinkedIn profile reachable and the email sendable', () => {
     render(<BusinessCard />)
 
-    expect(screen.getByRole('link', { name: card.phone.label })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: card.linkedin.label })).toHaveAttribute(
       'href',
-      card.phone.href,
+      card.linkedin.href,
     )
     expect(screen.getByRole('link', { name: card.email.label })).toHaveAttribute(
       'href',
       card.email.href,
     )
-    expect(card.phone.href?.startsWith('tel:')).toBe(true)
+    expect(card.linkedin.href?.startsWith('https://www.linkedin.com/in/')).toBe(true)
     expect(card.email.href?.startsWith('mailto:')).toBe(true)
   })
 

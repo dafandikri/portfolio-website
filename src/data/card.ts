@@ -16,7 +16,7 @@ import type { Card } from './schema'
  * the cost of shipping the whole validation runtime to render six strings.
  */
 export const card: Card = {
-  phone: { label: '+62 821 2277 6141', href: 'tel:+6282122776141' },
+  linkedin: { label: 'linkedin.com/in/dafandikri', href: 'https://www.linkedin.com/in/dafandikri/' },
   email: { label: 'dafandikri@gmail.com', href: 'mailto:dafandikri@gmail.com' },
 
   affiliation: {
@@ -35,11 +35,12 @@ export const card: Card = {
        * is the only route to the CV for a recruiter who never scrolls — which is
        * most of them.
        *
-       * Served under a neutral filename deliberately: `public/` is published
-       * verbatim, so whatever the file is called becomes a URL anyone can read.
-       * The original name carried the company it was tailored for and the date.
+       * `public/` is published verbatim, so the filename becomes a URL anyone
+       * can read. This one is safe to expose because it names no employer —
+       * an earlier draft was titled for the company it was tailored to, which
+       * would have leaked that targeting to every other reader.
        */
-      { label: 'Résumé', href: '/cv-erdafa-andikri.pdf' },
+      { label: 'Résumé', href: '/cv-erdafa-andikri-portfolio-2026-08-22.pdf' },
     ],
     [
       {

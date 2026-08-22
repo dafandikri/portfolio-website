@@ -327,12 +327,9 @@ lamps, control boxes.
   card grid.
 - **Structure:** real team photograph, award identity, a short story that names
   the competition before the placing, compact business lesson,
-  progressive-disclosure team credits and a closing margin note.
+  and progressive-disclosure team credits.
 - **Voice:** first person, plain and specific. Name the thing, give the number,
   admit the miss. No superlatives the record does not already earn.
-- **Margin note:** the one place the X-Men motif is named in words. It credits
-  the six-gouge tear typographically, because character artwork is ruled out
-  between Projects and Awards (see the X tear below).
 - **Colour:** warm paper and near-black ink sit inside an archive-navy stage;
   comic yellow remains reserved for status and action. Halftone belongs only to
   the paper edge and transition impact—not faces or running copy. Body copy

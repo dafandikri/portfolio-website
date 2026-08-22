@@ -18,7 +18,7 @@ import './ExperienceDeck.css'
 const SPRING = { type: 'spring', stiffness: 420, damping: 26, mass: 0.9 } as const
 
 /** Kept in step with the card's footer link in `src/data/card.ts`. */
-const RESUME_HREF = '/cv-erdafa-andikri.pdf'
+const RESUME_HREF = '/cv-erdafa-andikri-portfolio-2026-08-22.pdf'
 
 export interface ExperienceDeckProps {
   /** Which role is currently punched into the circuits. */

@@ -40,12 +40,25 @@ const validAward = {
   host: 'Test University',
   date: '1 January 2025',
   team: 'Team Mock',
+  stage: 'Mock final',
   members: ['Mock Person'],
   projectTitle: 'Mock Project',
   story: 'A mock award used for testing.',
   highlights: ['won a mock thing'],
   logo: 'github',
 }
+
+describe('awardSchema team credits', () => {
+  it('accepts a large team recorded as a head count instead of names', () => {
+    const { members: _members, ...rest } = validAward
+    expect(awardSchema.safeParse({ ...rest, teamSize: 9 }).success).toBe(true)
+  })
+
+  it('rejects an award that names neither its members nor its size', () => {
+    const { members: _members, ...rest } = validAward
+    expect(awardSchema.safeParse(rest).success).toBe(false)
+  })
+})
 
 describe('projectSchema', () => {
   it('accepts a valid project', () => {

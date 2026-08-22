@@ -53,17 +53,52 @@ describe('VisitorCenterScene', () => {
 
     const team = container.querySelector('.x-archive__credits') as HTMLElement
     expect(team).toHaveTextContent('Team FAM')
-    for (const member of awards[0]!.members) {
+    const members = awards[0]!.members ?? []
+    expect(members.length).toBeGreaterThan(0)
+    for (const member of members) {
       expect(team).toHaveTextContent(member)
     }
   })
 
-  it('lists every highlight of the award', () => {
+  it('lists every highlight of every award', () => {
     const { container } = render(<VisitorCenterScene />)
 
     expect(container.querySelectorAll('.x-archive__facts li')).toHaveLength(
-      awards[0]!.highlights.length,
+      awards.reduce((total, award) => total + award.highlights.length, 0),
     )
+  })
+
+  it('counts a team too large to name instead of listing it', () => {
+    const { container } = render(<VisitorCenterScene />)
+
+    const counted = container.querySelector('.x-archive__credits--count')
+    expect(counted).toHaveTextContent('Kelompok C2 · 9 members')
+    // A plain line, not a <details> promising a roster it cannot open.
+    expect(counted?.tagName).toBe('P')
+  })
+
+  it('counts the awards in the heading instead of hardcoding one', () => {
+    const { container } = render(<VisitorCenterScene />)
+
+    expect(container.querySelector('.x-archive__heading')).toHaveTextContent(
+      `/ ${String(awards.length).padStart(2, '0')}`,
+    )
+  })
+
+  it('labels each award with the stage that was actually judged', () => {
+    const { container } = render(<VisitorCenterScene />)
+
+    const events = [...container.querySelectorAll('.x-archive__event')].map((n) => n.textContent)
+    expect(events).toContain('RISTEK Hackathon 2026 · Final pitch')
+    // The PPL award went to the delivered system, not to a pitch.
+    expect(events).toContain('PPL x Propensi 2026 · Project exhibition')
+  })
+
+  it('mounts the Tech Wizard award won on the PPL course project', () => {
+    render(<VisitorCenterScene />)
+
+    expect(screen.getByRole('heading', { level: 3, name: 'Tech Wizard Award' })).toBeInTheDocument()
+    expect(screen.getByText(/software engineering project course at Fasilkom UI/)).toBeInTheDocument()
   })
 
   it('mounts the real team photograph as evidence with intrinsic dimensions', () => {
@@ -90,15 +125,6 @@ describe('VisitorCenterScene', () => {
     expect(screen.getByText(/student tech collective at Fasilkom UI/)).toBeInTheDocument()
     expect(screen.getByText(/against 37 teams/)).toBeInTheDocument()
     expect(screen.getByText(/came out with Best Presentation/)).toBeInTheDocument()
-  })
-
-  it('credits the six-gouge motif in a margin note rather than in artwork', () => {
-    const { container } = render(<VisitorCenterScene />)
-
-    const note = container.querySelector('.x-archive__marginalia') as HTMLElement
-    expect(note).toHaveTextContent('Margin note')
-    expect(note).toHaveTextContent(/Wolverine.s work, hence Class X/)
-    expect(container.querySelector('.x-archive__marginalia img')).toBeNull()
   })
 
   it('references the project it was won with, linked and safely targeted', () => {

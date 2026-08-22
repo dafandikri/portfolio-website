@@ -1,7 +1,14 @@
-import siraProjectLandscape from '../../assets/img/sira_project_landscape.webp'
-import boulderProjectLandscape from '../../assets/img/boulder_project_landscape.webp'
-import portfolioProjectLandscape from '../../assets/img/portfolio_project_landscape.webp'
-import interbioProjectLandscape from '../../assets/img/interbio_project_landscape.webp'
+/*
+ * Each walkthrough's poster is frame zero of the preview it plays, extracted
+ * with ffmpeg. A hand-picked still had to be re-matched by eye every time a
+ * recording changed, and any mismatch showed as a visible jump the moment the
+ * video started. Taking the poster from the clip itself makes that handoff
+ * seamless by construction.
+ */
+import siraProjectPoster from '../../assets/img/sira_project_poster.webp'
+import boulderProjectPoster from '../../assets/img/boulder_project_poster.webp'
+import portfolioProjectPoster from '../../assets/img/portfolio_project_poster.webp'
+import interbioProjectPoster from '../../assets/img/interbio_project_poster.webp'
 import talkactiveProjectLandscape from '../../assets/img/talkactive_project_landscape.webp'
 
 export type ProjectMedia =
@@ -18,14 +25,14 @@ const PROJECT_MEDIA: Readonly<Record<string, ProjectMedia>> = {
     kind: 'video',
     src: '/sira-promo-2k-60fps.mp4',
     previewSrc: '/sira-preview.mp4',
-    poster: siraProjectLandscape,
+    poster: siraProjectPoster,
     label: 'SIRA product walkthrough',
   },
   boulder_project: {
     kind: 'video',
     src: '/boulder-coach-walkthrough.mp4',
     previewSrc: '/boulder-coach-preview.mp4',
-    poster: boulderProjectLandscape,
+    poster: boulderProjectPoster,
     label: 'Boulder Coach complete product walkthrough',
   },
   // A still, not a clip: the walkthrough has not been recorded yet. Swapping
@@ -39,14 +46,14 @@ const PROJECT_MEDIA: Readonly<Record<string, ProjectMedia>> = {
     kind: 'video',
     src: '/portfolio-walkthrough.mp4',
     previewSrc: '/portfolio-preview.mp4',
-    poster: portfolioProjectLandscape,
+    poster: portfolioProjectPoster,
     label: 'Personal portfolio website complete walkthrough',
   },
   interbio_project: {
     kind: 'video',
     src: '/interbio-walkthrough.mp4',
     previewSrc: '/interbio-preview.mp4',
-    poster: interbioProjectLandscape,
+    poster: interbioProjectPoster,
     label: 'Archived 2024 Interbio website redesign walkthrough',
   },
 }

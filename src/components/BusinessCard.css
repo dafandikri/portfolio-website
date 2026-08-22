@@ -16,8 +16,16 @@
   place-items: center;
   overflow: clip;
   padding: 1.5rem;
-  /* Perspective lives here, on the tilted element's grandparent. */
-  perspective: 1400px;
+  /*
+   * Perspective lives here, on the tilted element's grandparent, and is scaled
+   * from the card's own width rather than fixed in pixels. A flat 1400px is
+   * over twice the card's 40rem desktop width — a long-lens view that barely
+   * foreshortens, so a rotation read as a flat skew instead of a turn in
+   * space. Tying the vanishing point to --card-w keeps the same convincing
+   * ratio at every breakpoint, where a fixed value drifted toward orthographic
+   * on wide screens and toward a fisheye on narrow ones.
+   */
+  perspective: calc(var(--card-w) * 1.35);
   background: #170904;
 }
 
