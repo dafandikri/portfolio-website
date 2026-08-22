@@ -61,6 +61,15 @@
   position: relative;
   height: calc(var(--stick) * 2);
   margin-bottom: clamp(1.2rem, 3vh, 1.8rem);
+  /*
+   * A camera for the stick. Without it the arm rotates flat and the board is a
+   * picture of a clapper; with it the raised end is genuinely nearer than the
+   * hinge, so the arm foreshortens as it falls and the teeth close in depth.
+   * Near enough to the board's own width to read as an object at arm's length.
+   */
+  perspective: 34rem;
+  perspective-origin: 12% 100%;
+  transform-style: preserve-3d;
 }
 
 .slate__jaw,
@@ -78,13 +87,25 @@
   border-radius: 0 0 3px 3px;
 }
 
+/* The lit underside of the raised arm. It is only visible while the stick is
+   open, which is what makes the closing read as two surfaces meeting. */
+.slate__arm::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.06));
+}
+
 /* Hinged at the left pin. Open by default so the closing move has somewhere to
    travel from; the pin is the transform origin, not the element's centre. */
 .slate__arm {
   top: 0;
   border-radius: 3px 3px 0 0;
+  /* The pin, not the element's centre. */
   transform-origin: 0.9rem 100%;
-  transform: rotate(-19deg);
+  transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem);
+  transform-style: preserve-3d;
   z-index: 1;
 }
 
@@ -253,11 +274,36 @@
   }
 }
 
+/*
+ * The strike. It accelerates into the jaw rather than easing into it, bounces
+ * once off the wood, and settles. The small tilt on the rotation axis keeps the
+ * raised end nearer the camera through the fall, so the arm foreshortens on the
+ * way down instead of sweeping across a flat plane.
+ */
 @keyframes slate-clap {
-  0% { transform: rotate(-19deg); }
-  72% { transform: rotate(-1.5deg); }
-  84% { transform: rotate(1.2deg); }
-  100% { transform: rotate(0deg); }
+  0% { transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem); }
+  58% { transform: rotate3d(0.24, 0, 1, -9deg) translateZ(0.2rem); }
+  74% { transform: rotate3d(0.1, 0, 1, 0deg) translateZ(0); }
+  82% { transform: rotate3d(0.16, 0, 1, -4.2deg) translateZ(0.12rem); }
+  91% { transform: rotate3d(0.06, 0, 1, -1.1deg) translateZ(0); }
+  100% { transform: rotate3d(0, 0, 1, 0deg) translateZ(0); }
+}
+
+/* The board takes the hit: a short settle on the same timeline, so the object
+   reacts to the strike instead of the stick moving against a fixed backing. */
+@media (prefers-reduced-motion: no-preference) {
+  .slate__board {
+    animation: slate-recoil linear both;
+    animation-timeline: view();
+    animation-range: entry 12% cover 34%;
+  }
+}
+
+@keyframes slate-recoil {
+  0%, 70% { transform: rotate(-1.1deg) translateY(0); }
+  76% { transform: rotate(-1.1deg) translateY(0.16rem); }
+  88% { transform: rotate(-1.1deg) translateY(-0.05rem); }
+  100% { transform: rotate(-1.1deg) translateY(0); }
 }
 
 .slate ::selection {

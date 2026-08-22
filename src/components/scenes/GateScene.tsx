@@ -550,31 +550,30 @@ export default function GateScene() {
   /*
    * The paddocks sit on a pinned stage: the page keeps scrolling but the scene
    * stays put, so there is no motion to tell the visitor the wheel still does
-   * anything. The cue answers that, and only that — it appears while the
-   * paddocks are the live scene, leaves the instant the visitor scrolls, and
-   * comes back only if they go quiet again while still held here.
+   * anything. The cue answers that, and only that.
+   *
+   * It stays up for the whole hold rather than waiting to be earned. The first
+   * version hid on any scroll and needed 2.6s of stillness to return, which
+   * meant it was absent exactly while someone was scrolling and wondering
+   * whether to continue. Now it is the default state here, and only steps aside
+   * for the moment a scroll is actually in flight so it never sits over the
+   * paddock the visitor is reaching for.
    */
   useEffect(() => {
     if (!projectsActive || archiveActive) {
       setHoldCueVisible(false)
       return
     }
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setHoldCueVisible(true)
-      return
-    }
+    setHoldCueVisible(true)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     let idleTimer = 0
-    const settle = () => {
-      window.clearTimeout(idleTimer)
-      idleTimer = window.setTimeout(() => setHoldCueVisible(true), 2600)
-    }
     const onScroll = () => {
       setHoldCueVisible(false)
-      settle()
+      window.clearTimeout(idleTimer)
+      idleTimer = window.setTimeout(() => setHoldCueVisible(true), 500)
     }
 
-    settle()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => {
       window.clearTimeout(idleTimer)

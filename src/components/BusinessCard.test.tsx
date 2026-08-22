@@ -136,7 +136,8 @@ describe('BusinessCard', () => {
 
     // Written straight to the node by the rAF loop. If these were React state
     // the component would re-render on every pointer move.
-    expect(wrapper!.style.getPropertyValue('--rx')).toMatch(/deg$/)
+    expect(wrapper!.style.getPropertyValue('--deg')).toMatch(/deg$/)
+    expect(wrapper!.style.getPropertyValue('--ax')).not.toBe('')
     expect(wrapper!.style.getPropertyValue('--mx')).toMatch(/%$/)
   })
 
@@ -166,12 +167,12 @@ describe('BusinessCard', () => {
     act(() => observers[0]?.trigger(wrapper, false, 0))
     act(() => flushFrame(16))
     expect(callbacks.size).toBe(0)
-    expect(wrapper.style.getPropertyValue('--rx')).toBe('')
+    expect(wrapper.style.getPropertyValue('--deg')).toBe('')
 
     act(() => observers[0]?.trigger(wrapper, true, 1))
     expect(callbacks.size).toBe(1)
     act(() => flushFrame(32))
-    expect(wrapper.style.getPropertyValue('--rx')).toMatch(/deg$/)
+    expect(wrapper.style.getPropertyValue('--deg')).toMatch(/deg$/)
     expect(callbacks.size).toBe(1)
   })
 

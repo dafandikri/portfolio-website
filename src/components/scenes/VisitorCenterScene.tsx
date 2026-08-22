@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { awardsData } from '../../data/awards'
 import { projectsData } from '../../data/projects'
 import ristekLogo from '../../assets/img/favicon/ristek.png'
@@ -54,7 +55,19 @@ export function PaddockSurfaceTransition() {
  * GateScene owns the shared scroll clock so this layer can sit behind the live
  * project frame throughout the strike instead of entering as a second scene.
  */
+/** A spread holds two pages, so anything beyond that has to be turned to. */
+const PER_SPREAD = 2
+
 export default function VisitorCenterScene({ interactive = true }: { interactive?: boolean }) {
+  const spreads = Math.ceil(awardsData.length / PER_SPREAD)
+  const [spread, setSpread] = useState(0)
+  // Two awards fill one spread. Controls for pages that do not exist are worse
+  // than no controls, so they appear only once the file actually has leaves.
+  const paged = spreads > 1
+  const visible = paged
+    ? awardsData.slice(spread * PER_SPREAD, spread * PER_SPREAD + PER_SPREAD)
+    : awardsData
+
   return (
     <section
       className="scene scene--archive"
@@ -67,6 +80,50 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
           data-reveal-layer="award"
           inert={!interactive}
         >
+          {/*
+            The file's own cover, hinged at the spine. Purely scenery: the
+            record beneath is in the document whether or not this ever swings,
+            so a browser without view() timelines, or a visitor who asked for
+            reduced motion, simply reads an open file.
+          */}
+          <span className="x-file__cover" aria-hidden="true">
+            {/*
+              Six gouges, two passes of three, matching the cut the paddock
+              takes. Drawn rather than tiled: a repeating gradient crossed with
+              itself into a diamond lattice, which read as chain-link fence.
+            */}
+            <svg className="x-file__cover-mark" viewBox="0 0 200 200" aria-hidden="true">
+              <g strokeLinecap="round" fill="none">
+                {/* Two families of three, crossing at the centre: the same X
+                    the paddock takes, at the same handedness. */}
+                {SCRATCHES.map((n) => (
+                  <line
+                    key={`fall-${n}`}
+                    x1={26}
+                    y1={34 + (n - 1) * 24}
+                    x2={174}
+                    y2={112 + (n - 1) * 24}
+                    strokeWidth={4.6 - (n - 1) * 0.9}
+                    opacity={0.92 - (n - 1) * 0.14}
+                  />
+                ))}
+                {SCRATCHES.map((n) => (
+                  <line
+                    key={`rise-${n}`}
+                    x1={26}
+                    y1={166 - (n - 1) * 24}
+                    x2={174}
+                    y2={88 - (n - 1) * 24}
+                    strokeWidth={4.2 - (n - 1) * 0.8}
+                    opacity={0.8 - (n - 1) * 0.12}
+                  />
+                ))}
+              </g>
+            </svg>
+            <span className="x-file__cover-stamp">Class X</span>
+            <span className="x-file__cover-edge" />
+          </span>
+
           <header className="x-archive__header">
             <div>
               <p className="x-archive__kicker">Field file · Class X</p>
@@ -81,7 +138,7 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
           </header>
 
           <ul className="x-archive__records" aria-label="Awards">
-            {awardsData.map((award, index) => {
+            {visible.map((award, index) => {
               const project = projectsData.find((candidate) => candidate.title === award.projectTitle)
               const lessonId = `award-lesson-${index}`
 
@@ -153,6 +210,30 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
               )
             })}
           </ul>
+
+          {paged ? (
+            <nav className="x-file__turn" aria-label="Award pages">
+              <button
+                type="button"
+                className="x-file__leaf"
+                onClick={() => setSpread((n) => Math.max(0, n - 1))}
+                disabled={spread === 0}
+              >
+                <span aria-hidden="true">&larr;</span> Previous
+              </button>
+              <p className="x-file__folio" aria-live="polite">
+                Spread {spread + 1} of {spreads}
+              </p>
+              <button
+                type="button"
+                className="x-file__leaf"
+                onClick={() => setSpread((n) => Math.min(spreads - 1, n + 1))}
+                disabled={spread === spreads - 1}
+              >
+                Next <span aria-hidden="true">&rarr;</span>
+              </button>
+            </nav>
+          ) : null}
         </div>
       </div>
     </section>
