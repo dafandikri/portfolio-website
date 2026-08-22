@@ -6,7 +6,7 @@
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm generate-llms && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "validate-data": "tsx scripts/validate-data.ts",
@@ -14,7 +14,8 @@
     "test:cov": "vitest run --coverage",
     "preview": "vite preview",
     "fetch-reviews": "node scripts/fetch-letterboxd.js",
-    "build-with-reviews": "npm run fetch-reviews && npm run build"
+    "build-with-reviews": "npm run fetch-reviews && npm run build",
+    "generate-llms": "tsx scripts/generate-llms.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
