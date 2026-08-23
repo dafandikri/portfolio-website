@@ -32,27 +32,37 @@
 }
 
 .x-archive {
-  --archive-ink: #07111e;
-  --archive-muted: #39475b;
+  --archive-ink: #14212f;
+  --archive-muted: #45566b;
   --archive-blue: #0b2c53;
   --archive-blue-lit: #1666a8;
   --archive-yellow: #ffd21f;
-  --archive-paper: #efe4c6;
-  --archive-paper-lit: #faf3df;
+  --archive-paper: #ece0c0;
+  --archive-paper-lit: #f6ecd2;
   --archive-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
   --archive-body: 'Helvetica Neue', Arial, sans-serif;
 
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: clamp(0.6rem, 1.8vh, 1.1rem);
-  width: min(100%, 74rem);
+  place-items: center;
+  width: 100%;
   height: 100%;
-  padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 3vw, 2rem);
+  /* Room around the object. The folder used to sit hard against the top of the
+     stage with the runway's whole margin below it; centred with real air on
+     every side, it reads as something placed on a table under a lamp rather
+     than something pinned to the ceiling. */
+  padding: clamp(2rem, 7vh, 5rem) clamp(1rem, 4vw, 3rem);
   transform-style: preserve-3d;
   color: var(--archive-ink);
+  /*
+   * One lamp over a dark table, not a flat navy field. The pool is warm and
+   * off-centre so the manila has something to be lit *by*, and the vignette
+   * closes the corners so nothing competes with the object in the middle.
+   */
   background:
-    radial-gradient(circle at 84% 6%, rgba(22, 102, 168, 0.28), transparent 31rem),
-    linear-gradient(145deg, #0b1e35 0%, #071321 44%, #040a12 100%);
+    radial-gradient(ellipse 62% 48% at 50% 34%, rgba(255, 214, 138, 0.14), transparent 72%),
+    radial-gradient(ellipse 90% 70% at 50% 40%, rgba(24, 58, 96, 0.5), transparent 76%),
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 42%, rgba(2, 6, 12, 0.72) 100%),
+    linear-gradient(168deg, #0a1828 0%, #071120 46%, #03070e 100%);
 }
 
 /* ---- the running head ---- */
@@ -71,79 +81,95 @@
   white-space: nowrap;
 }
 
-.x-archive__kicker {
-  margin: 0;
-  font-family: var(--archive-body);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--archive-blue-lit);
-}
-
-.x-archive__heading {
-  margin: 0;
-  font-family: var(--archive-display);
-  font-size: clamp(1.3rem, 3vw, 2rem);
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 1;
-  color: var(--archive-paper-lit);
-}
-
-.x-archive__heading span { color: var(--archive-yellow); }
-
 /* ---- the book ---- */
 
 .x-book {
   position: relative;
-  justify-self: center;
-  align-self: center;
-  width: min(100%, 66rem);
-  height: 100%;
+  width: min(100%, 68rem);
+  /* Capped by the paper's own proportion rather than the stage's height, so a
+     tall window gives the object air instead of stretching it. */
+  height: min(100%, 44rem);
+  aspect-ratio: 15 / 10;
   transform-style: preserve-3d;
 }
 
 /* Two leaves, meeting at a real gutter rather than a drawn rule. */
 .x-book__spread {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0;
+  position: relative;
   height: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
   transform-style: preserve-3d;
 }
 
-.x-book__leaf {
-  position: relative;
-  transform: translateZ(0);
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  /* Manila. Warmer and duller than the printed page it holds. */
-  background: linear-gradient(168deg, #e9d7ac, #dfc998 62%, #d2ba87);
+/*
+ * The front board and the leaf printed inside it, as one hinged object.
+ *
+ * Opening a folder does not leave its cover behind: it lays the cover down, and
+ * what was inside it is now facing you. Rotating the pair through a full
+ * half-turn about the crease is what makes the left page *arrive* rather than
+ * fade up underneath something that vanished.
+ *
+ * The previous version stopped at 78 degrees because a full turn made the board
+ * disappear at 90. That was backface-visibility doing exactly its job — the back
+ * of a one-sided panel faces you past square-on — not the board falling behind
+ * the paper. Giving it a real second face is the fix; halting the swing was
+ * treating the symptom.
+ */
+.x-book__flap {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 50%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  /* In front of the leaf it is covering. Coplanar with the recto both sat at
+     z:0 and the page won, so the shut folder showed its own right-hand page
+     through the board. Rotating about the hinge keeps this offset, so the
+     board stays in front the whole way over. */
+  transform: translateZ(0.5rem);
 }
 
-/* The gutter shades the paper as it curves into the spine, which is what makes
+.x-book__cover,
+.x-book__leaf--verso {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+/* The inside of the board, which is where award one is printed. */
+.x-book__leaf--verso {
+  transform: rotateY(180deg);
+}
+
+.x-book__leaf--recto {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 50%;
+}
+
+.x-book__leaf {
+  overflow: hidden;
+  background: linear-gradient(168deg, #f6ecd2, #ece0c0 62%, #ded0a9);
+}
+
+/* The gutter shades each half as it turns into the crease, which is what makes
    two panels read as one opened object rather than two cards side by side. */
 .x-book__leaf--verso {
   border-radius: 4px 0 0 4px;
   box-shadow:
-    inset -1.6rem 0 2.2rem -1.4rem rgba(52, 36, 12, 0.55),
-    -0.5rem 0.7rem 2.4rem rgba(0, 0, 0, 0.5);
+    inset -1.8rem 0 2.4rem -1.5rem rgba(52, 36, 12, 0.5),
+    -0.6rem 0.9rem 3rem rgba(0, 0, 0, 0.55);
 }
 
 .x-book__leaf--recto {
   border-radius: 0 4px 4px 0;
   box-shadow:
-    inset 1.6rem 0 2.2rem -1.4rem rgba(52, 36, 12, 0.55),
-    0.5rem 0.7rem 2.4rem rgba(0, 0, 0, 0.5);
+    inset 1.8rem 0 2.4rem -1.5rem rgba(52, 36, 12, 0.5),
+    0.6rem 0.9rem 3rem rgba(0, 0, 0, 0.55);
 }
 
-/* The crease. A folder is one sheet of card folded once, so the middle is a
-   fold with board either side of it, not a spine with page edges stacked in it. */
 .x-book__spine {
   position: absolute;
   top: 0;
@@ -332,7 +358,7 @@
 }
 
 .x-leaf__link:hover,
-.x-leaf__link:focus-visible { background: #ffe066; }
+.x-leaf__link:focus-visible { background: #ffd465; }
 
 .x-leaf__link:focus-visible {
   outline: 3px solid var(--archive-blue-lit);
@@ -353,23 +379,17 @@
 /* ---- the front board ---- */
 
 .x-book__cover {
+  /* Fills the flap it is a face of. It used to position itself against the
+     book, back when it was the whole hinge; left over inside the flap that made
+     it half-width and offset, so the shut folder showed its own right-hand page
+     beside the board. */
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  z-index: 6;
+  inset: 0;
   display: grid;
   place-items: center;
   align-content: center;
   gap: 0.9rem;
-  width: 50%;
   border-radius: 0 4px 4px 0;
-  /* Hinged on the crease, not on its own centre. */
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  /* z-index does not order a preserve-3d context; position does. Coplanar with
-     the leaves the jacket z-fought with the paper and the spread flickered as
-     the compositor picked a winner per frame. */
   backface-visibility: hidden;
   pointer-events: none;
   color: #4a2f10;
@@ -471,16 +491,12 @@
     will-change: transform;
   }
 
-  .x-book__cover {
+  .x-book__flap {
     animation: book-open 1s linear paused both;
     animation-delay: calc(var(--archive-progress, 0) * -1s);
-    will-change: transform, opacity;
+    will-change: transform;
   }
 
-  .x-book__leaf--verso {
-    animation: leaf-reveal 1s linear paused both;
-    animation-delay: calc(var(--archive-progress, 0) * -1s);
-  }
 }
 
 /*
@@ -507,22 +523,15 @@
 }
 
 /*
- * The jacket lifts and is gone before it could pass edge-on.
- *
- * Swinging the full 176 degrees put it behind the documents: a rotation about Y
- * carries the +Z that keeps it in front all the way through to -Z once it
- * passes 90, so it finished underneath the paper it had been covering. It now
- * opens to 78 degrees and fades out while still facing the reader, which is
- * where a cover being lifted actually stops being visible anyway.
+ * A full half-turn about the crease, with no fade anywhere in it. The board is
+ * two-sided now, so past square-on it simply shows its other face — which is
+ * the page — instead of disappearing.
  */
 @keyframes book-open {
-  0%, 82% { transform: translateZ(0.6rem) rotateY(0deg); opacity: 1; }
-  88% { transform: translateZ(0.85rem) rotateY(-46deg); opacity: 0.92; }
-  93%, 100% { transform: translateZ(1.1rem) rotateY(-78deg); opacity: 0; }
+  0%, 82% { transform: translateZ(0.5rem) rotateY(0deg); }
+  100% { transform: translateZ(0.5rem) rotateY(-180deg); }
 }
 
-@keyframes leaf-reveal {
-  0%, 84% { opacity: 0; }
   92%, 100% { opacity: 1; }
 }
 
@@ -534,158 +543,75 @@
   .x-book__cover { display: none; }
 }
 
-@media (max-width: 860px) {
-  .scene--archive { height: auto; }
-  .x-stage { position: relative; height: auto; min-height: 100svh; overflow: visible; }
+/*
+ * Narrow, short, or motion-averse: the folder lies open and flat, both leaves
+ * stacked in ordinary flow.
+ *
+ * This has to undo the hinge, not just hide the board. Award one is printed on
+ * the flap's back face, so a fallback that only hid the cover would have left
+ * that leaf turned away from the reader and invisible.
+ */
+@media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
+  .scene--archive {
+    position: relative;
+    inset: auto;
+    height: auto;
+    visibility: visible;
+    animation: none;
+  }
+
+  .x-stage {
+    position: relative;
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    perspective: none;
+  }
+
   .x-archive { height: auto; }
-  .x-book { height: auto; }
-  .x-book__spread { grid-template-columns: minmax(0, 1fr); }
-  .x-book__leaf--verso,
-  .x-book__leaf--recto { border-radius: 4px; box-shadow: 0 0.7rem 2.4rem rgba(0, 0, 0, 0.5); }
-  .x-book__spine,
-  .x-book__cover { display: none; }
+
+  .x-book {
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    transform: none;
+    animation: none;
+  }
+
+  .x-book__spread {
+    display: grid;
+    gap: clamp(1.25rem, 4vw, 2rem);
+    height: auto;
+  }
+
+  .x-book__flap {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    transform: none;
+    animation: none;
+  }
+
+  .x-book__cover,
+  .x-book__spine { display: none; }
+
+  .x-book__leaf {
+    position: relative;
+    inset: auto;
+    left: auto;
+    width: 100%;
+    /* Face the reader again: the hinge that turned this one over is gone. */
+    transform: none;
+    backface-visibility: visible;
+    border-radius: 4px;
+    box-shadow: 0 0.8rem 2.6rem rgba(0, 0, 0, 0.5);
+  }
+
   .x-leaf { grid-template-rows: none; }
-}
-
-/* Printed over the actual paddocks. The archive clock deliberately opens on a
-   clean hold: the live Jurassic scene stays untouched until the first blade
-   makes contact. Paper follows that cut; Ben-Day dots arrive only after the
-   second pass begins. */
-.x-transition__surface {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.x-transition__surface {
-  z-index: 60;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.x-transition__paper-wash,
-.x-transition__halftone {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  animation: paddock-paperize 1s linear both paused;
-  animation-delay: calc(var(--archive-progress, 0) * -1s);
-  will-change: opacity;
-}
-
-.x-transition__paper-wash {
-  z-index: 1;
-  background:
-    linear-gradient(112deg, rgba(255, 243, 213, 0.28), rgba(207, 177, 106, 0.72)),
-    #cfb979;
-  mix-blend-mode: color;
-}
-
-.x-transition__halftone {
-  z-index: 2;
-  background:
-    radial-gradient(circle, rgba(4, 11, 18, 0.68) 0 0.065rem, transparent 0.075rem) 0 0 / 0.45rem 0.45rem,
-    linear-gradient(115deg, transparent 0 62%, rgba(255, 231, 161, 0.14) 62% 62.4%, transparent 62.4%);
-  mix-blend-mode: screen;
-  animation-name: paddock-halftone;
-}
-
-/* Six material gouges belong to the project frame, so they leave with the
-   paperized paddocks during the camera push instead of floating over Awards. */
-.x-transition__scar-field {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 3;
-  width: 138vw;
-  height: clamp(4.5rem, 8.5vw, 7.2rem);
-  pointer-events: none;
-  transform-style: preserve-3d;
-}
-
-.x-transition__scar-field--rise {
-  transform: translate(-50%, -50%) rotate(-37deg);
-}
-
-.x-transition__scar-field--fall {
-  transform: translate(-50%, -50%) rotate(37deg);
-}
-
-.x-transition__scar {
-  --scar-offset: 0s;
-  position: absolute;
-  right: 0;
-  left: 0;
-  height: clamp(0.38rem, 0.72vw, 0.58rem);
-  opacity: 0;
-  clip-path: polygon(0 34%, 7% 14%, 18% 41%, 31% 20%, 44% 49%, 58% 16%, 74% 45%, 88% 19%, 100% 40%, 100% 72%, 87% 92%, 73% 67%, 59% 91%, 45% 65%, 32% 88%, 18% 61%, 7% 86%, 0 68%);
-  background: linear-gradient(
-    to bottom,
-    #f0f7fa 0 16%,
-    #7d909e 18% 30%,
-    #010203 34% 64%,
-    #8295a2 68% 82%,
-    #f2f9fc 86% 100%
-  );
-  box-shadow:
-    0 -0.18rem 0.22rem rgba(219, 236, 247, 0.18),
-    0 0.24rem 0.34rem rgba(0, 0, 0, 0.88);
-  transform: scaleX(0);
-  will-change: transform, opacity;
-}
-
-.x-transition__scar--1 { top: 0; --scar-offset: 0s; }
-.x-transition__scar--2 { top: 50%; --scar-offset: 0.012s; }
-.x-transition__scar--3 { top: 100%; --scar-offset: 0.024s; }
-
-.x-transition__scar-field--rise .x-transition__scar {
-  transform-origin: 100% 50%;
-  animation: scar-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
-  animation-delay: calc(var(--archive-progress, 0) * -1s + var(--scar-offset));
-}
-
-.x-transition__scar-field--fall .x-transition__scar {
-  transform-origin: 0 50%;
-  animation: scar-fall 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
-  animation-delay: calc(var(--archive-progress, 0) * -1s + var(--scar-offset));
-}
-
-@keyframes paddock-paperize {
-  0%, 24% { opacity: 0; }
-  34% { opacity: 0.16; }
-  46% { opacity: 0.42; }
-  60%, 100% { opacity: 0.76; }
-}
-
-@keyframes paddock-halftone {
-  0%, 46% { opacity: 0; }
-  54% { opacity: 0.18; }
-  64%, 100% { opacity: 0.62; }
-}
-
-@keyframes scar-rise {
-  0%, 38% { opacity: 0; transform: scaleX(0); }
-  41% { opacity: 1; }
-  57%, 100% { opacity: 1; transform: scaleX(1); }
-}
-
-@keyframes scar-fall {
-  0%, 20% { opacity: 0; transform: scaleX(0); }
-  23% { opacity: 1; }
-  39%, 100% { opacity: 1; transform: scaleX(1); }
 }
 
 @media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
   .x-transition__surface { display: none; }
-
-  .x-archive__shell {
-    padding: max(2rem, env(safe-area-inset-top)) clamp(1rem, 5vw, 2rem) max(2.5rem, env(safe-area-inset-bottom));
-  }
-
-  .x-archive__header { align-items: start; flex-direction: column; gap: 0.75rem; }
-  .x-archive__record { grid-template-columns: minmax(0, 1fr); align-items: start; }
-  .x-archive__brief { padding-left: 0.9rem; }
 
   /* A small static six-cut X preserves the transition language when a pinned
      camera move would create a nested-scroll trap. */
@@ -702,22 +628,6 @@
       repeating-linear-gradient(15deg, transparent 0 0.26rem, rgba(11, 44, 83, 0.68) 0.28rem 0.36rem, transparent 0.38rem 0.52rem);
     opacity: 0.72;
   }
-}
-
-@media (max-width: 560px) {
-  .x-archive__heading { font-size: 2.1rem; }
-  .x-archive__deck { font-size: 1rem; }
-  .x-archive__evidence { aspect-ratio: 5 / 4; }
-  .x-archive__identity { align-items: flex-start; }
-  .x-archive__identity img { width: 2.5rem; height: 2.5rem; }
-  .x-archive__identity h3 { font-size: 1.55rem; }
-  .x-archive__meta,
-  .x-archive__story,
-  .x-archive__lesson p,
-  .x-archive__facts,
-  .x-archive__credits p { font-size: 1rem; }
-  .x-archive__footer { align-items: stretch; flex-direction: column; }
-  .x-archive__link { justify-content: center; width: 100%; }
 }
 
 /* ---- the file's cover ---- */
