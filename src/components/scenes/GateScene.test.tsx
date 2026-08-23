@@ -38,15 +38,20 @@ describe('GateScene', () => {
   })
 })
 
-describe('awards release', () => {
-  it('does not trap the award spread inside the pinned 100svh stage', () => {
+describe('awards inside the stage', () => {
+  it('never renders more leaves at once than a single viewport holds', () => {
     const { container } = render(<GateScene />)
 
     const stage = container.querySelector('.gate__stage')
     const archive = container.querySelector('.scene--archive')
     expect(archive).not.toBeNull()
-    // Pinned inside the stage, the spread is clipped to one viewport and a
-    // second award becomes unreachable: nothing in that subtree can scroll.
-    expect(stage?.contains(archive as Node)).toBe(false)
+    // The awards live inside the pinned stage on purpose: the tear reveals them
+    // in place rather than the visitor scrolling to a section underneath.
+    expect(stage?.contains(archive as Node)).toBe(true)
+
+    // That is only safe because the spread is paginated. A tall spread in a
+    // fixed-height stage is what silently clipped a second award out of reach
+    // before, with nothing in the subtree able to scroll.
+    expect(container.querySelectorAll('.x-book__leaf').length).toBeLessThanOrEqual(2)
   })
 })

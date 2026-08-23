@@ -13,10 +13,13 @@ export const GATE_SEQUENCE_END = 0.587
  * paddock inspection hold). The remainder paperizes the live paddock, cuts the
  * X across it and pushes it away from camera.
  *
- * Over a 660svh runway this is ~396svh of gate chapter — ~233svh of gate shot
- * and ~164svh of inspection hold — leaving ~264svh for the tear and the push.
+ * Over a 900svh runway this is ~396svh of gate chapter — ~233svh of gate shot
+ * and ~164svh of inspection hold — leaving ~504svh for the tear, the camera
+ * move into the award book, and a hold on the open spread. The awards are
+ * revealed inside this stage rather than in a section below it, so that whole
+ * arrival has to fit on this clock.
  */
-export const GATE_CHAPTER_SHARE = 0.6
+export const GATE_CHAPTER_SHARE = 0.44
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))

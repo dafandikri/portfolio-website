@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useScrollProgress } from '../../hooks/useScrollProgress'
 import { awardsData } from '../../data/awards'
 import { projectsData } from '../../data/projects'
 import ristekLogo from '../../assets/img/favicon/ristek.png'
@@ -67,21 +66,16 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
   const visible = awardsData.slice(spread * PER_SPREAD, spread * PER_SPREAD + PER_SPREAD)
 
   /*
-   * The section is a tall runway holding a sticky, viewport-height stage, and
-   * `pin` measures progress across exactly the span the stage stays stuck. So
-   * the wheel drives the shot while the page itself does not move: the book
-   * arrives by growing toward the reader rather than by sliding up into frame.
-   *
-   * Arriving by scroll was the whole complaint. In document flow the section
-   * necessarily slides into view, and a scale layered on top of that slide is
-   * invisible — the translation dominates. Holding the stage still is what makes
-   * a zoom legible as a zoom.
+   * No clock of its own. The book is inside the gate's sticky stage and rides
+   * --archive-progress, the same value that paperizes the paddock and cuts the
+   * X across it, so the tear and the arrival are one continuous move on one
+   * timeline. Giving this its own scroll section made the awards somewhere the
+   * visitor had to travel to after the shot finished, which is the opposite of
+   * a transition.
    */
-  const enterRef = useScrollProgress<HTMLElement>('--enter', 'pin')
 
   return (
     <section
-      ref={enterRef}
       className="scene scene--archive"
       aria-labelledby="awards-heading"
       aria-hidden={!interactive}
@@ -181,6 +175,9 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
               that never runs the animation still reads an open book.
             */}
             <span className="x-book__cover" aria-hidden="true">
+              {/* The cut tab, which is the one thing that makes a folder read
+                  as a folder rather than as a board with a label on it. */}
+              <span className="x-book__tab">Mutant file</span>
               <svg className="x-book__mark" viewBox="0 0 200 200">
                 <g stroke="currentColor" strokeLinecap="round" fill="none" strokeWidth="9">
                   {SCRATCHES.map((n) => (
