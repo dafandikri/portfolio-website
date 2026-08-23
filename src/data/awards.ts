@@ -36,6 +36,7 @@ export const awardsData: Award[] = [
       caption: 'Talk-Active · Team FAM · 14 August 2026',
       width: 720,
       height: 960,
+      focusY: 62,
     },
     lesson: {
       title: 'What we missed',

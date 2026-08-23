@@ -13,13 +13,168 @@
   z-index: 15;
   /* Nothing below the tear until the tear reveals it. */
   visibility: hidden;
+  opacity: 0;
   animation: archive-reveal 1s linear paused both;
   animation-delay: calc(var(--archive-progress, 0) * -1s);
 }
 
+/*
+ * Printed over the paddocks, not behind them.
+ *
+ * This carried only `z-index: 60` for a while, with no position — and z-index
+ * does nothing to a statically positioned box. The whole tear therefore sat
+ * underneath the park's own stacking context at z-index 20: the paper never
+ * reached the project cards, and the six gouges cut a surface the visitor could
+ * not see. Restoring the position is what puts the ink on top of the scene, so
+ * the paddocks themselves become the page the X is slashed across.
+ */
+.x-transition__surface {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+}
+
+.x-transition__paper-wash,
+.x-transition__halftone {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  animation: paddock-paperize 1s linear both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+  will-change: opacity;
+}
+
+.x-transition__paper-wash {
+  z-index: 1;
+  /*
+   * Newsprint, painted over the jungle rather than tinted through it.
+   * `mix-blend-mode: color` kept the plate's own luminance, so a night jungle
+   * came out olive: the right hue and entirely the wrong value, which read as a
+   * colour cast rather than as the scene becoming paper. Laying opaque stock on
+   * top is what a printed page actually is.
+   */
+  background:
+    linear-gradient(112deg, rgba(255, 250, 232, 0.5), transparent 62%),
+    linear-gradient(158deg, #f2e6c6, #e6d7ae 58%, #d8c79c);
+}
+
+.x-transition__halftone {
+  z-index: 2;
+  /*
+   * Ben-Day dots, printed in ink on the stock above. Screen blending lifted
+   * them toward white, which is the opposite of ink; multiply is what a dot of
+   * pigment on paper does. Two grids at different pitches and angles keep the
+   * field from resolving into a visible square lattice.
+   */
+  background:
+    radial-gradient(circle, rgba(14, 28, 46, 0.62) 0 0.08rem, transparent 0.09rem) 0 0 / 0.42rem 0.42rem,
+    radial-gradient(circle, rgba(176, 64, 38, 0.3) 0 0.05rem, transparent 0.06rem) 0.21rem 0.21rem / 0.42rem 0.42rem;
+  mix-blend-mode: multiply;
+  animation-name: paddock-halftone;
+}
+
+/* Six material gouges belong to the project frame, so they leave with the
+   paperized paddocks during the camera push instead of floating over Awards. */
+.x-transition__scar-field {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  width: 138vw;
+  height: clamp(4.5rem, 8.5vw, 7.2rem);
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+
+.x-transition__scar-field--rise {
+  transform: translate(-50%, -50%) rotate(-37deg);
+}
+
+.x-transition__scar-field--fall {
+  transform: translate(-50%, -50%) rotate(37deg);
+}
+
+.x-transition__scar {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: clamp(0.55rem, 1.05vw, 0.9rem);
+  opacity: 0;
+  clip-path: polygon(0 34%, 7% 14%, 18% 41%, 31% 20%, 44% 49%, 58% 16%, 74% 45%, 88% 19%, 100% 40%, 100% 72%, 87% 92%, 73% 67%, 59% 91%, 45% 65%, 32% 88%, 18% 61%, 7% 86%, 0 68%);
+  background: linear-gradient(
+    to bottom,
+    #f0f7fa 0 16%,
+    #7d909e 18% 30%,
+    #010203 34% 64%,
+    #8295a2 68% 82%,
+    #f2f9fc 86% 100%
+  );
+  box-shadow:
+    0 -0.18rem 0.22rem rgba(219, 236, 247, 0.18),
+    0 0.24rem 0.34rem rgba(0, 0, 0, 0.88);
+  transform: scaleX(0);
+  will-change: transform, opacity;
+}
+
+/* Three blades on one hand: they land together. Staggering them read as three
+   separate swipes rather than one animal, which is the whole point of the mark. */
+.x-transition__scar--1 { top: 0; }
+.x-transition__scar--2 { top: 50%; }
+.x-transition__scar--3 { top: 100%; }
+
+.x-transition__scar-field--rise .x-transition__scar {
+  transform-origin: 100% 50%;
+  animation: scar-rise 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+}
+
+.x-transition__scar-field--fall .x-transition__scar {
+  transform-origin: 0 50%;
+  animation: scar-fall 1s cubic-bezier(0.16, 1, 0.3, 1) both paused;
+  animation-delay: calc(var(--archive-progress, 0) * -1s);
+}
+
+/* Ends near-opaque. At 0.8 a fifth of a night jungle still showed through and
+   the stock came out olive; newsprint is not a tint over the scene, it is the
+   page the scene has become. A trace is left so the paddock is not simply
+   painted out. */
+@keyframes paddock-paperize {
+  0%, 10% { opacity: 0; }
+  20% { opacity: 0.34; }
+  32% { opacity: 0.68; }
+  44%, 100% { opacity: 0.95; }
+}
+
+@keyframes paddock-halftone {
+  0%, 26% { opacity: 0; }
+  36% { opacity: 0.34; }
+  46%, 100% { opacity: 0.72; }
+}
+
+@keyframes scar-rise {
+  0%, 30% { opacity: 0; transform: scaleX(0); }
+  33% { opacity: 1; }
+  43%, 100% { opacity: 1; transform: scaleX(1); }
+}
+
+/* One pass, then the other, and the X is complete before the camera moves. */
+@keyframes scar-fall {
+  0%, 16% { opacity: 0; transform: scaleX(0); }
+  19% { opacity: 1; }
+  29%, 100% { opacity: 1; transform: scaleX(1); }
+}
+
+/* Fades up behind the halftone rather than cutting in. The hard visibility
+   switch was the "background changed immediately": one frame of jungle, the
+   next of navy, with nothing carrying the eye between them. */
 @keyframes archive-reveal {
-  0%, 56% { visibility: hidden; }
-  58%, 100% { visibility: visible; }
+  0%, 40% { visibility: hidden; opacity: 0; }
+  44% { visibility: visible; opacity: 0; }
+  60%, 100% { visibility: visible; opacity: 1; }
 }
 
 .x-stage {
@@ -245,7 +400,10 @@
   position: relative;
   margin: 0;
   overflow: hidden;
-  aspect-ratio: 16 / 7;
+  /* Taller than the 16/7 band it was. That crop letterboxed a group shot down
+     to a strip and left the page under-filled, with a dead gap above the
+     footer; this shows the team and fills the leaf. */
+  aspect-ratio: 3 / 2;
   border: 0.2rem solid var(--archive-ink);
   border-radius: 2px;
   background: var(--archive-ink);
@@ -270,7 +428,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 42%;
+  /* Overridden per photograph; see the photo's focusY. */
   filter: contrast(1.05) saturate(0.94);
 }
 
@@ -515,11 +673,17 @@
  * the book is already growing behind it, so the two moves overlap and the shot
  * never stops to wait for a new section.
  */
+/*
+ * Everything finishes by 84% so the last sixth of the runway is a hold on the
+ * open folder. It used to complete exactly as the pin released, which meant the
+ * right-hand page was revealed and taken away in the same instant — the reason
+ * the Tech Wizard leaf was never actually seen.
+ */
 @keyframes book-arrive {
-  0%, 58% { transform: translate3d(-25%, 1.2rem, 0) scale(0.3); opacity: 0; }
-  63% { opacity: 1; }
-  82% { transform: translate3d(-25%, 0, 0) scale(1); opacity: 1; }
-  92%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
+  0%, 40% { transform: translate3d(-25%, 1.4rem, 0) scale(0.28); opacity: 0; }
+  48% { opacity: 1; }
+  58% { transform: translate3d(-25%, 0, 0) scale(1); opacity: 1; }
+  80%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
 }
 
 /*
@@ -527,9 +691,15 @@
  * two-sided now, so past square-on it simply shows its other face — which is
  * the page — instead of disappearing.
  */
+/*
+ * A long, watchable turn. Measured against the right leaf: the board occludes
+ * it fully while shut, 78% at a quarter open, and nothing from the halfway
+ * point on — so most of this window is spent with both pages in view rather
+ * than waiting behind a board.
+ */
 @keyframes book-open {
-  0%, 82% { transform: translateZ(0.5rem) rotateY(0deg); }
-  100% { transform: translateZ(0.5rem) rotateY(-180deg); }
+  0%, 58% { transform: translateZ(0.5rem) rotateY(0deg); }
+  80%, 100% { transform: translateZ(0.5rem) rotateY(-180deg); }
 }
 
   92%, 100% { opacity: 1; }
@@ -557,6 +727,10 @@
     inset: auto;
     height: auto;
     visibility: visible;
+    /* The base rule starts this hidden AND transparent so the tear can reveal
+       it; killing the animation here without restoring both would leave the
+       whole awards section invisible. */
+    opacity: 1;
     animation: none;
   }
 

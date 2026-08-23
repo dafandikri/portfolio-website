@@ -85,6 +85,7 @@ function AwardLeaf({ award, side, id }: {
               width={award.photo.width}
               height={award.photo.height}
               decoding="async"
+              style={{ objectPosition: `50% ${award.photo.focusY ?? 42}%` }}
             />
             <figcaption>{award.photo.caption}</figcaption>
           </figure>
