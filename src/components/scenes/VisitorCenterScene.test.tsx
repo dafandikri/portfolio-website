@@ -12,7 +12,6 @@ describe('VisitorCenterScene', () => {
     render(<VisitorCenterScene />)
 
     expect(screen.getByRole('heading', { level: 2, name: 'Awards' })).toBeInTheDocument()
-    expect(screen.getByText('Field file · Class X')).toBeInTheDocument()
   })
 
   it('paperizes the real paddock only after two passes cross six physical gouges', () => {
@@ -76,12 +75,14 @@ describe('VisitorCenterScene', () => {
     expect(counted?.tagName).toBe('P')
   })
 
-  it('counts the awards in the heading instead of hardcoding one', () => {
+  it('keeps a heading for the landmark without printing one on the folder', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    expect(container.querySelector('.x-archive__heading')).toHaveTextContent(
-      `/ ${String(awards.length).padStart(2, '0')}`,
-    )
+    // The folder's own tab and stamp identify it; a title above them said the
+    // same thing again in a second voice. The heading stays for the landmark.
+    const heading = screen.getByRole('heading', { level: 2, name: 'Awards' })
+    expect(heading).toBeInTheDocument()
+    expect(container.querySelector('.x-archive__header')).toContainElement(heading)
   })
 
   it('labels each award with the stage that was actually judged', () => {

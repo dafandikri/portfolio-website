@@ -18,6 +18,21 @@ colors:
   archive-blue: "#1666a8"
   archive-yellow: "#ffd21f"
   archive-steel: "#94a3b8"
+  # The mutant file. Manila is its own material: duller and warmer than the
+  # documents it holds, so the folder reads as card and the pages as paper.
+  folder-manila: "#dcc79b"
+  folder-manila-lit: "#e3d0a4"
+  folder-manila-deep: "#bfa677"
+  folder-ink: "#4a2f10"
+  # The paper inside it, and the ink printed on that paper.
+  archive-paper: "#ece0c0"
+  archive-paper-lit: "#f6ecd2"
+  archive-paper-deep: "#ded0a9"
+  archive-ink-deep: "#142238"
+  archive-ink-soft: "#24344a"
+  # The table the folder is laid on, lit by one lamp above it.
+  archive-table: "#03070e"
+  archive-table-lit: "#0a1828"
   slate-body: "#1b1d1f"
   slate-chalk: "#eef1f2"
   slate-stick: "#f2f4f5"
@@ -81,6 +96,26 @@ typography:
     fontWeight: 400
     lineHeight: 1.2
     letterSpacing: "0.3em"
+  # A leaf of the mutant file. Denser than the archive spread it replaced,
+  # because two documents now share one viewport instead of scrolling.
+  leaf-title:
+    fontFamily: "Arial Black, Helvetica Neue, Arial, sans-serif"
+    fontSize: "clamp(1.05rem, 2.1vw, 1.55rem)"
+    fontWeight: 900
+    lineHeight: 1
+    letterSpacing: "-0.03em"
+  leaf-label:
+    fontFamily: "Helvetica Neue, Arial, sans-serif"
+    fontSize: "0.7rem"
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: "0.14em"
+  leaf-note:
+    fontFamily: "Helvetica Neue, Arial, sans-serif"
+    fontSize: "0.84rem"
+    fontWeight: 400
+    lineHeight: 1.45
+    letterSpacing: "normal"
 components:
   paddock-plaque:
     backgroundColor: "{colors.timber-deep}"
