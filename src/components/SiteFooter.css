@@ -42,6 +42,8 @@
   width: min(100%, 33rem);
   padding: 0 0 clamp(1.4rem, 3.5vh, 2.2rem);
   border-radius: 3px;
+  /* Keeps the stick and its shadow inside the board's silhouette. */
+  overflow: hidden;
   background: linear-gradient(163deg, var(--slate-body-lit), var(--slate-body) 46%, var(--slate-edge));
   box-shadow:
     0 1.5rem 3.5rem rgba(0, 0, 0, 0.72),
@@ -70,6 +72,13 @@
   perspective: 34rem;
   perspective-origin: 12% 100%;
   transform-style: preserve-3d;
+  /*
+   * The arm pivots on the left pin, so its free end sweeps up and to the right.
+   * Unclipped it swung clear of the board entirely and hung in the page as a
+   * loose black bar. The stick belongs to the slate; anything it does outside
+   * the board's own width is not part of the object.
+   */
+  overflow: hidden;
 }
 
 .slate__jaw,

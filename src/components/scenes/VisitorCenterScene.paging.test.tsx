@@ -38,13 +38,13 @@ describe('VisitorCenterScene paging', () => {
     const user = userEvent.setup()
     const { container } = render(<VisitorCenterScene />)
 
-    expect(container.querySelectorAll('.x-archive__record')).toHaveLength(2)
+    expect(container.querySelectorAll('.x-book__leaf')).toHaveLength(2)
     expect(screen.getByRole('button', { name: /Previous/ })).toBeDisabled()
 
     await user.click(screen.getByRole('button', { name: /Next/ }))
 
     expect(screen.getByText('Spread 2 of 2')).toBeInTheDocument()
-    expect(container.querySelectorAll('.x-archive__record')).toHaveLength(1)
+    expect(container.querySelectorAll('.x-book__leaf')).toHaveLength(1)
     expect(screen.getByRole('button', { name: /Next/ })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Previous/ })).toBeEnabled()
   })

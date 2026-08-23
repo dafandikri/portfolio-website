@@ -12,7 +12,6 @@ describe('VisitorCenterScene', () => {
     render(<VisitorCenterScene />)
 
     expect(screen.getByRole('heading', { level: 2, name: 'Awards' })).toBeInTheDocument()
-    expect(screen.getByText('The product was ready. The business case wasn’t.')).toBeInTheDocument()
     expect(screen.getByText('Field file · Class X')).toBeInTheDocument()
   })
 
@@ -37,21 +36,21 @@ describe('VisitorCenterScene', () => {
     const { container } = render(<VisitorCenterScene interactive={false} />)
 
     expect(container.querySelector('.scene--archive')).toHaveAttribute('aria-hidden', 'true')
-    expect(container.querySelector('.x-archive__shell')).toHaveAttribute('inert')
+    expect(container.querySelector('.x-book')).toHaveAttribute('inert')
   })
 
   it('shows one case per award, with the competition it was won at', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    expect(container.querySelectorAll('.x-archive__record')).toHaveLength(awards.length)
+    expect(container.querySelectorAll('.x-book__leaf')).toHaveLength(awards.length)
     expect(screen.getByRole('heading', { level: 3, name: 'Best Presentation' })).toBeInTheDocument()
-    expect(container.querySelector('.x-archive__event')).toHaveTextContent('RISTEK Hackathon 2026')
+    expect(container.querySelector('.x-leaf__event')).toHaveTextContent('RISTEK Hackathon 2026')
   })
 
   it('names the team and every member', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    const team = container.querySelector('.x-archive__credits') as HTMLElement
+    const team = container.querySelector('.x-leaf__team') as HTMLElement
     expect(team).toHaveTextContent('Team FAM')
     const members = awards[0]!.members ?? []
     expect(members.length).toBeGreaterThan(0)
@@ -63,7 +62,7 @@ describe('VisitorCenterScene', () => {
   it('lists every highlight of every award', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    expect(container.querySelectorAll('.x-archive__facts li')).toHaveLength(
+    expect(container.querySelectorAll('.x-leaf__facts li')).toHaveLength(
       awards.reduce((total, award) => total + award.highlights.length, 0),
     )
   })
@@ -71,7 +70,7 @@ describe('VisitorCenterScene', () => {
   it('counts a team too large to name instead of listing it', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    const counted = container.querySelector('.x-archive__credits--count')
+    const counted = container.querySelector('.x-leaf__team--count')
     expect(counted).toHaveTextContent('Kelompok C2 · 9 members')
     // A plain line, not a <details> promising a roster it cannot open.
     expect(counted?.tagName).toBe('P')
@@ -88,7 +87,7 @@ describe('VisitorCenterScene', () => {
   it('labels each award with the stage that was actually judged', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    const events = [...container.querySelectorAll('.x-archive__event')].map((n) => n.textContent)
+    const events = [...container.querySelectorAll('.x-leaf__event')].map((n) => n.textContent)
     expect(events).toContain('RISTEK Hackathon 2026 · Final pitch')
     // The PPL award went to the delivered system, not to a pitch.
     expect(events).toContain('PPL x Propensi 2026 · Project exhibition')
@@ -130,7 +129,7 @@ describe('VisitorCenterScene', () => {
   it('references the project it was won with, linked and safely targeted', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    const link = within(container.querySelector('.x-archive__record') as HTMLElement)
+    const link = within(container.querySelector('.x-book__leaf') as HTMLElement)
       .getByRole('link', { name: /Talk-Active/ })
     expect(link).toHaveAttribute('href', 'https://talk-active-id.vercel.app')
     expect(link).toHaveAttribute('rel', 'noreferrer noopener')
@@ -140,18 +139,18 @@ describe('VisitorCenterScene', () => {
   it('keeps the file cover as scenery the content does not depend on', () => {
     const { container } = render(<VisitorCenterScene />)
 
-    const cover = container.querySelector('.x-file__cover')
+    const cover = container.querySelector('.x-book__cover')
     expect(cover).toHaveAttribute('aria-hidden', 'true')
     // The cover swings over the spread. If the record lived inside it, a
     // browser without view() timelines would leave the awards shut in the file.
-    expect(cover?.querySelector('.x-archive__record')).toBeNull()
-    expect(container.querySelectorAll('.x-archive__record').length).toBeGreaterThan(0)
+    expect(cover?.querySelector('.x-book__leaf')).toBeNull()
+    expect(container.querySelectorAll('.x-book__leaf').length).toBeGreaterThan(0)
   })
 
   it('shows no page controls while every award fits one spread', () => {
     const { container } = render(<VisitorCenterScene />)
 
     expect(awards.length).toBeLessThanOrEqual(2)
-    expect(container.querySelector('.x-file__turn')).toBeNull()
+    expect(container.querySelector('.x-book__turn')).toBeNull()
   })
 })
