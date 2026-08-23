@@ -36,7 +36,6 @@ import VisitorCenterScene, {
   PaddockSurfaceTransition,
 } from './VisitorCenterScene'
 import InfoPopover from '../InfoPopover'
-import ScrollCue from '../ScrollCue'
 import './GateScene.css'
 
 /**
@@ -67,7 +66,6 @@ export default function GateScene() {
   const [projectsMounted, setProjectsMounted] = useState(false)
   const [projectsActive, setProjectsActive] = useState(false)
   const [archiveActive, setArchiveActive] = useState(false)
-  const [holdCueVisible, setHoldCueVisible] = useState(false)
   const [creditVisible, setCreditVisible] = useState(false)
 
   /*
@@ -547,43 +545,7 @@ export default function GateScene() {
   }, [hasEntered])
   /* v8 ignore stop */
 
-  /*
-   * The paddocks sit on a pinned stage: the page keeps scrolling but the scene
-   * stays put, so there is no motion to tell the visitor the wheel still does
-   * anything. The cue answers that, and only that.
-   *
-   * It stays up for the whole hold rather than waiting to be earned. The first
-   * version hid on any scroll and needed 2.6s of stillness to return, which
-   * meant it was absent exactly while someone was scrolling and wondering
-   * whether to continue. Now it is the default state here, and only steps aside
-   * for the moment a scroll is actually in flight so it never sits over the
-   * paddock the visitor is reaching for.
-   */
-  useEffect(() => {
-    if (!projectsActive || archiveActive) {
-      setHoldCueVisible(false)
-      return
-    }
-    setHoldCueVisible(true)
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let idleTimer = 0
-    const onScroll = () => {
-      setHoldCueVisible(false)
-      window.clearTimeout(idleTimer)
-      idleTimer = window.setTimeout(() => setHoldCueVisible(true), 500)
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.clearTimeout(idleTimer)
-      window.removeEventListener('scroll', onScroll)
-      setHoldCueVisible(false)
-    }
-  }, [projectsActive, archiveActive])
-
   return (
-    <>
     <section
       ref={(node) => {
         sceneRef.current = node
@@ -624,12 +586,18 @@ export default function GateScene() {
               <ParkScene />
               <PaddockSurfaceTransition />
             </div>
-            <ScrollCue
-              className={`gate__scroll-cue${holdCueVisible ? ' is-holding' : ''}`}
-              label="Keep scrolling"
-            />
           </div>
         )}
+
+        {/*
+          The award book, inside the stage the tear happens on. It lived in
+          document flow for a while, which made reaching it a second scroll into
+          a separate section — the camera move ended and then the visitor had to
+          go and find the awards. It is safe here now that the book is paginated:
+          one spread fits one viewport, so nothing can be clipped out of reach
+          the way a tall spread was.
+        */}
+        <VisitorCenterScene />
 
         <InfoPopover
           className="gate__credit"
@@ -664,16 +632,5 @@ export default function GateScene() {
         </InfoPopover>
       </div>
     </section>
-
-    {/*
-     * The award spread lives after the runway, in ordinary document flow.
-     * It used to sit inside the sticky 100svh stage as an absolutely
-     * positioned layer, which was correct while it held exactly one award and
-     * silently clipped the second: the stage clips, and nothing inside it
-     * scrolls. In flow it is as tall as its contents and the page's own
-     * scrollbar reaches all of it, however many awards there are.
-     */}
-    <VisitorCenterScene />
-    </>
   )
 }

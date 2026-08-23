@@ -14,7 +14,7 @@
    * open, read and close a project before the tear started taking the scene
    * away. The gate shot and the tear keep their previous absolute pacing.
    */
-  height: 660svh;
+  height: 900svh;
   background: #050403;
 }
 

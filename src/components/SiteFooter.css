@@ -84,8 +84,12 @@
 .slate__jaw,
 .slate__arm {
   position: absolute;
-  left: 0;
-  right: 0;
+  /* Wider than the box that clips them. Flush to the edges, the arm's rotation
+     swung its corners inside the frame and the board showed through behind the
+     stick; overhanging means there is always stick under the clip, whatever
+     angle it is at. */
+  left: -8%;
+  right: -8%;
   height: var(--stick);
   overflow: hidden;
   background: var(--slate-edge);
@@ -112,7 +116,7 @@
   top: 0;
   border-radius: 3px 3px 0 0;
   /* The pin, not the element's centre. */
-  transform-origin: 0.9rem 100%;
+  transform-origin: 1.6rem 100%;
   transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem);
   transform-style: preserve-3d;
   z-index: 1;
