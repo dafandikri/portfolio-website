@@ -58,29 +58,26 @@ export function PaddockSurfaceTransition() {
  */
 /** A spread holds two pages, so anything beyond that has to be turned to. */
 const PER_SPREAD = 2
-
 export default function VisitorCenterScene({ interactive = true }: { interactive?: boolean }) {
   const spreads = Math.ceil(awardsData.length / PER_SPREAD)
   const [spread, setSpread] = useState(0)
   // Two awards fill one spread. Controls for pages that do not exist are worse
   // than no controls, so they appear only once the file actually has leaves.
   const paged = spreads > 1
-  const visible = paged
-    ? awardsData.slice(spread * PER_SPREAD, spread * PER_SPREAD + PER_SPREAD)
-    : awardsData
+  const visible = awardsData.slice(spread * PER_SPREAD, spread * PER_SPREAD + PER_SPREAD)
 
   /*
-   * The zoom and the file's opening are scrubbed from this section's own travel
-   * through the viewport, written to --enter by JS.
+   * The section is a tall runway holding a sticky, viewport-height stage, and
+   * `pin` measures progress across exactly the span the stage stays stuck. So
+   * the wheel drives the shot while the page itself does not move: the book
+   * arrives by growing toward the reader rather than by sliding up into frame.
    *
-   * They were built on `animation-timeline: view()`, which is the right tool and
-   * is not available everywhere yet. Where it is missing the declaration is
-   * dropped, the animation falls back to its 0s duration, and every one of these
-   * resolves instantly to its end state — the file already open, the board
-   * already at full size. The result is not a degraded animation, it is no
-   * animation, which is exactly what it looked like.
+   * Arriving by scroll was the whole complaint. In document flow the section
+   * necessarily slides into view, and a scale layered on top of that slide is
+   * invisible — the translation dominates. Holding the stage still is what makes
+   * a zoom legible as a zoom.
    */
-  const enterRef = useScrollProgress<HTMLElement>('--enter', 'pass')
+  const enterRef = useScrollProgress<HTMLElement>('--enter', 'pin')
 
   return (
     <section
@@ -89,159 +86,131 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
       aria-labelledby="awards-heading"
       aria-hidden={!interactive}
     >
-      <div className="x-archive">
-        <div
-          className="x-archive__shell"
-          data-reveal-layer="award"
-          inert={!interactive}
-        >
-          {/*
-            The file's own cover, hinged at the spine. Purely scenery: the
-            record beneath is in the document whether or not this ever swings,
-            so a browser without view() timelines, or a visitor who asked for
-            reduced motion, simply reads an open file.
-          */}
-          <span className="x-file__cover" aria-hidden="true">
-            {/*
-              Six gouges, two passes of three, matching the cut the paddock
-              takes. Drawn rather than tiled: a repeating gradient crossed with
-              itself into a diamond lattice, which read as chain-link fence.
-            */}
-            <svg className="x-file__cover-mark" viewBox="0 0 200 200" aria-hidden="true">
-              <g strokeLinecap="round" fill="none">
-                {/* Two families of three, crossing at the centre: the same X
-                    the paddock takes, at the same handedness. */}
-                {SCRATCHES.map((n) => (
-                  <line
-                    key={`fall-${n}`}
-                    x1={26}
-                    y1={34 + (n - 1) * 24}
-                    x2={174}
-                    y2={112 + (n - 1) * 24}
-                    strokeWidth={4.6 - (n - 1) * 0.9}
-                    opacity={0.92 - (n - 1) * 0.14}
-                  />
-                ))}
-                {SCRATCHES.map((n) => (
-                  <line
-                    key={`rise-${n}`}
-                    x1={26}
-                    y1={166 - (n - 1) * 24}
-                    x2={174}
-                    y2={88 - (n - 1) * 24}
-                    strokeWidth={4.2 - (n - 1) * 0.8}
-                    opacity={0.8 - (n - 1) * 0.12}
-                  />
-                ))}
-              </g>
-            </svg>
-            <span className="x-file__cover-stamp">Class X</span>
-            <span className="x-file__cover-edge" />
-          </span>
-
+      <div className="x-stage">
+        <div className="x-archive">
           <header className="x-archive__header">
-            <div>
-              <p className="x-archive__kicker">Field file · Class X</p>
-              <h2 id="awards-heading" className="x-archive__heading" aria-label="Awards">
-                Awards{' '}
-                <span aria-hidden="true">/ {String(awardsData.length).padStart(2, '0')}</span>
-              </h2>
-            </div>
-            <p className="x-archive__deck">
-              The product was ready. The business case wasn&rsquo;t.
-            </p>
+            <p className="x-archive__kicker">Field file · Class X</p>
+            <h2 id="awards-heading" className="x-archive__heading" aria-label="Awards">
+              Awards{' '}
+              <span aria-hidden="true">/ {String(awardsData.length).padStart(2, '0')}</span>
+            </h2>
           </header>
 
-          <ul className="x-archive__records" aria-label="Awards">
-            {visible.map((award, index) => {
-              const project = projectsData.find((candidate) => candidate.title === award.projectTitle)
-              const lessonId = `award-lesson-${index}`
+          <div className="x-book" data-open={paged ? 'paged' : 'single'} inert={!interactive}>
+            <ul className="x-book__spread" aria-label="Awards">
+              {visible.map((award, index) => {
+                const project = projectsData.find((c) => c.title === award.projectTitle)
+                const lessonId = `award-lesson-${spread}-${index}`
 
-              return (
-                <li key={`${award.event}-${award.title}`} className="x-archive__record">
-                  {award.photo ? (
-                    <figure className="x-archive__evidence">
-                      <img
-                        src={AWARD_PHOTOS[award.photo.asset]}
-                        alt={award.photo.alt}
-                        width={award.photo.width}
-                        height={award.photo.height}
-                        decoding="async"
-                      />
-                      <figcaption>{award.photo.caption}</figcaption>
-                    </figure>
-                  ) : null}
-
-                  <article className="x-archive__brief">
-                    <div className="x-archive__identity">
-                      <img src={AWARD_LOGOS[award.logo]} alt="" />
-                      <div>
-                        <p className="x-archive__event">{award.event} · {award.stage}</p>
-                        <h3>{award.title}</h3>
-                        <p className="x-archive__meta">{award.host} · {award.date}</p>
+                return (
+                  <li
+                    key={`${award.event}-${award.title}`}
+                    className={`x-book__leaf x-book__leaf--${index === 0 ? 'verso' : 'recto'}`}
+                  >
+                    <article className="x-leaf">
+                      <div className="x-leaf__head">
+                        <img className="x-leaf__logo" src={AWARD_LOGOS[award.logo]} alt="" />
+                        <div>
+                          <p className="x-leaf__event">{award.event} · {award.stage}</p>
+                          <h3 className="x-leaf__title">{award.title}</h3>
+                          <p className="x-leaf__meta">{award.host} · {award.date}</p>
+                        </div>
                       </div>
-                    </div>
 
-                    <p className="x-archive__story">{award.story}</p>
-
-                    {award.lesson ? (
-                      <aside className="x-archive__lesson" aria-labelledby={lessonId}>
-                        <p>Pitch lesson</p>
-                        <h4 id={lessonId}>{award.lesson.title}</h4>
-                        <p>{award.lesson.body}</p>
-                      </aside>
-                    ) : null}
-
-                    <ul className="x-archive__facts" aria-label="Pitch facts">
-                      {award.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
-                    </ul>
-
-                    <footer className="x-archive__footer">
-                      {project ? (
-                        <a
-                          className="x-archive__link"
-                          href={project.liveLink}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          aria-label={`View ${project.title} (opens in a new tab)`}
-                        >
-                          View {project.title}
-                        </a>
+                      {award.photo ? (
+                        <figure className="x-leaf__plate">
+                          <img
+                            src={AWARD_PHOTOS[award.photo.asset]}
+                            alt={award.photo.alt}
+                            width={award.photo.width}
+                            height={award.photo.height}
+                            decoding="async"
+                          />
+                          <figcaption>{award.photo.caption}</figcaption>
+                        </figure>
                       ) : null}
 
-                      {award.members ? (
-                        <details className="x-archive__credits">
-                          <summary>{award.team} · {award.members.length} members</summary>
-                          <p>{award.members.join(' · ')}</p>
-                        </details>
-                      ) : (
-                        <p className="x-archive__credits x-archive__credits--count">
-                          {award.team} · {award.teamSize} members
-                        </p>
-                      )}
-                    </footer>
-                  </article>
-                </li>
-              )
-            })}
-          </ul>
+                      <p className="x-leaf__story">{award.story}</p>
+
+                      {award.lesson ? (
+                        <aside className="x-leaf__lesson" aria-labelledby={lessonId}>
+                          <h4 id={lessonId}>{award.lesson.title}</h4>
+                          <p>{award.lesson.body}</p>
+                        </aside>
+                      ) : null}
+
+                      <ul className="x-leaf__facts" aria-label="Award facts">
+                        {award.highlights.map((h) => <li key={h}>{h}</li>)}
+                      </ul>
+
+                      <footer className="x-leaf__foot">
+                        {project ? (
+                          <a
+                            className="x-leaf__link"
+                            href={project.liveLink}
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            aria-label={`View ${project.title} (opens in a new tab)`}
+                          >
+                            View {project.title}
+                          </a>
+                        ) : null}
+                        {award.members ? (
+                          <details className="x-leaf__team x-leaf__team--named">
+                            <summary>{award.team} · {award.members.length} members</summary>
+                            <p>{award.members.join(' · ')}</p>
+                          </details>
+                        ) : (
+                          <p className="x-leaf__team x-leaf__team--count">
+                            {award.team} · {award.teamSize} members
+                          </p>
+                        )}
+                      </footer>
+                    </article>
+                  </li>
+                )
+              })}
+            </ul>
+
+            {/* The spine: a real gutter between the leaves, not a drawn line. */}
+            <span className="x-book__spine" aria-hidden="true" />
+
+            {/*
+              The front board, hinged on the spine. Scenery only — every record
+              is in the document whether or not this ever swings, so a browser
+              that never runs the animation still reads an open book.
+            */}
+            <span className="x-book__cover" aria-hidden="true">
+              <svg className="x-book__mark" viewBox="0 0 200 200">
+                <g stroke="currentColor" strokeLinecap="round" fill="none" strokeWidth="9">
+                  {SCRATCHES.map((n) => (
+                    <line key={`f-${n}`} x1={38 + n * 16} y1="30" x2={104 + n * 16} y2="170" />
+                  ))}
+                  {SCRATCHES.map((n) => (
+                    <line key={`r-${n}`} x1={104 + n * 16} y1="30" x2={38 + n * 16} y2="170" />
+                  ))}
+                </g>
+              </svg>
+              <span className="x-book__stamp">Class X</span>
+            </span>
+          </div>
 
           {paged ? (
-            <nav className="x-file__turn" aria-label="Award pages">
+            <nav className="x-book__turn" aria-label="Award pages">
               <button
                 type="button"
-                className="x-file__leaf"
+                className="x-book__leaf-btn"
                 onClick={() => setSpread((n) => Math.max(0, n - 1))}
                 disabled={spread === 0}
               >
                 <span aria-hidden="true">&larr;</span> Previous
               </button>
-              <p className="x-file__folio" aria-live="polite">
+              <p className="x-book__folio" aria-live="polite">
                 Spread {spread + 1} of {spreads}
               </p>
               <button
                 type="button"
-                className="x-file__leaf"
+                className="x-book__leaf-btn"
                 onClick={() => setSpread((n) => Math.min(spreads - 1, n + 1))}
                 disabled={spread === spreads - 1}
               >
