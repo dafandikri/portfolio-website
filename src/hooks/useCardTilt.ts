@@ -52,8 +52,13 @@ export function pointerToOffset(clientX: number, clientY: number, box: Box): Off
  * its maximum, which is exactly where a pointer spends its time.
  *
  * Rotating once about the axis perpendicular to the pointer direction has no
- * roll term at any angle. The lean is always square to the direction you are
- * pointing from, which is what picking up a card actually does.
+ * roll term at any angle, so the lean stays square to the direction you are
+ * pointing from.
+ *
+ * The card leans *away* from the pointer: the corner under the cursor is the
+ * one that recedes, as though the pointer were pressing it into the surface.
+ * Leaning toward the cursor lifts the near edge at the viewer, which reads as
+ * the card rearing up to meet the mouse rather than responding to it.
  */
 export function offsetToTilt({ cx, cy }: Offset): Tilt {
   const length = Math.hypot(cx, cy)
@@ -61,9 +66,10 @@ export function offsetToTilt({ cx, cy }: Offset): Tilt {
   if (length === 0) return { ax: 1, ay: 0, deg: 0 }
 
   return {
-    // Perpendicular to the offset, so the near edge lifts toward the pointer.
-    ax: cy / length,
-    ay: -cx / length,
+    // Perpendicular to the offset, and signed so the edge under the pointer is
+    // pushed back rather than lifted forward.
+    ax: -cy / length,
+    ay: cx / length,
     // Corners reach further than edges; clamp so they do not tilt further too.
     deg: Math.min(1, length) * MAX_TILT_DEG,
   }

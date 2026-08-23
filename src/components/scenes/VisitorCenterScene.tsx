@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useScrollProgress } from '../../hooks/useScrollProgress'
 import { awardsData } from '../../data/awards'
 import { projectsData } from '../../data/projects'
 import ristekLogo from '../../assets/img/favicon/ristek.png'
@@ -68,8 +69,22 @@ export default function VisitorCenterScene({ interactive = true }: { interactive
     ? awardsData.slice(spread * PER_SPREAD, spread * PER_SPREAD + PER_SPREAD)
     : awardsData
 
+  /*
+   * The zoom and the file's opening are scrubbed from this section's own travel
+   * through the viewport, written to --enter by JS.
+   *
+   * They were built on `animation-timeline: view()`, which is the right tool and
+   * is not available everywhere yet. Where it is missing the declaration is
+   * dropped, the animation falls back to its 0s duration, and every one of these
+   * resolves instantly to its end state — the file already open, the board
+   * already at full size. The result is not a degraded animation, it is no
+   * animation, which is exactly what it looked like.
+   */
+  const enterRef = useScrollProgress<HTMLElement>('--enter', 'pass')
+
   return (
     <section
+      ref={enterRef}
       className="scene scene--archive"
       aria-labelledby="awards-heading"
       aria-hidden={!interactive}

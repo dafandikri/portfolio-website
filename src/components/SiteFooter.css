@@ -267,9 +267,8 @@
  */
 @media (prefers-reduced-motion: no-preference) {
   .slate__arm {
-    animation: slate-clap linear both;
-    animation-timeline: view();
-    animation-range: entry 12% cover 34%;
+    animation: slate-clap 1s linear paused both;
+    animation-delay: calc(var(--enter, 0) * -1s);
     will-change: transform;
   }
 }
@@ -281,29 +280,28 @@
  * way down instead of sweeping across a flat plane.
  */
 @keyframes slate-clap {
-  0% { transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem); }
-  58% { transform: rotate3d(0.24, 0, 1, -9deg) translateZ(0.2rem); }
-  74% { transform: rotate3d(0.1, 0, 1, 0deg) translateZ(0); }
-  82% { transform: rotate3d(0.16, 0, 1, -4.2deg) translateZ(0.12rem); }
-  91% { transform: rotate3d(0.06, 0, 1, -1.1deg) translateZ(0); }
-  100% { transform: rotate3d(0, 0, 1, 0deg) translateZ(0); }
+  0%, 22% { transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem); }
+  40% { transform: rotate3d(0.24, 0, 1, -9deg) translateZ(0.2rem); }
+  50% { transform: rotate3d(0.1, 0, 1, 0deg) translateZ(0); }
+  56% { transform: rotate3d(0.16, 0, 1, -4.2deg) translateZ(0.12rem); }
+  62% { transform: rotate3d(0.06, 0, 1, -1.1deg) translateZ(0); }
+  68%, 100% { transform: rotate3d(0, 0, 1, 0deg) translateZ(0); }
 }
 
 /* The board takes the hit: a short settle on the same timeline, so the object
    reacts to the strike instead of the stick moving against a fixed backing. */
 @media (prefers-reduced-motion: no-preference) {
   .slate__board {
-    animation: slate-recoil linear both;
-    animation-timeline: view();
-    animation-range: entry 12% cover 34%;
+    animation: slate-recoil 1s linear paused both;
+    animation-delay: calc(var(--enter, 0) * -1s);
   }
 }
 
 @keyframes slate-recoil {
-  0%, 70% { transform: rotate(-1.1deg) translateY(0); }
-  76% { transform: rotate(-1.1deg) translateY(0.16rem); }
-  88% { transform: rotate(-1.1deg) translateY(-0.05rem); }
-  100% { transform: rotate(-1.1deg) translateY(0); }
+  0%, 48% { transform: rotate(-1.1deg) translateY(0); }
+  53% { transform: rotate(-1.1deg) translateY(0.16rem); }
+  60% { transform: rotate(-1.1deg) translateY(-0.05rem); }
+  66%, 100% { transform: rotate(-1.1deg) translateY(0); }
 }
 
 .slate ::selection {

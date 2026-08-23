@@ -66,17 +66,18 @@ describe('offsetToTilt', () => {
     }
   })
 
-  it('leans toward the pointer rather than away from it', () => {
-    // CSS 3D points Y downward. A cursor high on the card must bring the top
-    // edge toward the viewer, which is a negative rotation about +X.
+  it('pushes the edge under the pointer away rather than lifting it', () => {
+    // CSS 3D points Y downward, so a positive rotation about +X brings the
+    // bottom edge forward and pushes the top edge back. A cursor high on the
+    // card must therefore produce a positive rotation about +X.
     const high = tiltAt(50, 0)
-    expect(high.ax * high.deg).toBeLessThan(0)
+    expect(high.ax * high.deg).toBeGreaterThan(0)
     const low = tiltAt(50, 100)
-    expect(low.ax * low.deg).toBeGreaterThan(0)
+    expect(low.ax * low.deg).toBeLessThan(0)
     const right = tiltAt(100, 50)
-    expect(right.ay * right.deg).toBeLessThan(0)
+    expect(right.ay * right.deg).toBeGreaterThan(0)
     const left = tiltAt(0, 50)
-    expect(left.ay * left.deg).toBeGreaterThan(0)
+    expect(left.ay * left.deg).toBeLessThan(0)
   })
 
   it('reaches the maximum tilt at an edge', () => {

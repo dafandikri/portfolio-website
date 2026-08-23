@@ -1,3 +1,4 @@
+import { useScrollProgress } from '../hooks/useScrollProgress'
 import { contact } from '../data/contact'
 import { card } from '../data/card'
 import './SiteFooter.css'
@@ -16,9 +17,13 @@ import './SiteFooter.css'
  */
 export default function SiteFooter() {
   const year = new Date().getFullYear()
+  /* The strike is scrubbed from the slate's travel through the viewport. It was
+     built on a view() timeline, which is unavailable in enough browsers that the
+     board simply rendered shut and never clapped at all. */
+  const enterRef = useScrollProgress<HTMLElement>('--enter', 'pass')
 
   return (
-    <footer className="slate" aria-labelledby="slate-heading">
+    <footer ref={enterRef} className="slate" aria-labelledby="slate-heading">
       <div className="slate__board">
         {/*
           The clapper: two halves of one stick. The arm swings down onto the
