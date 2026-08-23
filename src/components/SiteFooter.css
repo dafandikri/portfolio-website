@@ -40,16 +40,14 @@
 .slate__board {
   position: relative;
   width: min(100%, 33rem);
-  padding: 0 0 clamp(1.4rem, 3.5vh, 2.2rem);
-  border-radius: 3px;
-  /* Keeps the stick and its shadow inside the board's silhouette. */
-  overflow: hidden;
-  background: linear-gradient(163deg, var(--slate-body-lit), var(--slate-body) 46%, var(--slate-edge));
-  box-shadow:
-    0 1.5rem 3.5rem rgba(0, 0, 0, 0.72),
-    0 0.35rem 0.9rem rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.09),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
+  padding: 0;
+  /*
+   * No background and no clipping here. The board used to paint the full height
+   * including the stick's lane, so whatever the arm's rotation left uncovered
+   * showed slate through the clapper; clipping the arm to hide that only cut
+   * the stick instead. The board now begins below the stick, on .slate__face,
+   * and the arm has nothing behind it to reveal and no edge to be cut against.
+   */
   transform: rotate(-1.1deg);
 }
 
@@ -72,24 +70,13 @@
   perspective: 34rem;
   perspective-origin: 12% 100%;
   transform-style: preserve-3d;
-  /*
-   * The arm pivots on the left pin, so its free end sweeps up and to the right.
-   * Unclipped it swung clear of the board entirely and hung in the page as a
-   * loose black bar. The stick belongs to the slate; anything it does outside
-   * the board's own width is not part of the object.
-   */
-  overflow: hidden;
 }
 
 .slate__jaw,
 .slate__arm {
   position: absolute;
-  /* Wider than the box that clips them. Flush to the edges, the arm's rotation
-     swung its corners inside the frame and the board showed through behind the
-     stick; overhanging means there is always stick under the clip, whatever
-     angle it is at. */
-  left: -8%;
-  right: -8%;
+  left: 0;
+  right: 0;
   height: var(--stick);
   overflow: hidden;
   background: var(--slate-edge);
@@ -116,7 +103,7 @@
   top: 0;
   border-radius: 3px 3px 0 0;
   /* The pin, not the element's centre. */
-  transform-origin: 1.6rem 100%;
+  transform-origin: 0.9rem 100%;
   transform: rotate3d(0.24, 0, 1, -19deg) translateZ(0.2rem);
   transform-style: preserve-3d;
   z-index: 1;
@@ -155,7 +142,15 @@
 /* ---- the chalked face ---- */
 
 .slate__face {
-  padding-inline: clamp(1.15rem, 4vw, 2rem);
+  padding: clamp(0.9rem, 2.4vh, 1.4rem) clamp(1.15rem, 4vw, 2rem) 0;
+  padding-bottom: clamp(1.4rem, 3.5vh, 2.2rem);
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(163deg, var(--slate-body-lit), var(--slate-body) 46%, var(--slate-edge));
+  box-shadow:
+    0 1.5rem 3.5rem rgba(0, 0, 0, 0.72),
+    0 0.35rem 0.9rem rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.6);
 }
 
 .slate__head {
@@ -260,6 +255,8 @@
   flex: none;
   opacity: 0.8;
 }
+
+.slate__face > .slate__tail { margin-bottom: 0; }
 
 .slate__tail {
   display: flex;

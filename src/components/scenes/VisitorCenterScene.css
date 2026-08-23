@@ -57,10 +57,18 @@
 
 /* ---- the running head ---- */
 
+/* The running head is gone: the folder's own tab and stamp already say what
+   this is, and a title above it repeated that in a second voice. The heading
+   stays in the document as the section's accessible name. */
 .x-archive__header {
-  display: flex;
-  align-items: baseline;
-  gap: 0.9rem;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .x-archive__kicker {
@@ -498,10 +506,19 @@
   92%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 1; }
 }
 
+/*
+ * The jacket lifts and is gone before it could pass edge-on.
+ *
+ * Swinging the full 176 degrees put it behind the documents: a rotation about Y
+ * carries the +Z that keeps it in front all the way through to -Z once it
+ * passes 90, so it finished underneath the paper it had been covering. It now
+ * opens to 78 degrees and fades out while still facing the reader, which is
+ * where a cover being lifted actually stops being visible anyway.
+ */
 @keyframes book-open {
   0%, 82% { transform: translateZ(0.6rem) rotateY(0deg); opacity: 1; }
-  89% { opacity: 1; }
-  92%, 100% { transform: translateZ(0.6rem) rotateY(-176deg); opacity: 0; }
+  88% { transform: translateZ(0.85rem) rotateY(-46deg); opacity: 0.92; }
+  93%, 100% { transform: translateZ(1.1rem) rotateY(-78deg); opacity: 0; }
 }
 
 @keyframes leaf-reveal {
