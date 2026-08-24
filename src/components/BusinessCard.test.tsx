@@ -127,8 +127,8 @@ describe('BusinessCard', () => {
 
   it('drives the tilt through CSS custom properties, not React state', async () => {
     const { container } = render(<BusinessCard />)
-    const wrapper = container.querySelector<HTMLElement>('.card-drop')
-    expect(wrapper).not.toBeNull()
+    const stage = container.querySelector<HTMLElement>('.stage')
+    expect(stage).not.toBeNull()
     loadOpeningAssets(container)
 
     await nextFrame()
@@ -136,9 +136,32 @@ describe('BusinessCard', () => {
 
     // Written straight to the node by the rAF loop. If these were React state
     // the component would re-render on every pointer move.
-    expect(wrapper!.style.getPropertyValue('--deg')).toMatch(/deg$/)
-    expect(wrapper!.style.getPropertyValue('--ax')).not.toBe('')
-    expect(wrapper!.style.getPropertyValue('--mx')).toMatch(/%$/)
+    expect(stage!.style.getPropertyValue('--deg')).toMatch(/deg$/)
+    expect(stage!.style.getPropertyValue('--ax')).not.toBe('')
+    expect(stage!.style.getPropertyValue('--mx')).toMatch(/%$/)
+  })
+
+  it('publishes the tilt where the ground under the card can read it', async () => {
+    const { container } = render(<BusinessCard />)
+    const stage = container.querySelector<HTMLElement>('.stage')!
+    const backdrop = container.querySelector<HTMLElement>('.stage__backdrop')!
+    loadOpeningAssets(container)
+
+    await nextFrame()
+    await nextFrame()
+
+    /*
+     * The desk parallaxes off --mx/--my in CSS. Custom properties inherit
+     * downward only, so publishing them on the card — which is the backdrop's
+     * sibling, not its ancestor — would leave the ground unable to see the tilt
+     * however correct the maths was.
+     */
+    expect(stage.contains(backdrop)).toBe(true)
+    expect(stage.style.getPropertyValue('--my')).toMatch(/%$/)
+    // And nothing is written on the card itself, which would be dead weight.
+    expect(container.querySelector<HTMLElement>('.card-drop')!.style.getPropertyValue('--mx')).toBe(
+      '',
+    )
   })
 
   it('parks its animation loop offscreen and restarts when the card returns', () => {
@@ -160,19 +183,22 @@ describe('BusinessCard', () => {
     }
 
     const { container } = render(<BusinessCard />)
+    // Observed on the card, published on the stage: visibility is a question
+    // about the card, not about the scene wrapped around it.
     const wrapper = container.querySelector<HTMLElement>('.card-drop')!
+    const stage = container.querySelector<HTMLElement>('.stage')!
     loadOpeningAssets(container)
     expect(callbacks.size).toBe(1)
 
     act(() => observers[0]?.trigger(wrapper, false, 0))
     act(() => flushFrame(16))
     expect(callbacks.size).toBe(0)
-    expect(wrapper.style.getPropertyValue('--deg')).toBe('')
+    expect(stage.style.getPropertyValue('--deg')).toBe('')
 
     act(() => observers[0]?.trigger(wrapper, true, 1))
     expect(callbacks.size).toBe(1)
     act(() => flushFrame(32))
-    expect(wrapper.style.getPropertyValue('--deg')).toMatch(/deg$/)
+    expect(stage.style.getPropertyValue('--deg')).toMatch(/deg$/)
     expect(callbacks.size).toBe(1)
   })
 
@@ -190,23 +216,25 @@ describe('BusinessCard', () => {
     expect(planes.length).toBeGreaterThanOrEqual(2)
     for (const plane of planes) {
       expect(plane).toHaveAttribute('aria-hidden', 'true')
-      // Siblings of .card, so they inherit --rx/--ry from the same wrapper.
+      // Siblings of .card, so the same --ax/--ay/--deg reach all three.
       expect(plane.parentElement).toBe(wrapper)
     }
     expect(container.querySelector('.card')!.parentElement).toBe(wrapper)
   })
 
-  it('leaves the card completely still under prefers-reduced-motion', async () => {
+  it('leaves the card and the ground under it completely still under prefers-reduced-motion', async () => {
     stubMatchMedia(true)
     const { container } = render(<BusinessCard />)
-    const wrapper = container.querySelector<HTMLElement>('.card-drop')
+    const stage = container.querySelector<HTMLElement>('.stage')!
 
     await nextFrame()
     await nextFrame()
 
-    // No loop started, so nothing was ever written.
-    expect(wrapper!.style.getPropertyValue('--rx')).toBe('')
-    expect(wrapper!.style.getPropertyValue('--mx')).toBe('')
-
+    // No loop started, so nothing was ever written. That is also what stops the
+    // ground parallaxing: with no --mx/--my published, the desk's transform
+    // falls back to its own centre and the scene holds perfectly still.
+    expect(stage.style.getPropertyValue('--deg')).toBe('')
+    expect(stage.style.getPropertyValue('--mx')).toBe('')
+    expect(stage.style.getPropertyValue('--my')).toBe('')
   })
 })

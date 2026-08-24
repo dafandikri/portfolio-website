@@ -45,10 +45,16 @@ export default function BusinessCard({ onReady }: BusinessCardProps) {
   const readyAssetsRef = useRef(0)
   const openingReady = readyAssets === ALL_OPENING_ASSETS_READY
 
-  // On the wrapper, not the card: the cast shadow lives here (it must not
-  // rotate) and the rotation lives on the child, so the custom properties both
-  // read have to be written above the pair of them.
-  const tiltRef = useCardTilt<HTMLDivElement>(openingReady)
+  // The tilt is measured on the wrapper, not the card: the cast shadow lives
+  // here (it must not rotate) and the rotation lives on the child, so the
+  // pointer has to be read above the pair of them.
+  //
+  // The values are published one level higher still, on the stage, because the
+  // desk behind the card is the stage's own child and a custom property only
+  // inherits downward — a value written on the wrapper is unreachable from the
+  // ground the card is lying on.
+  const stageRef = useRef<HTMLDivElement>(null)
+  const tiltRef = useCardTilt<HTMLDivElement>(openingReady, stageRef)
 
   const markAssetReady = (bit: number) => {
     const previous = readyAssetsRef.current
@@ -67,7 +73,11 @@ export default function BusinessCard({ onReady }: BusinessCardProps) {
   }
 
   return (
-    <div className={`stage${openingReady ? ' stage--ready' : ''}`} aria-busy={!openingReady}>
+    <div
+      className={`stage${openingReady ? ' stage--ready' : ''}`}
+      aria-busy={!openingReady}
+      ref={stageRef}
+    >
       <img
         className="stage__backdrop"
         src={walnutDesk}
