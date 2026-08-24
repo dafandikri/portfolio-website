@@ -29,7 +29,12 @@ import {
 import { ColladaLoader } from 'three/examples/jsm/loaders/ColladaLoader.js'
 import { useInView } from '../../hooks/useInView'
 import { hingedDoor, splitGateGeometry } from './gateGeometry'
-import { gateMotion, gateSequenceProgress, projectAwardsProgress } from './gateMotion'
+import {
+  awardBookMotion,
+  gateMotion,
+  gateSequenceProgress,
+  projectAwardsProgress,
+} from './gateMotion'
 import { GATE_TORCHES, torchFlicker } from './gateTorches'
 import ParkScene from './ParkScene'
 import VisitorCenterScene, {
@@ -108,8 +113,10 @@ export default function GateScene() {
     const writeScrollState = (progress: number) => {
       const chapter = projectAwardsProgress(progress)
       const motion = gateMotion(gateSequenceProgress(chapter.gate), staticLayout)
+      const book = awardBookMotion(chapter.archive)
 
       section.style.setProperty('--archive-progress', chapter.archive.toFixed(4))
+      section.style.setProperty('--book-open-angle', `${book.angleDeg.toFixed(2)}deg`)
       section.style.setProperty('--environment-strength', motion.environmentStrength.toFixed(3))
       section.style.setProperty('--gate-model-strength', motion.modelStrength.toFixed(3))
       section.style.setProperty('--gate-dolly-scale', (1 + motion.dollyProgress * 0.28).toFixed(3))

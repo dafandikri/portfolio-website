@@ -16,16 +16,6 @@
   place-items: center;
   overflow: clip;
   padding: 1.5rem;
-  /*
-   * Perspective lives here, on the tilted element's grandparent, and is scaled
-   * from the card's own width rather than fixed in pixels. A flat 1400px is
-   * over twice the card's 40rem desktop width — a long-lens view that barely
-   * foreshortens, so a rotation read as a flat skew instead of a turn in
-   * space. Tying the vanishing point to --card-w keeps the same convincing
-   * ratio at every breakpoint, where a fixed value drifted toward orthographic
-   * on wide screens and toward a fisheye on narrow ones.
-   */
-  perspective: calc(var(--card-w) * 1.35);
   background: #170904;
 
   /*
@@ -91,14 +81,15 @@
 /*
  * Entrance wrapper. Kept separate from .card so the falling transform and the
  * pointer-driven rotation never fight over the same `transform` property.
- * preserve-3d passes .stage's perspective down to the card itself.
+ * The wrapper is intentionally not a 3D context: once it lands, no transformed
+ * or preserve-3d ancestor remains above the real links.
  */
 .card-delivery {
   position: relative;
   z-index: 2;
   width: var(--card-w);
   aspect-ratio: var(--card-ratio);
-  transform-style: preserve-3d;
+  pointer-events: none;
   opacity: 0;
   transform: translate3d(-0.28rem, -118vh, 0) rotate(-1.1deg);
 }
@@ -111,11 +102,27 @@
   animation: card-delivery-arrive 1250ms linear both;
 }
 
+/* `transform: none` inside a filled keyframe still reports as an identity
+   matrix in Safari/Chromium because the finished animation keeps its own
+   compositor effect alive. Retire the animation after animationend so links
+   sit beneath no transformed delivery ancestor at all. */
+.stage--ready .card-delivery.card-delivery--landed {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
 .card-drop {
   position: relative;
   width: 100%;
   height: 100%;
   border-radius: 3px;
+  /* Perspective is on the card and shadows' direct parent. This preserves the
+     full depth cue with one 3D context instead of passing it through the
+     temporary delivery wrapper—the chain that confused Safari hit testing. */
+  perspective: calc(var(--card-w) * 1.35);
+  perspective-origin: 50% 50%;
   transform-style: preserve-3d;
 }
 
@@ -169,7 +176,11 @@
     opacity: 1;
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    /* Remove the compositor layer after delivery. Safari can lose anchor hit
+       testing when a filled identity transform remains above another 3D
+       transformed descendant. `none` is the same final pose without that
+       invisible transformed parent. */
+    transform: none;
     opacity: 1;
   }
 }
@@ -328,17 +339,20 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
-  overflow: hidden;
+  /* Link hit surfaces extend outside their printed line boxes without changing
+     the card's typography. Decorative layers clip themselves below, so the
+     interaction area does not get cut back to 16-19px by this wrapper. */
+  overflow: visible;
   /*
    * Nearly flat. A pronounced gradient across the face reads as sheen, which
    * is the opposite of uncoated stock — the little variation left is closer to
    * uneven pulp than to a lit surface.
    */
   background: linear-gradient(158deg, var(--stock-lit) 0%, var(--stock) 52%, var(--stock-shade) 100%);
-  /* One axis, one angle. Two composed axis rotations carry an in-plane roll
-     that is invisible at the centre and reads as a spun card at the corners. */
-  transform: rotate3d(var(--ax, 1), var(--ay, 0), 0, var(--deg, 0deg));
-  will-change: transform;
+  /* One axis, one angle. The hook publishes `none` at rest, then freezes the
+     exact projected pose as the pointer enters either link column so the same
+     native anchor owns pointerdown, pointerup and click. */
+  transform: var(--card-transform, none);
   /* Keep taps and vertical page scrolling native. `touch-action: none` made
      the decorative tilt gesture win over the real anchors printed on the
      card, which is why the links could look correct yet fail to activate on a
@@ -370,6 +384,7 @@
    * card — enough tooth to read as paper, not enough to tint it.
    */
   opacity: 0.22;
+  border-radius: inherit;
   background-image:
     /* Fine tooth — this is the layer that actually reads as uncoated stock. */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='170' height='170'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='170' height='170' filter='url(%23f)' opacity='0.62'/%3E%3C/svg%3E"),
@@ -397,6 +412,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
+  border-radius: inherit;
   mix-blend-mode: soft-light;
   /*
    * Lit opposite the pointer, because the card leans away from it.
@@ -622,6 +638,35 @@ a.card__meta {
   cursor: pointer;
   text-decoration: none;
   transition: color 180ms ease, text-shadow 180ms ease;
+}
+
+/*
+ * A real 44px pointer/touch surface with zero layout footprint.
+ *
+ * The two printed lines keep the same baseline pitch as University/Major. The
+ * first link owns the space above their boundary and the second owns the space
+ * below it, so these larger surfaces never overlap or steal one another's
+ * click. Because the pseudo-element belongs to the anchor, native navigation,
+ * focus, context menus and status-bar URLs all remain intact.
+ */
+a.card__meta::before {
+  content: '';
+  position: absolute;
+  inset-inline: -0.35rem;
+  inset-block-start: auto;
+  inset-block-end: auto;
+  block-size: 44px;
+  pointer-events: auto;
+}
+
+.card__contact a.card__meta:first-child::before,
+.card__footer-col a.card__meta:first-child::before {
+  inset-block-end: 0;
+}
+
+.card__contact a.card__meta:last-child::before,
+.card__footer-col a.card__meta:last-child::before {
+  inset-block-start: 0;
 }
 
 /* Hover deepens the impression rather than underlining — an underline would

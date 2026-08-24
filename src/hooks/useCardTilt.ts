@@ -10,7 +10,19 @@ export const MAX_TILT_DEG = 14
  */
 const FOLLOW = 0.16
 
-const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, summary'
+/* The two printed link columns are guard zones too. Freezing as the pointer
+   enters the column—before it reaches a glyph—keeps a perspective-projected
+   anchor from travelling toward or away from the pointer on approach. */
+const INTERACTIVE_SELECTOR = [
+  'a',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'summary',
+  '.card__contact',
+  '.card__footer-col:first-child',
+].join(', ')
 
 /** True when pointer-driven decoration must yield to a real control. */
 export function isInteractivePointerTarget(target: EventTarget | null): boolean {
@@ -136,47 +148,15 @@ export function useCardTilt<T extends HTMLElement>(
 
     let frame = 0
     let pointerActive = false
-    let interactiveTargetActive = false
+    let pointerControlActive = false
+    let focusedControlActive = false
     let onScreen = true
     const current: Offset = { cx: 0, cy: 0 }
     let target: Offset = { cx: 0, cy: 0 }
 
-    const onPointerMove = (event: PointerEvent) => {
-      interactiveTargetActive = isInteractivePointerTarget(event.target)
-      if (interactiveTargetActive) {
-        /*
-         * Do not move a real control away from the pointer between pointerdown
-         * and click. Hold the current physical pose while a link/control is
-         * targeted; moving back onto the paper resumes the tilt immediately.
-         */
-        pointerActive = false
-        target = { ...current }
-        return
-      }
-      pointerActive = true
-      target = pointerToOffset(event.clientX, event.clientY, el.getBoundingClientRect())
-    }
-    // Touch drags end; mouse pointers leave. Either way, settle back to flat.
-    const onPointerRest = () => {
-      pointerActive = false
-      interactiveTargetActive = false
-    }
+    const interactiveTargetActive = () => pointerControlActive || focusedControlActive
 
-    const tick = (_now: number) => {
-      // Scenes follow the card now, so this loop would otherwise keep animating
-      // an element nobody can see. Park it and let the observer restart it.
-      if (!onScreen) {
-        frame = 0
-        return
-      }
-      /* A decorative idle orbit continuously moved the anchors under a
-         stationary cursor. Return to a stable, flat card instead: the card
-         still responds wherever the user points on the paper, but a link can
-         never drift away between hit testing and click dispatch. */
-      if (!pointerActive && !interactiveTargetActive) target = { cx: 0, cy: 0 }
-      current.cx += (target.cx - current.cx) * FOLLOW
-      current.cy += (target.cy - current.cy) * FOLLOW
-
+    const publish = () => {
       const { ax, ay, deg } = offsetToTilt(current)
       const { mx, my } = specularFromOffset(current)
       scope.style.setProperty('--ax', ax.toFixed(4))
@@ -184,6 +164,107 @@ export function useCardTilt<T extends HTMLElement>(
       scope.style.setProperty('--deg', `${deg.toFixed(3)}deg`)
       scope.style.setProperty('--mx', `${(mx * 100).toFixed(2)}%`)
       scope.style.setProperty('--my', `${(my * 100).toFixed(2)}%`)
+      scope.style.setProperty(
+        '--card-transform',
+        deg < 0.001
+          ? 'none'
+          : `rotate3d(${ax.toFixed(4)}, ${ay.toFixed(4)}, 0, ${deg.toFixed(3)}deg)`,
+      )
+    }
+
+    const resumeLoop = () => {
+      if (onScreen && frame === 0 && !interactiveTargetActive()) {
+        frame = requestAnimationFrame(tick)
+      }
+    }
+
+    /* Freeze the pose that was actually hit. Flattening here would move the
+       anchor under a stationary pointer between pointerover and pointerdown. */
+    const parkAtCurrentPose = () => {
+      pointerActive = false
+      target = { ...current }
+      cancelAnimationFrame(frame)
+      frame = 0
+    }
+
+    const holdPointerControl = () => {
+      pointerControlActive = true
+      parkAtCurrentPose()
+    }
+
+    const releasePointerControl = () => {
+      pointerControlActive = false
+      resumeLoop()
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (isInteractivePointerTarget(event.target)) {
+        /*
+         * Do not move a real control away from the pointer between pointerdown
+         * and click. Hold the current physical pose while a link/control is
+         * targeted; moving back onto the paper resumes the tilt immediately.
+         */
+        holdPointerControl()
+        return
+      }
+      releasePointerControl()
+      pointerActive = true
+      target = pointerToOffset(event.clientX, event.clientY, el.getBoundingClientRect())
+    }
+
+    const onPointerControl = (event: PointerEvent) => {
+      if (isInteractivePointerTarget(event.target)) holdPointerControl()
+    }
+
+    const onFocusIn = (event: FocusEvent) => {
+      if (!isInteractivePointerTarget(event.target)) return
+      focusedControlActive = true
+      parkAtCurrentPose()
+    }
+
+    const onFocusOut = (event: FocusEvent) => {
+      focusedControlActive = Boolean(
+        event.relatedTarget instanceof Node
+          && el.contains(event.relatedTarget)
+          && isInteractivePointerTarget(event.relatedTarget),
+      )
+      resumeLoop()
+    }
+
+    const onPointerUp = (event: PointerEvent) => {
+      pointerActive = false
+      /* Keep an anchor motionless through the following native click. */
+      if (!isInteractivePointerTarget(event.target)) releasePointerControl()
+    }
+
+    const onClick = (event: MouseEvent) => {
+      if (isInteractivePointerTarget(event.target)) releasePointerControl()
+    }
+
+    // Touch cancellation and a mouse leaving the card both settle it flat.
+    const onPointerRest = () => {
+      pointerActive = false
+      pointerControlActive = false
+      resumeLoop()
+    }
+
+    function tick(_now: number) {
+      frame = 0
+      // Scenes follow the card now, so this loop would otherwise keep animating
+      // an element nobody can see. Park it and let the observer restart it.
+      if (!onScreen) {
+        return
+      }
+      if (interactiveTargetActive()) return
+      /* A decorative idle orbit continuously moved the anchors under a
+         stationary cursor. Return to a stable, flat card instead: the card
+         still responds wherever the user points on the paper, but a link can
+         never drift away between hit testing and click dispatch. */
+      if (!pointerActive) target = { cx: 0, cy: 0 }
+      current.cx += (target.cx - current.cx) * FOLLOW
+      current.cy += (target.cy - current.cy) * FOLLOW
+
+      publish()
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
@@ -196,24 +277,34 @@ export function useCardTilt<T extends HTMLElement>(
         : new IntersectionObserver(
             (entries) => {
               onScreen = entries.some((entry) => entry.isIntersecting)
-              if (onScreen && frame === 0) frame = requestAnimationFrame(tick)
+              resumeLoop()
             },
             { threshold: 0 },
           )
     visibility?.observe(el)
 
+    el.addEventListener('pointerover', onPointerControl)
+    el.addEventListener('pointerdown', onPointerControl)
     el.addEventListener('pointermove', onPointerMove)
     el.addEventListener('pointerleave', onPointerRest)
-    el.addEventListener('pointerup', onPointerRest)
+    el.addEventListener('pointerup', onPointerUp)
     el.addEventListener('pointercancel', onPointerRest)
+    el.addEventListener('click', onClick)
+    el.addEventListener('focusin', onFocusIn)
+    el.addEventListener('focusout', onFocusOut)
 
     return () => {
       cancelAnimationFrame(frame)
       visibility?.disconnect()
+      el.removeEventListener('pointerover', onPointerControl)
+      el.removeEventListener('pointerdown', onPointerControl)
       el.removeEventListener('pointermove', onPointerMove)
       el.removeEventListener('pointerleave', onPointerRest)
-      el.removeEventListener('pointerup', onPointerRest)
+      el.removeEventListener('pointerup', onPointerUp)
       el.removeEventListener('pointercancel', onPointerRest)
+      el.removeEventListener('click', onClick)
+      el.removeEventListener('focusin', onFocusIn)
+      el.removeEventListener('focusout', onFocusOut)
     }
   }, [enabled, scopeRef])
 

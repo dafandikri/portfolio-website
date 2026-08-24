@@ -129,6 +129,18 @@ describe('interactive pointer targets', () => {
     expect(isInteractivePointerTarget(label)).toBe(true)
   })
 
+  it('freezes before the pointer reaches either printed link column', () => {
+    const contact = document.createElement('div')
+    const footerRow = document.createElement('div')
+    const footer = document.createElement('div')
+    contact.className = 'card__contact'
+    footer.className = 'card__footer-col'
+    footerRow.append(footer)
+
+    expect(isInteractivePointerTarget(contact)).toBe(true)
+    expect(isInteractivePointerTarget(footer)).toBe(true)
+  })
+
   it('leaves plain card stock available to drive the tilt', () => {
     expect(isInteractivePointerTarget(document.createElement('div'))).toBe(false)
     expect(isInteractivePointerTarget(null)).toBe(false)

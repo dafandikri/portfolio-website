@@ -1,14 +1,44 @@
 import { describe, expect, it } from 'vitest'
 import {
+  AWARD_BOOK_OPEN_END,
+  AWARD_BOOK_OPEN_START,
   GATE_OPEN_ANGLE,
   GATE_CHAPTER_SHARE,
   GATE_SEQUENCE_END,
+  awardBookMotion,
   classifyGateTriangle,
   gateMotion,
   gateSequenceProgress,
   projectAwardsProgress,
   smoothstep,
 } from './gateMotion'
+
+describe('awardBookMotion', () => {
+  it('opens during the visible zoom and holds the Tech Wizard sheet revealed', () => {
+    expect(awardBookMotion(AWARD_BOOK_OPEN_START)).toEqual({
+      openProgress: 0,
+      angleDeg: -0,
+    })
+    const halfway = awardBookMotion((AWARD_BOOK_OPEN_START + AWARD_BOOK_OPEN_END) / 2)
+    expect(halfway.openProgress).toBeCloseTo(0.5)
+    expect(halfway.angleDeg).toBeCloseTo(-90)
+    expect(awardBookMotion(AWARD_BOOK_OPEN_END)).toEqual({
+      openProgress: 1,
+      angleDeg: -180,
+    })
+    expect(awardBookMotion(1).angleDeg).toBe(-180)
+  })
+
+  it('clamps direct jumps and is identical when reverse-scrolling', () => {
+    expect(awardBookMotion(-1)).toEqual(awardBookMotion(0))
+    expect(awardBookMotion(2)).toEqual(awardBookMotion(1))
+
+    const points = [0, 0.5, 1]
+    expect([...points].reverse().map(awardBookMotion)).toEqual(
+      points.map(awardBookMotion).reverse(),
+    )
+  })
+})
 
 describe('gateMotion', () => {
   it('reveals the world, resolves the gate, then roars before the doors and dolly', () => {

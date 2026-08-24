@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { card } from '../data/card'
 import type { CardField } from '../data/schema'
 import { useCardTilt } from '../hooks/useCardTilt'
@@ -42,8 +42,18 @@ const ALL_OPENING_ASSETS_READY = BACKDROP_READY | HAND_READY
 
 export default function BusinessCard({ onReady }: BusinessCardProps) {
   const [readyAssets, setReadyAssets] = useState(0)
+  const [delivered, setDelivered] = useState(false)
   const readyAssetsRef = useRef(0)
   const openingReady = readyAssets === ALL_OPENING_ASSETS_READY
+
+  /* Animation events are standard in Safari, but this fail-open timer prevents
+     a throttled or interrupted entrance from ever leaving the native links
+     behind the temporary delivery layer. */
+  useEffect(() => {
+    if (!openingReady || delivered) return
+    const fallback = window.setTimeout(() => setDelivered(true), 1500)
+    return () => window.clearTimeout(fallback)
+  }, [delivered, openingReady])
 
   // The tilt is measured on the wrapper, not the card: the cast shadow lives
   // here (it must not rotate) and the rotation lives on the child, so the
@@ -88,7 +98,20 @@ export default function BusinessCard({ onReady }: BusinessCardProps) {
         onLoad={markLoaded(BACKDROP_READY)}
         onError={markFailed(BACKDROP_READY)}
       />
-      <div className="card-delivery">
+      <div
+        className={`card-delivery${delivered ? ' card-delivery--landed' : ''}`}
+        onAnimationEnd={(event) => {
+          /* Descendant blood animations bubble through this wrapper. Match the
+             wrapper's two possible arrival clocks by name so only delivery
+             completion may retire its transform layer. */
+          if (
+            event.animationName === 'card-delivery-arrive' ||
+            event.animationName === 'card-settle'
+          ) {
+            setDelivered(true)
+          }
+        }}
+      >
         <div className="card-drop" ref={tiltRef}>
           {/*
             Cast shadow planes. They share the card's rotation so their

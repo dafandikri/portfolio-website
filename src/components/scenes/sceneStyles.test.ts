@@ -94,14 +94,30 @@ describe('award file stacking', () => {
     expect(file).toBeGreaterThan(projects)
   })
 
-  it('keeps the Class X cover above Tech Wizard until the flap opens', () => {
+  it('uses one WebKit-safe hinge and keeps the Tech Wizard sheet explicitly visible', () => {
     const archive = readFileSync('src/components/scenes/VisitorCenterScene.css', 'utf8')
+    const blockOf = (selector: string) => {
+      const start = archive.indexOf(`${selector} {`)
+      expect(start).toBeGreaterThanOrEqual(0)
+      const block = archive.slice(start)
+      return block.slice(0, block.indexOf('}'))
+    }
 
-    const flap = zOf(archive, '.x-book__flap')
-    const techWizardLeaf = zOf(archive, '.x-book__leaf--recto')
+    const stage = blockOf('.x-stage')
+    const book = blockOf('.x-book')
+    const spread = blockOf('.x-book__spread')
+    const flap = blockOf('.x-book__flap')
+    const techWizardLeaf = blockOf('.x-book__leaf--recto')
 
-    expect(Number.isNaN(flap)).toBe(false)
-    expect(Number.isNaN(techWizardLeaf)).toBe(false)
-    expect(flap).toBeGreaterThan(techWizardLeaf)
+    expect(stage).not.toContain('perspective:')
+    expect(book).not.toContain('transform-style: preserve-3d')
+    expect(spread).toContain('-webkit-perspective: 74rem')
+    expect(spread).toContain('-webkit-transform-style: preserve-3d')
+    expect(spread).toContain('transform-style: preserve-3d')
+    expect(flap).toContain('-webkit-transform-style: preserve-3d')
+    expect(flap).toContain('rotateY(var(--book-open-angle, 0deg))')
+    expect(techWizardLeaf).toContain('visibility: visible')
+    expect(techWizardLeaf).toContain('opacity: 1')
+    expect(techWizardLeaf).toContain('-webkit-backface-visibility: visible')
   })
 })

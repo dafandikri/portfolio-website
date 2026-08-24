@@ -21,6 +21,17 @@ export const GATE_SEQUENCE_END = 0.587
  */
 export const GATE_CHAPTER_SHARE = 0.44
 
+/**
+ * Open the Class X board while the file is still arriving.
+ *
+ * The old 0.58 -> 0.80 window kept the Tech Wizard sheet covered through most
+ * of the only moving beat. Starting as the archive becomes visible preserves a
+ * truthful closed-cover frame, then exposes the stationary right-hand record
+ * during the zoom instead of at its tail.
+ */
+export const AWARD_BOOK_OPEN_START = 0.44
+export const AWARD_BOOK_OPEN_END = 0.7
+
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))
 }
@@ -48,6 +59,31 @@ export function smoothstep(from: number, to: number, value: number): number {
   if (from === to) return Number(value >= to)
   const t = clamp01((value - from) / (to - from))
   return t * t * (3 - 2 * t)
+}
+
+export interface AwardBookMotion {
+  openProgress: number
+  angleDeg: number
+}
+
+/**
+ * A browser-independent hinge clock for the award file.
+ *
+ * Writing the resulting angle as a CSS variable avoids paused negative-delay
+ * transform animations, whose compositor state differs between Chromium and
+ * WebKit when nested preserve-3d elements are involved.
+ */
+export function awardBookMotion(archiveProgress: number): AwardBookMotion {
+  const openProgress = smoothstep(
+    AWARD_BOOK_OPEN_START,
+    AWARD_BOOK_OPEN_END,
+    clamp01(archiveProgress),
+  )
+
+  return {
+    openProgress,
+    angleDeg: -180 * openProgress,
+  }
 }
 
 export interface GateMotion {

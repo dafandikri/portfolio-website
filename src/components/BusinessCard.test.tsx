@@ -111,6 +111,18 @@ describe('BusinessCard', () => {
     expect(onReady).toHaveBeenCalledTimes(1)
   })
 
+  it('retires the delivery animation layer after the card lands', () => {
+    const { container } = render(<BusinessCard />)
+    const delivery = container.querySelector('.card-delivery')!
+    loadOpeningAssets(container)
+
+    expect(delivery).not.toHaveClass('card-delivery--landed')
+    const animationEnd = new Event('webkitAnimationEnd', { bubbles: true })
+    Object.defineProperty(animationEnd, 'animationName', { value: 'card-delivery-arrive' })
+    fireEvent(delivery, animationEnd)
+    expect(delivery).toHaveClass('card-delivery--landed')
+  })
+
   it('lands the blood under the name, inside the card face', () => {
     const { container } = render(<BusinessCard />)
     const blood = container.querySelector('.blood')!
@@ -162,6 +174,50 @@ describe('BusinessCard', () => {
     expect(container.querySelector<HTMLElement>('.card-drop')!.style.getPropertyValue('--mx')).toBe(
       '',
     )
+  })
+
+  it('holds the hit pose while every native card link is activated', async () => {
+    const { container } = render(<BusinessCard />)
+    const stage = container.querySelector<HTMLElement>('.stage')!
+    const wrapper = container.querySelector<HTMLElement>('.card-drop')!
+    const links = [...container.querySelectorAll<HTMLAnchorElement>('a.card__meta')]
+    loadOpeningAssets(container)
+
+    vi.spyOn(wrapper, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 100,
+      width: 100,
+      height: 100,
+      toJSON: () => ({}),
+    })
+    fireEvent.pointerMove(wrapper, { clientX: 100, clientY: 100 })
+
+    await nextFrame()
+    await nextFrame()
+
+    const hitPose = stage.style.getPropertyValue('--card-transform')
+    expect(hitPose).not.toBe('none')
+
+    expect(links).toHaveLength(4)
+    for (const link of links) {
+      const clicked = vi.fn((event: MouseEvent) => event.preventDefault())
+      link.addEventListener('click', clicked)
+
+      fireEvent.pointerOver(link)
+      expect(stage.style.getPropertyValue('--card-transform')).toBe(hitPose)
+
+      fireEvent.pointerDown(link)
+      fireEvent.pointerUp(link)
+      expect(stage.style.getPropertyValue('--card-transform')).toBe(hitPose)
+      fireEvent.click(link)
+      expect(clicked).toHaveBeenCalledTimes(1)
+
+      link.removeEventListener('click', clicked)
+    }
   })
 
   it('parks its animation loop offscreen and restarts when the card returns', () => {
