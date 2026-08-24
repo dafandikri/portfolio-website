@@ -39,5 +39,6 @@ describe('business-card Safari interaction layers', () => {
     expect(hitSurface).toContain('position: absolute')
     expect(hitSurface).toContain('block-size: 44px')
     expect(hitSurface).toContain('pointer-events: auto')
+    expect(hitSurface).toContain('cursor: pointer')
   })
 })

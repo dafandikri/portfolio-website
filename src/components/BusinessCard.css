@@ -657,6 +657,9 @@ a.card__meta::before {
   inset-block-end: auto;
   block-size: 44px;
   pointer-events: auto;
+  /* Declare this on the generated hit surface itself rather than depending on
+     pseudo-element inheritance, which differs inside Safari 3D layers. */
+  cursor: pointer;
 }
 
 .card__contact a.card__meta:first-child::before,
