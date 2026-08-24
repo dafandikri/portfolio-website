@@ -463,6 +463,8 @@
   display: flex;
   flex-direction: column;
   --line-lead: 0.35em;
+  --link-hit-lead: 0.175em;
+  --link-hit-margin: -0.175em;
   gap: var(--line-lead);
   align-items: flex-start;
 }
@@ -562,6 +564,8 @@
    * three stacked pairs read as the same spacing.
    */
   --line-lead: 0.25em;
+  --link-hit-lead: 0.125em;
+  --link-hit-margin: -0.125em;
   gap: var(--line-lead);
   min-width: 0;
 }
@@ -599,22 +603,19 @@
 }
 
 /*
- * The printed type stays exactly the size it was; only the pointer target
- * grows. Card lettering is small on purpose — that is the object being
- * reproduced — so the reach comes from padding on the anchor rather than from
- * setting the text larger.
- *
- * The former negative-margin padding left only a 17–19px hit box. These links
- * are the card's real exits, so each one now owns a non-overlapping 32px row;
- * the type stays print-sized while the browser gets a dependable click/tap
- * target. Horizontal padding also makes the first and last glyph reachable.
+ * Links keep the exact printed rhythm of the adjacent university/major copy.
+ * Half of the existing leading is borrowed above and below each anchor, then
+ * cancelled from layout with an equal negative margin: the clickable box fills
+ * the whitespace that already belongs to the line without pushing the next
+ * line away. The stable tilt hook and native touch handling keep that compact
+ * box under the pointer through click dispatch.
  */
 a.card__meta {
   position: relative;
   z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  min-block-size: 2rem;
+  display: inline-block;
+  padding-block: var(--link-hit-lead);
+  margin-block: var(--link-hit-margin);
   padding-inline: 0.2rem;
   margin-inline: -0.2rem;
   color: inherit;

@@ -94,7 +94,7 @@ describe('award file stacking', () => {
     expect(file).toBeGreaterThan(projects)
   })
 
-  it('keeps the stationary Tech Wizard leaf above the turning flap', () => {
+  it('keeps the Class X cover above Tech Wizard until the flap opens', () => {
     const archive = readFileSync('src/components/scenes/VisitorCenterScene.css', 'utf8')
 
     const flap = zOf(archive, '.x-book__flap')
@@ -102,6 +102,6 @@ describe('award file stacking', () => {
 
     expect(Number.isNaN(flap)).toBe(false)
     expect(Number.isNaN(techWizardLeaf)).toBe(false)
-    expect(techWizardLeaf).toBeGreaterThan(flap)
+    expect(flap).toBeGreaterThan(techWizardLeaf)
   })
 })

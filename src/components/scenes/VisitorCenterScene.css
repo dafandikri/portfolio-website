@@ -285,7 +285,10 @@
   bottom: 0;
   left: 50%;
   width: 50%;
-  z-index: 1;
+  /* The Class X cover is physically above the stationary Tech Wizard sheet
+     while the file is closed. Its hinge animation then uncovers that sheet;
+     the award must never paint through the cover before it turns. */
+  z-index: 2;
   transform-origin: left center;
   transform-style: preserve-3d;
   /* A real physical offset prevents the two faces inside the flap from
@@ -310,19 +313,10 @@
   top: 0;
   bottom: 0;
   left: 50%;
-  /*
-   * The Tech Wizard page is the stationary right-hand leaf. Give that fact a
-   * real paint order instead of leaving it to the browser's 3D tie-breaking:
-   * the turning flap and the recto used to be coplanar, so WebKit/Chromium
-   * could keep the flap's compositor surface over the award until the very end
-   * of the turn. A small physical separation keeps the recto visibly printed
-   * throughout the visible zoom/open shot while the flap still turns normally
-   * into the left-hand leaf.
-   */
-  z-index: 2;
+  /* This is a separate Class X record inside the folder. It stays below the
+     front board while closed and is revealed by the board's physical turn. */
+  z-index: 1;
   width: 50%;
-  transform: translateZ(1rem);
-  backface-visibility: visible;
 }
 
 .x-book__leaf {
