@@ -118,12 +118,13 @@
   width: 100%;
   height: 100%;
   border-radius: 3px;
-  /* Perspective is on the card and shadows' direct parent. This preserves the
-     full depth cue with one 3D context instead of passing it through the
-     temporary delivery wrapper—the chain that confused Safari hit testing. */
+  /* Perspective stays on the card and shadows' direct parent, so each direct
+     child keeps the same projected tilt and depth cue. Keep their shared
+     context flat, though: WebKit can stop dispatching clicks to controls inside
+     a preserve-3d context as soon as the card receives its hover rotate3d(). */
   perspective: calc(var(--card-w) * 1.35);
   perspective-origin: 50% 50%;
-  transform-style: preserve-3d;
+  transform-style: flat;
 }
 
 /*

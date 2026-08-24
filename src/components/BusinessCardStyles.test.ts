@@ -29,7 +29,8 @@ describe('business-card Safari interaction layers', () => {
 
     expect(stage).not.toContain('perspective:')
     expect(drop).toContain('perspective: calc(var(--card-w) * 1.35)')
-    expect(drop).toContain('transform-style: preserve-3d')
+    expect(drop).toContain('transform-style: flat')
+    expect(drop).not.toContain('transform-style: preserve-3d')
     expect(card).not.toContain('will-change: transform')
   })
 
