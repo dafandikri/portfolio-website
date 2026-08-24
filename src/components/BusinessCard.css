@@ -339,8 +339,12 @@
      that is invisible at the centre and reads as a spun card at the corners. */
   transform: rotate3d(var(--ax, 1), var(--ay, 0), 0, var(--deg, 0deg));
   will-change: transform;
-  /* Let the card own drag gestures instead of the browser's scroll/zoom. */
-  touch-action: none;
+  /* Keep taps and vertical page scrolling native. `touch-action: none` made
+     the decorative tilt gesture win over the real anchors printed on the
+     card, which is why the links could look correct yet fail to activate on a
+     touchscreen. The tilt only observes pointer movement; it does not need to
+     cancel the browser's tap, pan, or zoom behavior. */
+  touch-action: pan-y pinch-zoom;
   /* The stock's thickness, read as a lit top edge and a shaded bottom one. */
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.5),
@@ -600,26 +604,21 @@
  * reproduced — so the reach comes from padding on the anchor rather than from
  * setting the text larger.
  *
- * The padding is exactly half the column's leading and is handed straight back
- * as a negative margin, so each anchor reaches into the white above and below
- * its line without occupying it: the pair's layout, and therefore its line
- * pitch, is identical to a pair of unpadded lines. Sizing it from --line-lead
- * rather than from a literal is what keeps that true at every breakpoint, and
- * halving it is what stops the two hit boxes from overlapping — they meet
- * exactly in the middle of the leading and stop.
- *
- * That caps the target at the line pitch: 19px in the header, 17px in the
- * footer, short of the 24px WCAG 2.5.8 asks for. 2.5.8 exempts targets whose
- * size is constrained by the line-height of surrounding text, which is exactly
- * the case here — these are typeset lines on a printed card, and an earlier
- * attempt to reach 24px by padding past the leading is what pushed the two link
- * pairs visibly further apart than the affiliation pair beside them.
+ * The former negative-margin padding left only a 17–19px hit box. These links
+ * are the card's real exits, so each one now owns a non-overlapping 32px row;
+ * the type stays print-sized while the browser gets a dependable click/tap
+ * target. Horizontal padding also makes the first and last glyph reachable.
  */
 a.card__meta {
-  display: inline-block;
-  padding-block: calc(var(--line-lead) / 2);
-  margin-block: calc(var(--line-lead) / -2);
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2rem;
+  padding-inline: 0.2rem;
+  margin-inline: -0.2rem;
   color: inherit;
+  cursor: pointer;
   text-decoration: none;
   transition: color 180ms ease, text-shadow 180ms ease;
 }

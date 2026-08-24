@@ -2,11 +2,9 @@ import { describe, it, expect } from 'vitest'
 import {
   pointerToOffset,
   offsetToTilt,
-  idleOffset,
   specularFromOffset,
   MAX_TILT_DEG,
-  IDLE_TILT_DEG,
-  IDLE_PERIOD_MS,
+  isInteractivePointerTarget,
 } from './useCardTilt'
 
 /**
@@ -99,21 +97,6 @@ describe('offsetToTilt', () => {
   })
 })
 
-describe('idleOffset', () => {
-  it('never drifts further than the resting amplitude', () => {
-    for (let ms = 0; ms <= IDLE_PERIOD_MS * 2; ms += IDLE_PERIOD_MS / 24) {
-      expect(offsetToTilt(idleOffset(ms)).deg).toBeLessThanOrEqual(IDLE_TILT_DEG + 1e-9)
-    }
-  })
-
-  it('does not visibly repeat within one period', () => {
-    const a = idleOffset(0)
-    const b = idleOffset(IDLE_PERIOD_MS)
-    // Incommensurate periods: one axis has returned, the other has not.
-    expect(Math.abs(a.cx - b.cx)).toBeGreaterThan(1e-6)
-  })
-})
-
 describe('specularFromOffset', () => {
   it('puts the highlight under the pointer', () => {
     const { mx, my } = specularFromOffset(pointerToOffset(100, 0, BOX))
@@ -133,5 +116,21 @@ describe('specularFromOffset', () => {
     expect(mx).toBeLessThanOrEqual(1)
     expect(my).toBeGreaterThanOrEqual(0)
     expect(my).toBeLessThanOrEqual(1)
+  })
+})
+
+describe('interactive pointer targets', () => {
+  it('recognises a link and anything nested inside it', () => {
+    const link = document.createElement('a')
+    const label = document.createElement('span')
+    link.append(label)
+
+    expect(isInteractivePointerTarget(link)).toBe(true)
+    expect(isInteractivePointerTarget(label)).toBe(true)
+  })
+
+  it('leaves plain card stock available to drive the tilt', () => {
+    expect(isInteractivePointerTarget(document.createElement('div'))).toBe(false)
+    expect(isInteractivePointerTarget(null)).toBe(false)
   })
 })

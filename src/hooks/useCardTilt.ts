@@ -2,9 +2,6 @@ import { useEffect, useRef, type RefObject } from 'react'
 
 /** Maximum rotation the card reaches when the pointer is at an edge. */
 export const MAX_TILT_DEG = 14
-/** Amplitude of the resting drift, so the card never looks dead. */
-export const IDLE_TILT_DEG = 1.6
-export const IDLE_PERIOD_MS = 9000
 
 /**
  * Fraction of the remaining distance covered each frame. Low enough to carry
@@ -12,6 +9,13 @@ export const IDLE_PERIOD_MS = 9000
  * the cursor rather than drifting after it.
  */
 const FOLLOW = 0.16
+
+const INTERACTIVE_SELECTOR = 'a, button, input, select, textarea, summary'
+
+/** True when pointer-driven decoration must yield to a real control. */
+export function isInteractivePointerTarget(target: EventTarget | null): boolean {
+  return target instanceof Element && Boolean(target.closest(INTERACTIVE_SELECTOR))
+}
 
 /** Pointer position relative to the card centre, -1..1 on each axis. */
 export interface Offset {
@@ -76,24 +80,6 @@ export function offsetToTilt({ cx, cy }: Offset): Tilt {
 }
 
 /**
- * Resting drift, so the card never looks dead while nobody is pointing at it.
- */
-export function idleOffset(elapsedMs: number): Offset {
-  const t = (elapsedMs / IDLE_PERIOD_MS) * Math.PI * 2
-  const amplitude = IDLE_TILT_DEG / MAX_TILT_DEG
-  /*
-   * A slow orbit with a breathing radius, not two independent sine axes. Two
-   * sines bound each axis separately, but their magnitude is the hypotenuse,
-   * which reaches sqrt(2) times the amplitude on the diagonals — the card
-   * drifted a third further than the resting limit says it can. Driving angle
-   * and radius separately makes the magnitude the radius by construction, and
-   * the incommensurate breathing period keeps the path from visibly repeating.
-   */
-  const radius = amplitude * (0.72 + 0.28 * Math.sin(t * 0.37))
-  return { cx: Math.cos(t) * radius, cy: Math.sin(t) * radius }
-}
-
-/**
  * Where the specular highlight sits. Derived from the same offset that drives
  * the rotation, which keeps the light and the geometry provably in sync.
  * Returns 0..1 coordinates across the card face.
@@ -150,28 +136,44 @@ export function useCardTilt<T extends HTMLElement>(
 
     let frame = 0
     let pointerActive = false
+    let interactiveTargetActive = false
     let onScreen = true
-    const start = performance.now()
     const current: Offset = { cx: 0, cy: 0 }
     let target: Offset = { cx: 0, cy: 0 }
 
     const onPointerMove = (event: PointerEvent) => {
+      interactiveTargetActive = isInteractivePointerTarget(event.target)
+      if (interactiveTargetActive) {
+        /*
+         * Do not move a real control away from the pointer between pointerdown
+         * and click. Hold the current physical pose while a link/control is
+         * targeted; moving back onto the paper resumes the tilt immediately.
+         */
+        pointerActive = false
+        target = { ...current }
+        return
+      }
       pointerActive = true
       target = pointerToOffset(event.clientX, event.clientY, el.getBoundingClientRect())
     }
-    // Touch drags end; mouse pointers leave. Either way, hand back to the drift.
+    // Touch drags end; mouse pointers leave. Either way, settle back to flat.
     const onPointerRest = () => {
       pointerActive = false
+      interactiveTargetActive = false
     }
 
-    const tick = (now: number) => {
+    const tick = (_now: number) => {
       // Scenes follow the card now, so this loop would otherwise keep animating
       // an element nobody can see. Park it and let the observer restart it.
       if (!onScreen) {
         frame = 0
         return
       }
-      if (!pointerActive) target = idleOffset(now - start)
+      /* A decorative idle orbit continuously moved the anchors under a
+         stationary cursor. Return to a stable, flat card instead: the card
+         still responds wherever the user points on the paper, but a link can
+         never drift away between hit testing and click dispatch. */
+      if (!pointerActive && !interactiveTargetActive) target = { cx: 0, cy: 0 }
       current.cx += (target.cx - current.cx) * FOLLOW
       current.cy += (target.cy - current.cy) * FOLLOW
 
