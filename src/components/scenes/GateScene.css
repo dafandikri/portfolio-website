@@ -82,22 +82,22 @@
 }
 
 @keyframes paddock-page-exit {
-  0%, 66% {
+  0%, 46% {
     visibility: visible;
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
-  76% {
+  56% {
     visibility: visible;
     opacity: 0.78;
     transform: translate3d(0, 0, 7rem) scale(1.07);
   }
-  90% {
+  64% {
     visibility: visible;
     opacity: 0;
     transform: translate3d(0, 0, 18rem) scale(1.18);
   }
-  91%, 100% {
+  65%, 100% {
     visibility: hidden;
     opacity: 0;
     transform: translate3d(0, 0, 18rem) scale(1.18);

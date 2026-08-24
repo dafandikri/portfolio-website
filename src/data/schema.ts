@@ -177,6 +177,13 @@ export const awardSchema = z.object({
     caption: z.string().min(1),
     width: z.number().int().positive(),
     height: z.number().int().positive(),
+    /**
+     * Where the subject sits vertically, as a percentage down the source image,
+     * used as the crop's object-position. A group shot with headroom needs a
+     * different centre than one framed tight, and a single value tuned for one
+     * photograph quietly mis-crops the next one added.
+     */
+    focusY: z.number().min(0).max(100).optional(),
   }).optional(),
   /** A first-person lesson kept distinct from the factual award record. */
   lesson: z.object({

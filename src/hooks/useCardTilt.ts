@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type RefObject } from 'react'
 
 /** Maximum rotation the card reaches when the pointer is at an edge. */
 export const MAX_TILT_DEG = 14
@@ -121,20 +121,32 @@ export function specularFromOffset({ cx, cy }: Offset): { mx: number; my: number
  * the centre, where the axis flips sign; the offset has no such discontinuity,
  * and the axis is recomputed from it each frame.
  *
- * Attach this to the card's *wrapper*, not the card itself. Custom properties
- * only inherit downward, and both the card and its cast-shadow planes are
- * siblings that need the values, so they have to be written above them.
+ * Attach the returned ref to the card's *wrapper*, not the card itself. Custom
+ * properties only inherit downward, and both the card and its cast-shadow
+ * planes are siblings that need the values, so they have to be written above
+ * them.
+ *
+ * `scopeRef` is where those values are published, and it defaults to the same
+ * wrapper. Passing an ancestor instead widens the set of elements that can read
+ * the tilt without widening the set that drives it: the pointer is still
+ * measured against, and listened for on, the wrapper's own box, so the feel of
+ * the tilt is unchanged — but the scene behind the card can then respond to it
+ * too, which a value published on the card itself could never reach.
  *
  * Under prefers-reduced-motion the hook attaches no listener and starts no
- * loop, so the card simply sits still.
+ * loop, so the card simply sits still and nothing is ever published.
  */
-export function useCardTilt<T extends HTMLElement>(enabled = true) {
+export function useCardTilt<T extends HTMLElement>(
+  enabled = true,
+  scopeRef?: RefObject<HTMLElement | null>,
+) {
   const ref = useRef<T>(null)
 
   useEffect(() => {
     const el = ref.current
     if (!el || !enabled) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const scope = scopeRef?.current ?? el
 
     let frame = 0
     let pointerActive = false
@@ -165,11 +177,11 @@ export function useCardTilt<T extends HTMLElement>(enabled = true) {
 
       const { ax, ay, deg } = offsetToTilt(current)
       const { mx, my } = specularFromOffset(current)
-      el.style.setProperty('--ax', ax.toFixed(4))
-      el.style.setProperty('--ay', ay.toFixed(4))
-      el.style.setProperty('--deg', `${deg.toFixed(3)}deg`)
-      el.style.setProperty('--mx', `${(mx * 100).toFixed(2)}%`)
-      el.style.setProperty('--my', `${(my * 100).toFixed(2)}%`)
+      scope.style.setProperty('--ax', ax.toFixed(4))
+      scope.style.setProperty('--ay', ay.toFixed(4))
+      scope.style.setProperty('--deg', `${deg.toFixed(3)}deg`)
+      scope.style.setProperty('--mx', `${(mx * 100).toFixed(2)}%`)
+      scope.style.setProperty('--my', `${(my * 100).toFixed(2)}%`)
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
@@ -201,7 +213,7 @@ export function useCardTilt<T extends HTMLElement>(enabled = true) {
       el.removeEventListener('pointerup', onPointerRest)
       el.removeEventListener('pointercancel', onPointerRest)
     }
-  }, [enabled])
+  }, [enabled, scopeRef])
 
   return ref
 }

@@ -33,6 +33,13 @@ colors:
   # The table the folder is laid on, lit by one lamp above it.
   archive-table: "#03070e"
   archive-table-lit: "#0a1828"
+  # The newsprint the paddocks become. Painted over the scene rather than
+  # tinted through it, so the stock keeps its own value instead of taking the
+  # jungle's; Ben-Day dots are printed on top in ink, not screened into it.
+  newsprint: "#e6d7ae"
+  newsprint-lit: "#f2e6c6"
+  newsprint-deep: "#d8c79c"
+  newsprint-ink: "#0e1c2e"
   slate-body: "#1b1d1f"
   slate-chalk: "#eef1f2"
   slate-stick: "#f2f4f5"
@@ -404,17 +411,27 @@ lamps, control boxes.
 
 ### Paddock-to-comic X tear (signature)
 
-- **Shape:** the live paddock frame itself, an opacity-only paper wash and
-  Ben-Day field and two fields of three physical gouges. The opposing fields
-  meet as an X; no separate cover or character artwork sits between Projects
+- **Shape:** the live paddock frame itself, newsprint painted over it, a
+  Ben-Day field printed on that stock, and two fields of three physical gouges
+  meeting as an X. No separate cover or character artwork sits between Projects
   and Awards.
-- **Motion:** the first three-cut field opens, paper follows the damage, then the
-  opposing field completes the X before halftone settles. That complete mark
-  holds on the paperized paddock, then the same frame scales toward camera and
-  fades to the Awards paper behind it. The motion is reversible, scroll-driven
-  and uses only transforms and opacity.
+- **The surface is on top, not behind.** The tear layer is positioned above the
+  park's own stacking context, so the paddocks *become* the page: the plaque and
+  the project cards take the paper and the gouges cut across them. A `z-index`
+  on a statically positioned layer does nothing, and the whole transition once
+  played invisibly underneath the scene it was meant to be printed on.
+- **Paper is painted, not tinted.** The wash is opaque stock over the plate, not
+  a blend through it; blending kept the night jungle's luminance and produced
+  olive. Ben-Day dots multiply on top, because a dot is ink on paper.
+- **Motion:** three cuts land at once, then the opposing three complete the X —
+  they are one hand, and staggering the blades read as three separate swipes.
+  Paper rises under the damage, halftone settles, then the paperized frame
+  pushes past camera and the mutant file arrives behind it.
+- **Everything finishes before the pin releases.** The last sixth of the runway
+  is a hold on the open folder. Timed to complete at the end, the second award
+  was revealed and taken away in the same instant.
 - **Fallback:** mobile, short viewports and reduced-motion render the finished
-  archive in natural flow with a small static six-gouge X.
+  file open and flat, with both leaves stacked and facing the reader.
 
 ### Links
 
