@@ -60,3 +60,37 @@ describe.each(SCENES)('%s styles', (_name, base) => {
     expect(unstyled).toEqual([])
   })
 })
+
+/**
+ * The award file has to paint above the paddocks.
+ *
+ * `.gate__projects` is positioned with a z-index, so it opens a stacking
+ * context and its whole subtree paints as one layer — including the tear, whose
+ * own z-index only orders it *within* that subtree. While the file sat below
+ * that number it zoomed in, opened and held entirely behind the projects, and
+ * the right-hand leaf was never seen. Nothing else caught it: the file was
+ * correct in isolation, and every harness that tested it lacked the very layer
+ * that was covering it.
+ */
+describe('award file stacking', () => {
+  /* Comments are stripped first: these rules explain their own stacking, and a
+     `z-index: 20` quoted in prose would otherwise be read as the declaration. */
+  const zOf = (css: string, selector: string) => {
+    const bare = css.replace(/\/\*[\s\S]*?\*\//g, '')
+    const block = bare.slice(bare.indexOf(`${selector} {`))
+    const match = block.slice(0, block.indexOf('}')).match(/z-index:\s*(\d+)/)
+    return match ? Number(match[1]) : Number.NaN
+  }
+
+  it('paints above the projects layer it is revealed through', () => {
+    const gate = readFileSync('src/components/scenes/GateScene.css', 'utf8')
+    const archive = readFileSync('src/components/scenes/VisitorCenterScene.css', 'utf8')
+
+    const projects = zOf(gate, '.gate__projects')
+    const file = zOf(archive, '.scene--archive')
+
+    expect(Number.isNaN(projects)).toBe(false)
+    expect(Number.isNaN(file)).toBe(false)
+    expect(file).toBeGreaterThan(projects)
+  })
+})

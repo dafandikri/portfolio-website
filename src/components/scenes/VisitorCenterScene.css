@@ -10,7 +10,17 @@
 .scene--archive {
   position: absolute;
   inset: 0;
-  z-index: 15;
+  /*
+   * Above the paddocks, which is the whole reason the file was invisible.
+   *
+   * `.gate__projects` is `position: absolute; z-index: 20`, so it opens a
+   * stacking context and its entire subtree paints as one layer at 20 —
+   * including the tear, whose own z-index of 60 only orders it *within* that
+   * subtree. At 15 the folder was underneath all of it: it zoomed in, opened
+   * and held behind the projects, and the right-hand leaf was never seen. This
+   * has to clear 20, not 60.
+   */
+  z-index: 30;
   /* Nothing below the tear until the tear reveals it. */
   visibility: hidden;
   opacity: 0;
