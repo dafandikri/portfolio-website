@@ -13,8 +13,18 @@ describe('card content', () => {
   })
 
   it('offers a reachable LinkedIn profile and a sendable address', () => {
+    expect(card.linkedin.label).toBe('LinkedIn')
+    expect(card.email.label).toBe('dafandikri@gmail.com')
     expect(card.linkedin.href).toMatch(/^https:\/\/www\.linkedin\.com\/in\/[\w-]+\/?$/)
     expect(card.email.href).toMatch(/^mailto:.+@.+\..+$/)
+  })
+
+  it('replaces the redundant self-link with the owner GitHub profile', () => {
+    const linkedFields = card.footer.flat().filter((field) => field.href !== null)
+    const github = linkedFields.find((field) => field.label === 'GitHub')
+
+    expect(github?.href).toBe('https://github.com/dafandikri')
+    expect(linkedFields.some((field) => field.href === 'https://dafandikri.dev')).toBe(false)
   })
 
   /*

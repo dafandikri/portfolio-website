@@ -8,7 +8,7 @@ export default function CardScene() {
   const markReady = useCallback(() => setReady(true), [])
 
   return (
-    <section className="scene scene--card" aria-label="Business card introduction">
+    <section id="home" className="scene scene--card" aria-label="Business card introduction">
       <BusinessCard onReady={markReady} />
       <ScrollCue ready={ready} />
     </section>

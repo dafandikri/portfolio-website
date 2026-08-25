@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!--
+    The choice, reduced to what survives 16px. The source art is two open palms
+    offering a red and a blue capsule; hands and skin tone turn to mush at tab
+    size, so only the pills are kept. They sit staggered along a shared axis
+    rather than side by side, because two full-length capsules cannot fit
+    abreast in 32 units without shrinking past legibility.
+
+    Dark plate with a hairline light border: the glow needs black to read as
+    glow, and the border keeps the tile from dissolving into a dark tab bar.
+  -->
+  <defs>
+    <clipPath id="cap">
+      <rect x="-7.5" y="-3.1" width="15" height="6.2" rx="3.1"/>
+    </clipPath>
+    <filter id="halo" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="1.7"/>
+    </filter>
+    <linearGradient id="redBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff6a55"/>
+      <stop offset="0.5" stop-color="#df1a15"/>
+      <stop offset="1" stop-color="#7d0403"/>
+    </linearGradient>
+    <linearGradient id="redCap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff3a2a"/>
+      <stop offset="1" stop-color="#a80806"/>
+    </linearGradient>
+    <linearGradient id="blueBody" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6fc4ff"/>
+      <stop offset="0.5" stop-color="#1666e8"/>
+      <stop offset="1" stop-color="#04246e"/>
+    </linearGradient>
+    <linearGradient id="blueCap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3f9dff"/>
+      <stop offset="1" stop-color="#0b3aa4"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="1" y="1" width="30" height="30" rx="6.5" fill="#08070a"
+        stroke="#ffffff" stroke-opacity="0.16" stroke-width="1"/>
+
+  <g transform="translate(11.5 11) rotate(-22)">
+    <rect x="-7.5" y="-3.1" width="15" height="6.2" rx="3.1" fill="#ff2d1a"
+          opacity="0.55" filter="url(#halo)"/>
+    <g clip-path="url(#cap)">
+      <rect x="-7.5" y="-3.1" width="15" height="6.2" fill="url(#redBody)"/>
+      <rect x="-7.5" y="-3.1" width="7.5" height="6.2" fill="url(#redCap)"/>
+      <rect x="-0.4" y="-3.1" width="0.8" height="6.2" fill="#3d0100" opacity="0.45"/>
+      <rect x="-5.6" y="-2.25" width="9.6" height="1.35" rx="0.67" fill="#ffffff" opacity="0.5"/>
+    </g>
+  </g>
+
+  <g transform="translate(20.5 21) rotate(-22)">
+    <rect x="-7.5" y="-3.1" width="15" height="6.2" rx="3.1" fill="#1f7bff"
+          opacity="0.55" filter="url(#halo)"/>
+    <g clip-path="url(#cap)">
+      <rect x="-7.5" y="-3.1" width="15" height="6.2" fill="url(#blueBody)"/>
+      <rect x="-7.5" y="-3.1" width="7.5" height="6.2" fill="url(#blueCap)"/>
+      <rect x="-0.4" y="-3.1" width="0.8" height="6.2" fill="#00113d" opacity="0.45"/>
+      <rect x="-5.6" y="-2.25" width="9.6" height="1.35" rx="0.67" fill="#ffffff" opacity="0.5"/>
+    </g>
+  </g>
+</svg>

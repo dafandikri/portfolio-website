@@ -14,7 +14,8 @@ import {
 } from './gateMotion'
 
 describe('awardBookMotion', () => {
-  it('opens during the visible zoom and holds the Tech Wizard sheet revealed', () => {
+  it('holds a clean Achievements cover, then opens and keeps Tech Wizard revealed', () => {
+    expect(AWARD_BOOK_OPEN_START).toBeGreaterThan(0.64)
     expect(awardBookMotion(AWARD_BOOK_OPEN_START)).toEqual({
       openProgress: 0,
       angleDeg: -0,

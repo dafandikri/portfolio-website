@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: clamp(1rem, 3vw, 2rem);
+  gap: clamp(0.75rem, 2vw, 1.35rem);
   background: #030405;
   box-shadow: 0 -7rem 7rem 2rem #030405;
   color: rgba(255, 255, 255, 0.86);
@@ -44,10 +44,73 @@
 }
 
 .circuits-scene__top,
+.circuits-scene__header,
 .scene--circuits .deck,
 .circuits-scene__placeholder {
   position: relative;
   z-index: 2;
+}
+
+/* A section marker in the dashboard's own visual language. Projects has its
+   containment-zone placard; Experience gets a compact destination-log plate
+   between the time circuits and the hand of roles. */
+.circuits-scene__header {
+  z-index: 3;
+  display: grid;
+  justify-items: center;
+  gap: 0.18rem;
+  align-self: center;
+  width: min(100%, 52rem);
+  margin-block: -0.15rem -0.45rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.circuits-scene__header::before,
+.circuits-scene__header::after {
+  content: '';
+  position: absolute;
+  top: 68%;
+  width: clamp(2.4rem, 10vw, 8rem);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 176, 31, 0.58));
+  box-shadow: 0 0 0.55rem rgba(255, 45, 28, 0.28);
+}
+
+.circuits-scene__header::before {
+  right: calc(50% + clamp(5.2rem, 11vw, 7.4rem));
+}
+
+.circuits-scene__header::after {
+  left: calc(50% + clamp(5.2rem, 11vw, 7.4rem));
+  transform: scaleX(-1);
+}
+
+.circuits-scene__kicker {
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(0.42rem, 0.85vw, 0.54rem);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  line-height: 1.4;
+  text-transform: uppercase;
+  color: rgba(96, 240, 255, 0.72);
+  text-shadow: 0 0 0.7rem rgba(96, 240, 255, 0.34);
+}
+
+.circuits-scene__heading {
+  margin: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(1rem, 2.3vw, 1.55rem);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  line-height: 1.1;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: #ffb01f;
+  text-shadow:
+    0 2px 0 rgba(105, 20, 11, 0.9),
+    0 0 0.65rem rgba(255, 45, 28, 0.42);
 }
 
 /* The OBJ renders across the whole scene so its translation, pitch, yaw and
@@ -233,4 +296,22 @@
   .circuits-scene__credit,
   .circuits-scene__credit-panel,
   .circuits-scene__credit-panel p { transition: none; }
+}
+
+@media (max-width: 760px) {
+  .scene--circuits {
+    justify-content: flex-start;
+    overflow: visible;
+    gap: 0.9rem;
+    padding: 1.5rem 0.9rem 3rem;
+  }
+
+  .circuits-scene__header {
+    margin-block: 0 -0.25rem;
+  }
+
+  .circuits-scene__kicker {
+    max-width: 32rem;
+    letter-spacing: 0.18em;
+  }
 }

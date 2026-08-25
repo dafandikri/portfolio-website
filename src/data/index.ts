@@ -16,6 +16,7 @@ export type {
   Skill,
   Card,
   CardField,
+  AwardBrand,
   Award,
 } from './schema'
 

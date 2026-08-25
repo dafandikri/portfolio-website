@@ -88,8 +88,18 @@
     </script>
     <!-- ld+json:end -->
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- One Matrix mark in every format browsers actually request. Safari can
+         retain an SVG favicon for a long time, so the versioned PNG/ICO and
+         pinned-tab mask prevent it from falling back to an older site icon. -->
+    <link rel="shortcut icon" href="/matrix-v2-favicon.ico" />
+    <link rel="icon" href="/matrix-v2-favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/matrix-v2-favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/matrix-v2-favicon-16.png" />
+    <link rel="icon" type="image/svg+xml" href="/matrix-v2-favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/matrix-v2-apple-touch.png" />
+    <link rel="mask-icon" href="/matrix-v2-safari-pinned-tab.svg" color="#d61d18" />
+    <link rel="manifest" href="/matrix-v2-site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Erdafa Andikri" />
 
     <!-- Painted before the stylesheet loads, so the first frame already matches
          the finished page rather than flashing another colour. -->

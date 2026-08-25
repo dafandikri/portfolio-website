@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { experiences } from './index'
-import { parseMonthLabel, timeline } from './timeline'
+import { fullTitle, parseMonthLabel, timeline } from './timeline'
 
 describe('parseMonthLabel', () => {
   it('extracts a display month and year from a dated label', () => {
@@ -36,5 +36,10 @@ describe('timeline', () => {
     const ids = timeline.map(({ entry }) => entry.id)
     expect(ids).toEqual([...ids].sort().reverse())
     expect(ids.length).toBeGreaterThan(1)
+  })
+
+  it('keeps the role employer name in the card button accessible name', () => {
+    const totm = timeline.find(({ entry }) => entry.id === '2026-06')!.entry
+    expect(fullTitle(totm)).toBe('Solution Engineer Intern — Interbio Technologies')
   })
 })

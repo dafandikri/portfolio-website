@@ -36,8 +36,9 @@ export const experienceEntrySchema = z.object({
   monthLabel: z.string().min(1),
   /**
    * The job, and who it was for, held apart rather than as one "Role - Org"
-   * string. They are read in different places — the card face shows only the
-   * organisation and the readout below it names the role — so storing the
+   * string. They are read in different places — the card face names the role,
+   * the linked plaque names the organisation, and the readout repeats the active
+   * position at full size — so storing the
    * joined line would mean splitting it back apart at every use.
    *
    * `org` is the short display name, not the legal one: it has to fit on a
@@ -49,6 +50,18 @@ export const experienceEntrySchema = z.object({
   description: z.string().min(1),
   achievements: z.array(z.string().min(1)).min(1),
   logo: z.string().min(1),
+  /**
+   * The organisation behind this role, when its public profile is linked from
+   * the experience card. `name` is the full accessible name; `label` is the
+   * compact wordmark-sized copy that still fits the physical card.
+   */
+  company: z.object({
+    name: z.string().min(1),
+    label: z.string().min(1).max(28),
+    /** Destination brand when it differs from the visible employer name. */
+    linkName: z.string().min(1).optional(),
+    href: z.string().url(),
+  }).optional(),
 })
 export type ExperienceEntry = z.infer<typeof experienceEntrySchema>
 
@@ -133,6 +146,21 @@ export type Card = z.infer<typeof cardSchema>
 // ---------------------------------------------------------------------------
 
 /**
+ * A mark printed on an award dossier.
+ *
+ * `asset` is deliberately a semantic key rather than an imported file path:
+ * the view can use the real brand art when it exists and retain a labelled,
+ * accessible wordmark while an asset is still pending. `href: null` means the
+ * mark is identification only, never a disguised or dead link.
+ */
+export const awardBrandSchema = z.object({
+  asset: z.string().min(1),
+  label: z.string().min(1),
+  href: z.string().url().nullable(),
+})
+export type AwardBrand = z.infer<typeof awardBrandSchema>
+
+/**
  * A competition result.
  *
  * Awards are held apart from projects on purpose. A project's copy describes
@@ -190,8 +218,12 @@ export const awardSchema = z.object({
     title: z.string().min(1),
     body: z.string().min(1),
   }).optional(),
-  /** asset key resolved via getIcon(). */
-  logo: z.string().min(1),
+  /** The organisation credited beside the award heading. */
+  partner: awardBrandSchema,
+  /** The product identity mounted separately on the evidence photograph. */
+  productMark: awardBrandSchema,
+  /** Whether the written record physically pulls out from behind its plate. */
+  presentation: z.enum(['pull-sheet', 'static']),
 }).refine(
   (award) => award.members !== undefined || award.teamSize !== undefined,
   { message: 'an award needs either named members or a teamSize', path: ['members'] },

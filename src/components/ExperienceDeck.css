@@ -20,7 +20,7 @@
   align-items: flex-end;
   list-style: none;
   margin: 0;
-  padding: clamp(1.5rem, 5vw, 3rem) 0 0;
+  padding: clamp(0.7rem, 1.8vw, 1.15rem) 0 0;
   /* Negative gap: the cards overlap the way a held hand does. */
   gap: clamp(-2rem, -3vw, -1rem);
 }
@@ -78,6 +78,24 @@
   color: #ffb01f;
 }
 
+/* The position belongs on the card, not only in the detail readout. Keeping it
+   as a compact engraved line makes every stop understandable before selection
+   while the larger neon sign below still owns the active role. */
+.deck__role {
+  width: 100%;
+  margin-top: 0.18rem;
+  padding-top: 0.42rem;
+  border-top: 1px solid rgba(96, 240, 255, 0.2);
+  font-size: clamp(0.48rem, 1.08vw, 0.62rem);
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  line-height: 1.28;
+  text-wrap: balance;
+  text-transform: uppercase;
+  color: rgba(218, 250, 255, 0.88);
+  text-shadow: 0 0 0.55rem rgba(96, 240, 255, 0.2);
+}
+
 /*
  * The organisation only. The role used to sit here as well and wrapped to four
  * lines on a card five units wide; it now reads out in neon under the deck,
@@ -91,6 +109,124 @@
   line-height: 1.2;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.82);
+}
+
+/*
+ * Company identity is a sibling of the card-selection button, never an anchor
+ * nested inside a button. The inset plate reads as a physical maker's badge:
+ * logo first, then the employer name, rather than loose text at the card edge.
+ * It stays inside the existing card bounds, so the fan and mobile geometry do
+ * not move when a company receives a link.
+ */
+.deck__company {
+  position: absolute;
+  z-index: 2;
+  inset-inline: clamp(0.6rem, 1.6vw, 0.9rem);
+  bottom: clamp(0.6rem, 1.6vw, 0.9rem);
+  min-height: 3.7rem;
+  display: grid;
+  grid-template-rows: 1.75rem auto;
+  justify-items: center;
+  align-items: center;
+  gap: 0.22rem;
+  padding: 0.38rem 0.36rem 0.34rem;
+  border: 1px solid rgba(255, 176, 31, 0.28);
+  border-radius: 0.34rem;
+  background:
+    linear-gradient(180deg, rgba(28, 24, 18, 0.9), rgba(7, 8, 9, 0.88)),
+    repeating-linear-gradient(90deg, transparent 0 8px, rgba(255, 255, 255, 0.025) 8px 9px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0.45rem 0.9rem -0.55rem rgba(0, 0, 0, 0.9);
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.deck__company::after {
+  content: '\2197';
+  position: absolute;
+  top: 0.25rem;
+  right: 0.3rem;
+  color: rgba(255, 176, 31, 0.62);
+  font-family: var(--font-tech);
+  font-size: 0.52rem;
+  line-height: 1;
+}
+
+.deck__company-logo {
+  display: block;
+  width: min(100%, 2.2rem);
+  height: 1.75rem;
+  object-fit: contain;
+  opacity: 0.94;
+  filter: drop-shadow(0 0.12rem 0.28rem rgba(0, 0, 0, 0.72));
+  transition:
+    opacity 180ms ease,
+    filter 180ms ease;
+}
+
+.deck__company-name {
+  min-width: 0;
+  font-family: var(--font-tech);
+  font-size: clamp(0.45rem, 1vw, 0.59rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.18;
+  text-align: center;
+  text-transform: uppercase;
+  overflow-wrap: break-word;
+  text-decoration-line: underline;
+  text-decoration-thickness: 0.1em;
+  text-decoration-color: rgba(255, 176, 31, 0.58);
+  text-underline-offset: 0.2em;
+  transition:
+    color 180ms ease,
+    text-decoration-color 180ms ease,
+    text-shadow 180ms ease;
+}
+
+.deck__company:hover .deck__company-name,
+.deck__company:focus-visible .deck__company-name {
+  color: #ffffff;
+  text-decoration-color: #ffb01f;
+  text-shadow: 0 0 0.75em rgba(255, 176, 31, 0.55);
+}
+
+.deck__company:hover,
+.deck__company:focus-visible {
+  border-color: rgba(255, 176, 31, 0.82);
+  background-color: rgba(255, 176, 31, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 1.25rem -0.25rem rgba(255, 176, 31, 0.35),
+    0 0.5rem 1rem -0.6rem rgba(0, 0, 0, 0.92);
+}
+
+.deck__company:hover .deck__company-logo,
+.deck__company:focus-visible .deck__company-logo {
+  opacity: 1;
+  filter: drop-shadow(0 0 0.55rem rgba(255, 176, 31, 0.38));
+}
+
+.deck__company:focus-visible {
+  outline: 2px solid #ffb01f;
+  outline-offset: 3px;
+}
+
+.is-open .deck__company-name {
+  color: rgba(255, 255, 255, 0.96);
+  text-decoration-color: rgba(255, 176, 31, 0.82);
+}
+
+.is-open .deck__company {
+  border-color: rgba(255, 176, 31, 0.62);
+  background-color: rgba(255, 176, 31, 0.04);
 }
 
 .is-open .deck__face {
@@ -229,4 +365,85 @@
   line-height: 1.75;
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.66);
+}
+
+/* On a phone the six-card fan would extend beyond both sides of the scene.
+   A three-by-two dealt grid preserves the card metaphor, shows every role and
+   keeps each company plaque reachable without horizontal page scrolling. */
+@media (max-width: 760px) {
+  .deck {
+    gap: 1.25rem;
+  }
+
+  .deck__hand {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 0.8rem 0.45rem;
+    width: min(100%, 23rem);
+    padding: 0.45rem 0.15rem 0;
+  }
+
+  .deck__card {
+    min-width: 0;
+    margin: 0;
+    transform: none !important;
+  }
+
+  .deck__face {
+    width: 100%;
+    min-width: 0;
+    padding: 0.55rem;
+  }
+
+  .deck__year {
+    font-size: clamp(0.92rem, 4.2vw, 1.12rem);
+  }
+
+  .deck__month {
+    font-size: 0.48rem;
+  }
+
+  .deck__role {
+    padding-top: 0.32rem;
+    font-size: clamp(0.5rem, 1.95vw, 0.56rem);
+    font-weight: 800;
+    letter-spacing: 0.035em;
+  }
+
+  .deck__company {
+    inset-inline: 0.42rem;
+    bottom: 0.42rem;
+    min-height: 3.15rem;
+    grid-template-rows: 1.4rem auto;
+    gap: 0.16rem;
+    padding: 0.3rem 0.24rem 0.28rem;
+  }
+
+  .deck__company-logo {
+    width: min(100%, 1.8rem);
+    height: 1.4rem;
+  }
+
+  .deck__company-name {
+    font-size: clamp(0.4rem, 1.65vw, 0.48rem);
+    letter-spacing: 0.045em;
+  }
+
+  .deck__detail {
+    width: min(100%, 34rem);
+  }
+
+  .deck__detail-text {
+    max-width: 44ch;
+  }
+
+  .deck__cv {
+    margin-top: 1rem;
+  }
+
+  .deck__company:active {
+    border-color: #ffb01f;
+    background-color: rgba(255, 176, 31, 0.1);
+  }
 }

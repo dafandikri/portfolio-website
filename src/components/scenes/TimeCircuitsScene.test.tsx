@@ -21,6 +21,10 @@ describe('TimeCircuitsScene', () => {
     expect(observers[0]?.rootMargin).toBe('0px 0px -12%')
 
     act(() => observers[0]?.trigger(scene, true, 1))
+    expect(screen.getByRole('heading', { level: 2, name: 'Experience' })).toHaveTextContent(
+      'Experience Circuits',
+    )
+    expect(screen.getByText('Temporal career archive · selected destinations')).toBeVisible()
     expect(container.querySelectorAll('.deck__card')).toHaveLength(timeline.length)
     const hoverboardCanvas = container.querySelector('.circuits-scene__hoverboard3d canvas')
     expect(hoverboardCanvas).toHaveAttribute('data-renderer', 'three')

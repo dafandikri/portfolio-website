@@ -22,15 +22,13 @@ export const GATE_SEQUENCE_END = 0.587
 export const GATE_CHAPTER_SHARE = 0.44
 
 /**
- * Open the Class X board while the file is still arriving.
- *
- * The old 0.58 -> 0.80 window kept the Tech Wizard sheet covered through most
- * of the only moving beat. Starting as the archive becomes visible preserves a
- * truthful closed-cover frame, then exposes the stationary right-hand record
- * during the zoom instead of at its tail.
+ * Give the clean, closed Achievements cover an establishing frame after the
+ * claw transition has cleared, then open it while the camera finishes settling.
+ * The hinge still completes well before the interactive reading hold, leaving
+ * the stationary Tech Wizard record fully exposed for the rest of the runway.
  */
-export const AWARD_BOOK_OPEN_START = 0.44
-export const AWARD_BOOK_OPEN_END = 0.7
+export const AWARD_BOOK_OPEN_START = 0.66
+export const AWARD_BOOK_OPEN_END = 0.82
 
 function clamp01(value: number): number {
   return Math.min(1, Math.max(0, value))

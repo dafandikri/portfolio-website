@@ -604,7 +604,7 @@ export default function GateScene() {
           one spread fits one viewport, so nothing can be clipped out of reach
           the way a tall spread was.
         */}
-        <VisitorCenterScene />
+        <VisitorCenterScene interactive={archiveActive} />
 
         <InfoPopover
           className="gate__credit"

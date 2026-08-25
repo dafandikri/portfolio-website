@@ -534,7 +534,7 @@
   justify-content: space-between;
   gap: 0.6rem;
   height: clamp(2.05rem, 4.5vh, 2.5rem);
-  padding: 0.28rem 0.8rem 0.25rem 1.15rem;
+  padding: 0.28rem 0.8rem 0.25rem 4rem;
   border: 2px solid #281508;
   border-radius: 0.28rem 0.38rem 0.3rem 0.34rem;
   background:
@@ -544,6 +544,90 @@
     linear-gradient(#31552f,#1e3b24 66%,#112516);
   box-shadow: 0 0.38rem 0 #2a1609,0 0.78rem 1rem rgba(3,13,5,0.67),inset 0 1px rgba(214,239,173,0.16);
 }
+
+/* Product identity lives on a separate metal-backed plaque above the sill. It
+   is a sibling of the full paddock button, never an anchor nested inside one,
+   so opening a live product cannot also trigger the containment dossier. */
+.park__project-logo {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  overflow: hidden;
+  border: 1px solid rgba(233, 198, 119, 0.46);
+  border-radius: 0.32rem;
+  background:
+    linear-gradient(145deg, rgba(242, 230, 196, 0.96), rgba(202, 184, 143, 0.94)),
+    #d9c69b;
+  box-shadow:
+    0 0.3rem 0 #201307,
+    0 0.55rem 0.8rem rgba(1, 8, 3, 0.58),
+    inset 0 1px rgba(255, 255, 255, 0.68);
+  color: #14212f;
+}
+
+.park__project-logo img {
+  display: block;
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  filter: drop-shadow(0 0.1rem 0.1rem rgba(7, 17, 30, 0.22));
+}
+
+.park__project-logo--paddock {
+  position: absolute;
+  bottom: 0.05rem;
+  left: 0.58rem;
+  /* Above the paddock button's hover layer (12). Otherwise the scaled button
+     repaints over the plaque precisely as the pointer crosses onto its link. */
+  z-index: 16;
+  width: clamp(2.75rem, 4vw, 3.15rem);
+  height: clamp(2.75rem, 4vw, 3.15rem);
+}
+
+a.park__project-logo--linked {
+  cursor: pointer;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition: border-color 160ms ease, filter 160ms ease, transform 160ms ease;
+}
+
+a.park__project-logo--linked::after {
+  content: '\2197';
+  position: absolute;
+  top: -0.2rem;
+  right: -0.18rem;
+  display: grid;
+  width: 1.15rem;
+  height: 1.15rem;
+  place-items: center;
+  border: 1px solid rgba(255, 226, 154, 0.5);
+  border-radius: 50%;
+  background: #17331e;
+  color: #ffd465;
+  font-family: var(--font-tech);
+  font-size: 0.58rem;
+  line-height: 1;
+  box-shadow: 0 0.16rem 0.35rem rgba(0, 0, 0, 0.52);
+}
+
+a.park__project-logo--linked:hover,
+a.park__project-logo--linked:focus-visible {
+  z-index: 18;
+  border-color: #ffe29a;
+  outline: none;
+  filter: brightness(1.08);
+  transform: translateY(-0.16rem) scale(1.04);
+}
+
+a.park__project-logo--linked:focus-visible {
+  box-shadow:
+    0 0 0 3px #f0b51f,
+    0 0.3rem 0 #201307,
+    0 0.55rem 0.8rem rgba(1, 8, 3, 0.58);
+}
+
+.park__project-logo--static { pointer-events: none; }
 
 .park__plaque-copy { min-width: 0; font-family: var(--font-tech); }
 
@@ -770,7 +854,34 @@
   color: rgba(240,181,31,0.82);
 }
 
+.park__link { gap: 0.42rem; }
+
+.park__source-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .park__media-expand { align-self: flex-end; margin-top: 0.45rem; }
+.park__media-expand { gap: 0.42rem; }
+
+.park__media-link-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.park__media-play-glyph { fill: currentColor; stroke: none; }
 .park__media-expand:hover,.park__media-expand:focus-visible,.park__link:hover,.park__link:focus-visible { border-color:#ffe29a;color:#ffe29a;outline:none; }
 
 .park__detail-copy {
@@ -781,6 +892,20 @@
   padding: 0.35rem 0.6rem 0.5rem 0.05rem;
   scrollbar-color: rgba(226,164,23,0.4) transparent;
   scrollbar-width: thin;
+}
+
+.park__detail-heading-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.park__project-logo--detail {
+  position: relative;
+  flex: none;
+  width: clamp(3.15rem, 5vw, 4rem);
+  height: clamp(3.15rem, 5vw, 4rem);
 }
 
 .park__detail-title {
@@ -863,9 +988,13 @@
 
 @media (max-width: 760px) {
   .park {
+    position: relative;
+    inset: auto;
     justify-content: flex-start;
+    min-height: 100svh;
+    height: auto;
     padding-top: max(2.6rem,env(safe-area-inset-top));
-    overflow-y: auto;
+    overflow: visible;
   }
 
   .park__header { width: 100%; }
@@ -886,6 +1015,12 @@
   .park__containment:nth-child(5) { grid-column: auto; }
 
   .park__containment { aspect-ratio: 1.42; }
+  .park__project-logo--paddock {
+    left: 0.52rem;
+    width: 2.9rem;
+    height: 2.9rem;
+  }
+  .park__sill { padding-left: 3.8rem; }
   .park__archive { width: min(100%,30rem); padding-bottom: 1rem; }
   .park__archive ul { position: static; grid-template-columns: 1fr 1fr; margin-top: 0.35rem; }
 

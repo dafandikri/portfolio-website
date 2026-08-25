@@ -45,7 +45,17 @@ const validAward = {
   projectTitle: 'Mock Project',
   story: 'A mock award used for testing.',
   highlights: ['won a mock thing'],
-  logo: 'github',
+  partner: {
+    asset: 'mock-host',
+    label: 'Mock Host',
+    href: 'https://example.com/host',
+  },
+  productMark: {
+    asset: 'mock-project',
+    label: 'Mock Project',
+    href: null,
+  },
+  presentation: 'static' as const,
 }
 
 describe('awardSchema team credits', () => {
@@ -152,6 +162,23 @@ describe('awardSchema', () => {
 
   it('rejects an award with an empty title', () => {
     expect(awardSchema.safeParse({ ...validAward, title: '' }).success).toBe(false)
+  })
+
+  it('validates linked brands while permitting an intentionally static product mark', () => {
+    expect(awardSchema.safeParse(validAward).success).toBe(true)
+    expect(awardSchema.safeParse({
+      ...validAward,
+      partner: { ...validAward.partner, href: 'not a URL' },
+    }).success).toBe(false)
+    expect(awardSchema.safeParse({
+      ...validAward,
+      productMark: { ...validAward.productMark, href: null },
+    }).success).toBe(true)
+  })
+
+  it('only accepts the supported physical dossier presentations', () => {
+    expect(awardSchema.safeParse({ ...validAward, presentation: 'pull-sheet' }).success).toBe(true)
+    expect(awardSchema.safeParse({ ...validAward, presentation: 'fade-up' }).success).toBe(false)
   })
 
   it('validates optional award photographs and personal lessons', () => {

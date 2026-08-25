@@ -33,8 +33,52 @@ describe('ParkScene', () => {
     expect(container.querySelectorAll('.park__fence i')).toHaveLength(featured.length * 9)
     expect(container.querySelectorAll('.park__pylons i')).toHaveLength(featured.length * 2)
     expect(screen.getAllByText('Secure')).toHaveLength(featured.length)
-    expect(screen.getByText('Archive enclosures', { exact: false })).toBeInTheDocument()
+    expect(screen.getByText('Project 01')).toBeInTheDocument()
+    expect(screen.getByText('Project 05')).toBeInTheDocument()
+    expect(container).not.toHaveTextContent(/Paddock 0[1-5]/)
+    expect(screen.getByText('Archive projects', { exact: false })).toBeInTheDocument()
     archived.forEach((project) => expect(screen.getByText(project.title)).toBeInTheDocument())
+  })
+
+  it('mounts independent logo plaques for every featured product and links every public one', () => {
+    const { container } = render(<ParkScene />)
+    const paddocks = [...container.querySelectorAll('.park__containment')]
+
+    expect(paddocks).toHaveLength(featured.length)
+    expect(container.querySelectorAll('.park__project-logo--paddock')).toHaveLength(featured.length)
+
+    const destinations = new Map([
+      ['Boulder Coach', 'https://boulder-coach-gamma.vercel.app'],
+      ['Talk-Active', 'https://talk-active-id.vercel.app'],
+      ['Erdafa Andikri portfolio', 'https://dafandikri.dev'],
+      ['Interbio', 'https://interbio.id'],
+    ])
+    for (const [label, href] of destinations) {
+      const link = screen.getByRole('link', { name: `Visit ${label} (opens in a new tab)` })
+      expect(link).toHaveAttribute('href', href)
+      expect(link).toHaveAttribute('target', '_blank')
+      expect(link).toHaveAttribute('rel', 'noreferrer noopener')
+      expect(link.closest('.park__containment-unit')).toBeNull()
+      expect(link.parentElement?.querySelector('.park__containment-unit')).toBeInTheDocument()
+    }
+
+    const siraPlaque = container.querySelector('.park__project-logo--static')
+    expect(siraPlaque?.tagName).toBe('SPAN')
+    expect(within(siraPlaque as HTMLElement).getByRole('img', { name: 'SIRA logo' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /Visit SIRA/i })).toBeNull()
+  })
+
+  it('does not open a paddock when its independent product-logo link is activated', () => {
+    render(<ParkScene />)
+    const link = screen.getByRole('link', {
+      name: 'Visit Boulder Coach (opens in a new tab)',
+    })
+
+    act(() => link.click())
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
+
+    expect(screen.queryByRole('dialog')).toBeNull()
+    expect(screen.getByRole('button', { name: /Boulder Coach/i })).toHaveAttribute('aria-busy', 'false')
   })
 
   it('opens the physical paddock before mounting its complete walkthrough', () => {
@@ -54,10 +98,13 @@ describe('ParkScene', () => {
       'src',
       '/boulder-coach-preview.mp4',
     )
-    expect(within(dialog).getByRole('link', { name: 'Open HD walkthrough' })).toHaveAttribute(
+    const hdVideo = within(dialog).getByRole('link', { name: 'Open HD walkthrough video in a new tab' })
+    expect(hdVideo).toHaveAttribute(
       'href',
       '/boulder-coach-walkthrough.mp4',
     )
+    expect(hdVideo).toHaveTextContent('HD video')
+    expect(hdVideo.querySelector('.park__media-link-icon')).toHaveAttribute('aria-hidden', 'true')
     expect(within(dialog).getByText(boulder.description)).toBeInTheDocument()
   })
 
@@ -73,8 +120,13 @@ describe('ParkScene', () => {
     expect(within(dialog).getByRole('heading', { level: 3, name: boulder.title })).toBeInTheDocument()
     expect(container.querySelectorAll('.park__features li')).toHaveLength(boulder.features.length)
     expect(container.querySelectorAll('.park__chip')).toHaveLength(boulder.techStack.length)
-    expect(within(dialog).getByRole('link', { name: boulder.liveLabel })).toHaveAttribute('target', '_blank')
+    expect(within(dialog).queryByRole('link', { name: boulder.liveLabel })).toBeNull()
     expect(within(dialog).getByRole('link', { name: 'Source' })).toHaveAttribute('href', boulder.repoLink)
+    const logo = within(dialog).getByRole('link', {
+      name: 'Visit Boulder Coach (opens in a new tab)',
+    })
+    expect(logo).toHaveClass('park__project-logo--detail')
+    expect(logo).toHaveAttribute('href', boulder.liveLink)
   })
 
   it('closes the dossier and returns to all paddocks', () => {
@@ -154,6 +206,7 @@ describe('ParkScene', () => {
     const dialog = screen.getByRole('dialog')
     const close = within(dialog).getByRole('button', { name: 'Return to paddocks' })
     const source = within(dialog).getByRole('link', { name: 'Source' })
+    expect(source.querySelector('.park__source-icon')).toHaveAttribute('aria-hidden', 'true')
 
     source.focus()
     act(() => window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true })))

@@ -2,6 +2,10 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { projectsData } from '../../data/projects'
 import type { Project } from '../../data/schema'
 import { useInView } from '../../hooks/useInView'
+import boulderCoachLogo from '../../assets/img/favicon/boulder-coach.svg'
+import interbioLogo from '../../assets/img/favicon/interbio.png'
+import siraLogo from '../../assets/img/favicon/sira.png'
+import talkActiveLogo from '../../assets/img/favicon/talkactive.png'
 import KatoPerch from '../KatoPerch'
 import { projectCardTitle, projectMedia, type ProjectMedia } from './projectMedia'
 import './ParkScene.css'
@@ -142,21 +146,65 @@ function projectTarget(link: string) {
   return link.startsWith('http') ? { target: '_blank', rel: 'noreferrer noopener' } : {}
 }
 
+interface ProjectLogo {
+  src: string
+  label: string
+}
+
+const PROJECT_LOGOS: Readonly<Partial<Record<string, ProjectLogo>>> = {
+  sira_project: { src: siraLogo, label: 'SIRA' },
+  boulder_project: { src: boulderCoachLogo, label: 'Boulder Coach' },
+  talkactive_project: { src: talkActiveLogo, label: 'Talk-Active' },
+  portfolio_project: { src: '/favicon.svg', label: 'Erdafa Andikri portfolio' },
+  interbio_project: { src: interbioLogo, label: 'Interbio' },
+}
+
+function ProjectLogoPlaque({ project, placement }: {
+  project: Project
+  placement: 'paddock' | 'detail'
+}) {
+  const logo = PROJECT_LOGOS[project.image]
+  if (!logo) return null
+
+  const className = `park__project-logo park__project-logo--${placement} ${
+    project.liveLink === '#' ? 'park__project-logo--static' : 'park__project-logo--linked'
+  }`
+  const image = <img src={logo.src} alt={project.liveLink === '#' ? `${logo.label} logo` : ''} />
+
+  /* SIRA is a real product identity but its deployment is intentionally private.
+     Keeping the plaque as a span communicates the identity without inventing a
+     public destination. Every live product gets a native sibling anchor. */
+  if (project.liveLink === '#') {
+    return <span className={className} title={`${logo.label} · private product`}>{image}</span>
+  }
+
+  return (
+    <a
+      className={className}
+      href={project.liveLink}
+      {...projectTarget(project.liveLink)}
+      aria-label={`Visit ${logo.label} (opens in a new tab)`}
+      title={`Visit ${logo.label}`}
+    >
+      {image}
+    </a>
+  )
+}
+
 function ProjectLinks({ project }: { project: Project }) {
-  if (project.liveLink === '#' && project.repoLink === '#') return null
+  /* The identity plaque is the one live-product destination in both views.
+     Repeating the same URL as “Open live app” beneath it made the dossier offer
+     two controls for one action. This row now exists only for source access. */
+  if (project.repoLink === '#') return null
 
   return (
     <p className="park__links">
-      {project.liveLink !== '#' && (
-        <a className="park__link" href={project.liveLink} {...projectTarget(project.liveLink)}>
-          {project.liveLabel}
-        </a>
-      )}
-      {project.repoLink !== '#' && (
-        <a className="park__link" href={project.repoLink} {...projectTarget(project.repoLink)}>
-          Source
-        </a>
-      )}
+      <a className="park__link" href={project.repoLink} {...projectTarget(project.repoLink)}>
+        <svg className="park__source-icon" viewBox="0 0 18 18" aria-hidden="true">
+          <path d="m6.2 4.2-4 4.8 4 4.8M11.8 4.2l4 4.8-4 4.8M10.5 2.5l-3 13" />
+        </svg>
+        Source
+      </a>
     </p>
   )
 }
@@ -309,7 +357,23 @@ export default function ParkScene() {
         if (value) body.style.setProperty(property, value, priority)
         else body.style.removeProperty(property)
       })
+      /* Hash navigation has its own cinematic easing. Dossier cleanup is not
+         navigation: restore the locked paddock frame synchronously so closing
+         never looks like a second page scroll. */
+      const root = document.documentElement
+      const previousScrollBehavior = root.style.getPropertyValue('scroll-behavior')
+      const previousScrollBehaviorPriority = root.style.getPropertyPriority('scroll-behavior')
+      root.style.setProperty('scroll-behavior', 'auto', 'important')
       window.scrollTo(scrollX, scrollY)
+      if (previousScrollBehavior) {
+        root.style.setProperty(
+          'scroll-behavior',
+          previousScrollBehavior,
+          previousScrollBehaviorPriority,
+        )
+      } else {
+        root.style.removeProperty('scroll-behavior')
+      }
     }
   }, [openIndex])
 
@@ -329,6 +393,7 @@ export default function ParkScene() {
 
   return (
     <section
+      id="projects"
       className={`park${openProject ? ' is-inspecting' : ''}`}
       aria-labelledby="projects-heading"
     >
@@ -355,14 +420,14 @@ export default function ParkScene() {
               <button
                 type="button"
                 className="park__containment-unit"
-                aria-label={`${project.title}, paddock ${String(index + 1).padStart(2, '0')}`}
+                aria-label={`${project.title}, project ${String(index + 1).padStart(2, '0')}`}
                 aria-expanded={isOpen || isOpening}
                 aria-busy={isOpening}
                 onClick={(event) => inspectPaddock(index, event.currentTarget)}
               >
                 <span className="park__lintel">
                   <span className="park__hazard" aria-hidden="true" />
-                  <span className="park__serial">Paddock {String(index + 1).padStart(2, '0')}</span>
+                  <span className="park__serial">Project {String(index + 1).padStart(2, '0')}</span>
                 </span>
 
                 <span className="park__cell">
@@ -398,6 +463,7 @@ export default function ParkScene() {
 
                 <span className="park__pylons" aria-hidden="true"><i /><i /></span>
               </button>
+              <ProjectLogoPlaque project={project} placement="paddock" />
               {/* Rendered after the button on purpose: the hover rule that
                   changes his pose uses a general sibling combinator. */}
               {project.title === 'Talk-Active' && <KatoPerch />}
@@ -407,7 +473,7 @@ export default function ParkScene() {
       </ul>
 
       <details className="park__archive">
-        <summary>Archive enclosures <span>{String(archivedProjects.length).padStart(2, '0')}</span></summary>
+        <summary>Archive projects <span>{String(archivedProjects.length).padStart(2, '0')}</span></summary>
         <ul>
           {archivedProjects.map((project) => (
             <li key={project.title}>
@@ -441,23 +507,46 @@ export default function ParkScene() {
 
             <div className="park__detail-media">
               <p className="park__detail-feed-label">
-                Paddock {String(openIndex + 1).padStart(2, '0')} // Full surveillance record
+                Project {String(openIndex + 1).padStart(2, '0')} // Full surveillance record
               </p>
               <div className="park__detail-viewport">
                 <ProjectMediaView media={openMedia} mode="detail" startAt={detailStartAt} />
                 <span className="park__detail-scan" aria-hidden="true" />
               </div>
               {openMedia ? (
-                <a className="park__media-expand" href={openMedia.src} target="_blank" rel="noreferrer noopener">
-                  {openMedia.kind === 'video' ? 'Open HD walkthrough' : 'Open walkthrough in a new tab'}
+                <a
+                  className="park__media-expand"
+                  href={openMedia.src}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={openMedia.kind === 'video'
+                    ? 'Open HD walkthrough video in a new tab'
+                    : 'Open full project preview in a new tab'}
+                >
+                  {openMedia.kind === 'video' ? (
+                    <svg className="park__media-link-icon" viewBox="0 0 18 18" aria-hidden="true">
+                      <rect x="1.8" y="3" width="14.4" height="12" rx="1.5" />
+                      <path className="park__media-play-glyph" d="m7.4 6.4 4.4 2.6-4.4 2.6Z" />
+                    </svg>
+                  ) : (
+                    <svg className="park__media-link-icon" viewBox="0 0 18 18" aria-hidden="true">
+                      <path d="M7 3H3v4M11 3h4v4M7 15H3v-4M11 15h4v-4" />
+                    </svg>
+                  )}
+                  {openMedia.kind === 'video' ? 'HD video' : 'Full preview'}
                 </a>
               ) : null}
             </div>
 
             <div className="park__detail-copy">
-              <p className="park__detail-index">Containment file // Access granted · {openProject.year}</p>
-              <h3 id="project-detail-title" className="park__detail-title">{openProject.title}</h3>
-              <p className="park__detail-context">{openProject.context}</p>
+              <div className="park__detail-heading-row">
+                <div>
+                  <p className="park__detail-index">Containment file // Access granted · {openProject.year}</p>
+                  <h3 id="project-detail-title" className="park__detail-title">{openProject.title}</h3>
+                  <p className="park__detail-context">{openProject.context}</p>
+                </div>
+                <ProjectLogoPlaque project={openProject} placement="detail" />
+              </div>
               <p className="park__detail-text">{openProject.description}</p>
               <p className="park__detail-section-label">Field notes</p>
               <ul className="park__features" aria-label="Project features">

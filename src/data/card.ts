@@ -16,7 +16,7 @@ import type { Card } from './schema'
  * the cost of shipping the whole validation runtime to render six strings.
  */
 export const card: Card = {
-  linkedin: { label: 'linkedin.com/in/dafandikri', href: 'https://www.linkedin.com/in/dafandikri/' },
+  linkedin: { label: 'LinkedIn', href: 'https://www.linkedin.com/in/dafandikri/' },
   email: { label: 'dafandikri@gmail.com', href: 'mailto:dafandikri@gmail.com' },
 
   affiliation: {
@@ -29,10 +29,10 @@ export const card: Card = {
 
   footer: [
     [
-      { label: 'dafandikri.dev', href: 'https://dafandikri.dev' },
+      { label: 'GitHub', href: 'https://github.com/dafandikri' },
       /*
-       * Stacked under the domain: the card is the whole landing scene, so this
-       * is the only route to the CV for a recruiter who never scrolls — which is
+       * Stacked under GitHub: the card is the whole landing scene, so this is
+       * the only route to the CV for a recruiter who never scrolls — which is
        * most of them.
        *
        * `public/` is published verbatim, so the filename becomes a URL anyone

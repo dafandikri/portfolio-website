@@ -402,15 +402,17 @@
   .gate__projects {
     position: relative;
     inset: auto;
-    height: 100svh;
+    height: auto;
+    min-height: 100svh;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
     opacity: 1;
   }
 
   .gate__project-frame {
     position: relative;
-    height: 100svh;
+    height: auto;
+    min-height: 100svh;
     width: 100%;
     visibility: visible;
     opacity: 1;

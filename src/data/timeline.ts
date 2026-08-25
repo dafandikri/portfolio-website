@@ -104,13 +104,12 @@ export const timeline: TimelineStop[] = Object.keys(experiences)
 /**
  * The full CV line, "Role — Org".
  *
- * Nothing on screen prints this: the card shows the organisation and the readout
- * beneath it shows the role, because a card face is too narrow to hold both
- * without wrapping to four lines. It exists for the card's accessible name,
- * where "SYSTATUM" alone would tell a screen-reader user nothing about the job.
+ * The same pairing is printed compactly across the card and its linked company
+ * plaque. It remains the card button's accessible name so the two visible pieces
+ * are announced as one useful control rather than as disconnected fragments.
  */
 export function fullTitle(entry: ExperienceEntry): string {
-  return `${entry.role} — ${entry.org}`
+  return `${entry.role} — ${entry.company?.name ?? entry.org}`
 }
 
 /** A timeline stop rendered as panel columns, with decorative clock digits. */

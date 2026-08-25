@@ -63,6 +63,34 @@ describe('SiteFooter', () => {
     expect(cv.getAttribute('href')).toMatch(/\.pdf$/)
   })
 
+  it('closes with a clear LinkedIn call to action and a compact source route', () => {
+    render(<SiteFooter />)
+
+    const cta = screen.getByRole('link', { name: /Start the next take.*LinkedIn/i })
+    expect(cta).toHaveAttribute('href', 'https://www.linkedin.com/in/dafandikri/')
+    expect(cta).toHaveAttribute('target', '_blank')
+    expect(cta).toHaveAttribute('rel', 'noreferrer noopener')
+
+    const source = screen.getByRole('link', { name: /Source code/i })
+    expect(source).toHaveAttribute('href', 'https://github.com/dafandikri/portfolio-website')
+    expect(source).not.toHaveTextContent(/MIT License|All rights reserved/i)
+  })
+
+  it('provides native hash links for every portfolio scene', () => {
+    render(<SiteFooter />)
+
+    const nav = screen.getByRole('navigation', { name: 'Portfolio sections' })
+    for (const [label, hash] of [
+      ['Home', '#home'],
+      ['Experience', '#experience'],
+      ['Projects', '#projects'],
+      ['Awards', '#awards'],
+      ['Contact', '#contact'],
+    ]) {
+      expect(within(nav).getByRole('link', { name: label })).toHaveAttribute('href', hash)
+    }
+  })
+
   it('builds the slate rather than drawing a label of one', () => {
     const { container } = render(<SiteFooter />)
 

@@ -1,11 +1,11 @@
 /*
- * The mutant file, as a book on a held stage.
+ * The achievements file, as a book on a held stage.
  *
  * The section is a tall runway around a sticky, viewport-height stage. Holding
  * the stage still is the whole point: in document flow the spread necessarily
- * slid up into frame, and a scale layered on a slide is invisible because the
-    linear-gradient(158deg, #dcc79b, #cfb88a 58%, #bfa677);
- * moves, so growing toward the reader reads as a zoom.
+ * slid up into frame, and a scale layered on that slide was visually lost
+ * because the whole object moved. Here, growing toward the reader reads as a
+ * real zoom.
  */
 .scene--archive {
   position: absolute;
@@ -166,16 +166,18 @@
 }
 
 @keyframes scar-rise {
-  0%, 30% { opacity: 0; transform: scaleX(0); }
-  33% { opacity: 1; }
-  43%, 100% { opacity: 1; transform: scaleX(1); }
+  0%, 25% { opacity: 0; transform: scaleX(0); }
+  28% { opacity: 1; }
+  38%, 45% { opacity: 1; transform: scaleX(1); }
+  50%, 100% { opacity: 0; transform: scaleX(1); }
 }
 
-/* One pass, then the other, and the X is complete before the camera moves. */
+/* One pass, then the other. Both clear before the clean cover opens. */
 @keyframes scar-fall {
-  0%, 16% { opacity: 0; transform: scaleX(0); }
-  19% { opacity: 1; }
-  29%, 100% { opacity: 1; transform: scaleX(1); }
+  0%, 12% { opacity: 0; transform: scaleX(0); }
+  15% { opacity: 1; }
+  25%, 45% { opacity: 1; transform: scaleX(1); }
+  50%, 100% { opacity: 0; transform: scaleX(1); }
 }
 
 /* Fades up behind the halftone rather than cutting in. The hard visibility
@@ -205,6 +207,8 @@
   --archive-display: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
   --archive-body: 'Helvetica Neue', Arial, sans-serif;
 
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
   width: 100%;
@@ -229,14 +233,11 @@
 
 /* ---- the running head ---- */
 
-/* The running head is gone: the folder's own tab and stamp already say what
-   this is, and a title above it repeated that in a second voice. The heading
-   stays in the document as the section's accessible name. */
 .x-archive__header {
   position: absolute;
   width: 1px;
   height: 1px;
-  margin: -1px;
+  margin: 0;
   padding: 0;
   overflow: hidden;
   clip-path: inset(50%);
@@ -247,11 +248,77 @@
 
 .x-book {
   position: relative;
+  z-index: 2;
   width: min(100%, 68rem);
   /* Capped by the paper's own proportion rather than the stage's height, so a
      tall window gives the object air instead of stretching it. */
   height: min(100%, 44rem);
   aspect-ratio: 15 / 10;
+}
+
+/* A time-based reader surprise, intentionally outside the scroll clock. The
+   character begins behind the folder's right edge (z-index 1), waits in React
+   until the fully open spread has been readable for a moment, then pops out.
+   The supplied GIF supplies the dance; this wrapper only stages its entrance. */
+.x-archive__wolverine {
+  position: absolute;
+  right: -0.75rem;
+  bottom: clamp(1.2rem, 7vh, 4rem);
+  z-index: 1;
+  width: clamp(6.5rem, 10.5vw, 9.5rem);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(-72%, 48%, 0) rotate(-24deg) scale(0.7);
+  transform-origin: 50% 100%;
+}
+
+.x-archive__wolverine.is-visible {
+  visibility: visible;
+  animation: wolverine-pop 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.x-archive__wolverine.is-exiting {
+  visibility: visible;
+  animation: wolverine-return 520ms cubic-bezier(0.55, 0, 0.84, 0.36) both;
+}
+
+.x-archive__wolverine img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(0 0.6rem 0.45rem rgba(0, 0, 0, 0.58));
+}
+
+@keyframes wolverine-pop {
+  0% {
+    opacity: 0;
+    transform: translate3d(-72%, 48%, 0) rotate(-24deg) scale(0.7);
+  }
+  68% {
+    opacity: 1;
+    transform: translate3d(5%, -5%, 0) rotate(4deg) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(-7deg) scale(1);
+  }
+}
+
+@keyframes wolverine-return {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(-7deg) scale(1);
+  }
+  32% {
+    opacity: 1;
+    transform: translate3d(-4%, 5%, 0) rotate(5deg) scale(0.98);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-72%, 48%, 0) rotate(-24deg) scale(0.7);
+  }
 }
 
 /*
@@ -382,7 +449,7 @@
 
 .x-leaf {
   display: grid;
-  grid-template-rows: auto auto auto auto 1fr auto;
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: clamp(0.4rem, 1.2vh, 0.7rem);
   height: 100%;
   padding: clamp(0.9rem, 2.6vh, 1.6rem) clamp(1rem, 2.4vw, 1.7rem);
@@ -390,16 +457,71 @@
 
 .x-leaf__head {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: center;
   gap: 0.7rem;
 }
 
-.x-leaf__logo {
-  width: 2.3rem;
-  height: 2.3rem;
-  border-radius: 3px;
+/* The supplied artwork stands on its own. Linked marks keep a full 44px hit
+   surface and visible hover/focus feedback without printing a second brand
+   name or external-link glyph beside the logo. */
+.x-brand {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.x-brand__mark {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.x-brand__mark img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  filter: drop-shadow(0 0.12rem 0.12rem rgba(7, 17, 30, 0.2));
+  transition: filter 150ms ease, opacity 150ms ease;
+}
+
+a.x-brand--linked {
+  cursor: pointer;
+  text-decoration: none;
+  touch-action: manipulation;
+  background: rgba(255, 242, 175, 0.18);
+  box-shadow: 0 0 0 1px rgba(22, 102, 168, 0.46);
+  transition:
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+a.x-brand--linked:hover {
+  background: rgba(255, 242, 175, 0.7);
+  box-shadow: 0 0 0 2px var(--archive-blue-lit);
+}
+
+a.x-brand--linked:hover .x-brand__mark img,
+a.x-brand--linked:focus-visible .x-brand__mark img {
+  filter: drop-shadow(0 0.22rem 0.3rem rgba(7, 17, 30, 0.42));
+}
+
+a.x-brand--linked:focus-visible {
+  outline: 3px solid var(--archive-blue-lit);
+  outline-offset: 3px;
+  background: rgba(255, 242, 175, 0.7);
+}
+
+.x-brand--static {
+  cursor: default;
 }
 
 .x-leaf__event {
@@ -429,18 +551,34 @@
   color: var(--archive-muted);
 }
 
-/* The evidence, cropped to a band so the page still holds its text. */
+/* The plate stays above the record sheet so the Team FAM notes can physically
+   emerge from behind it instead of each line appearing to rise on its own. */
+.x-leaf__evidence {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
 .x-leaf__plate {
   position: relative;
   margin: 0;
   overflow: hidden;
-  /* Taller than the 16/7 band it was. That crop letterboxed a group shot down
-     to a strip and left the page under-filled, with a dead gap above the
-     footer; this shows the team and fills the leaf. */
-  aspect-ratio: 3 / 2;
+  /* Enough face and board detail to count as evidence, while leaving a real
+     pocket below it for the separate paper record. */
+  aspect-ratio: 16 / 9;
   border: 0.2rem solid var(--archive-ink);
   border-radius: 2px;
   background: var(--archive-ink);
+}
+
+.x-brand--product {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  width: 3.5rem;
+  height: 3.5rem;
+  filter: drop-shadow(0 0.28rem 0.36rem rgba(4, 10, 18, 0.48));
 }
 
 .x-leaf__plate figcaption {
@@ -464,6 +602,43 @@
   object-fit: cover;
   /* Overridden per photograph; see the photo's focusY. */
   filter: contrast(1.05) saturate(0.94);
+}
+
+/* One tangible, stationary sheet holds the prose, lesson, facts and credits.
+   The negative overlap tucks its top edge under the mounted photograph. It does
+   not take part in the opening animation: moving this whole record also moved
+   every printed RISTEK line, which made ink behave like a floating overlay. */
+.x-leaf__insert {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: clamp(0.34rem, 0.9vh, 0.58rem);
+  min-width: 0;
+  min-height: 0;
+  margin-top: -0.5rem;
+  padding: 0.95rem 0.7rem 0.6rem;
+  border: 1px solid rgba(89, 66, 28, 0.28);
+  border-top-color: rgba(255, 255, 255, 0.72);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 1.08rem, rgba(31, 52, 75, 0.025) 1.11rem 1.14rem),
+    linear-gradient(169deg, #fff9e8, #f5e9c9 76%, #eadbb6);
+  box-shadow:
+    0 0.5rem 0.8rem -0.55rem rgba(52, 36, 12, 0.62),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.x-leaf__insert::before {
+  content: '';
+  position: absolute;
+  top: -0.22rem;
+  left: 11%;
+  width: 34%;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: rgba(61, 43, 15, 0.18);
+  filter: blur(0.12rem);
+  pointer-events: none;
 }
 
 .x-leaf__story {
@@ -547,6 +722,9 @@
   color: #07111e;
   background: var(--archive-yellow);
   clip-path: polygon(0.55rem 0, 100% 0, calc(100% - 0.55rem) 100%, 0 100%);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
 }
 
 .x-leaf__link:hover,
@@ -566,6 +744,139 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--archive-muted);
+}
+
+/* Team FAM's names live on their own roster slip, not inside the award record.
+   The tab sits at the page edge and its sheet unfolds over the lower page. That
+   overlay is deliberate: opening it never reflows or moves the RISTEK copy
+   underneath, while the downward settle still reads as paper pulled from a
+   pocket rather than as an accordion inside the document. */
+.x-leaf__roster {
+  position: absolute;
+  right: clamp(1rem, 2.4vw, 1.7rem);
+  bottom: clamp(0.75rem, 1.8vh, 1.1rem);
+  z-index: 12;
+  width: min(calc(100% - 2rem), 17rem);
+  font-family: var(--archive-body);
+  overflow-anchor: none;
+}
+
+.x-leaf__roster summary {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 44px;
+  padding: 0.48rem 0.7rem;
+  border: 1px solid rgba(64, 47, 20, 0.48);
+  background:
+    repeating-linear-gradient(91deg, transparent 0 0.7rem, rgba(78, 54, 17, 0.035) 0.72rem 0.76rem),
+    linear-gradient(168deg, #e9d7aa, #d7bf8d);
+  box-shadow: 0 0.35rem 0.7rem rgba(41, 28, 8, 0.34);
+  color: #142238;
+  cursor: pointer;
+  list-style: none;
+}
+
+.x-leaf__roster summary::-webkit-details-marker { display: none; }
+
+.x-leaf__roster summary::after {
+  content: '+';
+  display: grid;
+  width: 1.35rem;
+  height: 1.35rem;
+  place-items: center;
+  border: 1px solid rgba(11, 44, 83, 0.44);
+  border-radius: 50%;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--archive-blue);
+}
+
+.x-leaf__roster[open] summary::after { content: '\2212'; }
+
+.x-leaf__roster summary span {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.x-leaf__roster summary small {
+  grid-column: 1;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--archive-muted);
+}
+
+.x-leaf__roster summary:focus-visible {
+  outline: 3px solid var(--archive-blue-lit);
+  outline-offset: 3px;
+}
+
+.x-leaf__roster-sheet {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.38rem);
+  z-index: 1;
+  width: 100%;
+  max-height: min(12rem, 38vh);
+  overflow: auto;
+  padding: 0.75rem 0.85rem 0.8rem;
+  border: 1px solid rgba(74, 54, 20, 0.36);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 1.15rem, rgba(23, 50, 82, 0.055) 1.17rem 1.2rem),
+    linear-gradient(172deg, #fff9e8, #f0e1ba);
+  box-shadow:
+    0 0.8rem 1.3rem rgba(25, 17, 5, 0.42),
+    inset 0 1px rgba(255, 255, 255, 0.9);
+  transform-origin: 78% 100%;
+}
+
+.x-leaf__roster[open] .x-leaf__roster-sheet {
+  animation: roster-sheet-drop 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes roster-sheet-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-1.15rem) rotate(-1.8deg) scaleY(0.88);
+  }
+  72% {
+    opacity: 1;
+    transform: translateY(0.12rem) rotate(0.25deg) scaleY(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-0.35deg) scaleY(1);
+  }
+}
+
+.x-leaf__roster-sheet > p {
+  margin: 0 0 0.58rem;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--archive-blue);
+}
+
+.x-leaf__roster-sheet ol {
+  display: grid;
+  gap: 0.28rem;
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.x-leaf__roster-sheet li {
+  padding-left: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #24344a;
 }
 
 /* ---- the front board ---- */
@@ -599,14 +910,14 @@
 /* A cut tab, offset from the fore-edge and standing proud of the top. */
 .x-book__tab {
   position: absolute;
-  top: -1.35rem;
+  top: -1.65rem;
   right: 2.2rem;
-  padding: 0.32rem 0.9rem 0.5rem;
+  padding: 0.45rem 1.2rem 0.58rem;
   border-radius: 3px 3px 0 0;
   font-family: var(--archive-body);
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.22em;
+  font-size: clamp(0.74rem, 1.1vw, 0.9rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #43290c;
   background: linear-gradient(180deg, #e3d0a4, #d3bd8e);
@@ -614,16 +925,54 @@
 }
 
 .x-book__mark {
-  width: min(48%, 11rem);
-  opacity: 0.9;
+  width: min(52%, 12rem);
+  overflow: visible;
+  color: #4a2f10;
+  opacity: 0.92;
+  transform: rotate(-3deg);
+  filter: drop-shadow(0.08rem 0.12rem 0 rgba(255, 245, 214, 0.3));
 }
 
-.x-book__stamp {
-  font-family: var(--archive-display);
-  font-size: 0.8rem;
-  font-weight: 900;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
+.x-book__mark * {
+  vector-effect: non-scaling-stroke;
+}
+
+.x-book__mark-ring,
+.x-book__mark-cross path,
+.x-book__mark-register path {
+  fill: none;
+  stroke: currentColor;
+}
+
+.x-book__mark-ring--outer {
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 58 8 17 12;
+}
+
+.x-book__mark-ring--inner {
+  stroke-width: 2.5;
+  stroke-dasharray: 2 7;
+  opacity: 0.48;
+}
+
+.x-book__mark-cross path {
+  stroke-width: 15;
+  stroke-linecap: square;
+}
+
+.x-book__mark-cross path:last-child {
+  stroke-width: 10;
+}
+
+.x-book__mark-register path {
+  stroke-width: 3;
+  stroke-linecap: square;
+  opacity: 0.74;
+}
+
+.x-book__mark-register circle {
+  fill: currentColor;
 }
 
 /* ---- turning ---- */
@@ -779,6 +1128,10 @@
   .x-book__cover,
   .x-book__spine { display: none; }
 
+  /* There is no safe right-side pocket beside the stacked mobile spread, and
+     an animated GIF cannot honor reduced motion by itself. */
+  .x-archive__wolverine { display: none; }
+
   .x-book__leaf {
     position: relative;
     inset: auto;
@@ -794,6 +1147,37 @@
   }
 
   .x-leaf { grid-template-rows: none; }
+
+  .x-leaf__roster {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    margin: -0.25rem clamp(1rem, 2.4vw, 1.7rem) clamp(1rem, 2.4vw, 1.7rem);
+  }
+
+  .x-leaf__roster-sheet {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    max-height: none;
+    margin-top: 0.4rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .x-leaf__head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .x-brand--partner { justify-self: start; }
+
+  .x-brand--product {
+    top: 0.4rem;
+    right: 0.4rem;
+  }
 }
 
 @media (max-width: 860px), (max-height: 720px), (prefers-reduced-motion: reduce) {
@@ -835,26 +1219,3 @@
 
 /* Kept in the layout rather than removed: a control that vanishes at the first
    and last spread makes the row jump as you turn. */
-
-/* The named roster stays a disclosure: five names would crowd a page that has
-   to hold a photograph and a lesson as well. */
-.x-leaf__team--named summary {
-  cursor: pointer;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
-}
-
-.x-leaf__team--named summary:focus-visible {
-  outline: 2px solid var(--archive-blue-lit);
-  outline-offset: 3px;
-}
-
-.x-leaf__team--named p {
-  margin: 0.25rem 0 0;
-  font-size: 0.78rem;
-  font-weight: 400;
-  letter-spacing: normal;
-  text-transform: none;
-  color: #24344a;
-}

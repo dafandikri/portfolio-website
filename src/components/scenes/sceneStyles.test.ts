@@ -120,4 +120,44 @@ describe('award file stacking', () => {
     expect(techWizardLeaf).toContain('opacity: 1')
     expect(techWizardLeaf).toContain('-webkit-backface-visibility: visible')
   })
+
+  it('keeps the RISTEK record still and animates only the user-opened roster slip', () => {
+    const archive = readFileSync('src/components/scenes/VisitorCenterScene.css', 'utf8')
+    const keyframes = (name: string) => {
+      const start = archive.indexOf(`@keyframes ${name}`)
+      expect(start).toBeGreaterThanOrEqual(0)
+      const next = archive.indexOf('@keyframes', start + 1)
+      return archive.slice(start, next < 0 ? archive.length : next)
+    }
+
+    expect(archive).not.toContain('@keyframes team-sheet-extract')
+    expect(archive).not.toMatch(/\.x-leaf__insert--pull-sheet\s*\{[\s\S]*?animation:/)
+    expect(archive).toContain('@keyframes roster-sheet-drop')
+    expect(archive).toMatch(/\.x-leaf__roster\[open\] \.x-leaf__roster-sheet\s*\{[\s\S]*?animation:\s*roster-sheet-drop/)
+    const arrive = keyframes('book-arrive')
+    expect(arrive).toMatch(/80%, 100%\s*\{\s*transform:\s*translate3d\(0, 0, 0\) scale\(1\)/)
+    expect(archive).not.toContain('@keyframes verso-ink-reveal')
+    expect(archive).not.toMatch(/\.x-book__leaf--verso \.x-leaf__head[\s\S]*?animation:/)
+  })
+
+  it('clears both claw passes before the Achievements hinge starts', () => {
+    const archive = readFileSync('src/components/scenes/VisitorCenterScene.css', 'utf8')
+    const motion = readFileSync('src/components/scenes/gateMotion.ts', 'utf8')
+
+    expect(archive).toMatch(/@keyframes scar-rise[\s\S]*?50%, 100%\s*\{\s*opacity:\s*0/)
+    expect(archive).toMatch(/@keyframes scar-fall[\s\S]*?50%, 100%\s*\{\s*opacity:\s*0/)
+    expect(motion).toContain('AWARD_BOOK_OPEN_START = 0.66')
+  })
+})
+
+describe('mobile chapter flow', () => {
+  it('puts Project Paddocks after Experience in the page scroll instead of a nested scroller', () => {
+    const gate = readFileSync('src/components/scenes/GateScene.css', 'utf8')
+    const park = readFileSync('src/components/scenes/ParkScene.css', 'utf8')
+
+    expect(gate).toMatch(/\.gate__projects\s*\{[\s\S]*?height:\s*auto;[\s\S]*?overflow:\s*visible;/)
+    expect(gate).toMatch(/\.gate__project-frame\s*\{[\s\S]*?height:\s*auto;/)
+    expect(park).toMatch(/@media \(max-width: 760px\)[\s\S]*?\.park\s*\{[\s\S]*?position:\s*relative;[\s\S]*?height:\s*auto;[\s\S]*?overflow:\s*visible;/)
+    expect(park).not.toContain('overflow-y: auto')
+  })
 })

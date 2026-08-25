@@ -39,16 +39,26 @@ describe('BusinessCard', () => {
   it('makes the LinkedIn profile reachable and the email sendable', () => {
     render(<BusinessCard />)
 
-    expect(screen.getByRole('link', { name: card.linkedin.label })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
       'href',
       card.linkedin.href,
     )
-    expect(screen.getByRole('link', { name: card.email.label })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'dafandikri@gmail.com' })).toHaveAttribute(
       'href',
       card.email.href,
     )
     expect(card.linkedin.href?.startsWith('https://www.linkedin.com/in/')).toBe(true)
     expect(card.email.href?.startsWith('mailto:')).toBe(true)
+  })
+
+  it('offers GitHub instead of linking the current site back to itself', () => {
+    render(<BusinessCard />)
+
+    expect(screen.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/dafandikri',
+    )
+    expect(screen.queryByRole('link', { name: 'dafandikri.dev' })).not.toBeInTheDocument()
   })
 
   it('links every footer field that has a destination and leaves the rest as ink', () => {

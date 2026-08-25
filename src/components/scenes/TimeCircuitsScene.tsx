@@ -40,12 +40,16 @@ export default function TimeCircuitsScene() {
   const departed = timeline[activeIndex + 1] ?? null
 
   return (
-    <section ref={sceneRef} className="scene scene--circuits" aria-labelledby="experience-heading">
-      <h2 id="experience-heading" className="visually-hidden">
-        Experience
-      </h2>
+    <section id="experience" ref={sceneRef} className="scene scene--circuits" aria-labelledby="experience-heading">
       {hasEntered ? (
         <>
+          <header className="circuits-scene__header">
+            <p className="circuits-scene__kicker">Temporal career archive · selected destinations</p>
+            <h2 id="experience-heading" className="circuits-scene__heading" aria-label="Experience">
+              Experience Circuits
+            </h2>
+          </header>
+
           <Hoverboard3D onVisibilityChange={syncHoverboardCredit} />
 
           <InfoPopover
@@ -96,7 +100,12 @@ export default function TimeCircuitsScene() {
           <ExperienceDeck selectedId={destination.entry.id} onSelect={setActiveId} />
         </>
       ) : (
-        <div className="circuits-scene__placeholder" aria-hidden="true" />
+        <>
+          <h2 id="experience-heading" className="visually-hidden">
+            Experience
+          </h2>
+          <div className="circuits-scene__placeholder" aria-hidden="true" />
+        </>
       )}
     </section>
   )

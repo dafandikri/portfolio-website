@@ -43,7 +43,17 @@ export const awardsData: Award[] = [
       body:
         'We polished the demo and underprepared the business case: TAM, SAM and SOM. Now the product and the argument for it get built together.',
     },
-    logo: 'ristek',
+    partner: {
+      asset: 'ristek',
+      label: 'RISTEK',
+      href: 'https://ristek.cs.ui.ac.id/',
+    },
+    productMark: {
+      asset: 'talk-active',
+      label: 'Talk-Active',
+      href: 'https://talk-active-id.vercel.app',
+    },
+    presentation: 'pull-sheet',
   },
   {
     title: 'Tech Wizard Award',
@@ -72,6 +82,16 @@ export const awardsData: Award[] = [
       body:
         'The award went to the build, not the demo. A semester of tests, reviews and a clean handover is what a client can keep using after the team leaves.',
     },
-    logo: 'sira',
+    partner: {
+      asset: 'nashta-group',
+      label: 'NashTa Group',
+      href: 'https://nashtagroup.co.id/',
+    },
+    productMark: {
+      asset: 'sira',
+      label: 'SIRA',
+      href: null,
+    },
+    presentation: 'static',
   },
 ]

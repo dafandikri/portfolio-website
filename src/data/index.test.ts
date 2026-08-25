@@ -37,6 +37,21 @@ describe('content data integrity', () => {
     expect(new Set(ids).size).toBe(ids.length)
   })
 
+  it('maps the four requested experience cards to durable company destinations', () => {
+    const companies = Object.values(experiences)
+      .flatMap((year) => year.entries)
+      .flatMap((entry) => entry.company ? [[entry.id, entry.company.href]] : [])
+
+    expect(Object.fromEntries(companies)).toEqual({
+      '2026-06': 'https://totmtechnologies.com/',
+      '2026-01': 'https://systatum.com/',
+      '2025-07': 'https://www.transmigrasi.go.id/',
+      '2025-08': 'https://www.viciistudio.com/',
+      '2024-06': 'https://interbio.id',
+      '2023-01': 'https://ristek.cs.ui.ac.id/',
+    })
+  })
+
   it('exposes non-empty tech stack rows and skills', () => {
     expect(techStack.row1.length).toBeGreaterThan(0)
     expect(techStack.row2.length).toBeGreaterThan(0)

@@ -22,7 +22,13 @@ export const experiencesData: Experiences = {
         achievements: [
           'Migrated dashboard analytics off the live OLTP identity database onto a Change Data Capture pipeline, cutting load from roughly ten minutes to near zero',
         ],
-        logo: 'interbio',
+        logo: 'totm-technologies',
+        company: {
+          name: 'Interbio Technologies',
+          label: 'Interbio',
+          linkName: 'TOTM Technologies',
+          href: 'https://totmtechnologies.com/',
+        },
       },
       {
         id: '2026-01',
@@ -36,6 +42,11 @@ export const experiencesData: Experiences = {
           'Developed and optimized backend services using Crystal programming language',
         ],
         logo: 'systatum',
+        company: {
+          name: 'Systatum',
+          label: 'Systatum',
+          href: 'https://systatum.com/',
+        },
       },
     ],
   },
@@ -57,6 +68,11 @@ export const experiencesData: Experiences = {
           'Supported hundreds of employees in training activities',
         ],
         logo: 'kementrans',
+        company: {
+          name: 'Kementerian Transmigrasi RI',
+          label: 'Kementerian Transmigrasi',
+          href: 'https://www.transmigrasi.go.id/',
+        },
       },
       {
         id: '2025-08',
@@ -69,6 +85,11 @@ export const experiencesData: Experiences = {
           'Collaborated with cross-functional teams (IT, Design, and Marketing) to deliver high-quality e-commerce website integrating with Shopify',
         ],
         logo: 'vicii',
+        company: {
+          name: 'VICII Creative',
+          label: 'VICII',
+          href: 'https://www.viciistudio.com/',
+        },
       },
     ],
   },
@@ -89,6 +110,11 @@ export const experiencesData: Experiences = {
           'Empowered non-technical staff to publish content, resulting in 2x increase in PR efforts',
         ],
         logo: 'interbio',
+        company: {
+          name: 'Interbio Technologies',
+          label: 'Interbio',
+          href: 'https://interbio.id',
+        },
       },
     ],
   },
@@ -109,6 +135,11 @@ export const experiencesData: Experiences = {
           'Enhanced technical skills in data science methodologies',
         ],
         logo: 'ristek',
+        company: {
+          name: 'RISTEK Fasilkom UI',
+          label: 'RISTEK',
+          href: 'https://ristek.cs.ui.ac.id/',
+        },
       },
     ],
   },

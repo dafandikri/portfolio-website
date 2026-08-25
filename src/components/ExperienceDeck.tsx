@@ -1,5 +1,11 @@
 import { motion, AnimatePresence } from 'motion/react'
 import { fullTitle, timeline } from '../data/timeline'
+import totmTechnologiesCompanyLogo from '../assets/img/favicon/totm.png'
+import systatumCompanyLogo from '../assets/img/favicon/systatum.png'
+import kementransCompanyLogo from '../assets/img/favicon/kementrans.png'
+import viciiCompanyLogo from '../assets/img/favicon/vicii-transparent.png'
+import interbioCompanyLogo from '../assets/img/favicon/interbio.png'
+import ristekCompanyLogo from '../assets/img/favicon/ristek.png'
 import './ExperienceDeck.css'
 
 /**
@@ -20,6 +26,15 @@ const SPRING = { type: 'spring', stiffness: 420, damping: 26, mass: 0.9 } as con
 /** Kept in step with the card's footer link in `src/data/card.ts`. */
 const RESUME_HREF = '/cv-erdafa-andikri-portfolio-2026-08-22.pdf'
 
+const COMPANY_LOGOS: Readonly<Record<string, string>> = {
+  'totm-technologies': totmTechnologiesCompanyLogo,
+  systatum: systatumCompanyLogo,
+  kementrans: kementransCompanyLogo,
+  vicii: viciiCompanyLogo,
+  interbio: interbioCompanyLogo,
+  ristek: ristekCompanyLogo,
+}
+
 export interface ExperienceDeckProps {
   /** Which role is currently punched into the circuits. */
   selectedId: string
@@ -39,6 +54,9 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
       <ul className="deck__hand">
         {hand.map((stop, i) => {
           const isOpen = selected === stop.entry.id
+          const company = stop.entry.company
+          const companyLogo = company ? COMPANY_LOGOS[stop.entry.logo] : undefined
+          const companyLinkName = company?.linkName ?? company?.name
           // Fan the hand: each card rotates and lifts by its distance from the
           // middle, the way a hand of cards splays in a palm.
           const offset = i - mid
@@ -96,15 +114,41 @@ export default function ExperienceDeck({ selectedId, onSelect }: ExperienceDeckP
                 type="button"
                 className="deck__face"
                 aria-expanded={isOpen}
-                /* The face prints the organisation; the accessible name carries
-                   the role too, which the visible layout has no room for. */
+                /* Role and company are visible in separate physical zones; the
+                   accessible name joins them into one useful card control. */
                 aria-label={fullTitle(stop.entry)}
                 onClick={() => onSelect(stop.entry.id)}
               >
                 <span className="deck__year">{stop.year ?? ''}</span>
                 <span className="deck__month">{stop.month ?? ''}</span>
-                <span className="deck__org">{stop.entry.org}</span>
+                <span className="deck__role">{stop.entry.role}</span>
+                {!company && <span className="deck__org">{stop.entry.org}</span>}
               </button>
+              {company && (
+                <a
+                  className="deck__company"
+                  href={company.href}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  aria-label={`Visit ${companyLinkName} (opens in a new tab)`}
+                  title={companyLinkName}
+                >
+                  {companyLogo && (
+                    <img
+                      className="deck__company-logo"
+                      src={companyLogo}
+                      alt=""
+                      aria-hidden="true"
+                      width="44"
+                      height="44"
+                      loading="lazy"
+                      decoding="async"
+                      draggable="false"
+                    />
+                  )}
+                  <span className="deck__company-name">{company.label}</span>
+                </a>
+              )}
             </motion.li>
           )
         })}
