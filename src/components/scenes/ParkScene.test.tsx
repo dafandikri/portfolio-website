@@ -20,12 +20,12 @@ const featured = projectsData.filter((project) => project.featured)
 const archived = projectsData.filter((project) => !project.featured)
 
 describe('ParkScene', () => {
-  it('shows five complete containment paddocks and a quieter earlier-work archive', () => {
+  it('shows six complete containment paddocks and a quieter earlier-work archive', () => {
     const { container } = render(<ParkScene />)
 
     // Pinned rather than implied: the rest of this test derives its counts from
     // featured.length, which would keep passing if a project silently vanished.
-    expect(featured).toHaveLength(5)
+    expect(featured).toHaveLength(6)
     expect(screen.getByRole('heading', { level: 2, name: 'Projects' })).toBeInTheDocument()
     expect(container.querySelectorAll('.park__containment')).toHaveLength(featured.length)
     expect(container.querySelectorAll('.park__hazard')).toHaveLength(featured.length)
@@ -34,8 +34,8 @@ describe('ParkScene', () => {
     expect(container.querySelectorAll('.park__pylons i')).toHaveLength(featured.length * 2)
     expect(screen.getAllByText('Secure')).toHaveLength(featured.length)
     expect(screen.getByText('Project 01')).toBeInTheDocument()
-    expect(screen.getByText('Project 05')).toBeInTheDocument()
-    expect(container).not.toHaveTextContent(/Paddock 0[1-5]/)
+    expect(screen.getByText('Project 06')).toBeInTheDocument()
+    expect(container).not.toHaveTextContent(/Paddock 0[1-6]/)
     expect(screen.getByText('Archive projects', { exact: false })).toBeInTheDocument()
     archived.forEach((project) => expect(screen.getByText(project.title)).toBeInTheDocument())
   })
@@ -48,6 +48,7 @@ describe('ParkScene', () => {
     expect(container.querySelectorAll('.park__project-logo--paddock')).toHaveLength(featured.length)
 
     const destinations = new Map([
+      ['Bursawatch', 'https://bursawatch.abhipraya.dev/'],
       ['Boulder Coach', 'https://boulder-coach-gamma.vercel.app'],
       ['Talk-Active', 'https://talk-active-id.vercel.app'],
       ['Erdafa Andikri portfolio', 'https://dafandikri.dev'],
@@ -106,6 +107,31 @@ describe('ParkScene', () => {
     expect(hdVideo).toHaveTextContent('HD video')
     expect(hdVideo.querySelector('.park__media-link-icon')).toHaveAttribute('aria-hidden', 'true')
     expect(within(dialog).getByText(boulder.description)).toBeInTheDocument()
+  })
+
+  it('opens the complete Bursawatch launch from the beginning after its short product loop', () => {
+    render(<ParkScene />)
+    const bursawatch = featured.find((project) => project.title === 'Bursawatch')!
+    const trigger = screen.getByRole('button', { name: /Bursawatch, project 01/i })
+    const preview = trigger.querySelector('video')!
+    preview.currentTime = 7
+
+    act(() => trigger.click())
+    act(() => vi.advanceTimersByTime(PADDOCK_OPEN_MS))
+
+    const dialog = screen.getByRole('dialog')
+    const video = dialog.querySelector('video')!
+    act(() => video.dispatchEvent(new Event('loadedmetadata')))
+    expect(video).toHaveAttribute('src', '/bursawatch-walkthrough.mp4')
+    expect(video).toHaveAttribute('controls')
+    expect(video.currentTime).toBe(0)
+    expect(within(dialog).getByText(bursawatch.description)).toBeInTheDocument()
+    expect(within(dialog).getByRole('link', { name: 'Visit Bursawatch (opens in a new tab)' }))
+      .toHaveAttribute('href', 'https://bursawatch.abhipraya.dev/')
+    expect(within(dialog).getByRole('link', { name: 'Source' }))
+      .toHaveAttribute('href', 'https://github.com/absolutepraya/bursawatch-engine')
+    expect(within(dialog).getByRole('link', { name: 'Open HD walkthrough video in a new tab' }))
+      .toHaveAttribute('href', '/bursawatch-launch.mp4')
   })
 
   it('opens a focused dossier with outcomes, technology and honest destinations', () => {

@@ -3,11 +3,18 @@ import { projectCardTitle, projectMedia } from './projectMedia'
 
 describe('project media registry', () => {
   it('uses lightweight video previews and full walkthrough videos for every project that has a recording', () => {
+    const bursawatch = projectMedia('bursawatch_project')
     const sira = projectMedia('sira_project')
     const boulder = projectMedia('boulder_project')
     const portfolio = projectMedia('portfolio_project')
     const interbio = projectMedia('interbio_project')
 
+    expect(bursawatch).toMatchObject({
+      kind: 'video',
+      src: '/bursawatch-launch.mp4',
+      previewSrc: '/bursawatch-preview.mp4',
+      detailSrc: '/bursawatch-walkthrough.mp4',
+    })
     expect(sira?.kind).toBe('video')
     expect(sira?.src).toBe('/sira-promo-2k-60fps.mp4')
     expect(sira).toHaveProperty('previewSrc', '/sira-preview.mp4')

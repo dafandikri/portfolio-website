@@ -13,21 +13,26 @@
 
 ## Work
 
-5 featured projects and 4 archived, 6 roles across 4 years.
+6 featured projects and 4 archived, 6 roles across 4 years.
+
+### Bursawatch
+Bursawatch turns scattered Indonesian market news and analyst research into source-linked briefs and organized trading-plan threads in Discord. I designed and built its public website and operator workspace, giving a complex automation system a clear product identity and making source configuration, workflow controls, schedules, and run history easier to understand.
+Built with: nextjs, typescript, react, supabase, python, fastapi.
+Links: https://bursawatch.abhipraya.dev/ · https://github.com/absolutepraya/bursawatch-engine
 
 ### SIRA — Smart Invoice Reminder AI
 AI-powered invoice collection platform that predicts payment risk and sends tone-adapted reminders so finance teams stop chasing overdue clients manually. Built end-to-end by a 15-engineer team across a full semester, coordinating 214 merge requests through bot-driven automation.
 Built with: python, fastapi, react, postgresql, tailwind, gitlab.
 
-### Boulder Coach
-An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.
-Built with: nextjs, typescript, react, tailwind, playwright, vitest.
-Links: https://boulder-coach-gamma.vercel.app · https://github.com/dafandikri/boulder-coach
-
 ### Talk-Active
 A rehearsal workspace for students preparing a rubric-graded pitch, scholarship interview, thesis defence or competition Q&A. Rather than scoring delivery, it maps a spoken attempt against the evaluator's actual rubric, refuses any verdict it cannot support with a quote from the transcript, and turns the weakest claim into the next question the student has to answer.
 Built with: nextjs, typescript, react, postgresql, playwright.
 Links: https://talk-active-id.vercel.app · https://github.com/dafandikri/talk-active
+
+### Boulder Coach
+An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.
+Built with: nextjs, typescript, react, tailwind, playwright, vitest.
+Links: https://boulder-coach-gamma.vercel.app · https://github.com/dafandikri/boulder-coach
 
 ### Portfolio Website
 A cinematic, scene-driven personal website that turns a conventional portfolio into a continuous interactive story. The current edition moves through tactile film references while keeping the underlying experience fast, accessible, and data-driven.

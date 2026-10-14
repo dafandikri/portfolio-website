@@ -6,6 +6,7 @@ import boulderCoachLogo from '../../assets/img/favicon/boulder-coach.svg'
 import interbioLogo from '../../assets/img/favicon/interbio.png'
 import siraLogo from '../../assets/img/favicon/sira.png'
 import talkActiveLogo from '../../assets/img/favicon/talkactive.png'
+import bursawatchLogo from '../../assets/img/favicon/bursawatch.svg'
 import KatoPerch from '../KatoPerch'
 import { projectCardTitle, projectMedia, type ProjectMedia } from './projectMedia'
 import './ParkScene.css'
@@ -72,11 +73,11 @@ export function ProjectMediaView({
 
   if (media.kind === 'video') {
     const shouldLoad = mode === 'detail' || (active && inView)
-    /* The optimized recording has the same duration as the HD source and is
-       small enough to begin inside the dossier instead of leaving its poster
-       on screen while several megabytes arrive. The full recording remains a
-       direct link below the player. */
-    const source = media.previewSrc ?? media.src
+    // A short paddock loop can have a separate complete, lightweight recording
+    // in the dossier. The HD recording remains a direct link below the player.
+    const source = mode === 'detail'
+      ? media.detailSrc ?? media.previewSrc ?? media.src
+      : media.previewSrc ?? media.src
 
     return (
       <>
@@ -152,6 +153,7 @@ interface ProjectLogo {
 }
 
 const PROJECT_LOGOS: Readonly<Partial<Record<string, ProjectLogo>>> = {
+  bursawatch_project: { src: bursawatchLogo, label: 'Bursawatch' },
   sira_project: { src: siraLogo, label: 'SIRA' },
   boulder_project: { src: boulderCoachLogo, label: 'Boulder Coach' },
   talkactive_project: { src: talkActiveLogo, label: 'Talk-Active' },
@@ -214,7 +216,7 @@ const archivedProjects = projectsData.filter((project) => !project.featured)
 export const PADDOCK_OPEN_MS = 120
 
 /**
- * Four full containment paddocks replace the old overlapping card hand.
+ * Full containment paddocks replace the old overlapping card hand.
  * Every featured project remains visible inside a timber-and-steel paddock.
  * The enclosures sit in the same lush visitor-park world as the rest of the
  * island rather than reading as windows inside a computer interface.
@@ -251,22 +253,29 @@ export default function ParkScene() {
       // Begin filling the HTTP cache while the physical gate opens. On a cold
       // visit this turns the transition time into useful loading time instead
       // of showing a frozen first frame after the dossier appears.
-      void fetch(selectedMedia.previewSrc ?? selectedMedia.src, { cache: 'force-cache' })
+      void fetch(selectedMedia.detailSrc ?? selectedMedia.previewSrc ?? selectedMedia.src, { cache: 'force-cache' })
         .catch(() => undefined)
     }
 
     openingTriggerRef.current = button
     openingVideoRef.current = button.querySelector('video')
+    // A short highlight loop and the complete launch tell different parts of
+    // the story. Start the full recording at its beginning rather than carrying
+    // a timestamp from that loop into unrelated footage.
+    const detailTime = () => selectedMedia?.kind === 'video' && selectedMedia.detailSrc
+      && selectedMedia.detailSrc !== selectedMedia.previewSrc
+      ? 0
+      : openingVideoRef.current?.currentTime ?? 0
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (reducedMotion) {
-      setDetailStartAt(openingVideoRef.current?.currentTime ?? 0)
+      setDetailStartAt(detailTime())
       setOpenIndex(index)
       return
     }
 
     setOpeningIndex(index)
     openingTimerRef.current = window.setTimeout(() => {
-      setDetailStartAt(openingVideoRef.current?.currentTime ?? 0)
+      setDetailStartAt(detailTime())
       setOpenIndex(index)
       setOpeningIndex(null)
       openingTimerRef.current = null

@@ -12,6 +12,25 @@ import type { Project } from './schema'
  */
 export const projectsData: Project[] = [
   {
+    title: 'Bursawatch',
+    year: '2026',
+    featured: true,
+    context: 'Frontend · Team product',
+    description:
+      'Bursawatch turns scattered Indonesian market news and analyst research into source-linked briefs and organized trading-plan threads in Discord. I designed and built its public website and operator workspace, giving a complex automation system a clear product identity and making source configuration, workflow controls, schedules, and run history easier to understand.',
+    image: 'bursawatch_project',
+    features: [
+      'AI-filtered company, industry and macro news, summarized in Indonesian with original source links and stock-price context',
+      'Analyst plans organized into dedicated Discord threads, preserving entries, targets, stop-loss levels and follow-up updates',
+      'Next.js operator workspace with source catalogs, typed workflow editors, schedules and run history — plus clear loading states and role-aware controls',
+      'Public product site with Signal Fold branding, interactive market examples and a guided source-to-brief walkthrough',
+    ],
+    techStack: ['nextjs', 'typescript', 'react', 'supabase', 'python', 'fastapi'],
+    liveLink: 'https://bursawatch.abhipraya.dev/',
+    liveLabel: 'Open Bursawatch',
+    repoLink: 'https://github.com/absolutepraya/bursawatch-engine',
+  },
+  {
     title: 'SIRA — Smart Invoice Reminder AI',
     year: '2025',
     featured: true,
@@ -31,25 +50,6 @@ export const projectsData: Project[] = [
     repoLink: '#',
   },
   {
-    title: 'Boulder Coach',
-    year: '2026',
-    featured: true,
-    context: 'Independent product · Live',
-    description:
-      'An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.',
-    image: 'boulder_project',
-    features: [
-      'Offline-first Next.js PWA: ACWR load monitoring, RAMP warm-ups, 6-week waved periodization & a safety-first adaptation engine',
-      'Pure-TypeScript domain layer with zero I/O; layering (domain ↛ data ↛ app) enforced automatically by dependency-cruiser',
-      'Deterministic 8-step quality gate — strict type-checked ESLint (bans any), 99% type-coverage, per-file 100% branch coverage on safety logic',
-      'AI harness with four enforcement tiers (in-loop, pre-commit, pre-push, CI), a safety reviewer and a learning ledger that promotes recurring failures into automated checks',
-    ],
-    techStack: ['nextjs', 'typescript', 'react', 'tailwind', 'playwright', 'vitest'],
-    liveLink: 'https://boulder-coach-gamma.vercel.app',
-    liveLabel: 'Open live app',
-    repoLink: 'https://github.com/dafandikri/boulder-coach',
-  },
-  {
     title: 'Talk-Active',
     year: '2026',
     featured: true,
@@ -67,6 +67,25 @@ export const projectsData: Project[] = [
     liveLink: 'https://talk-active-id.vercel.app',
     liveLabel: 'Open live app',
     repoLink: 'https://github.com/dafandikri/talk-active',
+  },
+  {
+    title: 'Boulder Coach',
+    year: '2026',
+    featured: true,
+    context: 'Independent product · Live',
+    description:
+      'An adaptive bouldering training PWA that tells an intermediate (V4–V6) climber exactly what to train today — adapting to performance and readiness while keeping them out of injury. Shipped alongside a tool-agnostic, AI-first development harness that lets any agent or human commit only verifiably correct work.',
+    image: 'boulder_project',
+    features: [
+      'Offline-first Next.js PWA: ACWR load monitoring, RAMP warm-ups, 6-week waved periodization & a safety-first adaptation engine',
+      'Pure-TypeScript domain layer with zero I/O; layering (domain ↛ data ↛ app) enforced automatically by dependency-cruiser',
+      'Deterministic 8-step quality gate — strict type-checked ESLint (bans any), 99% type-coverage, per-file 100% branch coverage on safety logic',
+      'AI harness with four enforcement tiers (in-loop, pre-commit, pre-push, CI), a safety reviewer and a learning ledger that promotes recurring failures into automated checks',
+    ],
+    techStack: ['nextjs', 'typescript', 'react', 'tailwind', 'playwright', 'vitest'],
+    liveLink: 'https://boulder-coach-gamma.vercel.app',
+    liveLabel: 'Open live app',
+    repoLink: 'https://github.com/dafandikri/boulder-coach',
   },
   {
     title: 'Portfolio Website',

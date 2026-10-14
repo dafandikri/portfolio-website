@@ -10,10 +10,11 @@ import boulderProjectPoster from '../../assets/img/boulder_project_poster.webp'
 import portfolioProjectPoster from '../../assets/img/portfolio_project_poster.webp'
 import interbioProjectPoster from '../../assets/img/interbio_project_poster.webp'
 import talkactiveProjectLandscape from '../../assets/img/talkactive_project_landscape.webp'
+import bursawatchProjectPoster from '../../assets/img/bursawatch_project_poster.webp'
 
 export type ProjectMedia =
   | { kind: 'image'; src: string; alt: string }
-  | { kind: 'video'; src: string; previewSrc?: string; poster?: string; label: string }
+  | { kind: 'video'; src: string; previewSrc?: string; detailSrc?: string; poster?: string; label: string }
 
 /**
  * Media stays separate from portfolio copy so replacing a still with an MP4 or
@@ -21,6 +22,14 @@ export type ProjectMedia =
  * closed paddocks, then mount at their full aspect ratio in the selected record.
  */
 const PROJECT_MEDIA: Readonly<Record<string, ProjectMedia>> = {
+  bursawatch_project: {
+    kind: 'video',
+    src: '/bursawatch-launch.mp4',
+    previewSrc: '/bursawatch-preview.mp4',
+    detailSrc: '/bursawatch-walkthrough.mp4',
+    poster: bursawatchProjectPoster,
+    label: 'Bursawatch launch: Indonesian market news, analyst plans and operator workspace',
+  },
   sira_project: {
     kind: 'video',
     src: '/sira-promo-2k-60fps.mp4',

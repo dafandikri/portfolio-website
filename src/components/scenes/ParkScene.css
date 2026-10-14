@@ -1,7 +1,7 @@
 /*
  * Projects beyond the gate.
  *
- * Four non-overlapping containment paddocks replace the old Balatro hand. The
+ * Non-overlapping containment paddocks replace the old Balatro hand. The
  * information architecture is quieter, but every object is still built as a
  * Jurassic enclosure: round timber pylons, mossy masonry, welded bars,
  * hazard lintel, lock box and a carved park plaque.
@@ -146,13 +146,8 @@
 /* Paddock grid --------------------------------------------------------- */
 
 /*
- * Six tracks, each paddock spanning two.
- *
- * Five enclosures will not sit in a quadrant, and the stage is a single
- * non-scrolling viewport, so the row that would overflow becomes a centred row
- * of two instead. Six tracks is what allows that centring: the bottom row
- * starts half a paddock in from each edge, which two or three tracks cannot
- * express without a wrapper element.
+ * Six tracks, each paddock spanning two, form two complete rows of three.
+ * Keep every enclosure inside the single desktop stage; mobile uses page flow.
  */
 .park__grid {
   display: grid;
@@ -180,10 +175,6 @@
   animation: containment-deploy 760ms cubic-bezier(0.16,1.16,0.3,1) var(--deploy-delay) forwards;
   grid-column: span 2;
 }
-
-/* Bottom row of two, offset one track so it centres under the row of three. */
-.park__containment:nth-child(4) { grid-column: 2 / span 2; }
-.park__containment:nth-child(5) { grid-column: 4 / span 2; }
 
 @keyframes containment-deploy {
   0% { opacity: 0; filter: blur(0.45rem) brightness(1.4); transform: translateY(2.4rem) scale(0.9); }
@@ -1010,9 +1001,7 @@ a.park__project-logo--linked:focus-visible {
 
   /* One column here, so the six-track span rules must be switched off or they
      would keep forcing paddocks into columns that no longer exist. */
-  .park__containment,
-  .park__containment:nth-child(4),
-  .park__containment:nth-child(5) { grid-column: auto; }
+  .park__containment { grid-column: auto; }
 
   .park__containment { aspect-ratio: 1.42; }
   .park__project-logo--paddock {
