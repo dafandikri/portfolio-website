@@ -118,7 +118,7 @@ Explicitly undecided:
 
 Real, present in the repository:
 
-- Nine projects, five featured, four archived (`src/data/projects.ts`).
+- Ten projects, six featured, four archived (`src/data/projects.ts`).
 - Six roles across four years (`src/data/experiences.ts`).
 - Two awards (`src/data/awards.ts`), each with a real photograph and an
   owner-supplied reflection kept distinct from the factual record:
@@ -130,7 +130,7 @@ Real, present in the repository:
   - Tech Wizard Award, PPL x Propensi 2026, the same faculty, won with SIRA by
     the nine-person Kelompok C2 on the Pemrograman Perangkat Lunak course. A
     team this size is recorded as a head count rather than a printed roster.
-- Walkthrough recordings for four featured projects in `public/`, and product
+- Walkthrough recordings for five featured projects in `public/`, and product
   stills in `src/assets/img/`. Talk-Active currently has a still; its recording
   is planned and not yet captured.
 - Published PageSpeed results and CI/deployment screenshots in `readme/`.
