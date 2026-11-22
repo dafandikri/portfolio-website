@@ -11,12 +11,27 @@
 
 /* The blood finishes landing at 3.12s on the same loaded-asset clock. */
 .scroll-cue.is-ready {
-  animation: cue-in 240ms ease-out 3200ms both;
+  animation:
+    cue-in 240ms ease-out 3200ms both,
+    cue-nudge 1500ms ease-in-out 3500ms 3;
 }
 
 @keyframes cue-in {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+@keyframes cue-nudge {
+  0%, 76%, 100% {
+    translate: 0 0;
+  }
+  16% {
+    translate: 0 -0.125rem;
+    animation-timing-function: cubic-bezier(0.32, 0, 0.3, 1);
+  }
+  43% {
+    translate: 0 0.5rem;
+  }
 }
 
 /* The card can fill the viewport vertically on short landscape screens. */
