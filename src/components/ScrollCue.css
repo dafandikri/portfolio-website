@@ -1,70 +1,40 @@
 .scroll-cue {
   position: absolute;
-  bottom: clamp(1.25rem, 4vh, 2.5rem);
+  bottom: max(clamp(1.25rem, 4svh, 2.5rem), env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.55rem;
+  color: #fff4e2;
+  filter: drop-shadow(0 1px 3px rgb(0 0 0 / 75%));
   pointer-events: none;
   opacity: 0;
 }
 
-/* Held back until the blood has finished landing at ~3.1s, measured from the
-   same loaded-asset start signal as the card, hand and blood. */
+/* The blood finishes landing at 3.12s on the same loaded-asset clock. */
 .scroll-cue.is-ready {
-  animation: cue-in 700ms ease-out 4200ms both;
-}
-
-.scroll-cue__label {
-  font-family: var(--font-sc);
-  font-size: 0.62rem;
-  letter-spacing: 0.32em;
-  color: rgba(0, 0, 0, 0.34);
-}
-
-.scroll-cue__rule {
-  width: 1px;
-  height: 2.4rem;
-  background: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0));
-  /* A slow travel down the rule, rather than a bouncing arrow. The card is
-     letterpress; a bouncing chevron would be from a different website. */
-  transform-origin: top;
-}
-
-.scroll-cue.is-ready .scroll-cue__rule {
-  animation: cue-travel 2.6s ease-in-out 4900ms infinite;
+  animation: cue-in 240ms ease-out 3200ms both;
 }
 
 @keyframes cue-in {
-  from {
-    opacity: 0;
-    transform: translate(-50%, 0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes cue-travel {
-  0%,
-  100% {
-    transform: scaleY(0.45);
-    opacity: 0.5;
-  }
-  50% {
-    transform: scaleY(1);
-    opacity: 1;
+/* The card can fill the viewport vertically on short landscape screens. */
+@media (orientation: landscape) and (max-height: 29rem) {
+  .scroll-cue {
+    top: calc(100svh - max(0.875rem, env(safe-area-inset-bottom)) - 1.375rem);
+    right: max(0.125rem, env(safe-area-inset-right));
+    bottom: auto;
+    left: auto;
+    width: 1.375rem;
+    height: 1.375rem;
+    transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-cue.is-ready {
-    animation: cue-in 400ms ease-out 1200ms both;
-  }
-  .scroll-cue.is-ready .scroll-cue__rule {
     animation: none;
+    opacity: 1;
   }
 }

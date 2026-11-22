@@ -1,36 +1,20 @@
 import './ScrollCue.css'
 
-/**
- * A quiet mark telling the visitor there is more below.
- *
- * The card used to be the entire site, so nothing signalled a second screen.
- * Without a cue most visitors read the card and leave, and everything below it
- * never gets seen. It appears only after the blood has settled, so it does not
- * step on the punchline.
- */
-interface ScrollCueProps {
-  ready?: boolean
-  /**
-   * Scene-local skin. The behaviour is shared, the look is not: each set owns
-   * its own palette and typeface, so the paddocks cannot wear the card's
-   * letterpress cue.
-   */
-  className?: string
-  label?: string
-}
-
-export default function ScrollCue({
-  ready = true,
-  className = '',
-  label = 'Scroll',
-}: ScrollCueProps) {
+export default function ScrollCue({ ready }: { ready: boolean }) {
   return (
-    <div
-      className={`scroll-cue${ready ? ' is-ready' : ''}${className ? ` ${className}` : ''}`}
+    <svg
+      className={`scroll-cue${ready ? ' is-ready' : ''}`}
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden="true"
     >
-      <span className="scroll-cue__label">{label}</span>
-      <span className="scroll-cue__rule" />
-    </div>
+      <path d="M12 4v16m-6-6 6 6 6-6" />
+    </svg>
   )
 }
